@@ -5,6 +5,8 @@ const v = (id: string, title: string): Video => ({ id, title })
 
 export const UNIT_VIDEOS: Record<string, Video[]> = {
   '1-1': [v('Zto6YuVKFaI', 'Erd- und Himmelsperlen')],
+  // MathKids hat für Welt 1 nur ein Video; Einheit 2 wiederholt es. Für 1-3 (Zehner und Einer) fehlt noch eins.
+  '1-2': [v('Zto6YuVKFaI', 'Erd- und Himmelsperlen (Wiederholung)')],
   '2-1': [v('UUrV0frw8aI', 'Big Friends +9'), v('fHMDL8jGRdE', 'Big Friends +8')],
   '2-2': [v('h5YNF3tvTx8', 'Big Friends +7'), v('5OeEtNZIILM', 'Big Friends +6')],
   '2-3': [v('WlkEGQAyIq4', 'Big Friends +5'), v('DCgAPgrH0J8', 'Big Friends +4')],

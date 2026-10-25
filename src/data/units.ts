@@ -69,7 +69,7 @@ const UNITS: Record<string, UnitContent> = {
     rule: ['bis 4: nur Erdperlen', 'ab 5: Himmelsperle dazu'],
     learn: ['Zahlen bis 4 nur mit Erdperlen', 'Ab 5 hilft die Himmelsperle', 'Jede Zahl von 1 bis 9 ohne Zählen erkennen'],
     stationText: {
-      video: 'Für diese Einheit gibt es kein eigenes Video.',
+      video: 'Schau dir die Perlen noch einmal an.',
       entdecken: 'Perli zeigt dir 4, 6, 8 und 9.',
       ueben: '10 Aufgaben – einstellen und ablesen.',
       blitz: 'Der Abakus blitzt auf. Welche Zahl war es?',
