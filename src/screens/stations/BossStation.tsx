@@ -1,0 +1,140 @@
+import { useState } from 'react'
+import { Abakus } from '../../components/Abakus'
+import { Grummel } from '../../components/Grummel'
+import { Icon } from '../../components/Icon'
+import { Stage } from '../../components/Stage'
+import { WORLDS } from '../../data/curriculum'
+import { describeDigit, type UnitContent } from '../../data/units'
+import { completeUnit, finishStation } from '../../lib/progress'
+import { speak } from '../../lib/speak'
+import { StationDone } from './StationShell'
+
+const HITS = 10
+const LIVES = 3
+
+type Question = { kind: 'read' | 'describe'; n: number; options: number[] }
+
+function makeQuestion(prev?: number): Question {
+  let n = prev ?? 0
+  while (n === prev || n === 0) n = 1 + Math.floor(Math.random() * 9)
+  const opts = new Set([n])
+  while (opts.size < 4) opts.add(1 + Math.floor(Math.random() * 9))
+  return { kind: Math.random() < 0.5 ? 'read' : 'describe', n, options: [...opts].sort(() => Math.random() - 0.5) }
+}
+
+export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
+  const [q, setQ] = useState(() => makeQuestion())
+  const [hits, setHits] = useState(0)
+  const [lives, setLives] = useState(LIVES)
+  const [picked, setPicked] = useState<number | null>(null)
+  const [result, setResult] = useState<'won' | 'lost' | null>(null)
+  const [reward, setReward] = useState<{ perlen: number; worldDone: boolean } | null>(null)
+  const hp = Math.round(((HITS - hits) / HITS) * 100)
+
+  const answer = (v: number) => {
+    if (picked !== null || result) return
+    setPicked(v)
+    const ok = v === q.n
+    const nextHits = ok ? hits + 1 : hits
+    const nextLives = ok ? lives : lives - 1
+    speak(ok ? 'Treffer!' : `Autsch! Es war die ${q.n}.`)
+    window.setTimeout(() => {
+      setHits(nextHits)
+      setLives(nextLives)
+      setPicked(null)
+      if (nextHits >= HITS) {
+        const stars = nextLives
+        const perlen = finishStation(kidId, 'boss', stars, HITS)
+        const w = WORLDS[world - 1]
+        const { worldDone } = completeUnit(kidId, w.units.length, WORLDS.length)
+        setReward({ perlen, worldDone })
+        setResult('won')
+        speak('Du hast Grummel besiegt!')
+      } else if (nextLives <= 0) {
+        setResult('lost')
+        speak('Grummel hat diesmal gewonnen. Probier es nochmal!')
+      } else setQ(makeQuestion(q.n))
+    }, ok ? 800 : 1800)
+  }
+
+  const retry = () => { setQ(makeQuestion()); setHits(0); setLives(LIVES); setResult(null) }
+  const w = WORLDS[world - 1]
+  const nextText = reward?.worldDone
+    ? `Welt ${world} geschafft! Du bekommst den ${w.belt} Gürtel und 1 Diamant.`
+    : `Einheit ${unit} geschafft! Einheit ${unit + 1} ist jetzt offen.`
+
+  return (
+    <Stage background="#160F3A">
+      <div className="boss">
+        <div className="boss-top">
+          <a href="#/einheit" aria-label="Aufgeben" className="round-btn big"><Icon name="x" color="#FFFFFF" size={26} /></a>
+          <div className="boss-lives" aria-label={`${lives} von ${LIVES} Leben`}>
+            {Array.from({ length: LIVES }, (_, i) => (
+              <Icon key={i} name="heart" size={40} color={i < lives ? '#FF5C8A' : '#6E3B8A'} fill={i < lives ? '#FF5C8A' : 'none'} />
+            ))}
+          </div>
+          <div className="boss-hp">
+            <div className="boss-hp-head"><span>Grummel, der Zahlenfresser</span><span>{hp} / 100</span></div>
+            <div className="boss-hp-track"><div style={{ width: `${hp}%` }} /></div>
+          </div>
+        </div>
+
+        <div className="boss-arena">
+          <Grummel size={280} hit={picked !== null && picked === q.n} />
+          {picked !== null && picked === q.n && <div className="boss-pow">−10!</div>}
+        </div>
+
+        <div className="boss-panel">
+          <div className="boss-question">
+            <div className="eyebrow light">TREFFER {hits} VON {HITS}</div>
+            {q.kind === 'read' ? (
+              <div className="boss-q-read">
+                <Abakus key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={70} interactive={false} />
+                <span>Welche Zahl?</span>
+              </div>
+            ) : (
+              <div className="boss-q-text">{describeDigit(q.n)[0].toUpperCase() + describeDigit(q.n).slice(1)} = ?</div>
+            )}
+          </div>
+          <div className="boss-options">
+            {q.options.map((o) => (
+              <button
+                key={o}
+                type="button"
+                className={picked === null ? 'boss-opt' : o === q.n ? 'boss-opt right' : o === picked ? 'boss-opt wrong' : 'boss-opt dim'}
+                disabled={picked !== null}
+                onClick={() => answer(o)}
+              >
+                {o}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {result === 'lost' && (
+        <div className="done-overlay" role="dialog" aria-label="Verloren">
+          <div className="done-card">
+            <Grummel size={180} />
+            <h2>Fast geschafft!</h2>
+            <p>Grummel hat diesmal gewonnen. Du hast {hits} von {HITS} Treffern geschafft.</p>
+            <div className="done-actions">
+              <a href="#/einheit" className="btn-outline dark">Zur Einheit</a>
+              <button type="button" className="btn-primary small" onClick={retry}>Nochmal kämpfen</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {result === 'won' && reward && (
+        <StationDone
+          title="Grummel besiegt!"
+          stars={lives}
+          perlen={reward.perlen}
+          text={nextText}
+          href={reward.worldDone ? '#/karte' : '#/einheit'}
+          extra={<div className="done-trophy"><Icon name="trophy" color="#DE9800" fill="#FFE58F" size={40} /> Pokal: {content.title}</div>}
+        />
+      )}
+    </Stage>
+  )
+}

@@ -8,6 +8,9 @@ import { Einheit } from './screens/Einheit'
 import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
+import { BlitzStation } from './screens/stations/BlitzStation'
+import { KopfrechnenStation } from './screens/stations/KopfrechnenStation'
+import { BossStation } from './screens/stations/BossStation'
 import { unitContent, STATIONS } from './data/units'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
@@ -15,6 +18,7 @@ import { currentStation, getProgress } from './lib/progress'
 
 const TITLES: Record<string, string> = {
   einheit: 'Einheit',
+  station: 'Inhalte für diese Einheit folgen',
   denkpark: 'Denk-Park',
   shop: 'Shop',
   garderobe: 'Garderobe',
@@ -62,7 +66,10 @@ export default function App() {
       if (content && id === 'video') return <VideoStation kidId={kid.id} content={content} />
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
-      return <Placeholder title={STATIONS[index].title} />
+      if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />
+      if (content && id === 'kopfrechnen') return <KopfrechnenStation kidId={kid.id} content={content} />
+      if (content && id === 'boss') return <BossStation kidId={kid.id} content={content} world={progress.world} unit={progress.unit} />
+      return <Placeholder title={content ? STATIONS[index].title : `${STATIONS[index].title}: Inhalte folgen`} />
     }
   }
   return <Placeholder title={TITLES[route] ?? 'Unbekannte Seite'} />

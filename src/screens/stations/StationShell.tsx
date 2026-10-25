@@ -40,12 +40,12 @@ export function StationShell({ station, title, dots, perlen, children }: Props) 
   )
 }
 
-export function StationDone({ stars, perlen, text }: { stars: number; perlen: number; text: string }) {
+export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = '#/einheit', extra }: { stars: number; perlen: number; text: string; title?: string; href?: string; extra?: ReactNode }) {
   return (
     <div className="done-overlay" role="dialog" aria-label="Station geschafft">
       <div className="done-card">
         <Perli mood="cheer" size={150} />
-        <h2>Geschafft!</h2>
+        <h2>{title}</h2>
         <div className="done-stars" aria-label={`${stars} von 3 Sternen`}>
           {[0, 1, 2].map((k) => (
             <Icon key={k} name="star" size={64} color="#DE9800" fill={k < stars ? '#FFC531' : 'none'} strokeWidth={1.8} />
@@ -53,7 +53,8 @@ export function StationDone({ stars, perlen, text }: { stars: number; perlen: nu
         </div>
         <p>{text}</p>
         <div className="done-reward"><Bead color="yellow" width={36} /> +{perlen} Perlen</div>
-        <a href="#/einheit" className="btn-primary small">Weiter <Icon name="right" size={26} color="#231A4F" strokeWidth={3} /></a>
+        {extra}
+        <a href={href} className="btn-primary small">Weiter <Icon name="right" size={26} color="#231A4F" strokeWidth={3} /></a>
       </div>
     </div>
   )

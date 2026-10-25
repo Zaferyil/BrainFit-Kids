@@ -365,3 +365,60 @@ button { font-family: inherit; }
 .done-stars { display: flex; gap: 8px; }
 .done-card p { margin: 0; font-size: 19px; font-weight: 800; color: #5A5094; }
 .done-reward { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; background: #FFF4D1; font-weight: 900; font-size: 22px; margin-bottom: 8px; }
+
+/* Blitz */
+.blitz { display: flex; gap: 28px; flex: 1; min-height: 0; }
+.blitz-side { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; justify-content: center; }
+.blitz-stat { padding: 18px; border-radius: 24px; background: var(--board); display: flex; flex-direction: column; gap: 4px; }
+.blitz-stat strong { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; color: var(--yellow); }
+.blitz-streak { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 999px; background: var(--board); color: var(--muted); font-weight: 900; font-size: 18px; }
+.blitz-streak.on { background: var(--orange); color: var(--ink); }
+.blitz-stage { flex: 1; min-width: 0; border-radius: 32px; background: var(--night-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+.blitz-count { font-weight: 900; font-size: 16px; color: #A99FE8; }
+.blitz-window { width: 300px; height: 440px; display: flex; align-items: center; justify-content: center; }
+.blitz-ready { display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 34px; color: var(--yellow); }
+.blitz-cover { width: 240px; height: 400px; border-radius: 30px; background: var(--board); border: 4px dashed var(--violet-line); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 140px; color: var(--violet-line); }
+.blitz-cover.right { background: #DDF7E3; border: 4px solid var(--green); color: #25913F; }
+.blitz-say { min-height: 52px; padding: 12px 22px; border-radius: 999px; background: var(--board); font-weight: 800; font-size: 19px; color: var(--lilac-2); text-align: center; }
+.blitz-say.right { background: var(--green); color: #10351B; }
+.blitz-say.wrong { background: #FFE1E8; color: #8A1235; }
+
+/* Kopfrechnen */
+.mental { display: flex; gap: 28px; flex: 1; min-height: 0; }
+.mental-think { flex: 1; min-width: 0; position: relative; border-radius: 32px; background: var(--night-2); display: flex; align-items: center; justify-content: center; gap: 30px; padding: 24px; }
+.mental-badge { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: var(--board); font-weight: 800; font-size: 15px; color: var(--lilac); white-space: nowrap; }
+.mental-perli { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 260px; }
+.mental-perli .say-bubble { margin: 0; border-radius: 22px; text-align: center; }
+.mental-task { width: 340px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+.mental-q { border-radius: 28px; background: #FFFFFF; color: var(--ink); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 6px 0 #D8D1FF; }
+.mental-phrase { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.15; color: var(--violet); }
+.mental-eq { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-weight: 800; font-size: 48px; }
+.mental-eq .task-answer { flex: 1; height: 84px; font-size: 60px; }
+.mental-task .key { height: 76px; font-size: 36px; }
+
+/* Boss */
+.boss { position: absolute; inset: 0; padding: 28px 40px; display: flex; flex-direction: column; }
+.boss-top { display: flex; align-items: center; gap: 24px; }
+.boss-lives { display: flex; gap: 4px; }
+.boss-hp { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.boss-hp-head { display: flex; justify-content: space-between; font-family: var(--font-display); font-weight: 800; font-size: 22px; }
+.boss-hp-track { height: 22px; border-radius: 999px; background: #2A1458; overflow: hidden; border: 3px solid #4A1F8F; }
+.boss-hp-track div { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #FF4D6D, #FF8A1F); transition: width .4s ease; }
+.boss-arena { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; }
+.grummel.hit { animation: shake .4s; }
+@media (prefers-reduced-motion: reduce) { .grummel.hit { animation: none; } }
+.boss-pow { position: absolute; left: calc(50% + 110px); top: 30px; font-family: var(--font-display); font-weight: 800; font-size: 56px; color: var(--yellow); text-shadow: 0 4px 0 #8A5A00; }
+.boss-panel { display: flex; gap: 24px; align-items: stretch; }
+.boss-question { width: 460px; flex-shrink: 0; padding: 18px 24px; border-radius: 28px; background: var(--board); display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.boss-q-read { display: flex; align-items: center; gap: 24px; font-family: var(--font-display); font-weight: 800; font-size: 34px; }
+.boss-q-text { font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1.15; }
+.boss-options { flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.boss-opt { border: 0; border-radius: 26px; background: #FFFFFF; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 56px; cursor: pointer; box-shadow: 0 6px 0 #D8D1FF; min-height: 96px; }
+.boss-opt:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 #D8D1FF; }
+.boss-opt.right { background: var(--green); color: #10351B; box-shadow: 0 6px 0 #25913F; }
+.boss-opt.wrong { background: #FF5C8A; color: #FFFFFF; box-shadow: 0 6px 0 #C2264E; }
+.boss-opt.dim { opacity: .45; }
+.boss-opt:disabled { cursor: default; }
+.done-actions { display: flex; gap: 12px; margin-top: 8px; }
+.btn-outline.dark { border-color: #E4DFFF; color: #5A5094; text-decoration: none; }
+.done-trophy { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; background: #F2F0FF; font-weight: 900; font-size: 18px; margin-bottom: 8px; }

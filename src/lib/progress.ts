@@ -54,3 +54,17 @@ export function finishStation(kidId: string, station: StationId, stars: number, 
   saveProgress(kidId, { ...p, stationStars: { ...p.stationStars, [k]: all }, perlen: p.perlen + perlen, xp, level })
   return perlen
 }
+
+/** Boss besiegt: Einheit abschließen und zur nächsten Einheit oder Welt weitergehen. */
+export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: number) {
+  const p = getProgress(kidId)
+  const stars = stationStars(p)
+  const avg = Math.round(stars.reduce((a, b) => a + b, 0) / stars.length)
+  if (p.unit < unitsInWorld) {
+    saveProgress(kidId, { ...p, unit: p.unit + 1 })
+    return { worldDone: false }
+  }
+  const world = Math.min(p.world + 1, lastWorld)
+  saveProgress(kidId, { ...p, world, unit: 1, worldStars: { ...p.worldStars, [p.world]: avg }, gems: p.gems + 1 })
+  return { worldDone: true }
+}
