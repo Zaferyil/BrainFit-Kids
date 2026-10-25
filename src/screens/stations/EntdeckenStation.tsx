@@ -6,6 +6,7 @@ import { Perli } from '../../components/Perli'
 import type { UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
+import { SAY, STATION_INTRO } from '../../data/sprache'
 import { StationDone, StationShell } from './StationShell'
 
 export function EntdeckenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
@@ -14,11 +15,12 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
   const [value, setValue] = useState(steps[0].start)
   const [solved, setSolved] = useState(false)
   const [done, setDone] = useState<number | null>(null)
+  const [started, setStarted] = useState(false)
   const cur = steps[step]
   const last = step === steps.length - 1
   const waiting = cur.goal !== null && !solved
 
-  useEffect(() => { speak(cur.say) }, [cur.say])
+  useEffect(() => { if (started) void speak(cur.say) }, [cur.say, started])
 
   const go = (to: number) => {
     setStep(to)
@@ -30,7 +32,7 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
     setValue(v)
     if (cur.goal !== null && v === cur.goal && !solved) {
       setSolved(true)
-      speak('Richtig!')
+      void speak(SAY.richtig)
       setTimeout(() => go(step + 1), 1300)
     }
   }
@@ -41,7 +43,7 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
   }
 
   return (
-    <StationShell station="entdecken" title={`So funktioniert der Abakus`}>
+    <StationShell station="entdecken" title="So funktioniert der Abakus" intro={STATION_INTRO.entdecken} started={started} onStart={() => setStarted(true)} say={cur.say}>
       <div className="discover">
         <div className="discover-board">
           <div className="board-label">{content.board}</div>
@@ -75,7 +77,7 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
           </div>
         </div>
       </div>
-      {done !== null && <StationDone stars={3} perlen={done} text={`Geschafft: ${content.title}`} />}
+      {done !== null && <StationDone stars={3} perlen={done} text={`Geschafft: ${content.title}`} say={[SAY.geschafft]} />}
     </StationShell>
   )
 }

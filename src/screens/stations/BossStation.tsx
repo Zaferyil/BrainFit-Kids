@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Grummel } from '../../components/Grummel'
@@ -8,7 +8,8 @@ import { WORLDS } from '../../data/curriculum'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { completeUnit, finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
-import { StationDone } from './StationShell'
+import { SayButton, StationDone, StationIntro } from './StationShell'
+import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 
 const HITS = 10
 const LIVES = 3
@@ -32,7 +33,12 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
   const [picked, setPicked] = useState<number | null>(null)
   const [result, setResult] = useState<'won' | 'lost' | null>(null)
   const [reward, setReward] = useState<{ perlen: number; worldDone: boolean } | null>(null)
+  const [started, setStarted] = useState(false)
   const hp = Math.round(((HITS - hits) / HITS) * 100)
+  const question = q.kind === 'read' ? [SAY.welcheZahlAbakus] : [...sayDescribe(q.n), SAY.welcheZahlIst]
+  const questionKey = question.join('|')
+
+  useEffect(() => { if (started) void speak(questionKey.split('|')) }, [started, questionKey, q])
 
   const answer = (v: number) => {
     if (picked !== null || result) return
@@ -40,7 +46,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
     const ok = v === q.n
     const nextHits = ok ? hits + 1 : hits
     const nextLives = ok ? lives : lives - 1
-    speak(ok ? 'Treffer!' : `Autsch! Es war die ${q.n}.`)
+    void speak(ok ? SAY.treffer : [SAY.autsch, String(q.n)])
     window.setTimeout(() => {
       setHits(nextHits)
       setLives(nextLives)
@@ -52,10 +58,10 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
         const { worldDone } = completeUnit(kidId, w.units.length, WORLDS.length)
         setReward({ perlen, worldDone })
         setResult('won')
-        speak('Du hast Grummel besiegt!')
+        void speak(SAY.bossGewonnen)
       } else if (nextLives <= 0) {
         setResult('lost')
-        speak('Grummel hat diesmal gewonnen. Probier es nochmal!')
+        void speak(SAY.bossVerloren)
       } else setQ(makeQuestion(content.range, q.n))
     }, ok ? 800 : 1800)
   }
@@ -76,6 +82,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               <Icon key={i} name="heart" size={40} color={i < lives ? '#FF5C8A' : '#6E3B8A'} fill={i < lives ? '#FF5C8A' : 'none'} />
             ))}
           </div>
+          <SayButton say={question} />
           <div className="boss-hp">
             <div className="boss-hp-head"><span>Grummel, der Zahlenfresser</span><span>{hp} / 100</span></div>
             <div className="boss-hp-track"><div style={{ width: `${hp}%` }} /></div>
@@ -115,6 +122,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
         </div>
       </div>
 
+      {!started && <StationIntro station="boss" text={STATION_INTRO.boss} onStart={() => setStarted(true)} />}
       {result === 'lost' && (
         <div className="done-overlay" role="dialog" aria-label="Verloren">
           <div className="done-card">
@@ -134,6 +142,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
           stars={lives}
           perlen={reward.perlen}
           text={nextText}
+          say={[SAY.bossGewonnen]}
           href={reward.worldDone ? '#/karte' : '#/einheit'}
           extra={<div className="done-trophy"><Icon name="trophy" color="#DE9800" fill="#FFE58F" size={40} /> Pokal: {content.title}</div>}
         />

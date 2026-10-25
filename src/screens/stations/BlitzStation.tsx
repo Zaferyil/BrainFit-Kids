@@ -5,6 +5,7 @@ import { Icon } from '../../components/Icon'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
+import { SAY, STATION_INTRO } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
@@ -30,15 +31,21 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const [results, setResults] = useState<('right' | 'wrong')[]>([])
   const [streak, setStreak] = useState(0)
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
+  const [started, setStarted] = useState(false)
   const timer = useRef<number | undefined>(undefined)
   const n = numbers[index]
 
   // Ablauf je Aufgabe: kurz „Achtung“, dann blitzt der Abakus auf.
   useEffect(() => {
-    if (phase === 'ready') timer.current = window.setTimeout(() => setPhase('flash'), 900)
+    if (!started) return
+    if (phase === 'ready') {
+      void speak(SAY.achtung)
+      timer.current = window.setTimeout(() => setPhase('flash'), 1100)
+    }
+    if (phase === 'answer') void speak(SAY.welcheZahlWar)
     if (phase === 'flash') timer.current = window.setTimeout(() => setPhase('answer'), FLASH_MS)
     return () => window.clearTimeout(timer.current)
-  }, [phase, index])
+  }, [phase, index, started])
 
   const next = (res: ('right' | 'wrong')[]) => {
     if (index + 1 >= COUNT) {
@@ -61,7 +68,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
     setResults(res)
     setStreak(ok ? streak + 1 : 0)
     setPhase(ok ? 'right' : 'wrong')
-    speak(ok ? 'Richtig!' : `Es war die ${n}.`)
+    void speak(ok ? SAY.richtig : [SAY.esWar, String(n)])
     window.setTimeout(() => { setInput(''); next(res) }, ok ? 900 : 2200)
   }
 
@@ -69,7 +76,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const showAbakus = phase === 'flash' || phase === 'wrong'
 
   return (
-    <StationShell station="blitz" title="Blitz-Abakus: Welche Zahl war es?" dots={dots} perlen={results.filter((r) => r === 'right').length}>
+    <StationShell station="blitz" title="Blitz-Abakus: Welche Zahl war es?" dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
       <div className="blitz">
         <aside className="blitz-side">
           <div className="blitz-stat">

@@ -24,6 +24,7 @@ export function Anmelden() {
     'Wer bist du? Tippe auf dein Bild.',
     `Hallo ${kid?.name ?? ''}! Tippe deine vier Bilder.`,
   ][step]
+  const instructionSay = step === 2 ? [`Hallo ${kid?.name ?? ''}!`, 'Tippe deine vier Bilder.'] : instruction
 
   return (
     <Stage>
@@ -40,7 +41,7 @@ export function Anmelden() {
               </li>
             ))}
           </ol>
-          <button type="button" className="round-btn" aria-label="Vorlesen" onClick={() => speak(instruction)}>
+          <button type="button" className="round-btn" aria-label="Vorlesen" onClick={() => void speak(instructionSay)}>
             <Icon name="volume" color="#FFFFFF" size={26} />
           </button>
         </div>
@@ -50,7 +51,7 @@ export function Anmelden() {
             <KidPicker
               schoolClass={schoolClass}
               selected={kid}
-              onSelect={(k) => { setKid(k); speak(`Hallo ${k.name}! Tippe deine vier Bilder.`) }}
+              onSelect={(k) => { setKid(k); void speak([`Hallo ${k.name}!`, 'Tippe deine vier Bilder.']) }}
               onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
             />
             <PicturePassword key={kid?.id ?? 'none'} schoolClass={schoolClass} kid={kid} />
@@ -156,7 +157,7 @@ function PicturePassword({ schoolClass, kid }: { schoolClass: SchoolClass; kid: 
     if (next.every((p, i) => p === kid.password[i])) {
       setStatus('right')
       saveSession({ classCode: schoolClass.code, kidId: kid.id })
-      speak(`Richtig! Willkommen zurück, ${kid.name}.`)
+      void speak(['Richtig!', `Willkommen zurück, ${kid.name}!`])
     } else {
       setStatus('wrong')
       speak('Das war nicht richtig. Probier es nochmal!')

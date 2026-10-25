@@ -14,6 +14,7 @@ import { AREAS, type GameMeta } from '../games/registry'
 import type { GameProps } from '../games/types'
 import { rewardGame } from '../lib/progress'
 import { speak } from '../lib/speak'
+import { GAME_INTRO as INTRO } from '../data/sprache'
 
 const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   memory: PerlenMemory,
@@ -22,12 +23,6 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   jagd: PerlenJagd,
 }
 
-const INTRO: Record<string, string> = {
-  memory: 'Decke immer zwei Karten auf. Finde alle Paare!',
-  muster: 'Schau dir die Reihe an. Was kommt als Nächstes?',
-  kette: 'Die Perlen leuchten nacheinander. Tippe sie danach in der gleichen Reihenfolge.',
-  jagd: 'Tippe so schnell du kannst alle Perlen in der gesuchten Farbe an.',
-}
 
 type Result = { score: number; summary: string; perlen: number; adj: Adjustment }
 

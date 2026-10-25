@@ -430,6 +430,10 @@ button { font-family: inherit; }
 .boss-opt.dim { opacity: .45; }
 .boss-opt:disabled { cursor: default; }
 .done-actions { display: flex; gap: 12px; margin-top: 8px; }
+.say-btn.light { background: #EEEAFF; }
+.intro-card { gap: 14px; }
+.intro-card .intro-text { font-size: 22px; line-height: 1.4; color: var(--ink); }
+.intro-card .done-actions { align-items: center; }
 .btn-outline.dark { border-color: #E4DFFF; color: #5A5094; text-decoration: none; }
 .done-trophy { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; background: #F2F0FF; font-weight: 900; font-size: 18px; margin-bottom: 8px; }
 

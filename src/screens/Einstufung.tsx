@@ -35,7 +35,7 @@ export function Einstufung({ kid }: { kid: Kid }) {
     setScores(all)
     if (step + 1 < STEPS.length) {
       setStep(step + 1)
-      speak(`Super! Jetzt: ${STEPS[step + 1].title}. ${STEPS[step + 1].say}`)
+      void speak(['Super!', `Jetzt: ${STEPS[step + 1].title}.`, STEPS[step + 1].say])
       return
     }
     // Startstufe je Bereich für alle Spiele dieses Bereichs setzen
@@ -46,7 +46,7 @@ export function Einstufung({ kid }: { kid: Kid }) {
     savePlacement(kid.id, 'done')
     rewardGame(kid.id, 15)
     setStep(STEPS.length)
-    speak(`Fertig! Jetzt kenne ich dich, ${kid.name}.`)
+    void speak('Fertig! Jetzt kenne ich dich.')
   }
 
   const cur = STEPS[step]

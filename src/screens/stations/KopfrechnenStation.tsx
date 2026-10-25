@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
@@ -6,6 +6,7 @@ import { Perli } from '../../components/Perli'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
+import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
@@ -28,6 +29,10 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
   const n = numbers[index]
   const phrase = describeNumber(n)
+  const [started, setStarted] = useState(false)
+  const question = [...sayDescribe(n), SAY.welcheZahlIst]
+
+  useEffect(() => { if (started) void speak([...sayDescribe(n), SAY.welcheZahlIst]) }, [started, n, index])
 
   const onKey = (k: string) => {
     if (state !== 'ask') return
@@ -38,7 +43,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
     const res = [...results, ok ? 'right' as const : 'wrong' as const]
     setResults(res)
     setState(ok ? 'right' : 'wrong')
-    speak(ok ? 'Richtig!' : `Das ist die ${n}.`)
+    void speak(ok ? SAY.richtig : [SAY.fastDasIst, String(n)])
     window.setTimeout(() => {
       setInput('')
       setState('ask')
@@ -54,7 +59,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
   const dots = numbers.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
 
   return (
-    <StationShell station="kopfrechnen" title="Perlen im Kopf" dots={dots} perlen={results.filter((r) => r === 'right').length * 2}>
+    <StationShell station="kopfrechnen" title="Perlen im Kopf" dots={dots} perlen={results.filter((r) => r === 'right').length * 2} intro={STATION_INTRO.kopfrechnen} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="mental">
         <div className="mental-think">
           <div className="mental-badge"><Icon name="eyeoff" color="#C9C0FF" size={22} /> Ohne Abakus · doppelte Perlen</div>

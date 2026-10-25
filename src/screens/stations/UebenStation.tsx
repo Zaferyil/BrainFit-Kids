@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
@@ -6,6 +6,7 @@ import { Perli } from '../../components/Perli'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
+import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
@@ -36,7 +37,13 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const [errors, setErrors] = useState(0)
   const [earned, setEarned] = useState(0)
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
+  const [started, setStarted] = useState(false)
   const task = queue[index]
+  const question = task.kind === 'set' ? [SAY.stelleEin, String(task.n)] : [SAY.welcheZahlAbakus]
+  const questionKey = question.join('|')
+
+  // Jede Aufgabe wird vorgelesen – viele Kinder lesen noch nicht sicher.
+  useEffect(() => { if (started) void speak(questionKey.split('|')) }, [started, questionKey, index])
 
   const next = (q: Task[], errs: number) => {
     setFeedback(null)
@@ -51,7 +58,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
     setFeedback({ type: 'right', text: 'Richtig! +1 Perle', sub: 'Die nächste Aufgabe kommt gleich …' })
     setEarned(earned + 1)
     if (!task.retry) setResults({ ...results, [task.id]: 'right' })
-    speak('Richtig!')
+    void speak(SAY.richtig)
     setTimeout(() => next(queue, errors), 1100)
   }
 
@@ -62,8 +69,8 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
     setResults({ ...results, [task.id]: 'wrong' })
     const text = `Fast! Das ist die ${task.n}.`
     setFeedback({ type: 'wrong', text, sub: `${task.n} = ${describeNumber(task.n)}. Die Aufgabe kommt später noch einmal.` })
-    speak(`${text} ${task.n} ist ${describeNumber(task.n)}.`)
-    setTimeout(() => next(q, errors + 1), 2600)
+    void speak([SAY.fastDasIst, String(task.n), ...sayDescribe(task.n)])
+    setTimeout(() => next(q, errors + 1), 3600)
   }
 
   const onKey = (k: string) => {
@@ -82,14 +89,14 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const hint = () => {
     setErrors(errors + 1)
     setFeedback({ type: 'hint', text: `Tipp: ${task.n} = ${describeNumber(task.n)}` })
-    speak(`${task.n} ist ${describeNumber(task.n)}.`)
-    setTimeout(() => setFeedback(null), 2600)
+    void speak([SAY.tipp, ...sayDescribe(task.n)])
+    setTimeout(() => setFeedback(null), 3200)
   }
 
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title="Perlen einstellen und ablesen" dots={dots} perlen={earned}>
+    <StationShell station="ueben" title="Perlen einstellen und ablesen" dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className="task-card">
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>
