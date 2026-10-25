@@ -4,10 +4,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Für die Einzeldatei-Vorschau (INLINE_ASSETS=1) werden Grafiken und Ton eingebettet
+  build: process.env.INLINE_ASSETS ? { assetsInlineLimit: 100_000_000 } : {},
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Abakus-Grafiken und Klickton auch offline
+      workbox: { globPatterns: ['**/*.{js,css,html,png,svg,mp3,webmanifest}'] },
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'BrainFit Kids',

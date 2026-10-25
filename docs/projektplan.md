@@ -340,7 +340,7 @@ mekanikleri ve tüm soruları web'de yeniden yazılır.
 | Katman                      | Seçim                                                                       | Neden                                                                                 |
 |-----------------------------|-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
 | Arayüz                      | React + Vite, PWA                                                           | Tablette hızlı, çevrimdışı çalışır, uygulama gibi yüklenir                            |
-| Abaküs                      | Kendi SVG bileşenimiz (2–8 sütun)                                           | Sayı gösterme, animasyon, cevap kontrolü; oyundaki abaküsün görünümü                 |
+| Abaküs                      | Kendi bileşenimiz, abacus.mentalmath.at'in orijinal grafikleriyle (1–8 sütun) | Uygulama, web abaküsü ve yeni videolar birebir aynı görünür; sayı gösterme, cevap kontrolü |
 | Zeka oyunları               | Ortak oyun çerçevesi + oyun başına küçük modül; sorular seviye parametreleriyle otomatik üretilir | Yeni oyun eklemek kolay; sınırsız soru; çevrimdışı çalışır             |
 | Zorluk motoru (Denken)      | Uygulama içinde çalışan kural tabanlı ayarlayıcı (yaş kademesi + son turlar) | Anında tepki, internet gerekmez, sonuçlar sonra eşitlenir                             |
 | Giriş, veritabanı, liderlik | Supabase (AB sunucusu, Frankfurt)                                           | MathKids zaten Supabase kullanıyor; rol bazlı erişim, canlı sıralama                  |

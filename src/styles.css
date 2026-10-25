@@ -129,16 +129,18 @@ button { font-family: inherit; }
 .placeholder h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 800; font-size: 56px; }
 .placeholder p { margin: 0 0 20px; font-size: 22px; font-weight: 700; color: var(--lilac-2); }
 
-/* Abakus */
-.abakus { position: relative; flex-shrink: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,.25)); }
-.abakus-bead { position: absolute; padding: 0; margin: 0; border: 0; background: none; transition: top .25s ease; z-index: 1; }
+/* Abakus (Originalgrafiken) */
+.abakus { position: relative; flex-shrink: 0; background-size: 100% 100%; background-repeat: no-repeat; }
+.abakus-bead { position: absolute; padding: 0; margin: 0; border: 0; background: none; transition: top .15s ease; z-index: 2; }
+.abakus-bead img { width: 100%; height: auto; display: block; pointer-events: none; user-select: none; }
 .abakus-bead:disabled { cursor: default; }
 .abakus-bead:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 2px; border-radius: 40%; }
+.abakus-dot { position: absolute; z-index: 1; pointer-events: none; }
+.abakus-mark { position: absolute; z-index: 0; background: rgba(255,255,255,.16); box-shadow: 0 0 0 3px #FFFFFF inset; }
 .abakus-value {
-  position: absolute; left: 50%; transform: translateX(-50%); z-index: 2; border-radius: 999px; background: var(--yellow);
-  font-family: var(--font-display); font-weight: 800; color: var(--ink); box-shadow: 0 4px 0 #DE9800; border: 2px solid #111;
+  position: absolute; left: 50%; transform: translateX(-50%); z-index: 3; border-radius: 999px; background: var(--yellow);
+  font-family: var(--font-display); font-weight: 800; color: var(--ink); box-shadow: 0 4px 0 #DE9800; line-height: 1.2;
 }
-.start-dev { font-size: 14px; font-weight: 800; color: var(--lilac); }
 
 /* Anmelden */
 .login { flex: 1; padding: 32px 48px; display: flex; flex-direction: column; gap: 32px; }

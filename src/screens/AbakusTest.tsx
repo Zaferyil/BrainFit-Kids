@@ -1,24 +1,22 @@
 import { useState } from 'react'
 import { Fit } from '../components/Fit'
-import { Abakus } from '../components/Abakus'
+import { Abakus, type FrameColor } from '../components/Abakus'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import { TopBar } from '../components/TopBar'
 import { NavBar } from '../components/NavBar'
 
-const FRAMES = [
-  { color: '#1E86F0', label: 'Blau' },
-  { color: '#FF8A1F', label: 'Orange' },
-  { color: '#A06BFF', label: 'Lila' },
-  { color: '#3DBE5B', label: 'Grün' },
+const FRAMES: { id: FrameColor; color: string; label: string }[] = [
+  { id: 'orange', color: '#FF8A1F', label: 'Orange' },
+  { id: 'blau', color: '#1E86F0', label: 'Blau' },
 ]
 
 export function AbakusTest() {
   const [cols, setCols] = useState(4)
-  const [frame, setFrame] = useState(FRAMES[0].color)
+  const [frame, setFrame] = useState<FrameColor>('orange')
   const [value, setValue] = useState(0)
   const [reset, setReset] = useState(0)
-  const colw = Math.min(96, Math.floor(700 / cols))
+  const colw = Math.min(135, Math.floor(760 / cols))
 
   return (
     <Stage>
@@ -38,7 +36,7 @@ export function AbakusTest() {
             <span className="test-label">Rahmen</span>
             <div className="pill-row">
               {FRAMES.map((f) => (
-                <button key={f.color} type="button" aria-label={f.label} className={f.color === frame ? 'swatch active' : 'swatch'} style={{ background: f.color }} onClick={() => setFrame(f.color)} />
+                <button key={f.id} type="button" aria-label={f.label} className={f.id === frame ? 'swatch active' : 'swatch'} style={{ background: f.color }} onClick={() => setFrame(f.id)} />
               ))}
             </div>
           </div>
