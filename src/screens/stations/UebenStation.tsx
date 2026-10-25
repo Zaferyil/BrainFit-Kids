@@ -3,22 +3,22 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeDigit, type UnitContent } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
 import { Keypad, StationDone, StationShell } from './StationShell'
+import { typeDigit } from '../../lib/typeDigit'
 
 type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean }
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
 const COUNT = 10
 
-function makeTasks(): Task[] {
+function makeTasks(range: [number, number]): Task[] {
   const tasks: Task[] = []
-  let prev = 0
+  let prev: number | undefined
   for (let i = 0; i < COUNT; i++) {
-    let n = prev
-    while (n === prev) n = 1 + Math.floor(Math.random() * 9)
+    const n = randomIn(range, prev)
     prev = n
     tasks.push({ kind: i % 2 === 0 ? 'set' : 'read', n, id: i })
   }
@@ -28,7 +28,7 @@ function makeTasks(): Task[] {
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
 export function UebenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [queue, setQueue] = useState(makeTasks)
+  const [queue, setQueue] = useState(() => makeTasks(content.range))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -61,16 +61,17 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
     setErrors(errors + 1)
     setResults({ ...results, [task.id]: 'wrong' })
     const text = `Fast! Das ist die ${task.n}.`
-    setFeedback({ type: 'wrong', text, sub: `${task.n} = ${describeDigit(task.n)}. Die Aufgabe kommt später noch einmal.` })
-    speak(`${text} ${task.n} ist ${describeDigit(task.n)}.`)
+    setFeedback({ type: 'wrong', text, sub: `${task.n} = ${describeNumber(task.n)}. Die Aufgabe kommt später noch einmal.` })
+    speak(`${text} ${task.n} ist ${describeNumber(task.n)}.`)
     setTimeout(() => next(q, errors + 1), 2600)
   }
 
   const onKey = (k: string) => {
     if (feedback || task.kind !== 'read') return
-    if (k === 'del' || k === 'C') { setInput(''); return }
-    setInput(k)
-    if (Number(k) === task.n) right()
+    const t = typeDigit(input, k, task.n)
+    setInput(t.input)
+    if (!t.done) return
+    if (Number(t.input) === task.n) right()
     else wrong()
   }
 
@@ -80,8 +81,8 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
 
   const hint = () => {
     setErrors(errors + 1)
-    setFeedback({ type: 'hint', text: `Tipp: ${task.n} = ${describeDigit(task.n)}` })
-    speak(`${task.n} ist ${describeDigit(task.n)}.`)
+    setFeedback({ type: 'hint', text: `Tipp: ${task.n} = ${describeNumber(task.n)}` })
+    speak(`${task.n} ist ${describeNumber(task.n)}.`)
     setTimeout(() => setFeedback(null), 2600)
   }
 
@@ -117,7 +118,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
               key={`${index}-${task.id}`}
               value={task.kind === 'read' ? task.n : 0}
               cols={content.cols}
-              colw={130}
+              colw={content.cols > 1 ? 110 : 130}
               interactive={task.kind === 'set' && !feedback}
               onChange={onAbakus}
             />

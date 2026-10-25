@@ -44,9 +44,9 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
     <StationShell station="entdecken" title={`So funktioniert der Abakus`}>
       <div className="discover">
         <div className="discover-board">
-          <div className="board-label">Einer</div>
+          <div className="board-label">{content.board}</div>
           <Fit className="board-fit">
-            <Abakus key={step} value={cur.start} cols={content.cols} colw={150} interactive={cur.goal !== null && !solved} onChange={onChange} />
+            <Abakus key={step} value={cur.start} cols={content.cols} colw={content.cols > 1 ? 120 : 150} interactive={cur.goal !== null && !solved} onChange={onChange} />
           </Fit>
           <div className="board-value">{value}</div>
         </div>
@@ -75,7 +75,7 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
           </div>
         </div>
       </div>
-      {done !== null && <StationDone stars={3} perlen={done} text="Du kennst jetzt die Erd- und Himmelsperlen." />}
+      {done !== null && <StationDone stars={3} perlen={done} text={`Geschafft: ${content.title}`} />}
     </StationShell>
   )
 }

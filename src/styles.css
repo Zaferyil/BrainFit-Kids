@@ -804,3 +804,6 @@ button { font-family: inherit; }
 @media (max-width: 600px) and (orientation: portrait) {
   .placement-card .done-actions .btn-primary { flex: 1; justify-content: center; }
 }
+.station.skipped { background: #211858; opacity: .7; }
+.station.skipped .station-title { color: var(--muted); }
+.station-skip { padding: 4px 10px; border-radius: 999px; background: var(--board); color: var(--lilac); font-weight: 900; font-size: 13px; }

@@ -85,7 +85,7 @@ export default function App() {
       if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />
       if (content && id === 'kopfrechnen') return <KopfrechnenStation kidId={kid.id} content={content} />
       if (content && id === 'boss') return <BossStation kidId={kid.id} content={content} world={progress.world} unit={progress.unit} />
-      return <Placeholder title={content ? STATIONS[index].title : `${STATIONS[index].title}: Inhalte folgen`} />
+      return <Placeholder title={content ? STATIONS[index].title : `${STATIONS[index].title}: Inhalte folgen`} back={{ href: '#/einheit', label: 'Zur Einheit' }} />
     }
   }
   return <Placeholder title={TITLES[route] ?? 'Unbekannte Seite'} />

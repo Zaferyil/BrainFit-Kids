@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
-import { describeDigit, type UnitContent } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
 import { Keypad, StationDone, StationShell } from './StationShell'
+import { typeDigit } from '../../lib/typeDigit'
 
 const COUNT = 10
 /** Anzeigedauer des Abakus in ms – für alle Kinder gleich */
@@ -13,19 +14,17 @@ const FLASH_MS = 1500
 
 type Phase = 'ready' | 'flash' | 'answer' | 'right' | 'wrong'
 
-const randomDigits = () => {
+const randomNumbers = (range: [number, number]) => {
   const out: number[] = []
-  while (out.length < COUNT) {
-    const n = 1 + Math.floor(Math.random() * 9)
-    if (n !== out[out.length - 1]) out.push(n)
-  }
+  while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
   return out
 }
 
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
 export function BlitzStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [numbers] = useState(randomDigits)
+  const [numbers] = useState(() => randomNumbers(content.range))
+  const [input, setInput] = useState('')
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>('ready')
   const [results, setResults] = useState<('right' | 'wrong')[]>([])
@@ -53,14 +52,17 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   }
 
   const onKey = (k: string) => {
-    if (phase !== 'answer' || k === 'C' || k === 'del') return
-    const ok = Number(k) === n
+    if (phase !== 'answer') return
+    const t = typeDigit(input, k, n)
+    setInput(t.input)
+    if (!t.done) return
+    const ok = Number(t.input) === n
     const res = [...results, ok ? 'right' as const : 'wrong' as const]
     setResults(res)
     setStreak(ok ? streak + 1 : 0)
     setPhase(ok ? 'right' : 'wrong')
     speak(ok ? 'Richtig!' : `Es war die ${n}.`)
-    window.setTimeout(() => next(res), ok ? 900 : 2200)
+    window.setTimeout(() => { setInput(''); next(res) }, ok ? 900 : 2200)
   }
 
   const dots = numbers.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
@@ -85,10 +87,10 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
           <Fit className="board-fit">
           <div className="blitz-window">
             {phase === 'ready' && <div className="blitz-ready"><Icon name="bolt" color="#FFC531" fill="#FFC531" size={72} /> Achtung …</div>}
-            {showAbakus && <Abakus key={index} value={n} cols={content.cols} colw={120} interactive={false} />}
+            {showAbakus && <Abakus key={index} value={n} cols={content.cols} colw={content.cols > 1 ? 100 : 120} interactive={false} />}
             {(phase === 'answer' || phase === 'right') && (
               <div className={phase === 'right' ? 'blitz-cover right' : 'blitz-cover'}>
-                {phase === 'right' ? n : '?'}
+                {phase === 'right' ? n : input || '?'}
               </div>
             )}
           </div>
@@ -98,7 +100,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
             {phase === 'flash' && 'Merk dir die Perlen!'}
             {phase === 'answer' && 'Welche Zahl war es? Tippe sie ein.'}
             {phase === 'right' && 'Richtig! Blitzschnell.'}
-            {phase === 'wrong' && `Es war die ${n}: ${describeDigit(n)}.`}
+            {phase === 'wrong' && `Es war die ${n}: ${describeNumber(n)}.`}
           </div>
         </div>
 

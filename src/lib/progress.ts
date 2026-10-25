@@ -1,6 +1,7 @@
 import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
 import { addDaily } from './daily'
+import { unitVideos } from '../data/videos'
 
 // Fortschritt eines Kindes, bis Supabase angebunden ist: nur auf diesem Gerät.
 export type Progress = {
@@ -32,10 +33,15 @@ export function stationStars(p: Progress) {
   return p.stationStars[unitKey(p)] ?? STATIONS.map(() => 0)
 }
 
+/** Station ohne Inhalt in dieser Einheit (z. B. kein Video) – wird übersprungen. */
+export function stationSkipped(p: Progress, index: number) {
+  return STATIONS[index].id === 'video' && unitVideos(p.world, p.unit).length === 0
+}
+
 /** Erste Station ohne Sterne; alle davor sind offen. */
 export function currentStation(p: Progress) {
   const stars = stationStars(p)
-  const i = stars.findIndex((s) => s === 0)
+  const i = stars.findIndex((s, k) => s === 0 && !stationSkipped(p, k))
   return i === -1 ? STATIONS.length : i
 }
 
@@ -60,7 +66,7 @@ export function finishStation(kidId: string, station: StationId, stars: number, 
 /** Boss besiegt: Einheit abschließen und zur nächsten Einheit oder Welt weitergehen. */
 export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: number) {
   const p = getProgress(kidId)
-  const stars = stationStars(p)
+  const stars = stationStars(p).filter((_, k) => !stationSkipped(p, k))
   const avg = Math.round(stars.reduce((a, b) => a + b, 0) / stars.length)
   if (p.unit < unitsInWorld) {
     saveProgress(kidId, { ...p, unit: p.unit + 1 })

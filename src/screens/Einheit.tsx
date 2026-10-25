@@ -4,7 +4,7 @@ import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import { STATIONS, unitContent } from '../data/units'
-import { currentStation, stationStars, type Progress } from '../lib/progress'
+import { currentStation, stationSkipped, stationStars, type Progress } from '../lib/progress'
 import { unitVideos } from '../data/videos'
 
 export function Einheit({ progress }: { progress: Progress }) {
@@ -37,7 +37,7 @@ export function Einheit({ progress }: { progress: Progress }) {
 
         <div className="stations">
           {STATIONS.map((s, i) => {
-            const state = i < current ? 'done' : i === current ? 'current' : 'locked'
+            const state = stationSkipped(progress, i) ? 'skipped' : i < current ? 'done' : i === current ? 'current' : 'locked'
             const videos = unitVideos(progress.world, progress.unit)
             const text = content?.stationText[s.id] ?? (s.id === 'video' && videos.length ? videos.map((v) => v.title).join(' · ') : '')
             return (
@@ -67,6 +67,7 @@ export function Einheit({ progress }: { progress: Progress }) {
                   )}
                   {state === 'done' && <a href={`#/station/${s.id}`} className="station-again">Nochmal</a>}
                   {state === 'locked' && <Icon name="lock" color="#6B61A8" size={26} />}
+                  {state === 'skipped' && <span className="station-skip">kein Video</span>}
                 </div>
               </div>
             )

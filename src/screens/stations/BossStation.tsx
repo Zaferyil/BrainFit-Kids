@@ -5,7 +5,7 @@ import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
-import { describeDigit, type UnitContent } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { completeUnit, finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
 import { StationDone } from './StationShell'
@@ -15,16 +15,18 @@ const LIVES = 3
 
 type Question = { kind: 'read' | 'describe'; n: number; options: number[] }
 
-function makeQuestion(prev?: number): Question {
-  let n = prev ?? 0
-  while (n === prev || n === 0) n = 1 + Math.floor(Math.random() * 9)
+function makeQuestion(range: [number, number], prev?: number): Question {
+  const n = randomIn(range, prev)
   const opts = new Set([n])
-  while (opts.size < 4) opts.add(1 + Math.floor(Math.random() * 9))
+  // bei zwei Stellen: ähnliche Zahlen (Ziffern vertauscht, ±1, ±10) als Ablenkung
+  const near = n >= 10 ? [Number(String(n).split('').reverse().join('')), n + 1, n - 1, n + 10, n - 10] : []
+  for (const x of near) if (opts.size < 4 && x >= range[0] && x <= range[1]) opts.add(x)
+  while (opts.size < 4) opts.add(randomIn(range))
   return { kind: Math.random() < 0.5 ? 'read' : 'describe', n, options: [...opts].sort(() => Math.random() - 0.5) }
 }
 
 export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
-  const [q, setQ] = useState(() => makeQuestion())
+  const [q, setQ] = useState(() => makeQuestion(content.range))
   const [hits, setHits] = useState(0)
   const [lives, setLives] = useState(LIVES)
   const [picked, setPicked] = useState<number | null>(null)
@@ -54,11 +56,11 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
       } else if (nextLives <= 0) {
         setResult('lost')
         speak('Grummel hat diesmal gewonnen. Probier es nochmal!')
-      } else setQ(makeQuestion(q.n))
+      } else setQ(makeQuestion(content.range, q.n))
     }, ok ? 800 : 1800)
   }
 
-  const retry = () => { setQ(makeQuestion()); setHits(0); setLives(LIVES); setResult(null) }
+  const retry = () => { setQ(makeQuestion(content.range)); setHits(0); setLives(LIVES); setResult(null) }
   const w = WORLDS[world - 1]
   const nextText = reward?.worldDone
     ? `Welt ${world} geschafft! Du bekommst den ${w.belt} Gürtel und 1 Diamant.`
@@ -90,11 +92,11 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             <div className="eyebrow light">TREFFER {hits} VON {HITS}</div>
             {q.kind === 'read' ? (
               <div className="boss-q-read">
-                <Abakus key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={70} interactive={false} />
+                <Abakus key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} interactive={false} />
                 <span>Welche Zahl?</span>
               </div>
             ) : (
-              <div className="boss-q-text">{describeDigit(q.n)[0].toUpperCase() + describeDigit(q.n).slice(1)} = ?</div>
+              <div className="boss-q-text">{describeNumber(q.n)[0].toUpperCase() + describeNumber(q.n).slice(1)} = ?</div>
             )}
           </div>
           <div className="boss-options">
