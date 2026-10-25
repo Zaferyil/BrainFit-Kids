@@ -13,9 +13,11 @@ Almanca, oyunlaştırılmış bir PWA. İki ana alanı var:
    hız ve esneklik için zeka gelişim oyunları. Her yaş ve seviyede farklı
    oyunlar açılır.
 
-Zorluk çocuğun yaşına göre otomatik başlar ve oynadıkça çocuğun gerçek
-performansına göre kendiliğinden ayarlanır. Çocuğun gelişimi veli ve
-admin panellerinde iki alan için ayrı ayrı takip edilir.
+Rechnen'de her çocuk aynı müfredatı, aynı sırayla ve aynı ayarlarla
+izler; yaşa göre zorluk yoktur. Zeka oyunlarında ise zorluk çocuğun
+yaşına göre otomatik başlar ve oynadıkça çocuğun performansına göre
+kendiliğinden ayarlanır. Çocuğun gelişimi veli ve admin panellerinde iki
+alan için ayrı ayrı takip edilir.
 
 ## Hedef ve kapsam
 
@@ -26,13 +28,13 @@ mantık becerisini çalıştırır.
 
 | Konu           | Karar                                                                                                             |
 |----------------|-------------------------------------------------------------------------------------------------------------------|
-| Hedef kitle    | 5–12 yaş, 4 yaş kademesi (aşağıda); okuma becerisi zayıf çocuklar için her talimat sesli de okunur                |
+| Hedef kitle    | 5–12 yaş (zeka oyunları için 4 yaş kademesi, aşağıda); okuma becerisi zayıf çocuklar için her talimat sesli de okunur                |
 | Ana tema       | Mental-Arithmetik eğitim platformu **ve** zeka gelişim uygulaması; ikisi tek günlük plan içinde birleşir          |
 | Dil            | Önce Almanca (Avusturya). Tüm metinler tek bir dil dosyasında; Türkçe/İngilizce sonradan eklenebilir              |
 | Rechnen içeriği | Big Friends, Little Friends, Best Friends; toplama ve çıkarma; abaküslü ve zihinden (Anzan)                     |
 | Denken içeriği | 6 zeka alanında 18 oyun; sorular sabit liste değil, her seviye için otomatik üretilir                             |
 | Kaynaklar      | Abakuskids (48 aşama, 490 soru), MathKids (96 aşama, 1.440 soru, 33 hatası düzeltilmiş), 48 YouTube ders videosu |
-| Zorluk         | Yaşa göre başlangıç + kısa seviye testi + oynadıkça otomatik ayar; veli/admin elle değiştirebilir                 |
+| Zorluk         | Rechnen: herkes için aynı, yaşa göre değişmez. Denken: yaşa göre başlangıç + kısa seviye testi + oynadıkça otomatik ayar |
 | Cihazlar       | Tablet öncelikli (yatay), telefon ve bilgisayarda da çalışır; çevrimdışı alıştırma yapılabilir                    |
 | Kullanım şekli | Kursa ek ev ödevi ve kendi kendine öğrenme; eğitmen online derste dijital abaküsü kullanmaya devam eder           |
 
@@ -40,33 +42,38 @@ Kapsam dışı (ilk sürüm): çarpma ve bölme, sesli dikte (Hörrechnen),
 canlı ders modülü, çok oyunculu canlı düello. Bunlar 2. sürüm için not
 edildi.
 
-## Yaş kademeleri ve otomatik zorluk
+## Yaş kademeleri ve otomatik zorluk (sadece Denken)
+
+Bu bölüm yalnızca zeka gelişim oyunları için geçerlidir. Rechnen'de yaşa
+göre zorluk yoktur: her çocuk Dünya 1'den başlar, sıra, Blitz hızı,
+zincir uzunluğu ve ünite açma eşiği (%80) herkes için aynıdır.
 
 ### Dört yaş kademesi
 
-Her çocuk doğum yılına göre bir kademeye girer. Kademe başlangıç
-seviyesini, ekranın görünüşünü ve hangi oyunların açık olduğunu belirler.
+Her çocuk doğum yılına göre bir kademeye girer. Kademe, zeka
+oyunlarında başlangıç seviyesini ve hangi oyunların açık olduğunu
+belirler.
 
-| Kademe | Yaş   | Adı (Almanca)    | Ekran ve kullanım                                                              | Rechnen başlangıcı                                         | Denken                                     |
-|--------|-------|------------------|--------------------------------------------------------------------------------|------------------------------------------------------------|--------------------------------------------|
-| A      | 5–6   | Perlen-Küken     | Çok büyük düğmeler, metin yok denecek kadar az, her şey sesli, kısa turlar (3–4 dk) | Dünya 1, 1–9 sayıları; Blitz 1,5 sn/sayı, 3 sayı             | Görsel oyunlar; okuma gerektiren oyun yok  |
-| B      | 7–8   | Perlen-Entdecker | Büyük düğmeler, kısa cümleler, sesli okuma açık                                  | Dünya 1–2; Blitz 1,2 sn/sayı, 4–5 sayı                       | Tüm alanlar, temel seviyeler               |
-| C      | 9–10  | Perlen-Profi     | Normal düzen, sesli okuma isteğe bağlı                                           | Seviye testine göre Dünya 2–4; Blitz 0,9 sn/sayı, 5–7 sayı   | Tüm alanlar, orta seviyeler                |
-| D      | 11–12 | Perlen-Meister   | Daha sade, daha az çocuksu görünüm; süre ve rekor öne çıkar                      | Seviye testine göre Dünya 3–6; Blitz 0,7 sn/sayı, 6–8 sayı   | Tüm alanlar, ileri seviyeler, süre modu    |
+| Kademe | Yaş   | Adı (Almanca)    | Zeka oyunlarında                                                              |
+|--------|-------|------------------|-------------------------------------------------------------------------------|
+| A      | 5–6   | Perlen-Küken     | 8 görsel oyun, okuma gerekmez; kısa turlar (1–2 dk); başlangıç seviyesi 1–3   |
+| B      | 7–8   | Perlen-Entdecker | 15 oyun, temel seviyeler; başlangıç seviyesi 3–6                              |
+| C      | 9–10  | Perlen-Profi     | 18 oyunun hepsi, orta seviyeler; başlangıç seviyesi 6–10                      |
+| D      | 11–12 | Perlen-Meister   | 18 oyunun hepsi, ileri seviyeler ve süre modu; başlangıç seviyesi 9–13        |
 
 Kademe bir sınır değil, bir başlangıç noktasıdır: iyi giden 7 yaşındaki
 bir çocuk C kademesinin oyunlarına ilerleyebilir, zorlanan 11 yaşındaki
-bir çocuk daha kolay seviyelerden çalışabilir. Görünüm (düğme boyutu,
-sesli okuma) yaşa bağlı kalır, içerik performansa göre kayar.
+bir çocuk daha kolay seviyelerden çalışabilir.
 
 ### Otomatik zorluk nasıl çalışır
 
 1. **Yaş:** Veli veya admin hesabı açarken sadece **doğum yılı** girilir
    (tam tarih gerekmez). Bu, kademeyi ve başlangıç seviyesini belirler.
-2. **Seviye testi (Einstufung):** İlk girişte 5 dakikalık oyun gibi bir
-   test: 3 kısa zeka oyunu ve 10 abaküs sorusu. Sonuç başlangıç
-   seviyesini kademe içinde yukarı veya aşağı kaydırır. Çocuk bunu test
-   olarak değil, "Perli'yle tanışma" olarak görür.
+2. **Seviye testi (Einstufung):** İlk girişte 3–4 dakikalık oyun gibi
+   bir test: 3 kısa zeka oyunu (Gedächtnis, Logik, Konzentration).
+   Sonuç zeka oyunlarının başlangıç seviyesini kademe içinde yukarı veya
+   aşağı kaydırır. Çocuk bunu test olarak değil, "Perli'yle tanışma"
+   olarak görür. Rechnen için seviye testi yoktur.
 3. **Oynadıkça ayar:** Her oyunun 1–20 arası kendi seviyesi vardır.
    Hedef, çocuğun soruların yaklaşık **%75–85'ini** doğru yapmasıdır
    (ne sıkıcı ne bunaltıcı).
@@ -74,19 +81,18 @@ sesli okuma) yaşa bağlı kalır, içerik performansa göre kayar.
    - %60 altındaysa: bir seviye kolay ve Perli bir ipucu gösterir.
    - Arada ise: aynı seviye, ama yeni sorular.
    - Aynı oturumda en fazla 2 seviye yükselir, böylece şans eseri zıplama olmaz.
-4. **Rechnen'de ayar:** Ünite sırası değişmez (kurallar birbirine
-   dayanır), ama yaşa ve performansa göre değişenler: Blitz hızı, zincir
-   uzunluğu, soru başına süre, ipucu sıklığı, bir sonraki üniteyi açma
-   eşiği (A kademesinde %70, diğerlerinde %80).
-5. **Elle değiştirme:** Veli ve admin bir oyunun veya Rechnen'in
-   seviyesini kilitleyebilir veya değiştirebilir (ör. eğitmen "bu hafta
-   sadece +7 çalışsın").
-6. **Yaş günü:** Çocuk bir yaş büyüdüğünde kademe otomatik değişir,
+4. **Elle değiştirme:** Veli ve admin bir zeka oyununun seviyesini
+   kilitleyebilir veya değiştirebilir.
+5. **Yaş günü:** Çocuk bir yaş büyüdüğünde kademe otomatik değişir,
    ilerleme korunur; yeni kademede açılan oyunlar bir "Überraschung"
    olarak gösterilir.
 
 Tüm bu hesaplama uygulamanın içinde, çevrimdışı da çalışır; sonuçlar
 internet gelince sunucuya gönderilir.
+
+Rechnen'de eğitmenin elindeki tek ayar, bir sınıf veya çocuk için
+üniteleri açmak ve kilitlemektir (ör. "bu hafta sadece +7 çalışsın").
+Bu, yaşa göre değil eğitmenin kararıyla yapılır.
 
 ## Denken: zeka gelişim oyunları
 
@@ -133,11 +139,10 @@ A kademesinde 8 oyun, B'de 15 oyun, C ve D'de 18 oyunun hepsi açıktır.
 
 ### Günlük plan: iki alan birlikte
 
-Çocuk Weltkarte'yi açtığında ona göre hazırlanmış bir **Tagesplan**
-görür (A kademesinde ~10 dk, D kademesinde ~20 dk):
+Çocuk Weltkarte'yi açtığında bir **Tagesplan** görür (~15–20 dk):
 
 1. **Aufwärmen (2–3 dk):** Bir zeka oyunu, çocuğun en zayıf alanından.
-2. **Rechnen (5–12 dk):** Sıradaki ünitenin istasyonu.
+2. **Rechnen (10–12 dk):** Sıradaki ünitenin istasyonu; herkes için aynı.
 3. **Denk-Pause (3–5 dk):** İki farklı alandan iki kısa oyun.
 
 Günlük plan bitince seri (Tagesserie) sayılır. Çocuk istediği zaman
@@ -159,7 +164,7 @@ yapabilir.
 
 | Rol                       | Giriş                                                          | Yapabildikleri                                                                                                                                                                                                                                  |
 |---------------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Admin (sen ve eğitmenler) | E-posta + şifre                                                | Öğrenci, sınıf ve veli hesabı açar (doğum yılıyla); sınıflara ünite ve oyun açar/kilitler; seviyeleri elle değiştirir; tüm çocukların ilerlemesini, hata analizini ve zeka profilini görür; mağaza, rozet ve etkinlikleri yönetir; soru setlerini düzenler |
+| Admin (sen ve eğitmenler) | E-posta + şifre                                                | Öğrenci, sınıf ve veli hesabı açar (doğum yılıyla); sınıflara ünite ve oyun açar/kilitler; zeka oyunlarının seviyesini elle değiştirir; tüm çocukların ilerlemesini, hata analizini ve zeka profilini görür; mağaza, rozet ve etkinlikleri yönetir; soru setlerini düzenler |
 | Veli                      | E-posta + şifre (çocuğun davet koduyla bağlanır)               | Bir veya birden fazla çocuğunu görür; haftalık rapor, Rechnen ve Denken ilerlemesi, zeka profili; günlük hedef ve süre sınırı koyar; eğitmenin notlarını okur                                                                                   |
 | Öğrenci                   | Sınıf kodu + kendi avatarına dokunma + 4 resimden oluşan şifre | Günlük planı oynar, dünya haritasında ilerler, Denk-Park'ta oynar, Perlen kazanır, mağazadan alışveriş yapar, avatarını giydirir, liderlik tablosunu ve rozetlerini görür                                                                      |
 
@@ -171,8 +176,8 @@ görür.
 
 Öğrenme yolu 9 dünyadan ve 29 üniteden oluşuyor; her dünya bir kural
 ailesi, her ünite tek bir kural. Sıra, iki oyunun ve videoların zaten
-kullandığı sırayla birebir aynı. Yaşa göre değişen şey sıra değil,
-hız ve zincir uzunluğudur (yukarıdaki tablo).
+kullandığı sırayla birebir aynı. Yaşa göre zorluk yoktur: her çocuk
+Dünya 1'den başlar ve aynı sorularla, aynı ayarlarla ilerler.
 
 | Dünya                                | Üniteler                                                            | Abakuskids | MathKids | Kuşak   |
 |--------------------------------------|---------------------------------------------------------------------|------------|----------|---------|
@@ -192,10 +197,9 @@ gidiyor; bu düzeltilmeli.
 
 ### Bir ünitenin akışı
 
-Her ünite 6 istasyondan oluşur ve 10–15 dakikada biter (A kademesinde
-istasyonlar ikiye bölünür, her biri ~5 dk). İstasyonlar sırayla açılır;
-bir istasyon 1–3 yıldızla tamamlanır, bir sonraki ünite yaş kademesine
-göre %70 veya %80 doğrulukla açılır.
+Her ünite 6 istasyondan oluşur ve 10–15 dakikada biter. İstasyonlar
+sırayla açılır; bir istasyon 1–3 yıldızla tamamlanır, bir sonraki ünite
+en az %80 doğrulukla açılır.
 
 1. **Video ansehen:** Mevcut YouTube dersi uygulamanın içinde
    (listelenmemiş video) açılır. Video bitmeden "Weiter" görünmez.
@@ -205,7 +209,7 @@ göre %70 veya %80 doğrulukla açılır.
 3. **Üben mit Abakus:** Abakuskids'in ilgili aşama soruları. Çocuk
    ekrandaki abaküsle çözer; yanlış boncuk hareketinde ipucu çıkar.
 4. **Blitz-Training:** MathKids'in ilgili aşaması: sayılar tek tek
-   yanıp söner, hız yaşa ve performansa göre otomatik ayarlanır, 15 soru.
+   yanıp söner, hız MathKids'teki aşamanın hızıdır, süreye karşı 15 soru.
 5. **Kopfrechnen:** Aynı kural, abaküs gizli; çocuk boncukları hayal
    ederek çözer.
 6. **Boss-Kampf:** Ünite sonu testi. 10 karışık soru, 3 can. Kazanılırsa
@@ -293,7 +297,7 @@ yeni ve henüz tasarlanmadı. Değişen ekranlar ✎ ile işaretli.
 |-----|---------|-----------------------|--------------------------------------------------------------------------|
 | 1   | Öğrenci | Start                 | Maskot, "Los geht's", rol seçimi                                         |
 | 2   | Öğrenci | Anmelden              | Sınıf kodu → avatar seç → resimli şifre                                  |
-| 3   | Öğrenci | ★ Einstufung          | İlk girişte "Perli'yle tanışma": 3 zeka oyunu + 10 abaküs sorusu         |
+| 3   | Öğrenci | ★ Einstufung          | İlk girişte "Perli'yle tanışma": zeka oyunları için 3 kısa oyun         |
 | 4   | Öğrenci | Weltkarte ✎           | Ana sayfa: Tagesplan, 9 dünyalı yol, Denk-Park girişi, Perlen/seri       |
 | 5   | Öğrenci | Einheit               | Ünitenin 6 istasyonu ve yıldızlar                                        |
 | 6   | Öğrenci | Video                 | Ders videosu ve kural kartı                                              |
@@ -316,7 +320,7 @@ yeni ve henüz tasarlanmadı. Değişen ekranlar ✎ ile işaretli.
 | 23  | Veli    | Einstellungen ✎       | Günlük hedef, süre sınırı, doğum yılı, liderlik tablosu aç/kapa          |
 | 24  | Admin   | Admin-Dashboard       | Aktif çocuklar, sınıf ilerlemesi, uyarılar                               |
 | 25  | Admin   | Schüler & Klassen ✎   | Hesap açma (doğum yılıyla), sınıf kodu, veli daveti                      |
-| 26  | Admin   | Schüler-Detail ✎      | Tek çocuğun tüm verisi, Gehirn-Profil, seviyeyi elle değiştirme, not     |
+| 26  | Admin   | Schüler-Detail ✎      | Tek çocuğun tüm verisi, Gehirn-Profil, oyun seviyesini elle değiştirme, not |
 | 27  | Admin   | Lerninhalte           | Dünya/ünite kilitleme, soru setleri, video linkleri                      |
 | 28  | Admin   | ★ Denkspiele          | Oyunları kademe/sınıf için açma-kapama, zorluk ayarları                  |
 | 29  | Admin   | Shop & Belohnungen    | Ürün, fiyat, rozet ve etkinlik yönetimi                                  |
@@ -334,7 +338,7 @@ mekanikleri ve tüm soruları web'de yeniden yazılır.
 | Arayüz                      | React + Vite, PWA                                                           | Tablette hızlı, çevrimdışı çalışır, uygulama gibi yüklenir                            |
 | Abaküs                      | Kendi SVG bileşenimiz (2–8 sütun)                                           | Sayı gösterme, animasyon, cevap kontrolü; oyundaki abaküsün görünümü                 |
 | Zeka oyunları               | Ortak oyun çerçevesi + oyun başına küçük modül; sorular seviye parametreleriyle otomatik üretilir | Yeni oyun eklemek kolay; sınırsız soru; çevrimdışı çalışır             |
-| Zorluk motoru               | Uygulama içinde çalışan kural tabanlı ayarlayıcı (yaş kademesi + son turlar) | Anında tepki, internet gerekmez, sonuçlar sonra eşitlenir                             |
+| Zorluk motoru (Denken)      | Uygulama içinde çalışan kural tabanlı ayarlayıcı (yaş kademesi + son turlar) | Anında tepki, internet gerekmez, sonuçlar sonra eşitlenir                             |
 | Giriş, veritabanı, liderlik | Supabase (AB sunucusu, Frankfurt)                                           | MathKids zaten Supabase kullanıyor; rol bazlı erişim, canlı sıralama                  |
 | Yayın                       | GitHub + Netlify                                                            | Alışık olduğun akış, terminal gerekmez                                                |
 | İçerik                      | 1.930 soru JSON olarak (hatalar düzeltilmiş), oyun seviye tabloları, video linkleri, ses efektleri | Admin panelden düzenlenebilir                                  |
@@ -357,22 +361,23 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 | Aşama              | İçerik                                                                                                     | Test kriteri                                                                 | Durum              |
 |--------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------|
 | 0 · Tasarım        | Bu plan, 24 ekranın UI tasarımı, 5 yeni ekran (Einstufung, Denk-Park, Denkspiel, Gehirn-Profil, Admin-Denkspiele) | Sen onaylarsın                                                        | 24 ekran hazır, 5 ekran bekliyor |
-| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; yaş kademesi ve zorluk motoru; Dünya 1'in ilk ünitesi (6 istasyon); ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zorluk ikisine farklı ayarlanır | Başladı: iskelet, abaküs ve Start hazır |
-| 2 · Rechnen        | 29 ünitenin hepsi, 1.930 soru, videolar, yaşa göre hız ve zincir ayarı                                    | Her ünite oynanarak kontrol edilir; tüm cevaplar otomatik test edilir        | –                  |
+| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; Dünya 1'in ilk ünitesi (6 istasyon); yaş kademesi ve zorluk motoru; ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zeka oyunlarında zorluk ikisine farklı ayarlanır | Başladı: iskelet, abaküs ve Start hazır |
+| 2 · Rechnen        | 29 ünitenin hepsi, 1.930 soru, videolar                                                                   | Her ünite oynanarak kontrol edilir; tüm cevaplar otomatik test edilir        | –                  |
 | 3 · Denken         | 18 oyunun hepsi, 4 kademe ve 20 seviye tablosu, Einstufung, Denk-Park, Gehirn-Profil, Tagesplan           | Her oyunun her seviyesi otomatik üretim testinden geçer; 4 yaş grubundan çocuklar dener, %75–85 hedefi tutar | –         |
 | 4 · Oyunlaştırma   | Perlen, XP, kuşaklar, Denk-Sterne, rozetler, kupalar, mağaza, garderob, yaş kademeli liderlik             | 1 hafta boyunca puanlar ve sıralama doğru hesaplanır                         | –                  |
 | 5 · Paneller       | Veli ve admin panelleri, Gehirn-Profil raporu, seviyeyi elle değiştirme, haftalık rapor                   | Gerçek verilerle raporlar elle kontrol edilir                                | –                  |
-| 6 · Pilot          | 2 sınıfla 2 haftalık deneme: biri 5–7 yaş, biri 9–12 yaş                                                  | Çocuk ve veli geri bildirimi; zorluk ayarı iki grupta da doğru; hata listesi temizlenir | –       |
+| 6 · Pilot          | 2 sınıfla 2 haftalık deneme: biri 5–7 yaş, biri 9–12 yaş                                                  | Çocuk ve veli geri bildirimi; zeka oyunlarında zorluk ayarı iki grupta da doğru; hata listesi temizlenir | –       |
 | 7 · Yayın          | Domain, veri koruma metinleri, yedekleme                                                                  | Yayın kontrol listesi tamam                                                  | –                  |
 
 ## Onayından önce netleşmesi gerekenler
 
 - [x] Uygulamanın adı: **Brain Fit Kids**, alt başlık **Mental Arithmetik**.
 - [x] Yaş aralığı: **5–12**.
-- [x] Ana tema: Mental-Arithmetik **ve** zeka gelişimi, yaşa göre otomatik zorluk.
+- [x] Ana tema: Mental-Arithmetik **ve** zeka gelişimi.
+- [x] Yaşa göre otomatik zorluk **sadece zeka oyunlarında**; Rechnen herkes için aynı.
 - [ ] Zeka oyunları: 18 oyunluk liste uygun mu, eklemek veya çıkarmak istediğin oyun var mı?
 - [ ] Günlük plan: Rechnen ve Denken süresinin oranı (öneri: ~%60 Rechnen, ~%40 Denken) uygun mu?
-- [ ] Seviye testi (Einstufung) ilk girişte zorunlu mu olsun, yoksa atlanabilir mi?
+- [ ] Zeka oyunları için seviye testi (Einstufung) ilk girişte zorunlu mu olsun, yoksa atlanabilir mi?
 - [ ] Doğum yılını kim girer: sadece admin mi, veli de mi?
 - [ ] Denk-Park kursa kayıtlı olmayan çocuklara da açık mı olacak (ör. ücretsiz deneme)?
 - [ ] Maskot: ders videolarındaki 3D öğretmen kız (sarı örgülü, mavi
