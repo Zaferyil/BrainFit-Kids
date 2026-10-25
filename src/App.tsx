@@ -4,9 +4,14 @@ import { AbakusTest } from './screens/AbakusTest'
 import { Placeholder } from './screens/Placeholder'
 import { Anmelden } from './screens/Anmelden'
 import { Weltkarte } from './screens/Weltkarte'
+import { Einheit } from './screens/Einheit'
+import { VideoStation } from './screens/stations/VideoStation'
+import { EntdeckenStation } from './screens/stations/EntdeckenStation'
+import { UebenStation } from './screens/stations/UebenStation'
+import { unitContent, STATIONS } from './data/units'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
-import { getProgress } from './lib/progress'
+import { currentStation, getProgress } from './lib/progress'
 
 const TITLES: Record<string, string> = {
   einheit: 'Einheit',
@@ -19,7 +24,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'einheit', 'denkpark', 'shop', 'garderobe', 'pokale']
+const KID_ROUTES = ['karte', 'einheit', 'denkpark', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -45,6 +50,19 @@ export default function App() {
     if (route === 'karte') {
       const logout = () => { saveSession(null); window.location.hash = '#/anmelden' }
       return <Weltkarte kid={kid} progress={getProgress(kid.id)} onLogout={logout} />
+    }
+    const progress = getProgress(kid.id)
+    if (route === 'einheit') return <Einheit progress={progress} />
+    if (route.startsWith('station/')) {
+      const id = route.slice(8)
+      const content = unitContent(progress.world, progress.unit)
+      const index = STATIONS.findIndex((s) => s.id === id)
+      // gesperrte Stationen führen zurück zur Einheit
+      if (index > currentStation(progress)) return <Einheit progress={progress} />
+      if (content && id === 'video') return <VideoStation kidId={kid.id} content={content} />
+      if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
+      if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
+      return <Placeholder title={STATIONS[index].title} />
     }
   }
   return <Placeholder title={TITLES[route] ?? 'Unbekannte Seite'} />

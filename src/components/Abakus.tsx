@@ -89,7 +89,7 @@ export function Abakus({
   )
 
   return (
-    <div role="group" aria-label="Abakus" className="abakus" style={{ width: W, height: H, opacity: faded ? 0.28 : 1 }}>
+    <div role="group" aria-label="Abakus" data-value={Number(digits.join(''))} className="abakus" style={{ width: W, height: H, opacity: faded ? 0.28 : 1 }}>
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true" style={{ position: 'absolute', inset: 0 }}>
         <defs>
           <linearGradient id={`${gid}board`} x1="0" y1="0" x2="0" y2="1">
