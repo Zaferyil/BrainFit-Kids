@@ -3,7 +3,7 @@ import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import { TopBar } from '../components/TopBar'
 import type { Kid } from '../data/demo'
-import { getLevel, tierFor, tierRank, TIERS } from '../games/engine'
+import { getLevel, getPlacement, tierFor, tierRank, TIERS } from '../games/engine'
 import { AREAS, GAMES } from '../games/registry'
 import type { Progress } from '../lib/progress'
 
@@ -16,7 +16,9 @@ export function DenkPark({ kid, progress, onLogout }: { kid: Kid; progress: Prog
         <div className="park-head">
           <h1>Denk-Park</h1>
           <span className="park-tier">{TIERS[tier].name} · {TIERS[tier].ages} Jahre</span>
-          <span className="park-note">Die Spiele passen sich dir an: Je besser du wirst, desto kniffliger.</span>
+          {getPlacement(kid.id)?.status === 'done'
+            ? <span className="park-note">Die Spiele passen sich dir an: Je besser du wirst, desto kniffliger.</span>
+            : <a href="#/einstufung" className="park-invite"><Icon name="sparkle" color="#231A4F" size={20} /> Perli kennenlernen (3 Min.)</a>}
         </div>
         <div className="park-grid">
           {AREAS.map((a) => (

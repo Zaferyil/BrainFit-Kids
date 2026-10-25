@@ -1,5 +1,7 @@
 export type GameProps = {
   level: number
+  /** kürzere Runde, z. B. für die Einstufung */
+  rounds?: number
   /** score 0–1 (Leistung), summary kurzer Satz fürs Ergebnis */
   onFinish: (score: number, summary: string) => void
 }

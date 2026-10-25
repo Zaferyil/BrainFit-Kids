@@ -361,7 +361,7 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 | Aşama              | İçerik                                                                                                     | Test kriteri                                                                 | Durum              |
 |--------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------|
 | 0 · Tasarım        | Bu plan, 24 ekranın UI tasarımı, 5 yeni ekran (Einstufung, Denk-Park, Denkspiel, Gehirn-Profil, Admin-Denkspiele) | Sen onaylarsın                                                        | 24 ekran hazır, 5 ekran bekliyor |
-| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; Dünya 1'in ilk ünitesi (6 istasyon); yaş kademesi ve zorluk motoru; ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zeka oyunlarında zorluk ikisine farklı ayarlanır | Kodlandı, test bekliyor: Start, Anmelden, Weltkarte, Dünya 1 Ünite 1 (6 istasyon), zorluk motoru, Denk-Park, 3 oyun. Eksik: Einstufung, gerçek sorular ve videolar, Supabase |
+| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; Dünya 1'in ilk ünitesi (6 istasyon); yaş kademesi ve zorluk motoru; ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zeka oyunlarında zorluk ikisine farklı ayarlanır | Kodlandı, test bekliyor: Start, Anmelden, Weltkarte, Dünya 1 Ünite 1 (6 istasyon), zorluk motoru, Einstufung, Denk-Park, 4 oyun (Memory, Kette, Muster, Jagd). Eksik: gerçek sorular ve videolar, Supabase |
 | 2 · Rechnen        | 29 ünitenin hepsi, 1.930 soru, videolar                                                                   | Her ünite oynanarak kontrol edilir; tüm cevaplar otomatik test edilir        | –                  |
 | 3 · Denken         | 18 oyunun hepsi, 4 kademe ve 20 seviye tablosu, Einstufung, Denk-Park, Gehirn-Profil, Tagesplan           | Her oyunun her seviyesi otomatik üretim testinden geçer; 4 yaş grubundan çocuklar dener, %75–85 hedefi tutar | –         |
 | 4 · Oyunlaştırma   | Perlen, XP, kuşaklar, Denk-Sterne, rozetler, kupalar, mağaza, garderob, yaş kademeli liderlik             | 1 hafta boyunca puanlar ve sıralama doğru hesaplanır                         | –                  |
@@ -377,7 +377,7 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 - [x] Yaşa göre otomatik zorluk **sadece zeka oyunlarında**; Rechnen herkes için aynı.
 - [ ] Zeka oyunları: 18 oyunluk liste uygun mu, eklemek veya çıkarmak istediğin oyun var mı?
 - [ ] Günlük plan: Rechnen ve Denken süresinin oranı (öneri: ~%60 Rechnen, ~%40 Denken) uygun mu?
-- [ ] Zeka oyunları için seviye testi (Einstufung) ilk girişte zorunlu mu olsun, yoksa atlanabilir mi?
+- [ ] Zeka oyunları için seviye testi (Einstufung): şimdilik **atlanabilir** ("Später"); atlanırsa yaş kademesinin başlangıç seviyesi kullanılır. Zorunlu olsun mu?
 - [ ] Doğum yılını kim girer: sadece admin mi, veli de mi?
 - [ ] Denk-Park kursa kayıtlı olmayan çocuklara da açık mı olacak (ör. ücretsiz deneme)?
 - [ ] Maskot: ders videolarındaki 3D öğretmen kız (sarı örgülü, mavi

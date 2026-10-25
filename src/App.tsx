@@ -14,6 +14,7 @@ import { BossStation } from './screens/stations/BossStation'
 import { unitContent, STATIONS } from './data/units'
 import { DenkPark } from './screens/DenkPark'
 import { Denkspiel } from './screens/Denkspiel'
+import { Einstufung } from './screens/Einstufung'
 import { findGame } from './games/registry'
 import { tierFor, tierRank } from './games/engine'
 import { findKid } from './data/demo'
@@ -31,7 +32,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'einheit', 'denkpark', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -58,6 +59,7 @@ export default function App() {
     const progress = getProgress(kid.id)
     if (route === 'karte') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
+    if (route === 'einstufung') return <Einstufung kid={kid} />
     if (route.startsWith('spiel/')) {
       const game = findGame(route.slice(6))
       const open = game && game.ready && tierRank(tierFor(kid.birthYear)) >= tierRank(game.minTier)

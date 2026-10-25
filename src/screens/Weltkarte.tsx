@@ -10,7 +10,7 @@ import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
 import type { Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
-import { getLevel, tierFor, tierRank } from '../games/engine'
+import { getLevel, getPlacement, tierFor, tierRank } from '../games/engine'
 import { GAMES } from '../games/registry'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
@@ -29,7 +29,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const warmup = GAMES.filter((g) => g.ready && tierRank(tier) >= tierRank(g.minTier))
     .sort((a, b) => getLevel(kid.id, a.id, tier) - getLevel(kid.id, b.id, tier))[0]
   const plan: PlanStep[] = [
-    { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: warmup ? warmup.name : 'Ein Denkspiel', minutes: 3, href: warmup ? `#/spiel/${warmup.id}` : '#/denkpark' },
+    getPlacement(kid.id)
+      ? { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: warmup ? warmup.name : 'Ein Denkspiel', minutes: 3, href: warmup ? `#/spiel/${warmup.id}` : '#/denkpark' }
+      : { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: 'Perli kennenlernen', minutes: 3, href: '#/einstufung' },
     { icon: 'bead', color: '#FFF4D1', title: 'Rechnen', text: `Welt ${current.n} · ${unitName}`, minutes: 10, href: '#/einheit' },
     { icon: 'sparkle', color: '#3BA7FF', title: 'Denk-Pause', text: 'Zwei kurze Denkspiele', minutes: 5, href: '#/denkpark' },
   ]

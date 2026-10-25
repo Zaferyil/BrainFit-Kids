@@ -63,3 +63,18 @@ export function adjustLevel(kidId: string, gameId: string, tier: Tier, score: nu
 
 /** Perlen für eine Runde: 5 bis 15 je nach Leistung. */
 export const perlenFor = (score: number) => 5 + Math.round(score * 10)
+
+// Einstufung („Perli kennenlernen“): einmal pro Kind, kann übersprungen werden.
+export type Placement = { status: 'done' | 'skipped'; date: string }
+const placementKey = (kidId: string) => `bfk.placement.${kidId}`
+export const getPlacement = (kidId: string) => load<Placement | null>(placementKey(kidId), null)
+export const savePlacement = (kidId: string, status: Placement['status']) =>
+  save(placementKey(kidId), { status, date: new Date().toISOString().slice(0, 10) })
+
+/** Ergebnis der Einstufung → Verschiebung der Startstufe für einen ganzen Bereich. */
+export function placementShift(score: number) {
+  if (score >= 0.9) return 2
+  if (score >= 0.75) return 1
+  if (score < 0.5) return -1
+  return 0
+}

@@ -8,6 +8,7 @@ import { adjustLevel, getLevel, perlenFor, tierFor, type Adjustment } from '../g
 import { MusterMeister } from '../games/MusterMeister'
 import { PerlenKette } from '../games/PerlenKette'
 import { PerlenMemory } from '../games/PerlenMemory'
+import { PerlenJagd } from '../games/PerlenJagd'
 import { AREAS, type GameMeta } from '../games/registry'
 import type { GameProps } from '../games/types'
 import { rewardGame } from '../lib/progress'
@@ -17,12 +18,14 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   memory: PerlenMemory,
   muster: MusterMeister,
   kette: PerlenKette,
+  jagd: PerlenJagd,
 }
 
 const INTRO: Record<string, string> = {
   memory: 'Decke immer zwei Karten auf. Finde alle Paare!',
   muster: 'Schau dir die Reihe an. Was kommt als Nächstes?',
   kette: 'Die Perlen leuchten nacheinander. Tippe sie danach in der gleichen Reihenfolge.',
+  jagd: 'Tippe so schnell du kannst alle Perlen in der gesuchten Farbe an.',
 }
 
 type Result = { score: number; summary: string; perlen: number; adj: Adjustment }

@@ -505,3 +505,27 @@ button { font-family: inherit; }
 .level-change.up { background: #DDF7E3; color: #1F7A35; }
 .level-change.down { background: #FFF4D1; color: #8A5A00; }
 .level-change.same { background: #F2F0FF; color: #5A5094; }
+
+/* Perlen-Jagd */
+.game-hunt { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.hunt-goal { display: flex; align-items: center; gap: 12px; padding: 8px 20px; border-radius: 999px; background: #FFFFFF; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 24px; }
+.hunt-count { margin-left: 8px; padding: 2px 12px; border-radius: 999px; background: var(--yellow); font-size: 20px; }
+.hunt-grid { display: grid; gap: 10px; }
+.hunt-cell { border: 0; border-radius: 20px; background: var(--board); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: transform .12s ease; }
+.hunt-cell:hover { transform: scale(1.04); }
+.hunt-cell.found { background: #DDF7E3; box-shadow: 0 0 0 4px var(--green) inset; cursor: default; }
+.hunt-cell.miss { background: #FFE1E8; animation: shake .3s; }
+@media (prefers-reduced-motion: reduce) { .hunt-cell.miss { animation: none; } }
+
+/* Einstufung */
+.park-invite { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; background: var(--yellow); color: var(--ink); font-weight: 900; font-size: 16px; text-decoration: none; box-shadow: 0 4px 0 #DE9800; }
+.park-invite:hover { color: var(--ink); }
+.placement-intro { flex: 1; display: flex; align-items: center; justify-content: center; gap: 48px; }
+.placement-card { width: 560px; padding: 32px 36px; border-radius: 32px; background: #FFFFFF; color: var(--ink); display: flex; flex-direction: column; gap: 14px; box-shadow: 0 8px 0 #D8D1FF; }
+.placement-card h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 38px; line-height: 1.05; }
+.placement-card p { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.4; color: #5A5094; }
+.placement-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.placement-card li { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 18px; }
+.placement-card li span { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.placement-result { list-style: none; margin: 0 0 8px; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.placement-result li { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-radius: 14px; background: #F7F5FF; font-weight: 900; font-size: 17px; }

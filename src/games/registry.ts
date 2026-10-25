@@ -18,7 +18,7 @@ export const GAMES: GameMeta[] = [
   { id: 'memory', name: 'Perlen-Memory', area: 'gedaechtnis', minTier: 'A', text: 'Finde die Paare', ready: true },
   { id: 'kette', name: 'Perlen-Kette', area: 'gedaechtnis', minTier: 'A', text: 'Merk dir die Reihenfolge', ready: true },
   { id: 'blitzabakus', name: 'Blitz-Abakus', area: 'gedaechtnis', minTier: 'B', text: 'Welche Zahl hat geblitzt?', ready: false },
-  { id: 'jagd', name: 'Perlen-Jagd', area: 'konzentration', minTier: 'A', text: 'Finde alle Zielperlen', ready: false },
+  { id: 'jagd', name: 'Perlen-Jagd', area: 'konzentration', minTier: 'A', text: 'Finde alle Zielperlen', ready: true },
   { id: 'detektiv', name: 'Fehler-Detektiv', area: 'konzentration', minTier: 'A', text: 'Finde die Unterschiede', ready: false },
   { id: 'stopp', name: 'Stopp-Perle', area: 'konzentration', minTier: 'B', text: 'Grün tippen, Rot nicht', ready: false },
   { id: 'muster', name: 'Muster-Meister', area: 'logik', minTier: 'A', text: 'Was kommt als Nächstes?', ready: true },

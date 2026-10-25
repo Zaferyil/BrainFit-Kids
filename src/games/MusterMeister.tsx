@@ -62,7 +62,7 @@ function ItemView({ item, big }: { item: Item; big?: boolean }) {
   return <span className={big ? 'pat-num big' : 'pat-num'}>{item.n}</span>
 }
 
-export function MusterMeister({ level, onFinish }: GameProps) {
+export function MusterMeister({ level, onFinish, rounds = ROUNDS }: GameProps) {
   const [round, setRound] = useState(0)
   const [puzzle, setPuzzle] = useState(() => makePuzzle(level))
   const [correct, setCorrect] = useState(0)
@@ -77,14 +77,14 @@ export function MusterMeister({ level, onFinish }: GameProps) {
     speak(ok ? 'Richtig!' : 'Schau, das kommt als Nächstes.')
     window.setTimeout(() => {
       setPicked(null)
-      if (round + 1 >= ROUNDS) onFinish(c / ROUNDS, `${c} von ${ROUNDS} Mustern richtig`)
+      if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} Mustern richtig`)
       else { setRound(round + 1); setPuzzle(makePuzzle(level)) }
     }, ok ? 900 : 1800)
   }
 
   return (
     <div className="game-pattern">
-      <div className="game-hint">Muster {round + 1} von {ROUNDS} · Was kommt als Nächstes?</div>
+      <div className="game-hint">Muster {round + 1} von {rounds} · Was kommt als Nächstes?</div>
       <div className="pat-row">
         {puzzle.shown.map((it, i) => <div key={i} className="pat-cell"><ItemView item={it} /></div>)}
         <div className={picked ? (same(picked, puzzle.answer) ? 'pat-cell slot right' : 'pat-cell slot wrong') : 'pat-cell slot'}>

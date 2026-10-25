@@ -18,7 +18,7 @@ function chainSettings(level: number) {
 
 type Phase = 'show' | 'input' | 'right' | 'wrong'
 
-export function PerlenKette({ level, onFinish }: GameProps) {
+export function PerlenKette({ level, onFinish, rounds = ROUNDS }: GameProps) {
   const s = chainSettings(level)
   const [round, setRound] = useState(0)
   const [seq, setSeq] = useState(() => Array.from({ length: s.length }, () => randInt(0, s.beads - 1)))
@@ -57,7 +57,7 @@ export function PerlenKette({ level, onFinish }: GameProps) {
       setPhase(ok ? 'right' : 'wrong')
       speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
       window.setTimeout(() => {
-        if (round + 1 >= ROUNDS) { onFinish(c / ROUNDS, `${c} von ${ROUNDS} Ketten richtig, ${s.length} Perlen lang`); return }
+        if (round + 1 >= rounds) { onFinish(c / rounds, `${c} von ${rounds} Ketten richtig, ${s.length} Perlen lang`); return }
         setRound(round + 1)
         setSeq(Array.from({ length: s.length }, () => randInt(0, s.beads - 1)))
         setInput([])
@@ -75,7 +75,7 @@ export function PerlenKette({ level, onFinish }: GameProps) {
 
   return (
     <div className="game-chain">
-      <div className="game-hint">Kette {round + 1} von {ROUNDS} · {s.length} Perlen{backwards ? ' · rückwärts' : ''}</div>
+      <div className="game-hint">Kette {round + 1} von {rounds} · {s.length} Perlen{backwards ? ' · rückwärts' : ''}</div>
       <div className="chain-slots" aria-label="Deine Eingabe">
         {target.map((_, i) => (
           <span key={i} className={i < input.length ? `chain-slot filled ${phase}` : 'chain-slot'}>
