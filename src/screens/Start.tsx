@@ -52,6 +52,7 @@ export function Start() {
       </div>
 
       <div className="start-age">Für Kinder von 5 bis 12 Jahren</div>
+      <a href="#/abakus-test" className="start-dev">Abakus-Test (nur in der Entwicklung)</a>
     </Stage>
   )
 }
