@@ -9,6 +9,9 @@ import { TopBar } from '../components/TopBar'
 import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
 import type { Progress } from '../lib/progress'
+import { getDaily } from '../lib/daily'
+import { getLevel, tierFor, tierRank } from '../games/engine'
+import { GAMES } from '../games/registry'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
@@ -20,12 +23,19 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const unitsLeft = current.units.length - progress.unit + 1
   const [say, setSay] = useState(`Noch ${unitsLeft} ${unitsLeft === 1 ? 'Einheit' : 'Einheiten'} bis zum ${current.belt} Gürtel!`)
 
+  const daily = getDaily(kid.id)
+  // Aufwärmen: das Denkspiel mit der niedrigsten Stufe
+  const tier = tierFor(kid.birthYear)
+  const warmup = GAMES.filter((g) => g.ready && tierRank(tier) >= tierRank(g.minTier))
+    .sort((a, b) => getLevel(kid.id, a.id, tier) - getLevel(kid.id, b.id, tier))[0]
   const plan: PlanStep[] = [
-    { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: 'Ein Denkspiel', minutes: 3, href: '#/denkpark' },
+    { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: warmup ? warmup.name : 'Ein Denkspiel', minutes: 3, href: warmup ? `#/spiel/${warmup.id}` : '#/denkpark' },
     { icon: 'bead', color: '#FFF4D1', title: 'Rechnen', text: `Welt ${current.n} · ${unitName}`, minutes: 10, href: '#/einheit' },
     { icon: 'sparkle', color: '#3BA7FF', title: 'Denk-Pause', text: 'Zwei kurze Denkspiele', minutes: 5, href: '#/denkpark' },
   ]
-  const planDone = 0
+  const doneSteps = [daily.games >= 1, daily.stations >= 1, daily.games >= 3]
+  const planDone = doneSteps.filter(Boolean).length
+  const nextStep = doneSteps.findIndex((d) => !d)
   const pts = WORLDS.map((w) => `${w.x},${w.y}`)
 
   return (
@@ -113,7 +123,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           </div>
           <ol className="plan-list">
             {plan.map((s, i) => (
-              <li key={s.title} className={i === planDone ? 'plan-step current' : 'plan-step'}>
+              <li key={s.title} className={doneSteps[i] ? 'plan-step done' : i === nextStep ? 'plan-step current' : 'plan-step'}>
                 <span className="plan-icon" style={{ background: s.color }}>
                   {s.icon === 'bead' ? <Bead color="yellow" width={30} /> : <Icon name={s.icon} color="#231A4F" size={22} strokeWidth={2.4} />}
                 </span>
@@ -121,14 +131,20 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   <strong>{s.title}</strong>
                   <span>{s.text}</span>
                 </span>
-                <span className="plan-min">{s.minutes} Min.</span>
+                {doneSteps[i]
+                  ? <span className="plan-check"><Icon name="check" color="#10351B" size={18} strokeWidth={3} /></span>
+                  : <span className="plan-min">{s.minutes} Min.</span>}
               </li>
             ))}
           </ol>
-          <a href={plan[planDone].href} className="btn-primary plan-go">
-            <Icon name="play" color="#231A4F" fill="#231A4F" size={22} />
-            {planDone === 0 ? 'Los geht’s' : 'Weiter'}
-          </a>
+          {nextStep === -1 ? (
+            <div className="plan-finished"><Icon name="star" color="#DE9800" fill="#FFC531" size={24} /> Tagesplan geschafft!</div>
+          ) : (
+            <a href={plan[nextStep].href} className="btn-primary plan-go">
+              <Icon name="play" color="#231A4F" fill="#231A4F" size={22} />
+              {planDone === 0 ? 'Los geht’s' : 'Weiter'}
+            </a>
+          )}
         </section>
 
         <section className="quests">
@@ -137,16 +153,16 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             <span>bis Mitternacht</span>
           </div>
           {[
-            { icon: 'target' as IconName, text: 'Löse 20 Aufgaben', done: 0, goal: 20, reward: 20 },
-            { icon: 'brain' as IconName, text: 'Spiele 2 Denkspiele', done: 0, goal: 2, reward: 20 },
-            { icon: 'clock' as IconName, text: 'Lerne 10 Minuten', done: 0, goal: 10, reward: 30 },
+            { icon: 'target' as IconName, text: 'Löse 20 Aufgaben', done: Math.min(daily.tasks, 20), goal: 20, reward: 20 },
+            { icon: 'brain' as IconName, text: 'Spiele 2 Denkspiele', done: Math.min(daily.games, 2), goal: 2, reward: 20 },
+            { icon: 'clock' as IconName, text: 'Lerne 10 Minuten', done: Math.min(daily.minutes, 10), goal: 10, reward: 30 },
           ].map((q) => (
             <div key={q.text} className="quest">
-              <span className="quest-icon"><Icon name={q.icon} color="#FFFFFF" size={22} strokeWidth={2.6} /></span>
+              <span className={q.done >= q.goal ? 'quest-icon done' : 'quest-icon'}><Icon name={q.icon} color="#FFFFFF" size={22} strokeWidth={2.6} /></span>
               <div className="quest-body">
                 <div className="quest-text">{q.text}</div>
                 <div className="quest-track" role="progressbar" aria-label={q.text} aria-valuenow={q.done} aria-valuemin={0} aria-valuemax={q.goal}>
-                  <div style={{ width: `${(q.done / q.goal) * 100}%` }} />
+                  <div className={q.done >= q.goal ? 'full' : ''} style={{ width: `${(q.done / q.goal) * 100}%` }} />
                 </div>
               </div>
               <span className="quest-reward">+{q.reward}</span>

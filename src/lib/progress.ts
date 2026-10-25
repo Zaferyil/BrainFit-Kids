@@ -1,5 +1,6 @@
 import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
+import { addDaily } from './daily'
 
 // Fortschritt eines Kindes, bis Supabase angebunden ist: nur auf diesem Gerät.
 export type Progress = {
@@ -52,6 +53,7 @@ export function finishStation(kidId: string, station: StationId, stars: number, 
   let level = p.level
   while (xp >= 100) { xp -= 100; level += 1 }
   saveProgress(kidId, { ...p, stationStars: { ...p.stationStars, [k]: all }, perlen: p.perlen + perlen, xp, level })
+  addDaily(kidId, { stations: 1, tasks: correct, minutes: 3 })
   return perlen
 }
 
@@ -67,4 +69,14 @@ export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: num
   const world = Math.min(p.world + 1, lastWorld)
   saveProgress(kidId, { ...p, world, unit: 1, worldStars: { ...p.worldStars, [p.world]: avg }, gems: p.gems + 1 })
   return { worldDone: true }
+}
+
+/** Perlen und XP aus einem Denkspiel gutschreiben. */
+export function rewardGame(kidId: string, perlen: number) {
+  const p = getProgress(kidId)
+  let xp = p.xp + 10
+  let level = p.level
+  while (xp >= 100) { xp -= 100; level += 1 }
+  saveProgress(kidId, { ...p, perlen: p.perlen + perlen, xp, level })
+  addDaily(kidId, { games: 1, minutes: 2 })
 }

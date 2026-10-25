@@ -12,6 +12,10 @@ import { BlitzStation } from './screens/stations/BlitzStation'
 import { KopfrechnenStation } from './screens/stations/KopfrechnenStation'
 import { BossStation } from './screens/stations/BossStation'
 import { unitContent, STATIONS } from './data/units'
+import { DenkPark } from './screens/DenkPark'
+import { Denkspiel } from './screens/Denkspiel'
+import { findGame } from './games/registry'
+import { tierFor, tierRank } from './games/engine'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
 import { currentStation, getProgress } from './lib/progress'
@@ -19,7 +23,6 @@ import { currentStation, getProgress } from './lib/progress'
 const TITLES: Record<string, string> = {
   einheit: 'Einheit',
   station: 'Inhalte für diese Einheit folgen',
-  denkpark: 'Denk-Park',
   shop: 'Shop',
   garderobe: 'Garderobe',
   pokale: 'Pokale & Abzeichen',
@@ -47,15 +50,20 @@ export default function App() {
   if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />
 
-  if (KID_ROUTES.includes(route)) {
+  if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {
     const session = getSession()
     const kid = session && findKid(session.classCode, session.kidId)
     if (!kid) return <Anmelden />
-    if (route === 'karte') {
-      const logout = () => { saveSession(null); window.location.hash = '#/anmelden' }
-      return <Weltkarte kid={kid} progress={getProgress(kid.id)} onLogout={logout} />
-    }
+    const logout = () => { saveSession(null); window.location.hash = '#/anmelden' }
     const progress = getProgress(kid.id)
+    if (route === 'karte') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
+    if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
+    if (route.startsWith('spiel/')) {
+      const game = findGame(route.slice(6))
+      const open = game && game.ready && tierRank(tierFor(kid.birthYear)) >= tierRank(game.minTier)
+      if (!game || !open) return <DenkPark kid={kid} progress={progress} onLogout={logout} />
+      return <Denkspiel key={game.id} kid={kid} game={game} />
+    }
     if (route === 'einheit') return <Einheit progress={progress} />
     if (route.startsWith('station/')) {
       const id = route.slice(8)
