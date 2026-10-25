@@ -5,6 +5,7 @@ import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
+import { Fit } from '../components/Fit'
 import { TopBar } from '../components/TopBar'
 import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
@@ -53,6 +54,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         onLogout={onLogout}
       />
 
+      <div className="map-layout">
+      <Fit className="map-fit">
       <div className="map">
         {WORLDS.map((w) => (
           <div key={'i' + w.n} className="island" style={{ left: w.x - 78, top: w.y - 70 }} />
@@ -116,6 +119,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           <div className="map-bubble" role="status">{say}</div>
         </div>
       </div>
+      </Fit>
 
       <aside className="map-side">
         <section className="plan-card">
@@ -172,8 +176,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           ))}
         </section>
       </aside>
+      </div>
 
-      <div className="test-nav"><NavBar active="karte" /></div>
+      <div className="nav-dock"><NavBar active="karte" /></div>
     </Stage>
   )
 }

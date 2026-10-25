@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { speak } from '../lib/speak'
+import { usePortrait } from '../lib/usePortrait'
 import { randInt, type GameProps } from './types'
 
 const COLORS: BeadColor[] = ['yellow', 'green', 'orange', 'blue', 'purple', 'pink']
@@ -26,6 +27,7 @@ export function PerlenKette({ level, onFinish, rounds = ROUNDS }: GameProps) {
   const [lit, setLit] = useState<number | null>(null)
   const [input, setInput] = useState<number[]>([])
   const [correct, setCorrect] = useState(0)
+  const portrait = usePortrait()
   // ab Stufe 12 jede zweite Runde rückwärts
   const backwards = s.backwards && round % 2 === 1
 
@@ -74,7 +76,7 @@ export function PerlenKette({ level, onFinish, rounds = ROUNDS }: GameProps) {
   }[phase]
 
   return (
-    <div className="game-chain">
+    <div className={portrait ? 'game-chain portrait' : 'game-chain'}>
       <div className="game-hint">Kette {round + 1} von {rounds} · {s.length} Perlen{backwards ? ' · rückwärts' : ''}</div>
       <div className="chain-slots" aria-label="Deine Eingabe">
         {target.map((_, i) => (

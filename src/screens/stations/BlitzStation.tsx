@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { describeDigit, type UnitContent } from '../../data/units'
@@ -81,6 +82,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
 
         <div className="blitz-stage">
           <div className="blitz-count">Aufgabe {index + 1} von {COUNT}</div>
+          <Fit className="board-fit">
           <div className="blitz-window">
             {phase === 'ready' && <div className="blitz-ready"><Icon name="bolt" color="#FFC531" fill="#FFC531" size={72} /> Achtung …</div>}
             {showAbakus && <Abakus key={index} value={n} cols={content.cols} colw={120} interactive={false} />}
@@ -90,6 +92,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
               </div>
             )}
           </div>
+          </Fit>
           <div className={`blitz-say ${phase}`} role="status">
             {phase === 'ready' && 'Gleich blitzt der Abakus auf. Schau genau hin!'}
             {phase === 'flash' && 'Merk dir die Perlen!'}

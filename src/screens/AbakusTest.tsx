@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../components/Fit'
 import { Abakus } from '../components/Abakus'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
@@ -48,11 +49,11 @@ export function AbakusTest() {
           <button type="button" className="btn-secondary" onClick={() => { setValue(0); setReset((r) => r + 1) }}>Zurücksetzen</button>
           <div className="test-perli"><Perli mood={value ? 'happy' : 'think'} size={140} /></div>
         </div>
-        <div className="test-board">
+        <Fit className="test-board">
           <Abakus key={`${cols}-${reset}`} cols={cols} colw={colw} frame={frame} mark={0} showValue onChange={setValue} />
-        </div>
+        </Fit>
       </div>
-      <div className="test-nav"><NavBar active="karte" /></div>
+      <div className="nav-dock"><NavBar active="karte" /></div>
     </Stage>
   )
 }

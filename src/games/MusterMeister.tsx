@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { Icon } from '../components/Icon'
 import { speak } from '../lib/speak'
+import { usePortrait } from '../lib/usePortrait'
 import { randInt, shuffle, type GameProps } from './types'
 
 type Item = { kind: 'bead'; color: BeadColor } | { kind: 'num'; n: number }
@@ -67,6 +68,7 @@ export function MusterMeister({ level, onFinish, rounds = ROUNDS }: GameProps) {
   const [puzzle, setPuzzle] = useState(() => makePuzzle(level))
   const [correct, setCorrect] = useState(0)
   const [picked, setPicked] = useState<Item | null>(null)
+  const portrait = usePortrait()
 
   const pick = (o: Item) => {
     if (picked) return
@@ -83,7 +85,7 @@ export function MusterMeister({ level, onFinish, rounds = ROUNDS }: GameProps) {
   }
 
   return (
-    <div className="game-pattern">
+    <div className={portrait ? 'game-pattern portrait' : 'game-pattern'}>
       <div className="game-hint">Muster {round + 1} von {rounds} · Was kommt als Nächstes?</div>
       <div className="pat-row">
         {puzzle.shown.map((it, i) => <div key={i} className="pat-cell"><ItemView item={it} /></div>)}

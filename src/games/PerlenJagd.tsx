@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { speak } from '../lib/speak'
+import { usePortrait } from '../lib/usePortrait'
 import { randInt, shuffle, type GameProps } from './types'
 
 const ROUNDS = 5
@@ -32,7 +33,10 @@ function makeRound(level: number): Round {
 }
 
 export function PerlenJagd({ level, onFinish, rounds = ROUNDS }: GameProps) {
-  const s = settings(level)
+  const portrait = usePortrait()
+  const base = settings(level)
+  // hochkant: Raster drehen (mehr Zeilen als Spalten)
+  const s = portrait && base.cols > base.rows ? { ...base, cols: base.rows, rows: base.cols } : base
   const [round, setRound] = useState(0)
   const [r, setR] = useState(() => makeRound(level))
   const [found, setFound] = useState<number[]>([])
@@ -71,7 +75,7 @@ export function PerlenJagd({ level, onFinish, rounds = ROUNDS }: GameProps) {
     }
   }
 
-  const size = Math.min(104, Math.floor(470 / s.rows), Math.floor(900 / s.cols))
+  const size = portrait ? Math.min(104, Math.floor(700 / s.rows), Math.floor(480 / s.cols)) : Math.min(104, Math.floor(470 / s.rows), Math.floor(900 / s.cols))
 
   return (
     <div className="game-hunt">

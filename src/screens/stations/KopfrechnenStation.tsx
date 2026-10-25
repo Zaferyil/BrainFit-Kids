@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
@@ -58,9 +59,9 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
       <div className="mental">
         <div className="mental-think">
           <div className="mental-badge"><Icon name="eyeoff" color="#C9C0FF" size={22} /> Ohne Abakus · doppelte Perlen</div>
-          <div className="mental-abakus">
+          <Fit className="mental-abakus">
             <Abakus key={`${index}-${state}`} value={state === 'wrong' ? n : 0} cols={content.cols} colw={90} faded={state !== 'wrong'} interactive={false} />
-          </div>
+          </Fit>
           <div className="mental-perli">
             <Perli mood={state === 'right' ? 'cheer' : 'think'} size={170} />
             <div className="say-bubble">

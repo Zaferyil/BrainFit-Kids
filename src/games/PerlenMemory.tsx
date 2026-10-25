@@ -3,6 +3,7 @@ import { Abakus } from '../components/Abakus'
 import { Bead, type BeadColor } from '../components/Bead'
 import { Icon, type IconName } from '../components/Icon'
 import { speak } from '../lib/speak'
+import { usePortrait } from '../lib/usePortrait'
 import { randInt, shuffle, type GameProps } from './types'
 
 type Face =
@@ -61,10 +62,16 @@ export function PerlenMemory({ level, onFinish }: GameProps) {
   const [found, setFound] = useState<number[]>([])
   const [attempts, setAttempts] = useState(0)
   const pairs = deck.length / 2
+  const portrait = usePortrait()
 
-  const cols = deck.length <= 6 ? 3 : deck.length <= 8 ? 4 : deck.length <= 12 ? 4 : deck.length <= 16 ? 4 : deck.length <= 20 ? 5 : 6
-  const rows = Math.ceil(deck.length / cols)
-  const size = Math.min(150, Math.floor((560 - (rows - 1) * 12) / rows), Math.floor((980 - (cols - 1) * 12) / cols))
+  // Quer: breite Fläche; hochkant: weniger Spalten, mehr Zeilen
+  const n = deck.length
+  const cols = portrait
+    ? (n <= 6 ? 2 : n <= 12 ? 3 : 4)
+    : (n <= 6 ? 3 : n <= 16 ? 4 : n <= 20 ? 5 : 6)
+  const [areaW, areaH] = portrait ? [520, 760] : [980, 560]
+  const rows = Math.ceil(n / cols)
+  const size = Math.min(150, Math.floor((areaH - (rows - 1) * 12) / rows), Math.floor((areaW - (cols - 1) * 12) / cols))
 
   const flip = (c: Card) => {
     if (open.length === 2 || open.includes(c.id) || found.includes(c.pair)) return

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
@@ -80,7 +81,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
         </div>
 
         <div className="boss-arena">
-          <Grummel size={280} hit={picked !== null && picked === q.n} />
+          <Fit className="boss-fit"><Grummel size={280} hit={picked !== null && picked === q.n} /></Fit>
           {picked !== null && picked === q.n && <div className="boss-pow">−10!</div>}
         </div>
 

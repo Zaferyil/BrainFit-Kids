@@ -58,7 +58,7 @@ export function DenkPark({ kid, progress, onLogout }: { kid: Kid; progress: Prog
           ))}
         </div>
       </div>
-      <div className="test-nav"><NavBar active="denkpark" /></div>
+      <div className="nav-dock"><NavBar active="denkpark" /></div>
     </Stage>
   )
 }

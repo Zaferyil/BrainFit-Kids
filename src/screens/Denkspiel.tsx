@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../components/Fit'
 import { Bead } from '../components/Bead'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
@@ -77,7 +78,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
           <span>{INTRO[game.id]}</span>
         </div>
         <div className="game-area">
-          <Game key={`${run}-${level}`} level={level} onFinish={finish} />
+          <Fit className="game-fit" max={1.5}><Game key={`${run}-${level}`} level={level} onFinish={finish} /></Fit>
         </div>
       </div>
       {result && (

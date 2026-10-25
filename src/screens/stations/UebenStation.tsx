@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
@@ -111,14 +112,16 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
 
         <div className="practice-board">
           <div className="board-hint">{task.kind === 'set' ? 'Tippe auf die Perlen' : 'Schau genau hin'}</div>
-          <Abakus
-            key={`${index}-${task.id}`}
-            value={task.kind === 'read' ? task.n : 0}
-            cols={content.cols}
-            colw={130}
-            interactive={task.kind === 'set' && !feedback}
-            onChange={onAbakus}
-          />
+          <Fit className="board-fit">
+            <Abakus
+              key={`${index}-${task.id}`}
+              value={task.kind === 'read' ? task.n : 0}
+              cols={content.cols}
+              colw={130}
+              interactive={task.kind === 'set' && !feedback}
+              onChange={onAbakus}
+            />
+          </Fit>
           {feedback && (
             <div className={`feedback ${feedback.type}`} role="status">
               {feedback.type === 'right'

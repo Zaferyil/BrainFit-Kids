@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
@@ -44,7 +45,9 @@ export function EntdeckenStation({ kidId, content }: { kidId: string; content: U
       <div className="discover">
         <div className="discover-board">
           <div className="board-label">Einer</div>
-          <Abakus key={step} value={cur.start} cols={content.cols} colw={150} interactive={cur.goal !== null && !solved} onChange={onChange} />
+          <Fit className="board-fit">
+            <Abakus key={step} value={cur.start} cols={content.cols} colw={150} interactive={cur.goal !== null && !solved} onChange={onChange} />
+          </Fit>
           <div className="board-value">{value}</div>
         </div>
         <div className="discover-side">

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Fit } from '../components/Fit'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
@@ -72,7 +73,7 @@ export function Einstufung({ kid }: { kid: Kid }) {
           <>
             <div className="game-intro"><Perli mood="happy" size={64} /><span>{cur.say}</span></div>
             <div className="game-area">
-              <cur.Game key={step} level={start} rounds={cur.rounds} onFinish={finish} />
+              <Fit className="game-fit" max={1.5}><cur.Game key={step} level={start} rounds={cur.rounds} onFinish={finish} /></Fit>
             </div>
           </>
         )}
