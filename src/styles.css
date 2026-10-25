@@ -529,3 +529,16 @@ button { font-family: inherit; }
 .placement-card li span { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
 .placement-result { list-style: none; margin: 0 0 8px; padding: 0; width: 100%; display: flex; flex-direction: column; gap: 8px; }
 .placement-result li { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-radius: 14px; background: #F7F5FF; font-weight: 900; font-size: 17px; }
+
+/* Video mit mehreren Teilen */
+.video-main { width: 760px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+.video-main .video-box { width: 760px; height: 428px; }
+.video-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.video-tab { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 14px; border: 0; background: var(--board); color: var(--lilac); font-weight: 800; font-size: 15px; cursor: pointer; }
+.video-tab.active { background: var(--violet); color: #FFFFFF; }
+.video-actions { display: flex; align-items: center; gap: 16px; }
+.watch-btn { display: inline-flex; align-items: center; gap: 12px; padding: 10px 22px 10px 10px; border-radius: 999px; background: linear-gradient(180deg, #F0453A, #C62A22); color: #FFFFFF; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: .03em; box-shadow: 0 5px 0 #8E1A14; }
+.watch-btn:hover { color: #FFFFFF; filter: brightness(1.05); }
+.watch-icon { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.22); display: flex; align-items: center; justify-content: center; }
+.video-status { font-weight: 800; font-size: 16px; color: var(--lilac); }
+.video-side .text-btn { align-self: center; color: var(--lilac); }

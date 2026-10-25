@@ -195,6 +195,8 @@ Her ünite sonunda ilgili YouTube videosu (Level 1 ve çıkarma
 listelerindeki 48 video) bağlanır. Big Friends −6 ile −4 aynı videoya
 gidiyor; bu düzeltilmeli.
 
+Video linkleri ve MathKids'in 96 seviyesi (1.440 soru, 33 cevabı düzeltilmiş) MathKids oyunundan çıkarıldı: `content/videos.json`, `content/mathkids-levels.json`. Düzeltilen sorular dosyada `korrigiert` altında listeli.
+
 ### Bir ünitenin akışı
 
 Her ünite 6 istasyondan oluşur ve 10–15 dakikada biter. İstasyonlar
@@ -361,7 +363,7 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 | Aşama              | İçerik                                                                                                     | Test kriteri                                                                 | Durum              |
 |--------------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|--------------------|
 | 0 · Tasarım        | Bu plan, 24 ekranın UI tasarımı, 5 yeni ekran (Einstufung, Denk-Park, Denkspiel, Gehirn-Profil, Admin-Denkspiele) | Sen onaylarsın                                                        | 24 ekran hazır, 5 ekran bekliyor |
-| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; Dünya 1'in ilk ünitesi (6 istasyon); yaş kademesi ve zorluk motoru; ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zeka oyunlarında zorluk ikisine farklı ayarlanır | Kodlandı, test bekliyor: Start, Anmelden, Weltkarte, Dünya 1 Ünite 1 (6 istasyon), zorluk motoru, Einstufung, Denk-Park, 4 oyun (Memory, Kette, Muster, Jagd). Eksik: gerçek sorular ve videolar, Supabase |
+| 1 · Çekirdek       | PWA iskeleti, abaküs bileşeni, Start; öğrenci girişi; Dünya 1'in ilk ünitesi (6 istasyon); yaş kademesi ve zorluk motoru; ilk 3 zeka oyunu (Perlen-Memory, Muster-Meister, Perlen-Kette) | 5 ve 10 yaşında birer çocuk üniteyi ve 3 oyunu tabletinde yardımsız bitirir; zeka oyunlarında zorluk ikisine farklı ayarlanır | Kodlandı, test bekliyor: Start, Anmelden, Weltkarte, Dünya 1 Ünite 1 (6 istasyon), zorluk motoru, Einstufung, Denk-Park, 4 oyun (Memory, Kette, Muster, Jagd). 47 video ünitelere bağlandı. Eksik: Abakuskids soruları, Supabase |
 | 2 · Rechnen        | 29 ünitenin hepsi, 1.930 soru, videolar                                                                   | Her ünite oynanarak kontrol edilir; tüm cevaplar otomatik test edilir        | –                  |
 | 3 · Denken         | 18 oyunun hepsi, 4 kademe ve 20 seviye tablosu, Einstufung, Denk-Park, Gehirn-Profil, Tagesplan           | Her oyunun her seviyesi otomatik üretim testinden geçer; 4 yaş grubundan çocuklar dener, %75–85 hedefi tutar | –         |
 | 4 · Oyunlaştırma   | Perlen, XP, kuşaklar, Denk-Sterne, rozetler, kupalar, mağaza, garderob, yaş kademeli liderlik             | 1 hafta boyunca puanlar ve sıralama doğru hesaplanır                         | –                  |

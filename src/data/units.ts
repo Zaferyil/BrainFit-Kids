@@ -27,8 +27,6 @@ export type UnitContent = {
   title: string
   lead: string
   rule: string[]
-  /** YouTube-Video-ID; null, solange der Link fehlt */
-  videoId: string | null
   learn: string[]
   stationText: Record<StationId, string>
   cols: number
@@ -40,7 +38,6 @@ const UNITS: Record<string, UnitContent> = {
     title: 'Erd- und Himmelsperlen',
     lead: 'Lerne die Perlen kennen: Was ist eine Perle wert?',
     rule: ['Erdperle = 1', 'Himmelsperle = 5'],
-    videoId: null,
     learn: ['Unten sind 4 Erdperlen. Jede ist 1 wert.', 'Oben ist die Himmelsperle. Sie ist 5 wert.', 'Zahlen von 1 bis 9 einstellen'],
     stationText: {
       video: 'Frau Lehrerin zeigt dir den Abakus.',

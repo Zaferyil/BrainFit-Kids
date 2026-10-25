@@ -5,6 +5,7 @@ import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import { STATIONS, unitContent } from '../data/units'
 import { currentStation, stationStars, type Progress } from '../lib/progress'
+import { unitVideos } from '../data/videos'
 
 export function Einheit({ progress }: { progress: Progress }) {
   const world = WORLDS[progress.world - 1]
@@ -37,7 +38,8 @@ export function Einheit({ progress }: { progress: Progress }) {
         <div className="stations">
           {STATIONS.map((s, i) => {
             const state = i < current ? 'done' : i === current ? 'current' : 'locked'
-            const text = content?.stationText[s.id] ?? ''
+            const videos = unitVideos(progress.world, progress.unit)
+            const text = content?.stationText[s.id] ?? (s.id === 'video' && videos.length ? videos.map((v) => v.title).join(' · ') : '')
             return (
               <div key={s.id} className={`station ${state}`}>
                 <div className="station-top">

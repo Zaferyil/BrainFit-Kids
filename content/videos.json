@@ -1,0 +1,247 @@
+{
+ "quelle": "MathKids 2.1, Knopf „Watch Video“ je Level",
+ "addition": [
+  {
+   "index": 1,
+   "id": "Zto6YuVKFaI",
+   "titel": "Erd- und Himmelsperlen"
+  },
+  {
+   "index": 2,
+   "id": "UUrV0frw8aI",
+   "titel": "BigFriends +9"
+  },
+  {
+   "index": 3,
+   "id": "fHMDL8jGRdE",
+   "titel": "BigFriends +8"
+  },
+  {
+   "index": 4,
+   "id": "h5YNF3tvTx8",
+   "titel": "BigFriends +7"
+  },
+  {
+   "index": 5,
+   "id": "5OeEtNZIILM",
+   "titel": "BigFriends +6"
+  },
+  {
+   "index": 6,
+   "id": "WlkEGQAyIq4",
+   "titel": "BigFriends +5"
+  },
+  {
+   "index": 7,
+   "id": "DCgAPgrH0J8",
+   "titel": "BigFriends +4"
+  },
+  {
+   "index": 8,
+   "id": "U3AzocsMz0g",
+   "titel": "BigFriends +3"
+  },
+  {
+   "index": 9,
+   "id": "C0EJfP0nIk0",
+   "titel": "BigFriends +2"
+  },
+  {
+   "index": 10,
+   "id": "sz4KTrNUuN4",
+   "titel": "BigFriends +1"
+  },
+  {
+   "index": 11,
+   "id": "zXHWvJ8K5BQ",
+   "titel": "Alle BigFriends"
+  },
+  {
+   "index": 12,
+   "id": "zXHWvJ8K5BQ",
+   "titel": "Alle BigFriends"
+  },
+  {
+   "index": 13,
+   "id": "tWghlERLe7s",
+   "titel": "LittleFriends+4"
+  },
+  {
+   "index": 14,
+   "id": "iBV2HwcNe0c",
+   "titel": "LittleFriends+3"
+  },
+  {
+   "index": 15,
+   "id": "SuMxJaEkcEo",
+   "titel": "LittleFriends+2"
+  },
+  {
+   "index": 16,
+   "id": "qHMAWRv6IrQ",
+   "titel": "LittleFriends+1"
+  },
+  {
+   "index": 17,
+   "id": "S2gVsf8EUDw",
+   "titel": "Alle LittleFriends"
+  },
+  {
+   "index": 18,
+   "id": "S2gVsf8EUDw",
+   "titel": "Alle LittleFriends"
+  },
+  {
+   "index": 19,
+   "id": "V5weiE0zbZI",
+   "titel": "BestFriends+6"
+  },
+  {
+   "index": 20,
+   "id": "mKfS-0taZH0",
+   "titel": "BestFriends+7"
+  },
+  {
+   "index": 21,
+   "id": "qmnhO7aOHBw",
+   "titel": "BestFriends+8"
+  },
+  {
+   "index": 22,
+   "id": "YO1jrEezMzw",
+   "titel": "BestFriends+9"
+  },
+  {
+   "index": 23,
+   "id": "RrollzMfpxY",
+   "titel": "Alle BestFriends"
+  },
+  {
+   "index": 24,
+   "id": "RrollzMfpxY",
+   "titel": "Alle BestFriends"
+  }
+ ],
+ "subtraktion": [
+  {
+   "index": 1,
+   "id": "WOKGEaTal_k",
+   "titel": "BigFriends -9"
+  },
+  {
+   "index": 2,
+   "id": "47OaoX87960",
+   "titel": "BigFriends -8"
+  },
+  {
+   "index": 3,
+   "id": "2590z9kSWB4",
+   "titel": "BigFriends -7"
+  },
+  {
+   "index": 4,
+   "id": "5N8WOhDN2Os",
+   "titel": "BigFriends -6"
+  },
+  {
+   "index": 5,
+   "id": "tDl6SUsTuxs",
+   "titel": "BigFriends -5"
+  },
+  {
+   "index": 6,
+   "id": "5N8WOhDN2Os",
+   "titel": "BigFriends -4"
+  },
+  {
+   "index": 7,
+   "id": "4Vj-T_KSksM",
+   "titel": "BigFriends -3"
+  },
+  {
+   "index": 8,
+   "id": "g2zPiY_Y8hY",
+   "titel": "BigFriends -2"
+  },
+  {
+   "index": 9,
+   "id": "HTnjgudJE5Y",
+   "titel": "BigFriends -1"
+  },
+  {
+   "index": 10,
+   "id": "FhNZbVVzgi0",
+   "titel": "Alle Minus-BigFriends"
+  },
+  {
+   "index": 11,
+   "id": "FhNZbVVzgi0",
+   "titel": "Alle Minus-BigFriends"
+  },
+  {
+   "index": 12,
+   "id": "syFqaVtK-Gw",
+   "titel": "Little Friends -4"
+  },
+  {
+   "index": 13,
+   "id": "6S_lKdcnDEQ",
+   "titel": "Little Friends -3"
+  },
+  {
+   "index": 14,
+   "id": "Y7nQ-6mkqxc",
+   "titel": "Little Friends -2"
+  },
+  {
+   "index": 15,
+   "id": "_bv5Uj6xUag",
+   "titel": "Little Friends -1"
+  },
+  {
+   "index": 16,
+   "id": "Lr_n3cnTJ2k",
+   "titel": "Alle LittleFriends"
+  },
+  {
+   "index": 17,
+   "id": "Lr_n3cnTJ2k",
+   "titel": "Alle LittleFriends"
+  },
+  {
+   "index": 18,
+   "id": "8vkSeNju3_A",
+   "titel": "Best Friends-6"
+  },
+  {
+   "index": 19,
+   "id": "IhBJ4mupleo",
+   "titel": "Best Friends-7"
+  },
+  {
+   "index": 20,
+   "id": "-RtPC5feHRo",
+   "titel": "Best Friends-8"
+  },
+  {
+   "index": 21,
+   "id": "uwatUNukPCQ",
+   "titel": "Best Friends-9"
+  },
+  {
+   "index": 22,
+   "id": "cIX4tJwVcE8",
+   "titel": "Alle Best Friends"
+  },
+  {
+   "index": 23,
+   "id": "cIX4tJwVcE8",
+   "titel": "Alle Best Friends"
+  },
+  {
+   "index": 24,
+   "id": "cIX4tJwVcE8",
+   "titel": "Alle Best Friends"
+  }
+ ]
+}

@@ -12,6 +12,8 @@ import { BlitzStation } from './screens/stations/BlitzStation'
 import { KopfrechnenStation } from './screens/stations/KopfrechnenStation'
 import { BossStation } from './screens/stations/BossStation'
 import { unitContent, STATIONS } from './data/units'
+import { unitVideos } from './data/videos'
+import { WORLDS } from './data/curriculum'
 import { DenkPark } from './screens/DenkPark'
 import { Denkspiel } from './screens/Denkspiel'
 import { Einstufung } from './screens/Einstufung'
@@ -73,7 +75,11 @@ export default function App() {
       const index = STATIONS.findIndex((s) => s.id === id)
       // gesperrte Stationen führen zurück zur Einheit
       if (index > currentStation(progress)) return <Einheit progress={progress} />
-      if (content && id === 'video') return <VideoStation kidId={kid.id} content={content} />
+      const videos = unitVideos(progress.world, progress.unit)
+      if (id === 'video' && videos.length) {
+        const title = content?.title ?? WORLDS[progress.world - 1].units[progress.unit - 1]
+        return <VideoStation kidId={kid.id} title={title} videos={videos} learn={content?.learn} rule={content?.rule} />
+      }
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
       if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />
