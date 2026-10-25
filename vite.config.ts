@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'BrainFit Kids',
-        short_name: 'BrainFit',
-        description: 'Mental-Arithmetik',
+        name: 'Brain Fit Kids',
+        short_name: 'Brain Fit Kids',
+        description: 'Mental Arithmetik',
         lang: 'de',
         theme_color: '#1B1446',
         background_color: '#1B1446',

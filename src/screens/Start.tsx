@@ -25,9 +25,9 @@ export function Start() {
               <circle cx="14" cy="20" r="2.2" fill="#231A4F" />
             </svg>
           </div>
-          <span className="brand-sub">MENTAL-ARITHMETIK</span>
+          <span className="brand-sub">MENTAL ARITHMETIK</span>
         </div>
-        <h1 className="start-title">BrainFit<br /><span>Kids</span></h1>
+        <h1 className="start-title">Brain Fit<br /><span>Kids</span></h1>
         <p className="start-lead">Rechnen wie ein Blitz – mit Perli und dem Zauber-Abakus.</p>
         <div className="start-actions">
           <a href="#/anmelden" className="btn-primary">
@@ -51,7 +51,7 @@ export function Start() {
         <div className="speech">Hallo! Ich bin Perli.</div>
       </div>
 
-      <div className="start-age">Für Kinder von 6 bis 10 Jahren</div>
+      <div className="start-age">Für Kinder von 5 bis 12 Jahren</div>
     </Stage>
   )
 }

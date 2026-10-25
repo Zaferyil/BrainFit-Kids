@@ -1,8 +1,8 @@
-# Abakus Akademie – Projektplan
+# Brain Fit Kids – Projektplan
 
 Oct 25, 2026 · @Zafer
 
-6–10 yaş arası çocuklara Soroban abaküsü ve zihinden hesaplamayı
+5–12 yaş arası çocuklara Soroban abaküsü ve zihinden hesaplamayı
 (Mental-Arithmetik) sıfırdan ileri seviyeye öğreten, Almanca,
 oyunlaştırılmış bir PWA. Abakuskids ve MathKids oyunlarının tüm
 aşamaları, YouTube ders videoları ve dijital abaküs tek bir öğrenme
@@ -16,7 +16,7 @@ sayılarla 10–12 adımlık zincirleri abaküssüz, zihinden ve hızlı çözer
 
 | Konu           | Karar                                                                                                            |
 |----------------|------------------------------------------------------------------------------------------------------------------|
-| Hedef kitle    | 6–10 yaş; okuma becerisi zayıf çocuklar için her talimat sesli de okunur                                         |
+| Hedef kitle    | 5–12 yaş; okuma becerisi zayıf çocuklar için her talimat sesli de okunur                                         |
 | Dil            | Önce Almanca (Avusturya). Tüm metinler tek bir dil dosyasında; Türkçe/İngilizce sonradan eklenebilir             |
 | İçerik         | Big Friends, Little Friends, Best Friends; toplama ve çıkarma; abaküslü ve zihinden (Anzan)                      |
 | Kaynaklar      | Abakuskids (48 aşama, 490 soru), MathKids (96 aşama, 1.440 soru, 33 hatası düzeltilmiş), 48 YouTube ders videosu |
@@ -221,8 +221,7 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 
 ## Onayından önce netleşmesi gerekenler
 
-- [ ] Uygulamanın adı: çalışma adı "Abakus Akademie". "Abakus Dojo"
-  (kuşak sistemine uyar) veya "MentalMath Kids" da olabilir.
+- [x] Uygulamanın adı: **Brain Fit Kids**, alt başlık **Mental Arithmetik**.
 
 - [ ] Maskot: ders videolarındaki 3D öğretmen kız (sarı örgülü, mavi
   kazaklı) uygulamanın rehberi olsun mu?

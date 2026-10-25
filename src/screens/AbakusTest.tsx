@@ -6,8 +6,8 @@ import { TopBar } from '../components/TopBar'
 import { NavBar } from '../components/NavBar'
 
 const FRAMES = [
+  { color: '#1E86F0', label: 'Blau' },
   { color: '#FF8A1F', label: 'Orange' },
-  { color: '#3BA7FF', label: 'Blau' },
   { color: '#A06BFF', label: 'Lila' },
   { color: '#3DBE5B', label: 'Grün' },
 ]

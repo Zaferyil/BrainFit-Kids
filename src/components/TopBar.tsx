@@ -1,4 +1,5 @@
 import { Avatar } from './Avatar'
+import { Bead } from './Bead'
 import { Icon, type IconName } from './Icon'
 
 type Props = {
@@ -36,7 +37,7 @@ export function TopBar({ name = 'Lena', level = 7, xp = 64, perlen = '1.240', ge
       </div>
       <div className="topbar-chips">
         <Chip icon="flame" color="#FF8A1F" fill="#FF8A1F">{streak}</Chip>
-        <Chip icon="pearl" color="#DE9800" fill="#FFC531">{perlen}</Chip>
+        <div className="chip"><Bead color="yellow" width={30} /><span>{perlen}</span></div>
         <Chip icon="gem" color="#3BA7FF" fill="#9BD3FF">{gems}</Chip>
         <button type="button" className="round-btn" aria-label="Einstellungen">
           <Icon name="settings" color="#C9C0FF" size={26} />
