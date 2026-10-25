@@ -69,7 +69,7 @@ const UNITS: Record<string, UnitContent> = {
     rule: ['bis 4: nur Erdperlen', 'ab 5: Himmelsperle dazu'],
     learn: ['Zahlen bis 4 nur mit Erdperlen', 'Ab 5 hilft die Himmelsperle', 'Jede Zahl von 1 bis 9 ohne Zählen erkennen'],
     stationText: {
-      video: 'Schau dir die Perlen noch einmal an.',
+      video: 'Frau Lehrerin rechnet mit einer Stange.',
       entdecken: 'Perli zeigt dir 4, 6, 8 und 9.',
       ueben: '10 Aufgaben – einstellen und ablesen.',
       blitz: 'Der Abakus blitzt auf. Welche Zahl war es?',
@@ -94,7 +94,7 @@ const UNITS: Record<string, UnitContent> = {
     rule: ['rechte Stange = Einer', 'linke Stange = Zehner'],
     learn: ['Die rechte Stange zeigt die Einer', 'Die linke Stange zeigt die Zehner', 'Zahlen von 10 bis 99 einstellen und ablesen'],
     stationText: {
-      video: 'Für diese Einheit gibt es kein eigenes Video.',
+      video: 'Frau Lehrerin rechnet mit Zehnern und Einern.',
       entdecken: 'Perli zeigt dir die Zehner-Stange.',
       ueben: '10 Aufgaben mit zwei Stangen.',
       blitz: 'Zwei Stangen blitzen auf. Welche Zahl war es?',

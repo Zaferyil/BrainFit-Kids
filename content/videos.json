@@ -243,5 +243,261 @@
    "id": "cIX4tJwVcE8",
    "titel": "Alle Best Friends"
   }
- ]
+ ],
+ "drive": {
+  "ordner": "https://drive.google.com/drive/folders/1Y7F5FQRpuYJGhxoX7q2sxM6Y7mOIUDpb",
+  "hinweis": "MP4-Dateien „Bitmis-Video Dersler-Youtube icin“; X.1 = zweites Video (Übung) zur Lektion X",
+  "dateien": [
+   {
+    "lektion": "1",
+    "id": "1wLGpCnsNODMvhcAMIzyMoyoSVlvYodiz",
+    "datei": "1.Lektion_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "2",
+    "id": "16ZbfblAYiKU_VoNMjjzbUNWAkNNHA30U",
+    "datei": "2.Lektion_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "3",
+    "id": "1-eg7e_UsxmAHQIMnwZmxsIXvYW03rEe5",
+    "datei": "3.Lektion_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "4",
+    "id": "1rQXg--sL71NtbSdLt5Y6ufHQ1imFNWb9",
+    "datei": "4.Lektion_BigFrineds+9_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "4.1",
+    "id": "1ieGeE4nJnPB9Cy9F5WZD6ytCRb9LuVgx",
+    "datei": "4.1_Lektion_BigFrineds+9_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "5",
+    "id": "1mXVygFmu4B6cgiSdqAbnvPxnXSFEH_Gr",
+    "datei": "5.Lektion_BigFrineds+8_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "5.1",
+    "id": "1qB97ieebpV89F8fzhfjfhHXmY6aijkil",
+    "datei": "5.1_Lektion_BigFrineds+8_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "6",
+    "id": "1bN7tDX3xzzlg_xPNmpLCTsN10UlYv-HJ",
+    "datei": "6.Lektion_BigFrineds+7_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "6.1",
+    "id": "1IY1F9bXsmsRtHKCySsPe-6fy1md9wqzY",
+    "datei": "6.1_Lektion_BigFrineds+7_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "7",
+    "id": "1b38qyBHd4TPU_vELpU59WZZkkMwFk-9H",
+    "datei": "7.Lektion_BigFrineds+6_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "7.1",
+    "id": "1vr6EARQno6QmTdJKmXi6Qjpu-U8MNA7z",
+    "datei": "7.1_Lektion_BigFrineds+6_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "8",
+    "id": "1C9ViR3LWBfFUbu3HJ2M3yRB9vgAAq-vw",
+    "datei": "8.Lektion_BigFrineds+5_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "8.1",
+    "id": "10b8NDu1J_BXePdFUcgQltRPt2nJsb0mm",
+    "datei": "8.1_Lektion_BigFrineds+5_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "9",
+    "id": "1X5lWDjr3jLptwWG2rkydUnJQNJMtq4QO",
+    "datei": "9.Lektion_BigFrineds+4_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "9.1",
+    "id": "13PfLBVn6mHUGWcWwQ0mMmh80H-gxRY82",
+    "datei": "9.1_Lektion_BigFrineds+4_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "10",
+    "id": "1k4mrN7dSkVrlkHx85R0RLFgbzFQbjQZ-",
+    "datei": "10.Lektion_BigFrineds+3_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "10.1",
+    "id": "1UWCEoRrtTFumLVNXfcobq8LUnFKK4I4D",
+    "datei": "10.1_Lektion_BigFrineds+3_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "11",
+    "id": "1LuHnbzb-s4wmLjgw-6XdrtD1TRRTT9QC",
+    "datei": "11.Lektion_BigFriends+2_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "11.1",
+    "id": "1YvUsv38tLXtv2YdL2Mbf41uFRpGwHk2A",
+    "datei": "11.1_Lektion_BigFriends+2_Mental Arirthmetik Kurs.mp4"
+   },
+   {
+    "lektion": "12",
+    "id": "1XyrzJ4B_pNljrwpngEFHz6d8axNC-K8_",
+    "datei": "12.Lektion_BigFriends+1_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "12.1",
+    "id": "1kB-iPPWIt3QcysbNhG7adQMW27TXzniE",
+    "datei": "12.1_Lektion_BigFriends+1_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "13",
+    "id": "13MKFu4Q5fKXEbY0VoHkDU1WygVApxFNe",
+    "datei": "13.Lektion_Alle-BigFriends_Gemisches_Übungen.mp4"
+   },
+   {
+    "lektion": "14",
+    "id": "1qEJrffa8Y5N_5qCQc7BM1Jr96OWJDNkg",
+    "datei": "14.Lektion_LittleFriends+4_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "14.1",
+    "id": "1LvI3jA6qRUmEvSvAPhgtkNxF1qrrFmaq",
+    "datei": "14.1_Lektion_LittleFriends+4_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "15",
+    "id": "1WmUlb-4oi76VFm0NcEvoFIcjb_8h0TRf",
+    "datei": "15.Lektion_LittleFriends+3_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "15.1",
+    "id": "1TIzRFXpyZdMOlJEZJ_vPNj79iCd6K4ix",
+    "datei": "15.1_Lektion_LittleFriends+3_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "16",
+    "id": "1F8YzQkzn5Jwl4w4GiPyujQRFO-7ODV1Y",
+    "datei": "16.Lektion_LittleFriends+2_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "16.1",
+    "id": "11nkowuL5uXbbpRjp0eMfJ8qGK8PTu2BR",
+    "datei": "16.1_Lektion_LittleFriends+2_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "17",
+    "id": "10wdqSOnVgjk8hJXWGtJMwX7IAVU7TRRG",
+    "datei": "17.Lektion_LittleFriends+1_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "17.1",
+    "id": "1UyEz38lPksytVvzRmCA1J6T5vyrOrs7q",
+    "datei": "17.1_Lektion_LittleFriends+1_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "18",
+    "id": "17rtrn8TlvmF2EHnfkJgIRigyxppRA0UZ",
+    "datei": "18.Lektion_Alle-LittleFriends_Gemischübungen-Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "19",
+    "id": "1OCGYem2YllFeLOIVJJuuDqPo9lzwClGP",
+    "datei": "19.Lektion_BestFriends+6_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "19.1",
+    "id": "1dAksvTQjzVSG0CXKkQ5eNsF0V9u-erTg",
+    "datei": "19.1_Lektion_BestFriends+6_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "20",
+    "id": "1kyqAaVm8Q05ualYm_9TMVsRjjJeQQiB3",
+    "datei": "20.Lektion_BestFriends+7_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "20.1",
+    "id": "1mygi8j1kYIEp3C2-aXRWxQ6gqNy3mZyi",
+    "datei": "20.1_Lektion_BestFriends+7_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "21",
+    "id": "1IFev7I_Tw04XH7c0hYKGOWjdrh005Ped",
+    "datei": "21.Lektion_BestFriends+8_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "21.1",
+    "id": "1n8DkGAtPh8nf30zgD2EyiV4RssHzZdLH",
+    "datei": "21.1_Lektion_BestFriends+8_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "22",
+    "id": "1wjWb2ypX8S-PiwDRbzmYlCfoCveUMnIP",
+    "datei": "22.Lektion_BestFriends+9_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "22.1",
+    "id": "13QInHjXkaEzFg2n6nvsrUdPnzPqllaAn",
+    "datei": "22.1_Lektion_BestFriends+9_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "23",
+    "id": "15_JY_IFPoPtR7TN3wJIEnHtPkteNbQtV",
+    "datei": "23.Lektion_Alle_BestFriends_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "24",
+    "id": "1v-Fik62mCU--huZITSC1RfC-4mOviich",
+    "datei": "24.Lektion_Spezielfälle_Mental Arithmetik Kurs.mp4"
+   },
+   {
+    "lektion": "25",
+    "id": "1PJroKV48AhOtT7kgs72_jRbtphmS7xck",
+    "datei": "25.Lektion_Minus_BigFriends-9.mp4"
+   },
+   {
+    "lektion": "26",
+    "id": "1A7KLNxoIDwgsjEGArwM58p0t-RZ6k59p",
+    "datei": "26.Lektion_Minus_BigFriends-8.mp4"
+   },
+   {
+    "lektion": "27",
+    "id": "1q-E4SCunk-BfPXM8RDZ9V7PWcKZvboMI",
+    "datei": "27.Lektion_Minus_BigFriends-7.mp4"
+   },
+   {
+    "lektion": "28",
+    "id": "1IERz7RkGhNhFEUpmutfNbO7xlnZOyh8m",
+    "datei": "28.Lektion_Minus_BigFriends-6.mp4"
+   },
+   {
+    "lektion": "29",
+    "id": "14lFUB9cbQihsKtv5yP8HBO48Kvy3SkaQ",
+    "datei": "29.Lektion_Minus_BigFriends-5.mp4"
+   },
+   {
+    "lektion": "30",
+    "id": "1QMTdjjujCH2Q3m7K7LZ-zknN1Mdb7gcR",
+    "datei": "30.Lektion_Minus_BigFriends-4.mp4"
+   },
+   {
+    "lektion": "31",
+    "id": "1uQX3jIIEDUAxR5kZObXDb6KhFhg8GAUw",
+    "datei": "31.Lektion_Minus_BigFriends-3.mp4"
+   },
+   {
+    "lektion": "32",
+    "id": "15osOKbVLRCoPYU7oTqkVCU9ThO1Yim30",
+    "datei": "32.Lektion_Minus_BigFriends-2.mp4"
+   },
+   {
+    "lektion": "33",
+    "id": "1yD_Pcr7khkqorbnF2VPyTywhtlEpUDwC",
+    "datei": "33.Lektion_Minus_BigFriends-1.mp4"
+   }
+  ]
+ }
 }

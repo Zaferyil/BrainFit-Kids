@@ -197,6 +197,8 @@ gidiyor; bu düzeltilmeli.
 
 Video linkleri ve MathKids'in 96 seviyesi (1.440 soru, 33 cevabı düzeltilmiş) MathKids oyunundan çıkarıldı: `content/videos.json`, `content/mathkids-levels.json`. Düzeltilen sorular dosyada `korrigiert` altında listeli.
 
+Drive klasöründeki 50 ders videosu (`content/videos.json` → `drive`) eksik üç üniteyi tamamlıyor: Lektion 2 (1 bis 9), Lektion 3 (Zehner und Einer) ve Lektion 30 (Big Friends −4). Drive oynatıcısı videonun bittiğini bildirmediği için "Weiter" sürenin %90'ından sonra açılır. Uzun vadede bu videoların da YouTube'a "nicht gelistet" yüklenmesi önerilir (bitiş kesin algılanır, Drive kotası sorun olmaz). "X.1" videolar (her kuralın ikinci, alıştırma videosu) henüz bağlı değil.
+
 ### Bir ünitenin akışı
 
 Her ünite 6 istasyondan oluşur ve 10–15 dakikada biter. İstasyonlar

@@ -1,12 +1,14 @@
 // Lernvideos je Einheit, aus MathKids („Watch Video“-Knopf je Level), siehe content/videos.json.
-export type Video = { id: string; title: string }
+export type Video = { id: string; title: string; source: 'youtube' | 'drive'; seconds?: number }
 
-const v = (id: string, title: string): Video => ({ id, title })
+const v = (id: string, title: string): Video => ({ id, title, source: 'youtube' })
+// MP4 aus dem Drive-Ordner „Bitmis-Video Dersler-Youtube icin“ (siehe content/videos.json)
+const drive = (id: string, title: string, seconds: number): Video => ({ id, title, source: 'drive', seconds })
 
 export const UNIT_VIDEOS: Record<string, Video[]> = {
   '1-1': [v('Zto6YuVKFaI', 'Erd- und Himmelsperlen')],
-  // MathKids hat für Welt 1 nur ein Video; Einheit 2 wiederholt es. Für 1-3 (Zehner und Einer) fehlt noch eins.
-  '1-2': [v('Zto6YuVKFaI', 'Erd- und Himmelsperlen (Wiederholung)')],
+  '1-2': [drive('16ZbfblAYiKU_VoNMjjzbUNWAkNNHA30U', '2. Lektion: 1 bis 9', 112)],
+  '1-3': [drive('1-eg7e_UsxmAHQIMnwZmxsIXvYW03rEe5', '3. Lektion: Zehner und Einer', 115)],
   '2-1': [v('UUrV0frw8aI', 'Big Friends +9'), v('fHMDL8jGRdE', 'Big Friends +8')],
   '2-2': [v('h5YNF3tvTx8', 'Big Friends +7'), v('5OeEtNZIILM', 'Big Friends +6')],
   '2-3': [v('WlkEGQAyIq4', 'Big Friends +5'), v('DCgAPgrH0J8', 'Big Friends +4')],
@@ -20,8 +22,8 @@ export const UNIT_VIDEOS: Record<string, Video[]> = {
   '4-3': [v('RrollzMfpxY', 'Alle Best Friends')],
   '5-1': [v('WOKGEaTal_k', 'Big Friends −9'), v('47OaoX87960', 'Big Friends −8')],
   '5-2': [v('2590z9kSWB4', 'Big Friends −7'), v('5N8WOhDN2Os', 'Big Friends −6')],
-  // Achtung: In MathKids führt −4 zum selben Video wie −6 (5N8WOhDN2Os) – hier nur −5, bis das richtige −4-Video da ist.
-  '5-3': [v('tDl6SUsTuxs', 'Big Friends −5')],
+  // In MathKids führt −4 zum selben Video wie −6; das richtige −4-Video kommt aus dem Drive-Ordner (30. Lektion).
+  '5-3': [v('tDl6SUsTuxs', 'Big Friends −5'), drive('1QMTdjjujCH2Q3m7K7LZ-zknN1Mdb7gcR', 'Big Friends −4', 88)],
   '5-4': [v('4Vj-T_KSksM', 'Big Friends −3'), v('g2zPiY_Y8hY', 'Big Friends −2')],
   '5-5': [v('HTnjgudJE5Y', 'Big Friends −1'), v('FhNZbVVzgi0', 'Alle Minus-Big-Friends')],
   '6-1': [v('syFqaVtK-Gw', 'Little Friends −4'), v('6S_lKdcnDEQ', 'Little Friends −3')],
@@ -35,3 +37,6 @@ export const UNIT_VIDEOS: Record<string, Video[]> = {
 export const unitVideos = (world: number, unit: number) => UNIT_VIDEOS[`${world}-${unit}`] ?? []
 
 export const youtubeUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`
+/** Eingebetteter Drive-Player; direkte MP4-Links blockiert der Browser (ORB). */
+export const drivePreviewUrl = (id: string) => `https://drive.google.com/file/d/${id}/preview`
+export const driveViewUrl = (id: string) => `https://drive.google.com/file/d/${id}/view`
