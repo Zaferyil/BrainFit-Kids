@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 
 type Props = {
   value?: number
@@ -27,7 +27,12 @@ export function Abakus({
 }: Props) {
   const n = Math.min(8, Math.max(1, Math.round(cols)))
   const [digits, setDigits] = useState(() => digitsFor(value, n))
-  useEffect(() => setDigits(digitsFor(value, n)), [value, n])
+  // Neue value/cols von außen setzen den Abakus zurück.
+  const [source, setSource] = useState(`${value}/${n}`)
+  if (source !== `${value}/${n}`) {
+    setSource(`${value}/${n}`)
+    setDigits(digitsFor(value, n))
+  }
 
   const u = colw / 64
   const pad = Math.round(16 * u)
