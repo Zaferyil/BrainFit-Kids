@@ -14,8 +14,8 @@ export default defineConfig({
         short_name: 'BrainFit',
         description: 'Mental-Arithmetik',
         lang: 'de',
-        theme_color: '#1e6fd9',
-        background_color: '#f4f8ff',
+        theme_color: '#1b1446',
+        background_color: '#1b1446',
         display: 'standalone',
         icons: [
           { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
