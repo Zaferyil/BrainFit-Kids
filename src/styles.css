@@ -194,3 +194,54 @@ button { font-family: inherit; }
 .pw-dev { margin-top: auto; padding-top: 10px; }
 @keyframes shake { 0%, 100% { translate: 0 0; } 20%, 60% { translate: -8px 0; } 40%, 80% { translate: 8px 0; } }
 @media (prefers-reduced-motion: reduce) { .pw-slots.wrong, .code-input.error { animation: none; } }
+
+/* Weltkarte */
+.map { position: absolute; left: 24px; top: 100px; width: 830px; height: 620px; }
+.map-path { position: absolute; left: 0; top: 0; }
+.island { position: absolute; width: 156px; height: 140px; border-radius: 50%; background: #231A58; }
+.island.park { width: 168px; height: 148px; background: #2B1F68; }
+.world { position: absolute; width: 160px; display: flex; flex-direction: column; align-items: center; }
+.world-me { position: absolute; left: 50%; top: -58px; transform: translateX(-50%); padding: 3px; border-radius: 50%; background: #FFFFFF; z-index: 1; }
+.world-node { border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; font-family: var(--font-display); font-weight: 800; line-height: 1; border: 6px solid #FFFFFF; box-shadow: 0 8px 0 rgba(0,0,0,.3); }
+.world-node.current { box-shadow: 0 8px 0 rgba(0,0,0,.3), 0 0 0 10px rgba(255,197,49,.25); }
+.world-node.locked { background: var(--board); border: 5px solid #3A2F80; box-shadow: none; cursor: pointer; padding: 0; }
+.world-node.park { background: linear-gradient(135deg, #A06BFF, #5B47D6); }
+.world-node:hover:not(.locked) { filter: brightness(1.06); }
+.world-node:active { transform: translateY(3px); }
+.world-label { margin-top: 8px; padding: 3px 10px; border-radius: 999px; background: #FFFFFF; color: var(--ink); font-weight: 900; font-size: 14px; white-space: nowrap; }
+.world-label.locked { background: none; color: var(--muted); }
+.world-stars { display: flex; gap: 2px; margin-top: 2px; }
+.map-perli { position: absolute; left: 410px; top: 468px; display: flex; align-items: flex-end; gap: 4px; }
+.map-bubble { width: 168px; margin-bottom: 34px; padding: 10px 14px; border-radius: 18px 18px 18px 4px; background: #FFFFFF; color: var(--ink); font-weight: 800; font-size: 14px; line-height: 1.3; }
+
+.map-side { position: absolute; right: 24px; top: 104px; width: 316px; display: flex; flex-direction: column; gap: 14px; }
+.plan-card { background: #FFFFFF; color: var(--ink); border-radius: 28px; padding: 18px 20px; box-shadow: 0 6px 0 #D8D1FF; display: flex; flex-direction: column; gap: 12px; }
+.plan-head { display: flex; align-items: center; justify-content: space-between; }
+.eyebrow { font-weight: 900; font-size: 13px; letter-spacing: .06em; color: #6B61A8; }
+.plan-count { font-weight: 900; font-size: 13px; color: #6B61A8; }
+.plan-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.plan-step { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 16px; }
+.plan-step.current { background: #FFF4D1; box-shadow: 0 0 0 3px var(--yellow) inset; }
+.plan-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.plan-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.plan-text strong { font-family: var(--font-display); font-weight: 800; font-size: 19px; line-height: 1.1; }
+.plan-text span { font-weight: 700; font-size: 13px; color: #5A5094; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.plan-min { font-weight: 900; font-size: 13px; color: #6B61A8; white-space: nowrap; }
+.plan-go { justify-content: center; padding: 12px; font-size: 24px; box-shadow: 0 6px 0 var(--orange-dark); }
+
+.quests { background: var(--board); border-radius: 28px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.quests-head { display: flex; align-items: center; justify-content: space-between; }
+.quests-head h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 21px; }
+.quests-head span { font-weight: 800; font-size: 13px; color: #A99FE8; }
+.quest { display: flex; align-items: center; gap: 12px; }
+.quest-icon { width: 38px; height: 38px; border-radius: 13px; background: var(--violet); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.quest-body { flex: 1; min-width: 0; }
+.quest-text { font-weight: 800; font-size: 14px; line-height: 1.25; }
+.quest-track { height: 8px; border-radius: 999px; background: var(--night); margin-top: 6px; overflow: hidden; }
+.quest-track div { height: 100%; border-radius: 999px; background: var(--yellow); }
+.quest-reward { font-weight: 900; font-size: 14px; color: var(--yellow); }
+
+.topbar-menu { position: relative; }
+.menu-pop { position: absolute; right: 0; top: 60px; z-index: 20; padding: 8px; border-radius: 18px; background: #FFFFFF; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+.menu-pop button { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border: 0; border-radius: 12px; background: none; color: var(--ink); font-weight: 900; font-size: 16px; white-space: nowrap; cursor: pointer; }
+.menu-pop button:hover { background: #F2F0FF; }

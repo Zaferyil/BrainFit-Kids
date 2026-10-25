@@ -50,3 +50,7 @@ export function normalizeCode(code: string) {
 export function findClass(code: string) {
   return CLASSES.find((c) => normalizeCode(c.code) === normalizeCode(code))
 }
+
+export function findKid(classCode: string, kidId: string) {
+  return findClass(classCode)?.kids.find((k) => k.id === kidId)
+}

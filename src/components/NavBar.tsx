@@ -1,12 +1,12 @@
 import { Icon, type IconName } from './Icon'
 
-export type NavId = 'karte' | 'shop' | 'garderobe' | 'rangliste' | 'pokale'
+export type NavId = 'karte' | 'denkpark' | 'shop' | 'garderobe' | 'pokale'
 
 const items: { id: NavId; label: string; icon: IconName }[] = [
   { id: 'karte', label: 'Karte', icon: 'map' },
+  { id: 'denkpark', label: 'Denk-Park', icon: 'brain' },
   { id: 'shop', label: 'Shop', icon: 'bag' },
   { id: 'garderobe', label: 'Garderobe', icon: 'shirt' },
-  { id: 'rangliste', label: 'Rangliste', icon: 'crown' },
   { id: 'pokale', label: 'Pokale', icon: 'trophy' },
 ]
 
