@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { Start } from './screens/Start'
 import { AbakusTest } from './screens/AbakusTest'
 import { Placeholder } from './screens/Placeholder'
+import { Anmelden } from './screens/Anmelden'
 
 const TITLES: Record<string, string> = {
-  anmelden: 'Anmelden',
   karte: 'Weltkarte',
   shop: 'Shop',
   garderobe: 'Garderobe',
@@ -28,6 +28,7 @@ function useRoute() {
 export default function App() {
   const route = useRoute()
   if (route === '') return <Start />
+  if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />
   return <Placeholder title={TITLES[route] ?? 'Unbekannte Seite'} />
 }
