@@ -1,9 +1,13 @@
 import { Abakus } from '../components/Abakus'
+import { Bead } from '../components/Bead'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 
-const STARS = [[140, 90, 4], [320, 60, 3], [520, 140, 5], [700, 40, 3], [880, 100, 4], [1050, 220, 3], [980, 420, 5], [60, 380, 3], [620, 760, 4], [400, 700, 3], [1120, 690, 4], [760, 300, 3], [260, 520, 3], [1150, 40, 5]]
+// "Kids" in den Perlenfarben des Abakus
+const KIDS = [['K', '#7CD63A'], ['i', '#FFC531'], ['d', '#FF7A2E'], ['s', '#4FB3FF']]
+
+const STARS =[[140, 90, 4], [320, 60, 3], [520, 140, 5], [700, 40, 3], [880, 100, 4], [1050, 220, 3], [980, 420, 5], [60, 380, 3], [620, 760, 4], [400, 700, 3], [1120, 690, 4], [760, 300, 3], [260, 520, 3], [1150, 40, 5]]
 
 export function Start() {
   return (
@@ -15,19 +19,23 @@ export function Start() {
       <div className="blob" style={{ right: -80, top: -120, width: 420, height: 420, background: '#221A56' }} />
 
       <div className="start-copy">
-        <div className="brand">
-          <div className="brand-mark">
-            <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-              <rect x="3" y="3" width="22" height="22" rx="4" fill="none" stroke="#231A4F" strokeWidth="2.5" />
-              <line x1="3" y1="11" x2="25" y2="11" stroke="#231A4F" strokeWidth="2.5" />
-              <circle cx="9" cy="7" r="2.2" fill="#231A4F" />
-              <circle cx="19" cy="17" r="2.2" fill="#231A4F" />
-              <circle cx="14" cy="20" r="2.2" fill="#231A4F" />
-            </svg>
+        <div className="start-logo">
+          <h1 className="start-title" aria-label="BrainFit Kids">
+            <span className="title-row">
+              <span className="t-brain">Brain</span><span className="t-fit">Fit</span>
+            </span>
+            <span className="title-row t-kids" aria-hidden="true">
+              {KIDS.map(([ch, color], i) => (
+                <span key={i} className="t-letter" style={{ color, animationDelay: `${i * 0.12}s` }}>{ch}</span>
+              ))}
+            </span>
+          </h1>
+          <div className="start-sub">
+            <Bead color="green" width={34} />
+            <span>Mental Arithmetik</span>
+            <Bead color="orange" width={34} />
           </div>
-          <span className="brand-sub">MENTAL ARITHMETIK</span>
         </div>
-        <h1 className="start-title">Brain Fit<br /><span>Kids</span></h1>
         <p className="start-lead">Rechnen wie ein Blitz – mit Perli und dem Zauber-Abakus.</p>
         <div className="start-actions">
           <a href="#/anmelden" className="btn-primary">

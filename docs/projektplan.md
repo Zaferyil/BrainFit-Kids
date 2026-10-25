@@ -1,8 +1,8 @@
-# Brain Fit Kids – Projektplan
+# BrainFit Kids – Projektplan
 
 Sürüm 2 · 25 Ekim 2026 · @Zafer
 
-**Brain Fit Kids – Mental Arithmetik**, 5–12 yaş arası çocuklar için
+**BrainFit Kids – Mental Arithmetik**, 5–12 yaş arası çocuklar için
 Almanca, oyunlaştırılmış bir PWA. İki ana alanı var:
 
 1. **Rechnen (Mental-Arithmetik):** Soroban abaküsü ve zihinden hesaplama
@@ -290,7 +290,7 @@ atayabilir.
 ## Ekran listesi
 
 Toplam 29 ekran: 19 öğrenci, 4 veli ve 6 admin ekranı. İlk 24 ekran
-"Brain Fit Kids – UI Design" sayfasında tasarlandı; ★ işaretli 5 ekran
+"BrainFit Kids – UI Design" sayfasında tasarlandı; ★ işaretli 5 ekran
 yeni ve henüz tasarlanmadı. Değişen ekranlar ✎ ile işaretli.
 
 | \#  | Rol     | Ekran (Almanca adı)   | Amacı                                                                    |
@@ -371,7 +371,7 @@ Her aşama test edilip onaylanmadan bir sonrakine geçilmez.
 
 ## Onayından önce netleşmesi gerekenler
 
-- [x] Uygulamanın adı: **Brain Fit Kids**, alt başlık **Mental Arithmetik**.
+- [x] Uygulamanın adı: **BrainFit Kids**, alt başlık **Mental Arithmetik**.
 - [x] Yaş aralığı: **5–12**.
 - [x] Ana tema: Mental-Arithmetik **ve** zeka gelişimi.
 - [x] Yaşa göre otomatik zorluk **sadece zeka oyunlarında**; Rechnen herkes için aynı.
