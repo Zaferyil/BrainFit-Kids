@@ -26,6 +26,11 @@ KARTEN = [
         'punkte': [(366,1368),(498,1228),(595,1043),(263,933),(478,762),(664,720),(357,561),(260,419),(546,363),(732,466),(770,300)],
         'figur': False,
     },
+    {
+        'quelle': 'docs/referenz/karte-vorlage-5.webp', 'ziel': 'src/assets/karte/insel-5.webp', 'top': 128, 'bottom': 1535,
+        'punkte': [(392,1325),(663,1210),(463,1077),(685,970),(428,898),(573,773),(321,680),(647,610),(470,515),(285,425),(491,365),(635,305)],
+        'figur': False,
+    },
 ]
 
 for k in KARTEN:
@@ -40,5 +45,5 @@ for k in KARTEN:
     out = cv2.inpaint(im, cv2.dilate(m, np.ones((5, 5))), 9, cv2.INPAINT_TELEA)
     if k['figur']:
         out[1385:1480, 436:572] = im[1385:1480, 436:572]   # Start-Schild unverändert lassen
-    cv2.imwrite(k['ziel'], out[k['top']:k['bottom']], [cv2.IMWRITE_WEBP_QUALITY, 82])
+    cv2.imwrite(k['ziel'], out[k['top']:k['bottom']], [cv2.IMWRITE_WEBP_QUALITY, 72])
     cv2.imwrite('/tmp/claude-0/-home-user-BrainFit-Kids/fb303a68-5eb2-544c-8d38-6cf1f112268d/scratchpad/' + k['ziel'].split('/')[-1] + '-maske.png', m)
