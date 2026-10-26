@@ -3,6 +3,9 @@ import { BEAD_IMAGES, type BeadColor } from './beadImages'
 import klick from '../assets/abakus/klick.mp3'
 import punktOrange from '../assets/abakus/punkt-orange.png'
 import punktBlau from '../assets/abakus/punkt-blau.png'
+import {
+  BEAD_H, BEAD_W, COL_LEFT, DOT, DOT_TOP, H, PAD, PITCH, digitsFor, earthTop, frameWidth, heavenTop,
+} from './abakusGeometry'
 
 // Originalrahmen von abacus.mentalmath.at, je Stangenzahl ein Bild (1 Stange aus dem 2er-Rahmen geschnitten)
 const FRAMES = import.meta.glob('../assets/abakus/rahmen-*.png', { eager: true, import: 'default' }) as Record<string, string>
@@ -25,27 +28,12 @@ type Props = {
   marker?: boolean
   sound?: boolean
   onChange?: (value: number) => void
+  /** Video-Studio: Perlen stehen zwischen „from“ und value, je nach progress (0–1), ohne CSS-Übergang. */
+  from?: number
+  progress?: number
 }
 
-// Maße des Originals in px (bei 135 px Stangenabstand)
-const PITCH = 135
-const H = 443
-const COL_LEFT = [50, 186, 320, 456, 590, 726, 860, 996]
-const BEAD_W = 116
-const BEAD_H = 55
-const PAD = 24
-const HEAVEN_TOP = PAD + 2
-const HEAVEN_DOWN = 50
-const EARTH_BOTTOM = H - PAD
-const EARTH_UP = 44
-const DOT = 20
-const DOT_TOP = PAD + 110
-
-const frameWidth = (n: number) => (n === 1 ? 218 : 353 + PITCH * (n - 2))
-
-function digitsFor(value: number, cols: number) {
-  return String(Math.max(0, Math.floor(value))).padStart(cols, '0').slice(-cols).split('').map(Number)
-}
+const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
 
 let audio: HTMLAudioElement | null = null
 function playClick() {
@@ -61,7 +49,7 @@ function playClick() {
 
 export function Abakus({
   value = 0, cols = 3, colw = PITCH, interactive = true, showValue = false,
-  mark = -1, faded = false, frame = 'orange', marker = true, sound = true, onChange,
+  mark = -1, faded = false, frame = 'orange', marker = true, sound = true, onChange, from, progress,
 }: Props) {
   const n = Math.min(8, Math.max(1, Math.round(cols)))
   const [digits, setDigits] = useState(() => digitsFor(value, n))
@@ -72,6 +60,12 @@ export function Abakus({
     setDigits(digitsFor(value, n))
   }
 
+  const animated = progress !== undefined
+  const fromDigits = digitsFor(from ?? value, n)
+  const ease = animated ? easeInOut(Math.min(1, Math.max(0, progress))) : 1
+  // Position zwischen Start- und Zielziffer (nur im Studio, sonst gilt die Zielziffer)
+  const lerpTop = (ci: number, top: (d: number) => number) =>
+    animated ? top(fromDigits[ci]) + (top(digits[ci]) - top(fromDigits[ci])) * ease : top(digits[ci])
   const s = colw / PITCH
   const W = frameWidth(n)
   const px = (v: number) => v * s
@@ -104,7 +98,7 @@ export function Abakus({
       role="group"
       aria-label="Abakus"
       data-value={Number(digits.join(''))}
-      className="abakus"
+      className={animated ? 'abakus abakus-static' : 'abakus'}
       style={{ width: px(W), height: px(H), opacity: faded ? 0.28 : 1, backgroundImage: `url(${frameSrc(frame, n)})` }}
     >
       {digits.map((d, ci) => {
@@ -118,7 +112,7 @@ export function Abakus({
             {fromRight === mark && (
               <div className="abakus-mark" style={{ left: px(left - 6), top: px(PAD - 8), width: px(BEAD_W + 12), height: px(H - 2 * PAD + 16), borderRadius: px(22) }} />
             )}
-            {bead(`h${ci}`, `Himmelsperle, Stange ${fromRight + 1}`, left, heavenOn ? HEAVEN_TOP + HEAVEN_DOWN : HEAVEN_TOP, 'green',
+            {bead(`h${ci}`, `Himmelsperle, Stange ${fromRight + 1}`, left, lerpTop(ci, heavenTop), 'green',
               () => setDigit(ci, heavenOn ? d - 5 : d + 5))}
             {marked && (
               <img className="abakus-dot" src={frame === 'blau' ? punktBlau : punktOrange} alt="" aria-hidden="true"
@@ -126,8 +120,7 @@ export function Abakus({
             )}
             {[0, 1, 2, 3].map((i) => {
               const on = i < lower
-              const rest = EARTH_BOTTOM - (4 - i) * BEAD_H
-              return bead(`e${ci}-${i}`, `Erdperle ${i + 1}, Stange ${fromRight + 1}`, left, on ? rest - EARTH_UP : rest,
+              return bead(`e${ci}-${i}`, `Erdperle ${i + 1}, Stange ${fromRight + 1}`, left, lerpTop(ci, (dd) => earthTop(dd, i)),
                 marked && i === 0 ? 'orange' : 'yellow',
                 () => setDigit(ci, (heavenOn ? 5 : 0) + (on ? i : i + 1)))
             })}

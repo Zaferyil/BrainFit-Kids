@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Start } from './screens/Start'
 import { AbakusTest } from './screens/AbakusTest'
+import { Studio } from './studio/Studio'
 import { Placeholder } from './screens/Placeholder'
 import { Anmelden } from './screens/Anmelden'
 import { Weltkarte } from './screens/Weltkarte'
@@ -52,6 +53,7 @@ export default function App() {
   if (route === '') return <Start />
   if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />
+  if (route.startsWith('studio/')) return <Studio id={route.slice('studio/'.length).split('?')[0]} />
 
   if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {
     const session = getSession()

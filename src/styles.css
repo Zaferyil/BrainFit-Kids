@@ -134,6 +134,7 @@ button { font-family: inherit; }
 .abakus-bead { position: absolute; padding: 0; margin: 0; border: 0; background: none; transition: top .15s ease; z-index: 2; }
 .abakus-bead img { width: 100%; height: auto; display: block; pointer-events: none; user-select: none; }
 .abakus-bead:disabled { cursor: default; }
+.abakus-static .abakus-bead { transition: none; }
 .abakus-bead:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 2px; border-radius: 40%; }
 .abakus-dot { position: absolute; z-index: 1; pointer-events: none; }
 .abakus-mark { position: absolute; z-index: 0; background: rgba(255,255,255,.16); box-shadow: 0 0 0 3px #FFFFFF inset; }
@@ -813,3 +814,71 @@ button { font-family: inherit; }
 .station.skipped { background: #211858; opacity: .7; }
 .station.skipped .station-title { color: var(--muted); }
 .station-skip { padding: 4px 10px; border-radius: 999px; background: var(--board); color: var(--lilac); font-weight: 900; font-size: 13px; }
+
+/* ---------- Video-Studio (Lernvideos, 1920×1080) ---------- */
+.studio { min-height: 100dvh; background: #0B0726; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.studio.exporting { justify-content: flex-start; }
+.studio-viewport { position: relative; overflow: hidden; }
+.studio-frame { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.studio-controls { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 800; width: min(1200px, 96vw); }
+.studio-controls input { flex: 1; }
+.studio-controls button, .studio-controls select { font: inherit; padding: 8px 16px; border-radius: 12px; border: 0; background: var(--yellow); color: var(--ink); cursor: pointer; }
+.studio-missing { color: #fff; padding: 40px; }
+
+.sf { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: #fff; font-family: var(--font-body);
+  background: radial-gradient(1200px 800px at 60% 40%, #33287A 0%, #1B1446 60%, #120C33 100%); }
+.sf-stars { position: absolute; inset: 0; opacity: .5;
+  background-image: radial-gradient(2px 2px at 140px 120px, #fff 50%, transparent 51%), radial-gradient(2px 2px at 520px 260px, #C9C0FF 50%, transparent 51%),
+    radial-gradient(3px 3px at 1700px 160px, #FFC531 50%, transparent 51%), radial-gradient(2px 2px at 1500px 700px, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 900px 90px, #fff 50%, transparent 51%), radial-gradient(3px 3px at 300px 600px, #C9C0FF 50%, transparent 51%),
+    radial-gradient(2px 2px at 1820px 960px, #fff 50%, transparent 51%), radial-gradient(2px 2px at 1240px 980px, #C9C0FF 50%, transparent 51%); }
+.sf-head { position: absolute; top: 40px; left: 60px; right: 60px; display: flex; align-items: center; gap: 22px; }
+.sf-chip { padding: 10px 26px; border-radius: 999px; background: var(--orange); color: var(--ink); font-weight: 900; font-size: 30px; }
+.sf-title { font-family: var(--font-display); font-weight: 800; font-size: 48px; }
+.sf-brand { margin-left: auto; font-family: var(--font-display); font-weight: 800; font-size: 38px; color: var(--lilac); }
+.sf-brand b { color: var(--yellow); }
+
+.sf-board { position: absolute; left: 420px; right: 60px; top: 130px; bottom: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+.sf-abakus-wrap { position: relative; }
+.sf-caption { display: flex; align-items: center; gap: 18px; padding: 12px 30px; border-radius: 999px; background: #FFFFFF; color: var(--ink); font-weight: 900; font-size: 38px; }
+.sf-caption img { width: 64px; height: 64px; }
+.sf-caption.task { background: var(--yellow); font-family: var(--font-display); font-size: 48px; }
+.sf-glow { position: absolute; border-radius: 28px; box-shadow: 0 0 0 6px #FFE58F, 0 0 40px 12px rgba(255,229,143,.9); pointer-events: none; z-index: 3; }
+.sf-glow.bar { border-radius: 16px; }
+.sf-hand { position: absolute; z-index: 4; filter: drop-shadow(0 6px 6px rgba(0,0,0,.35)); }
+.sf-place { position: absolute; top: calc(100% + 14px); padding: 8px 22px; border-radius: 16px; background: var(--lilac); color: var(--ink); font-weight: 900; font-size: 36px; white-space: nowrap; }
+.sf-badge { position: absolute; right: 40px; top: 50%; translate: 0 -50%; padding: 18px 40px; border-radius: 36px; background: var(--orange); color: var(--ink);
+  font-family: var(--font-display); font-weight: 800; font-size: 96px; line-height: 1.1; box-shadow: 0 12px 0 var(--orange-dark); white-space: nowrap; }
+.sf-countdown { position: absolute; right: 120px; top: 50%; translate: 0 -50%; width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center;
+  background: #FFFFFF; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 150px; box-shadow: 0 0 0 14px rgba(255,255,255,.25); }
+
+.sf-card { position: absolute; left: 470px; right: 110px; top: 170px; bottom: 190px; border-radius: 48px; background: #FFFFFF; color: var(--ink); padding: 50px 70px;
+  display: flex; flex-direction: column; justify-content: center; gap: 28px; box-shadow: 0 16px 0 #D8D1FF; }
+.sf-card h2 { margin: 0 0 10px; font-family: var(--font-display); font-weight: 800; font-size: 72px; line-height: 1; }
+.sf-card-line { display: flex; align-items: center; gap: 34px; font-size: 48px; font-weight: 900; }
+.sf-card-icon { width: 130px; display: flex; justify-content: center; }
+.sf-card-icon img { width: 110px; height: 110px; }
+
+.sf-teacher { position: absolute; left: 50px; bottom: 50px; width: 330px; }
+.sf-teacher-win { width: 330px; height: 412px; border-radius: 44px; overflow: hidden; border: 8px solid var(--yellow); background: #fff; box-shadow: 0 18px 0 #120C33; }
+.sf-teacher-win img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sf-teacher-name { position: absolute; left: 50%; bottom: -26px; translate: -50% 0; display: flex; align-items: center; gap: 14px; padding: 8px 26px; border-radius: 999px;
+  background: var(--orange); color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 36px; }
+.sf-wave { display: flex; align-items: center; gap: 4px; height: 32px; }
+.sf-wave i { width: 6px; border-radius: 3px; background: var(--ink); display: block; }
+.sf-teacher-hand { position: absolute; right: -40px; top: 40px; width: 110px; transform-origin: 50% 90%; }
+
+.sf-subtitle { position: absolute; left: 440px; right: 80px; bottom: 44px; text-align: center; padding: 18px 34px; border-radius: 28px; background: rgba(11,7,38,.82);
+  font-size: 42px; font-weight: 800; line-height: 1.3; }
+
+.sf-titlecard { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; }
+.sf-logo { font-family: var(--font-display); font-weight: 800; font-size: 150px; line-height: 1; text-align: center; }
+.sf-logo .brain { color: #FFFFFF; }
+.sf-logo .kids { color: var(--yellow); }
+.sf-logo.small { font-size: 64px; }
+.sf-sub { font-size: 56px; color: var(--orange); margin-top: 10px; }
+.sf-lesson { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 26px 70px; border-radius: 40px; background: #FFFFFF; color: var(--ink); }
+.sf-lesson span { font-weight: 900; font-size: 40px; color: #5A5094; }
+.sf-lesson strong { font-family: var(--font-display); font-size: 84px; line-height: 1; }
+.sf-title-perli { position: absolute; right: 180px; bottom: 120px; }
+.sf-titlecard.end .sf-lesson strong { font-size: 110px; }
