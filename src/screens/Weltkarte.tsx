@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import insel from '../assets/karte/insel.webp'
+import { KartenLand } from '../components/KartenLand'
+import { LAND_W, landLayout } from '../components/kartenLandLayout'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -13,8 +15,8 @@ import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
-// Eine durchgehende Karte: das Inselbild (ohne Stationen, siehe scripts/karte-bild.py) wiederholt sich nach oben.
-// Je Bild 12 Plätze auf dem Weg, von unten (Start) nach oben (Burg); die Stationen sind durchnummeriert.
+// Eine durchgehende Karte: unten die Startinsel (Bild ohne Stationen, siehe scripts/karte-bild.py) mit 12 Plätzen,
+// darüber zeichnet KartenLand den Weg im gleichen Stil weiter. Die Stationen sind durchnummeriert.
 const IMG_W = 941
 const IMG_H = 1403
 const SLOTS: [number, number][] = [
@@ -31,7 +33,10 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const [questsOpen, setQuestsOpen] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
-  const islands = useMemo(() => groupByWorld(path), [path])
+  const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
+  const first = stops.slice(0, SLOTS.length)
+  const rest = stops.slice(SLOTS.length)
+  const land = useMemo(() => landLayout(rest.length), [rest.length])
 
   // Beim Öffnen zur aktuellen Station scrollen
   useEffect(() => {
@@ -84,41 +89,38 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </div>
 
         <div className="inseln" ref={scroller}>
-          {islands.map((stops, k) => (
-            <section key={k} className="insel">
-              <img className="insel-bg" src={insel} alt="" draggable={false} />
-              {SLOTS.map(([x, y], i) => {
-                const s = stops[i]
-                const pos = { left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }
-                if (!s) return <span key={i} className="insel-coin" style={pos} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
-                return (
-                  <div key={s.id} className="insel-stop" style={pos}>
-                    <Node stop={s} n={(islands.length - 1 - k) * SLOTS.length + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
-                  </div>
-                )
-              })}
-              {k === islands.length - 1 && (
-                <div className="insel-perli">
-                  <div className="map-bubble" role="status">{say}</div>
-                  <Perli mood="happy" size={96} />
+          {rest.length > 0 && (
+            <section className="insel land" style={{ aspectRatio: `${LAND_W} / ${land.height}` }}>
+              <KartenLand n={rest.length} />
+              {rest.map((s, i) => (
+                <div key={s.id} className="insel-stop" style={{ left: `${(land.stops[i].x / LAND_W) * 100}%`, top: `${(land.stops[i].y / land.height) * 100}%` }}>
+                  <Node stop={s} n={SLOTS.length + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
                 </div>
-              )}
+              ))}
             </section>
-          ))}
+          )}
+          <section className="insel">
+            <img className="insel-bg" src={insel} alt="" draggable={false} />
+            {SLOTS.map(([x, y], i) => {
+              const s = first[i]
+              if (!s) return null
+              return (
+                <div key={s.id} className="insel-stop" style={{ left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }}>
+                  <Node stop={s} n={i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+                </div>
+              )
+            })}
+            <div className="insel-perli">
+              <div className="map-bubble" role="status">{say}</div>
+              <Perli mood="happy" size={96} />
+            </div>
+          </section>
         </div>
       </div>
 
       <div className="nav-dock"><NavBar active="karte" /></div>
     </Stage>
   )
-}
-
-/** Stationen (ohne Welt-Banner) in Inselbilder zu je 12 Plätzen aufteilen; oben das letzte Bild. */
-function groupByWorld(path: MapStop[]): Stop[][] {
-  const stops = path.filter((s): s is Stop => s.kind !== 'world')
-  const islands: Stop[][] = []
-  for (let i = 0; i < stops.length; i += SLOTS.length) islands.push(stops.slice(i, i + SLOTS.length))
-  return islands.reverse()
 }
 
 function greeting(s?: MapStop) {

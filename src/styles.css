@@ -1088,11 +1088,10 @@ button { font-family: inherit; }
 /* Karte als Inseln: Bild + Stationen in % des Bildes, Größen relativ zur Inselbreite */
 .inseln { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 0 0 24px; }
 .insel { position: relative; flex-shrink: 0; width: min(100%, 620px); container-type: inline-size; }
-.insel + .insel, .inseln > .island:not(:first-child) { margin-top: -2px; }
 .insel-bg { display: block; width: 100%; height: auto; user-select: none; }
-.insel:not(:first-child) { margin-top: -14cqw; }
-.insel:not(:first-child) .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw); }
-.insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
+.insel.land { z-index: 2; }
+.land-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-banner .world-banner { width: min(88cqw, 440px); }
 .insel-stop { position: absolute; width: 0; height: 0; z-index: 2; }
 .insel-stop .path-stop { position: absolute; left: 0; top: 0; width: 40cqw; translate: -50% -50%; gap: .6cqw; }
