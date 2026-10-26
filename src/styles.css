@@ -1090,7 +1090,8 @@ button { font-family: inherit; }
 .insel { position: relative; flex-shrink: 0; width: min(100%, 620px); container-type: inline-size; }
 .insel + .insel, .inseln > .island:not(:first-child) { margin-top: -2px; }
 .insel-bg { display: block; width: 100%; height: auto; user-select: none; }
-.insel.locked .insel-bg { filter: grayscale(.75) brightness(.7); }
+.insel:not(:first-child) { margin-top: -14cqw; }
+.insel:not(:first-child) .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw); }
 .insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-banner .world-banner { width: min(88cqw, 440px); }
 .insel-stop { position: absolute; width: 0; height: 0; z-index: 2; }
