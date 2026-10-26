@@ -1147,3 +1147,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .pw-back { margin-left: auto; align-self: flex-start; color: #5A5094; }
 .btn-primary.los { margin-top: 20px; align-self: center; text-decoration: none; font-size: 26px; padding: 18px 40px; animation: path-pulse 1.6s ease-in-out infinite; }
 @media (max-width: 600px) { .stufe-grid { gap: 8px; } .stufe { min-height: 78px; } .stufe strong { font-size: 26px; } .stufe span { font-size: 11px; } }
+/* Anmeldung Schritt für Schritt: immer nur ein Fenster, das nächste springt auf */
+.login-body.single { justify-content: center; align-items: flex-start; }
+.login-body.single > .kids-panel, .login-body.single > .pw-panel { flex: 0 1 720px; width: auto; min-height: 0; }
+.login-body.single .kids-foot { margin-top: 24px; }
+.popin { animation: popin .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes popin { from { opacity: 0; transform: scale(.82) translateY(24px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .popin { animation: none; } }

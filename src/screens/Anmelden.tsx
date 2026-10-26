@@ -59,16 +59,20 @@ export function Anmelden() {
         </div>
 
         {schoolClass ? (
-          <div className="login-body">
-            <KidPicker
-              schoolClass={schoolClass}
-              selected={kid}
-              onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
-              onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
-            />
-            {kid && stufe === null
-              ? <StufePicker kid={kid} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
-              : <PicturePassword key={kid?.id ?? 'none'} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />}
+          <div className="login-body single">
+            {!kid ? (
+              <KidPicker
+                key="kind"
+                schoolClass={schoolClass}
+                selected={kid}
+                onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
+                onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
+              />
+            ) : stufe === null ? (
+              <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
+            ) : (
+              <PicturePassword key={`pw-${kid.id}`} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />
+            )}
           </div>
         ) : (
           <ClassCode onFound={(c) => { saveClass(c.code); setSchoolClass(c) }} />
@@ -128,7 +132,7 @@ function KidPicker({ schoolClass, selected, onSelect, onChangeClass }: {
   onChangeClass: () => void
 }) {
   return (
-    <section className="kids-panel">
+    <section className="kids-panel popin">
       <div className="kids-head">
         <h2>Wer bist du?</h2>
         <span className="class-chip">Klasse {schoolClass.code}</span>
@@ -151,16 +155,17 @@ function KidPicker({ schoolClass, selected, onSelect, onChangeClass }: {
   )
 }
 
-function StufePicker({ kid, onPick }: { kid: Kid; onPick: (n: number) => void }) {
+function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) => void; onBack: () => void }) {
   const saved = getStufe(kid.id)
   return (
-    <section className="pw-panel">
+    <section className="pw-panel popin">
       <div className="pw-head">
         <Avatar size={64} {...kid.avatar} />
         <div>
           <div className="pw-hello">Hallo {kid.name}!</div>
           <h2>In welche Klasse gehst du?</h2>
         </div>
+        <button type="button" className="text-btn pw-back" onClick={onBack}>Anderes Kind</button>
       </div>
       <div className="stufe-grid">
         {STUFEN.map((s) => (
@@ -205,7 +210,7 @@ function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClas
   }
 
   return (
-    <section className="pw-panel">
+    <section className="pw-panel popin">
       <div className="pw-head">
         <Avatar size={64} {...kid.avatar} />
         <div>
