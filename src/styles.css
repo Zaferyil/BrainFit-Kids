@@ -1025,3 +1025,59 @@ button { font-family: inherit; }
   .lesson-bar span { display: none; }
   .lesson-play { width: 72px; height: 72px; }
 }
+
+/* Karte als Lernweg: Welten, Einheiten und Denkspiele auf einem Weg */
+.path-screen { position: relative; flex: 1; display: flex; flex-direction: column; }
+.path-tools { position: sticky; top: 8px; z-index: 8; display: flex; justify-content: flex-end; padding: 0 20px; height: 0; overflow: visible; }
+.quest-chip { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--yellow); color: var(--ink);
+  font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; box-shadow: 0 4px 0 #C99400; }
+.quest-chip b { padding: 2px 8px; border-radius: 999px; background: rgba(35,26,79,.12); }
+.quests.popover { position: absolute; right: 20px; top: 54px; width: min(380px, calc(100vw - 40px)); box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+.path-scroll { padding: 64px 0 40px; }
+.path { position: relative; width: 100%; max-width: 640px; margin: 0 auto; }
+.path-line { position: absolute; left: 50%; top: 0; translate: -50% 0; pointer-events: none; }
+.path-item { position: absolute; left: 50%; width: 0; }
+.path-stop { position: absolute; left: 0; top: 0; width: 200px; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.path-node { position: relative; width: 96px; height: 96px; border-radius: 50%; border: 0; display: grid; place-items: center; text-decoration: none; cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0,0,0,.28), inset 0 -6px 0 rgba(0,0,0,.12); }
+.path-node.unit.current { width: 116px; height: 116px; margin-top: -10px; box-shadow: 0 0 0 10px rgba(255,197,49,.35), 0 8px 0 rgba(0,0,0,.28), inset 0 -6px 0 rgba(0,0,0,.12); animation: path-pulse 2s ease-in-out infinite; }
+.path-node.game { width: 84px; height: 84px; background: linear-gradient(160deg, #A06BFF, #6A3DE8); }
+.path-node.game.current, .path-node.start.current { width: 100px; height: 100px; box-shadow: 0 0 0 10px rgba(160,107,255,.35), 0 8px 0 rgba(0,0,0,.28); animation: path-pulse 2s ease-in-out infinite; }
+.path-node.start { background: linear-gradient(160deg, #3BA7FF, #2F6FED); }
+.path-node.locked { background: var(--board); box-shadow: inset 0 0 0 4px var(--violet-line); cursor: default; }
+.path-num { font-family: var(--font-display); font-weight: 800; font-size: 46px; line-height: 1; }
+.path-node.current .path-num { font-size: 56px; }
+.path-check { position: absolute; right: -4px; bottom: -4px; width: 32px; height: 32px; border-radius: 50%; background: #5EE07E; display: grid; place-items: center; box-shadow: 0 0 0 4px var(--night); }
+.path-label { max-width: 190px; text-align: center; font-weight: 900; font-size: 15px; line-height: 1.2; color: #FFFFFF; text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.path-label.locked { color: #8F85D6; text-shadow: none; }
+.path-kind { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #C9B6FF; }
+.path-start { position: absolute; top: -48px; padding: 6px 18px; border-radius: 14px; background: #FFFFFF; color: var(--ink); font-weight: 900; font-size: 17px; animation: path-bob 1.4s ease-in-out infinite; }
+.path-start::after { content: ''; position: absolute; left: 50%; bottom: -8px; translate: -50% 0; border: 8px solid transparent; border-top-color: #FFFFFF; border-bottom: 0; }
+.path-me { position: absolute; left: 22px; top: -14px; z-index: 2; border-radius: 50%; box-shadow: 0 0 0 4px var(--night); }
+.path-perli { position: absolute; left: 70px; top: -6px; display: flex; align-items: flex-end; gap: 4px; pointer-events: none; }
+.path-perli.left { left: auto; right: 70px; flex-direction: row-reverse; }
+.path-perli .map-bubble { width: 150px; margin-bottom: 40px; }
+.path-perli.left .map-bubble { border-radius: 18px 18px 4px 18px; }
+.path-item.world { z-index: 3; }
+.world-banner { position: absolute; left: 0; top: 0; translate: -50% 0; width: min(440px, calc(100vw - 32px)); display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  border-radius: 24px; background: var(--board); color: #FFFFFF; box-shadow: 0 6px 0 rgba(0,0,0,.25); }
+.world-banner.locked { background: #231A57; color: #8F85D6; box-shadow: inset 0 0 0 3px var(--violet-line); }
+.world-banner-n { flex-shrink: 0; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: rgba(255,255,255,.35); font-family: var(--font-display); font-weight: 800; font-size: 32px; }
+.world-banner.locked .world-banner-n { background: rgba(255,255,255,.06); }
+.world-banner-text strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.1; }
+.world-banner-text span { font-weight: 800; font-size: 14px; opacity: .8; }
+@keyframes path-pulse { 50% { transform: scale(1.05); } }
+@keyframes path-bob { 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) { .path-node, .path-start { animation: none !important; } }
+@media (max-width: 600px) {
+  .path-perli { left: 60px; }
+  .path-perli.left { right: 60px; }
+  .path-perli .map-bubble { width: 118px; font-size: 13px; }
+}
+.path-node { padding: 0; aspect-ratio: 1; font: inherit; flex-shrink: 0; }
+@media (max-width: 600px) {
+  .path-perli .map-bubble { display: none; }
+  .path-perli { left: 58px; top: 14px; }
+  .path-perli.left { right: 58px; }
+  .path-perli svg { width: 64px; height: auto; }
+}

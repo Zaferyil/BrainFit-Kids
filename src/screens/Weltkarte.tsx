@@ -1,45 +1,44 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Avatar } from '../components/Avatar'
-import { Bead } from '../components/Bead'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
-import { Fit } from '../components/Fit'
 import { TopBar } from '../components/TopBar'
-import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
 import type { Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
-import { getLevel, getPlacement, tierFor, tierRank } from '../games/engine'
-import { GAMES } from '../games/registry'
+import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
-type PlanStep = { icon: IconName | 'bead'; color: string; title: string; text: string; minutes: number; href: string }
+// Abstände auf dem Weg (px) und seitliche Schlangenlinie
+const GAP: Record<MapStop['kind'], number> = { world: 160, start: 180, unit: 185, game: 175 }
+const SWING = 92
 
 export function Weltkarte({ kid, progress, onLogout }: Props) {
-  const current = WORLDS[progress.world - 1]
-  const unitName = current.units[progress.unit - 1]
-  const unitsLeft = current.units.length - progress.unit + 1
-  const [say, setSay] = useState(`Noch ${unitsLeft} ${unitsLeft === 1 ? 'Einheit' : 'Einheiten'} bis zum ${current.belt} Gürtel!`)
+  const path = useMemo(() => buildPath(kid, progress), [kid, progress])
+  const current = path.find((s) => s.state === 'current')
+  const [say, setSay] = useState(() => greeting(current))
+  const [questsOpen, setQuestsOpen] = useState(false)
+  const scroller = useRef<HTMLDivElement>(null)
+
+  const { placed, height } = useMemo(() => layout(path), [path])
+  const line = placed.filter((p) => p.s.kind !== 'world').map((p) => ({ x: p.x, y: p.top + 50, done: p.s.state === 'done' }))
+  const doneUntil = line.findIndex((p) => !p.done)
+
+  // Beim Öffnen zur aktuellen Station scrollen
+  useEffect(() => {
+    scroller.current?.querySelector('.path-node.current')?.scrollIntoView({ block: 'center' })
+  }, [])
 
   const daily = getDaily(kid.id)
-  // Aufwärmen: das Denkspiel mit der niedrigsten Stufe
-  const tier = tierFor(kid.birthYear)
-  const warmup = GAMES.filter((g) => g.ready && tierRank(tier) >= tierRank(g.minTier))
-    .sort((a, b) => getLevel(kid.id, a.id, tier) - getLevel(kid.id, b.id, tier))[0]
-  const plan: PlanStep[] = [
-    getPlacement(kid.id)
-      ? { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: warmup ? warmup.name : 'Ein Denkspiel', minutes: 3, href: warmup ? `#/spiel/${warmup.id}` : '#/denkpark' }
-      : { icon: 'brain', color: '#A06BFF', title: 'Aufwärmen', text: 'Perli kennenlernen', minutes: 3, href: '#/einstufung' },
-    { icon: 'bead', color: '#FFF4D1', title: 'Rechnen', text: `Welt ${current.n} · ${unitName}`, minutes: 10, href: '#/einheit' },
-    { icon: 'sparkle', color: '#3BA7FF', title: 'Denk-Pause', text: 'Zwei kurze Denkspiele', minutes: 5, href: '#/denkpark' },
+  const quests = [
+    { icon: 'target' as IconName, text: 'Löse 20 Aufgaben', done: Math.min(daily.tasks, 20), goal: 20, reward: 20 },
+    { icon: 'brain' as IconName, text: 'Spiele 2 Denkspiele', done: Math.min(daily.games, 2), goal: 2, reward: 20 },
+    { icon: 'clock' as IconName, text: 'Lerne 10 Minuten', done: Math.min(daily.minutes, 10), goal: 10, reward: 30 },
   ]
-  const doneSteps = [daily.games >= 1, daily.stations >= 1, daily.games >= 3]
-  const planDone = doneSteps.filter(Boolean).length
-  const nextStep = doneSteps.findIndex((d) => !d)
-  const pts = WORLDS.map((w) => `${w.x},${w.y}`)
+  const questsDone = quests.filter((q) => q.done >= q.goal).length
 
   return (
     <Stage>
@@ -54,131 +53,125 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         onLogout={onLogout}
       />
 
-      <div className="map-layout">
-      <Fit className="map-fit">
-      <div className="map">
-        {WORLDS.map((w) => (
-          <div key={'i' + w.n} className="island" style={{ left: w.x - 78, top: w.y - 70 }} />
-        ))}
-        <div className="island park" style={{ left: 740 - 84, top: 505 - 74 }} />
-        <svg width="830" height="620" viewBox="0 0 830 620" aria-hidden="true" className="map-path">
-          <polyline points={pts.join(' ')} fill="none" stroke="#3A2F80" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 22" />
-          <polyline points={pts.slice(0, progress.world).join(' ')} fill="none" stroke="#FFC531" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-
-        {WORLDS.map((w) => {
-          const state = w.n < progress.world ? 'done' : w.n === progress.world ? 'current' : 'locked'
-          const size = state === 'current' ? 116 : 88
-          const label = `Welt ${w.n}: ${w.name}${state === 'locked' ? ' (gesperrt)' : ''}`
-          return (
-            <div key={w.n} className="world" style={{ left: w.x - 80, top: w.y - size / 2 }}>
-              {state === 'current' && (
-                <div className="world-me"><Avatar size={44} {...kid.avatar} /></div>
-              )}
-              {state === 'locked' ? (
-                <button
-                  type="button"
-                  className="world-node locked"
-                  style={{ width: size, height: size }}
-                  aria-label={label}
-                  onClick={() => setSay(`${w.name} öffnet sich, wenn du Welt ${w.n - 1} geschafft hast.`)}
-                >
-                  <Icon name="lock" color="#8F85D6" size={34} />
-                </button>
-              ) : (
-                <a
-                  href="#/einheit"
-                  className={`world-node ${state}`}
-                  style={{ width: size, height: size, background: w.color, color: w.ink }}
-                  aria-label={label}
-                >
-                  <span style={{ fontSize: state === 'current' ? 52 : 40 }}>{w.n}</span>
-                </a>
-              )}
-              <div className={state === 'locked' ? 'world-label locked' : 'world-label'}>{w.name}</div>
-              {state === 'done' && (
-                <div className="world-stars" aria-label={`${progress.worldStars[w.n] ?? 3} Sterne`}>
-                  {[0, 1, 2].map((i) => (
-                    <Icon key={i} name="star" size={20} color="#DE9800" fill={i < (progress.worldStars[w.n] ?? 3) ? '#FFC531' : 'none'} />
-                  ))}
+      <div className="path-screen">
+        <div className="path-tools">
+          <button type="button" className={questsOpen ? 'quest-chip open' : 'quest-chip'} onClick={() => setQuestsOpen(!questsOpen)} aria-expanded={questsOpen}>
+            <Icon name="target" color="#231A4F" size={20} strokeWidth={2.6} />
+            Tagesaufgaben <b>{questsDone}/{quests.length}</b>
+          </button>
+          {questsOpen && (
+            <section className="quests popover">
+              {quests.map((q) => (
+                <div key={q.text} className="quest">
+                  <span className={q.done >= q.goal ? 'quest-icon done' : 'quest-icon'}><Icon name={q.icon} color="#FFFFFF" size={22} strokeWidth={2.6} /></span>
+                  <div className="quest-body">
+                    <div className="quest-text">{q.text}</div>
+                    <div className="quest-track" role="progressbar" aria-label={q.text} aria-valuenow={q.done} aria-valuemin={0} aria-valuemax={q.goal}>
+                      <div className={q.done >= q.goal ? 'full' : ''} style={{ width: `${(q.done / q.goal) * 100}%` }} />
+                    </div>
+                  </div>
+                  <span className="quest-reward">+{q.reward}</span>
                 </div>
-              )}
-            </div>
-          )
-        })}
-
-        <div className="world" style={{ left: 740 - 80, top: 505 - 50 }}>
-          <a href="#/denkpark" className="world-node park" style={{ width: 100, height: 100 }} aria-label="Denk-Park: Denkspiele">
-            <Icon name="brain" color="#FFFFFF" size={52} strokeWidth={2.4} />
-          </a>
-          <div className="world-label">Denk-Park</div>
-        </div>
-
-        <div className="map-perli">
-          <Perli mood="happy" size={96} />
-          <div className="map-bubble" role="status">{say}</div>
-        </div>
-      </div>
-      </Fit>
-
-      <aside className="map-side">
-        <section className="plan-card">
-          <div className="plan-head">
-            <span className="eyebrow">DEIN TAGESPLAN</span>
-            <span className="plan-count">{planDone} von {plan.length}</span>
-          </div>
-          <ol className="plan-list">
-            {plan.map((s, i) => (
-              <li key={s.title} className={doneSteps[i] ? 'plan-step done' : i === nextStep ? 'plan-step current' : 'plan-step'}>
-                <span className="plan-icon" style={{ background: s.color }}>
-                  {s.icon === 'bead' ? <Bead color="yellow" width={30} /> : <Icon name={s.icon} color="#231A4F" size={22} strokeWidth={2.4} />}
-                </span>
-                <span className="plan-text">
-                  <strong>{s.title}</strong>
-                  <span>{s.text}</span>
-                </span>
-                {doneSteps[i]
-                  ? <span className="plan-check"><Icon name="check" color="#10351B" size={18} strokeWidth={3} /></span>
-                  : <span className="plan-min">{s.minutes} Min.</span>}
-              </li>
-            ))}
-          </ol>
-          {nextStep === -1 ? (
-            <div className="plan-finished"><Icon name="star" color="#DE9800" fill="#FFC531" size={24} /> Tagesplan geschafft!</div>
-          ) : (
-            <a href={plan[nextStep].href} className="btn-primary plan-go">
-              <Icon name="play" color="#231A4F" fill="#231A4F" size={22} />
-              {planDone === 0 ? 'Los geht’s' : 'Weiter'}
-            </a>
+              ))}
+            </section>
           )}
-        </section>
+        </div>
 
-        <section className="quests">
-          <div className="quests-head">
-            <h2>Tagesaufgaben</h2>
-            <span>bis Mitternacht</span>
-          </div>
-          {[
-            { icon: 'target' as IconName, text: 'Löse 20 Aufgaben', done: Math.min(daily.tasks, 20), goal: 20, reward: 20 },
-            { icon: 'brain' as IconName, text: 'Spiele 2 Denkspiele', done: Math.min(daily.games, 2), goal: 2, reward: 20 },
-            { icon: 'clock' as IconName, text: 'Lerne 10 Minuten', done: Math.min(daily.minutes, 10), goal: 10, reward: 30 },
-          ].map((q) => (
-            <div key={q.text} className="quest">
-              <span className={q.done >= q.goal ? 'quest-icon done' : 'quest-icon'}><Icon name={q.icon} color="#FFFFFF" size={22} strokeWidth={2.6} /></span>
-              <div className="quest-body">
-                <div className="quest-text">{q.text}</div>
-                <div className="quest-track" role="progressbar" aria-label={q.text} aria-valuenow={q.done} aria-valuemin={0} aria-valuemax={q.goal}>
-                  <div className={q.done >= q.goal ? 'full' : ''} style={{ width: `${(q.done / q.goal) * 100}%` }} />
-                </div>
+        <div className="path-scroll" ref={scroller}>
+          <div className="path" style={{ height }}>
+            <svg className="path-line" width="400" height={height} viewBox={`-200 0 400 ${height}`} aria-hidden="true">
+              <polyline points={line.map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#3A2F80" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 24" />
+              {doneUntil !== 0 && (
+                <polyline points={line.slice(0, doneUntil === -1 ? line.length : doneUntil + 1).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#FFC531" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+              )}
+            </svg>
+
+            {placed.map(({ s, top, x }) => (
+              <div key={s.id} className={`path-item ${s.kind}`} style={{ top, transform: `translateX(${x}px)` }}>
+                {s.kind === 'world'
+                  ? <WorldBanner stop={s} />
+                  : <Node stop={s} kid={kid} onLocked={(text) => setSay(text)} />}
+                {s.state === 'current' && s.kind !== 'world' && (
+                  <div className={x > 0 ? 'path-perli left' : 'path-perli'}>
+                    <Perli mood="happy" size={86} />
+                    <div className="map-bubble" role="status">{say}</div>
+                  </div>
+                )}
               </div>
-              <span className="quest-reward">+{q.reward}</span>
-            </div>
-          ))}
-        </section>
-      </aside>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="nav-dock"><NavBar active="karte" /></div>
     </Stage>
+  )
+}
+
+/** Position jeder Station: senkrecht untereinander, Knoten schwingen nach links und rechts. */
+function layout(path: MapStop[]) {
+  let y = 40
+  let n = 0
+  const placed = path.map((s) => {
+    const top = y
+    y += GAP[s.kind]
+    const x = s.kind === 'world' ? 0 : Math.round(Math.sin(n++ * 0.85) * SWING)
+    return { s, top, x }
+  })
+  return { placed, height: y + 60 }
+}
+
+function greeting(s?: MapStop) {
+  if (!s) return 'Du hast alles geschafft!'
+  if (s.kind === 'start') return 'Lass uns starten! Ich will dich kennenlernen.'
+  if (s.kind === 'game') return 'Zeit für ein Denkspiel!'
+  if (s.kind === 'unit') return `Weiter geht’s: ${s.name}!`
+  return ''
+}
+
+function WorldBanner({ stop }: { stop: Extract<MapStop, { kind: 'world' }> }) {
+  const w = stop.world
+  return (
+    <div className={stop.state === 'locked' ? 'world-banner locked' : 'world-banner'} style={{ background: stop.state === 'locked' ? undefined : w.color, color: stop.state === 'locked' ? undefined : w.ink }}>
+      <span className="world-banner-n">{stop.state === 'locked' ? <Icon name="lock" color="#8F85D6" size={22} /> : w.n}</span>
+      <span className="world-banner-text">
+        <strong>Welt {w.n} · {w.name}</strong>
+        <span>{w.topic} · {w.belt} Gürtel</span>
+      </span>
+    </div>
+  )
+}
+
+function Node({ stop, kid, onLocked }: { stop: Exclude<MapStop, { kind: 'world' }>; kid: Kid; onLocked: (text: string) => void }) {
+  const current = stop.state === 'current'
+  const cls = `path-node ${stop.kind} ${stop.state}`
+  const label = stop.kind === 'unit' ? stop.name : stop.kind === 'game' ? stop.game.name : 'Perli kennenlernen'
+  const href = stop.kind === 'unit' ? '#/einheit' : stop.kind === 'game' ? `#/spiel/${stop.game.id}` : '#/einstufung'
+  const inner = stop.state === 'locked'
+    ? <Icon name="lock" color="#8F85D6" size={30} />
+    : stop.kind === 'unit'
+      ? <span className="path-num">{stop.unit}</span>
+      : <Icon name={stop.kind === 'game' ? 'brain' : 'sparkle'} color="#FFFFFF" size={stop.kind === 'game' ? 40 : 44} strokeWidth={2.4} />
+  const style = stop.kind === 'unit' && stop.state !== 'locked' ? { background: stop.world.color, color: stop.world.ink } : undefined
+
+  return (
+    <div className="path-stop">
+      {current && <div className="path-start">{stop.kind === 'game' ? 'Spielen' : 'Start'}</div>}
+      {current && stop.kind === 'unit' && <div className="path-me"><Avatar size={40} {...kid.avatar} /></div>}
+      {stop.state === 'locked' ? (
+        <button type="button" className={cls} aria-label={`${label} (gesperrt)`} onClick={() => onLocked(stop.kind === 'game' ? 'Dieses Denkspiel kommt nach der Einheit davor.' : 'Das kommt später – Schritt für Schritt!')}>
+          {inner}
+        </button>
+      ) : (
+        <a href={href} className={cls} style={style} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id) }}>
+          {inner}
+          {stop.state === 'done' && <span className="path-check"><Icon name="check" color="#10351B" size={16} strokeWidth={3.4} /></span>}
+        </a>
+      )}
+      <div className={stop.state === 'locked' ? 'path-label locked' : 'path-label'}>
+        {stop.kind === 'game' && <span className="path-kind">Denkspiel</span>}
+        {label}
+      </div>
+    </div>
   )
 }

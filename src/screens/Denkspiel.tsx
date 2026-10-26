@@ -15,6 +15,7 @@ import type { GameProps } from '../games/types'
 import { rewardGame } from '../lib/progress'
 import { speak } from '../lib/speak'
 import { GAME_INTRO as INTRO } from '../data/sprache'
+import { cameFromMap, clearActiveStop, finishActiveStop } from '../lib/mapPath'
 
 const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   memory: PerlenMemory,
@@ -31,6 +32,9 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
   const [level, setLevel] = useState(() => getLevel(kid.id, game.id, tier))
   const [run, setRun] = useState(0)
   const [result, setResult] = useState<Result | null>(null)
+  // Von der Karte gestartet: danach zurück zur Karte, die Station gilt als geschafft
+  const [fromMap] = useState(cameFromMap)
+  const back = fromMap ? '#/karte' : '#/denkpark'
   const Game = COMPONENTS[game.id]
   const area = AREAS.find((a) => a.id === game.area)!
 
@@ -38,6 +42,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
     const adj = adjustLevel(kid.id, game.id, tier, score)
     const perlen = perlenFor(score)
     rewardGame(kid.id, perlen)
+    finishActiveStop(kid.id)
     setResult({ score, summary, perlen, adj })
     speak(score >= 0.9 ? 'Super gemacht!' : score >= 0.6 ? 'Gut gemacht!' : 'Weiter so, du schaffst das!')
   }
@@ -58,9 +63,9 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
     <Stage>
       <div className="game-screen">
         <div className="station-bar">
-          <a href="#/denkpark" aria-label="Spiel beenden" className="round-btn big"><Icon name="x" color="#FFFFFF" size={26} /></a>
+          <a href={back} aria-label="Spiel beenden" className="round-btn big" onClick={clearActiveStop}><Icon name="x" color="#FFFFFF" size={26} /></a>
           <div className="station-bar-title">
-            <div className="eyebrow light">DENK-PARK · {area.name.toUpperCase()}</div>
+            <div className="eyebrow light">{fromMap ? 'DENKSPIEL AUF DEINEM WEG' : 'DENK-PARK'} · {area.name.toUpperCase()}</div>
             <h1>{game.name}</h1>
           </div>
           <span className="park-badge level big">Stufe {level}</span>
@@ -88,7 +93,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
             </div>
             <div className="done-reward"><Bead color="yellow" width={36} /> +{result.perlen} Perlen</div>
             <div className="done-actions">
-              <a href="#/denkpark" className="btn-outline dark">Zum Denk-Park</a>
+              <a href={back} className={fromMap ? 'btn-primary small' : 'btn-outline dark'}>{fromMap ? 'Weiter auf der Karte' : 'Zum Denk-Park'}</a>
               <button type="button" className="btn-primary small" onClick={again}>Nochmal</button>
             </div>
           </div>
