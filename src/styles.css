@@ -1084,3 +1084,35 @@ button { font-family: inherit; }
   .path-perli.left { right: 58px; }
   .path-perli svg { width: 64px; height: auto; }
 }
+
+/* Karte als Inseln: Bild + Stationen in % des Bildes, Größen relativ zur Inselbreite */
+.inseln { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 0 0 24px; }
+.insel { position: relative; flex-shrink: 0; width: min(100%, 620px); container-type: inline-size; }
+.insel + .insel, .inseln > .island:not(:first-child) { margin-top: -2px; }
+.insel-bg { display: block; width: 100%; height: auto; user-select: none; }
+.insel.locked .insel-bg { filter: grayscale(.75) brightness(.7); }
+.insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
+.insel-banner .world-banner { width: min(88cqw, 440px); }
+.insel-stop { position: absolute; width: 0; height: 0; z-index: 2; }
+.insel-stop .path-stop { position: absolute; left: 0; top: 0; width: 40cqw; translate: -50% -50%; gap: .6cqw; }
+.insel-stop .path-node { width: max(52px, 10cqw); height: max(52px, 10cqw); background: radial-gradient(circle at 35% 30%, #6FC2FF, #1E6FE0 70%); color: #FFFFFF;
+  box-shadow: 0 0 0 4px #FFFFFF, 0 6px 0 4px rgba(10,40,100,.35); }
+.insel-stop .path-node.game { background: radial-gradient(circle at 35% 30%, #C59BFF, #6A3DE8 70%); }
+.insel-stop .path-node.start { background: radial-gradient(circle at 35% 30%, #FFD36B, #FF8A1F 70%); }
+.insel-stop .path-node.locked { background: radial-gradient(circle at 35% 30%, #B9C4DA, #7D8AA8 70%); box-shadow: 0 0 0 4px rgba(255,255,255,.8), 0 6px 0 4px rgba(0,0,0,.2); cursor: pointer; }
+.insel-stop .path-node.current { width: max(64px, 12.5cqw); height: max(64px, 12.5cqw); margin-top: 0;
+  box-shadow: 0 0 0 5px #FFC531, 0 0 0 12px rgba(255,197,49,.4), 0 8px 0 5px rgba(10,40,100,.35); }
+.insel-stop .path-num, .insel-stop .path-node.current .path-num { font-size: max(28px, 6cqw); text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.insel-stop .path-label { position: absolute; top: 100%; margin-top: 1cqw; padding: 4px 12px; border-radius: 12px; background: #FFFFFF; color: var(--ink); text-shadow: none; font-size: 14px; white-space: nowrap; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+.insel-stop .path-kind { color: #6A3DE8; }
+.insel-stop .path-start { top: -44px; }
+.insel-stop .path-me { left: auto; right: -6px; top: -14px; }
+.path-stars { display: flex; gap: 0; margin-top: -1.6cqw; z-index: 1; }
+.path-stars svg { fill: #C9CFDD; stroke: #8892A8; }
+.path-stars.done svg { fill: #FFC531; stroke: #C98A00; }
+.insel-coin { position: absolute; translate: -50% -50%; width: 6cqw; height: 6cqw; min-width: 30px; min-height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #FFE27A, #F2A900 70%); box-shadow: 0 0 0 3px #FFFFFF, 0 3px 0 3px rgba(0,0,0,.18); z-index: 1; }
+.insel-perli { position: absolute; right: 51%; top: 96%; translate: 0 -100%; z-index: 2; display: flex; align-items: flex-end; gap: 2px; pointer-events: none; }
+.insel-perli svg { width: min(110px, 19cqw); height: auto; flex-shrink: 0; }
+.insel-perli .map-bubble { width: min(150px, 30cqw); margin-bottom: 9cqw; border-radius: 18px 18px 4px 18px; }
+@media (max-width: 600px) { .insel-perli .map-bubble { display: none; } }

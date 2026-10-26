@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import insel from '../assets/karte/insel.webp'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -12,9 +13,16 @@ import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
-// Abstände auf dem Weg (px) und seitliche Schlangenlinie
-const GAP: Record<MapStop['kind'], number> = { world: 160, start: 180, unit: 185, game: 175 }
-const SWING = 92
+// Jede Welt ist eine Insel (Bild ohne Stationen, siehe scripts/karte-bild.py). Die Stationen liegen
+// auf den 12 Plätzen des Wegs, von unten (Start) nach oben (Burg); freie Plätze bekommen eine Münze.
+const IMG_W = 941
+const IMG_H = 1403
+const SLOTS: [number, number][] = [
+  [555, 1173], [325, 1046], [157, 923], [262, 713], [449, 793], [700, 871],
+  [766, 668], [559, 538], [329, 471], [319, 298], [565, 263], [700, 163],
+]
+
+type Island = { banner: Extract<MapStop, { kind: 'world' }>; stops: Exclude<MapStop, { kind: 'world' }>[] }
 
 export function Weltkarte({ kid, progress, onLogout }: Props) {
   const path = useMemo(() => buildPath(kid, progress), [kid, progress])
@@ -23,9 +31,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const [questsOpen, setQuestsOpen] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
-  const { placed, height } = useMemo(() => layout(path), [path])
-  const line = placed.filter((p) => p.s.kind !== 'world').map((p) => ({ x: p.x, y: p.top + 50, done: p.s.state === 'done' }))
-  const doneUntil = line.findIndex((p) => !p.done)
+  const islands = useMemo(() => groupByWorld(path), [path])
 
   // Beim Öffnen zur aktuellen Station scrollen
   useEffect(() => {
@@ -77,29 +83,29 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           )}
         </div>
 
-        <div className="path-scroll" ref={scroller}>
-          <div className="path" style={{ height }}>
-            <svg className="path-line" width="400" height={height} viewBox={`-200 0 400 ${height}`} aria-hidden="true">
-              <polyline points={line.map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#3A2F80" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 24" />
-              {doneUntil !== 0 && (
-                <polyline points={line.slice(0, doneUntil === -1 ? line.length : doneUntil + 1).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke="#FFC531" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
-              )}
-            </svg>
-
-            {placed.map(({ s, top, x }) => (
-              <div key={s.id} className={`path-item ${s.kind}`} style={{ top, transform: `translateX(${x}px)` }}>
-                {s.kind === 'world'
-                  ? <WorldBanner stop={s} />
-                  : <Node stop={s} kid={kid} onLocked={(text) => setSay(text)} />}
-                {s.state === 'current' && s.kind !== 'world' && (
-                  <div className={x > 0 ? 'path-perli left' : 'path-perli'}>
-                    <Perli mood="happy" size={86} />
-                    <div className="map-bubble" role="status">{say}</div>
+        <div className="inseln" ref={scroller}>
+          {islands.map((isl) => (
+            <section key={isl.banner.id} className={isl.banner.state === 'locked' ? 'insel locked' : 'insel'} aria-label={`Welt ${isl.banner.world.n}`}>
+              <img className="insel-bg" src={insel} alt="" draggable={false} />
+              <div className="insel-banner"><WorldBanner stop={isl.banner} /></div>
+              {SLOTS.map(([x, y], i) => {
+                const s = isl.stops[i]
+                const pos = { left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }
+                if (!s) return <span key={i} className="insel-coin" style={pos} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
+                return (
+                  <div key={s.id} className="insel-stop" style={pos}>
+                    <Node stop={s} kid={kid} onLocked={(text) => setSay(text)} />
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
+                )
+              })}
+              {isl.stops.some((s) => s.state === 'current') && (
+                <div className="insel-perli">
+                  <div className="map-bubble" role="status">{say}</div>
+                  <Perli mood="happy" size={96} />
+                </div>
+              )}
+            </section>
+          ))}
         </div>
       </div>
 
@@ -108,17 +114,15 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   )
 }
 
-/** Position jeder Station: senkrecht untereinander, Knoten schwingen nach links und rechts. */
-function layout(path: MapStop[]) {
-  let y = 40
-  let n = 0
-  const placed = path.map((s) => {
-    const top = y
-    y += GAP[s.kind]
-    const x = s.kind === 'world' ? 0 : Math.round(Math.sin(n++ * 0.85) * SWING)
-    return { s, top, x }
-  })
-  return { placed, height: y + 60 }
+/** Stationen nach Welten gruppieren (die Einstufung gehört zu Welt 1); oben die letzte Welt, unten die erste. */
+function groupByWorld(path: MapStop[]): Island[] {
+  const islands: Island[] = []
+  const before: Island['stops'] = []
+  for (const s of path) {
+    if (s.kind === 'world') islands.push({ banner: s, stops: islands.length ? [] : before })
+    else (islands.at(-1)?.stops ?? before).push(s)
+  }
+  return islands.reverse()
 }
 
 function greeting(s?: MapStop) {
@@ -147,12 +151,11 @@ function Node({ stop, kid, onLocked }: { stop: Exclude<MapStop, { kind: 'world' 
   const cls = `path-node ${stop.kind} ${stop.state}`
   const label = stop.kind === 'unit' ? stop.name : stop.kind === 'game' ? stop.game.name : 'Perli kennenlernen'
   const href = stop.kind === 'unit' ? '#/einheit' : stop.kind === 'game' ? `#/spiel/${stop.game.id}` : '#/einstufung'
-  const inner = stop.state === 'locked'
-    ? <Icon name="lock" color="#8F85D6" size={30} />
+  const inner = stop.state === 'locked' && stop.kind !== 'unit'
+    ? <Icon name="lock" color="#FFFFFF" size={26} strokeWidth={2.6} />
     : stop.kind === 'unit'
       ? <span className="path-num">{stop.unit}</span>
-      : <Icon name={stop.kind === 'game' ? 'brain' : 'sparkle'} color="#FFFFFF" size={stop.kind === 'game' ? 40 : 44} strokeWidth={2.4} />
-  const style = stop.kind === 'unit' && stop.state !== 'locked' ? { background: stop.world.color, color: stop.world.ink } : undefined
+      : <Icon name={stop.kind === 'game' ? 'brain' : 'sparkle'} color="#FFFFFF" size={34} strokeWidth={2.4} />
 
   return (
     <div className="path-stop">
@@ -163,15 +166,19 @@ function Node({ stop, kid, onLocked }: { stop: Exclude<MapStop, { kind: 'world' 
           {inner}
         </button>
       ) : (
-        <a href={href} className={cls} style={style} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id) }}>
+        <a href={href} className={cls} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id) }}>
           {inner}
-          {stop.state === 'done' && <span className="path-check"><Icon name="check" color="#10351B" size={16} strokeWidth={3.4} /></span>}
         </a>
       )}
-      <div className={stop.state === 'locked' ? 'path-label locked' : 'path-label'}>
-        {stop.kind === 'game' && <span className="path-kind">Denkspiel</span>}
-        {label}
+      <div className={stop.state === 'done' ? 'path-stars done' : 'path-stars'} aria-hidden="true">
+        {[0, 1, 2].map((i) => <Icon key={i} name="star" color="#FFFFFF" size={16} strokeWidth={1.5} />)}
       </div>
+      {current && (
+        <div className="path-label">
+          {stop.kind === 'game' && <span className="path-kind">Denkspiel</span>}
+          {label}
+        </div>
+      )}
     </div>
   )
 }
