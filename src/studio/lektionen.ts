@@ -46,13 +46,28 @@ const DAUMEN = { icons: ['daumen-hoch' as const], text: 'Daumen' }
 const ZEIGE = { icons: ['zeigefinger' as const], text: 'Zeigefinger' }
 const BEIDE = { icons: ['zeigefinger' as const, 'daumen-hoch' as const], text: 'Beide gleichzeitig' }
 
-export type Lesson = { id: string; number: number; title: string; world: number; scenes: Scene[] }
+export type Lesson = {
+  id: string
+  number: number
+  title: string
+  world: number
+  /** Abschnitte für die Fortschrittsanzeige auf der Tafel; start = erste Szene des Abschnitts */
+  sections: { title: string; start: string }[]
+  scenes: Scene[]
+}
 
 const LEKTION_1: Lesson = {
   id: 'lektion-1',
   number: 1,
   title: 'Der Abakus',
   world: 1,
+  sections: [
+    { title: 'Der Abakus', start: 'titel' },
+    { title: 'Finger', start: 'finger' },
+    { title: 'Zahlen 1 bis 4', start: 'zahl-1' },
+    { title: 'Zahlen 5 bis 9', start: 'quiz-5' },
+    { title: 'Üben', start: 'aufgabe-3' },
+  ],
   scenes: [
     { id: 'titel', kind: 'titel', min: 4.5, cols: 4, value: 0 },
     { id: 'hallo', say: 'Hallo! Ich bin Lisa. Heute lernst du den Abakus kennen. Am Ende kannst du alle Zahlen von 0 bis 9 zeigen!' },
