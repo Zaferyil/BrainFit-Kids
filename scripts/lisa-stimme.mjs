@@ -1,9 +1,10 @@
-// Vertont alle Sätze von Lisa mit einer HeyGen-Katalogstimme (Standard „Gentle Greta – Friendly“) und legt ab:
+// Vertont alle Sätze von Lisa und legt ab:
 //   content/lektionen/<id>/<szene>.mp3   – eine Aufnahme je Szene
 //   content/lektionen/<id>/timing.json   – Länge und Zeichen-Zeitmarken je Szene (für das Studio)
 //   content/lektionen/<id>/ton.wav       – die ganze Tonspur im Zeitplan des Videos (für HeyGen)
-// Aufruf: HEYGEN_API_KEY=… node scripts/lisa-stimme.mjs lektion-1 [--nur-ton] [--frei]
-//   --frei: kostenlose Stimme „Nele“ (HeyGen Voice Turbo Free) statt Greta
+// Stimme: mit ELEVENLABS_API_KEY Lisas ElevenLabs-Stimme (Ehc9dVwDGENWbpsWNTfK, Standard),
+//         sonst HeyGen „Gentle Greta – Friendly“ (HEYGEN_API_KEY) oder mit --frei „Nele“ (HeyGen, kostenlos)
+// Aufruf: ELEVENLABS_API_KEY=… node scripts/lisa-stimme.mjs lektion-1 [--nur-ton] [--frei]
 import { createServer } from 'vite'
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs'
@@ -11,14 +12,55 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs'
 const id = process.argv[2] ?? 'lektion-1'
 const onlyTrack = process.argv.includes('--nur-ton')
 const KEY = process.env.HEYGEN_API_KEY
+const EL_KEY = process.env.ELEVENLABS_API_KEY
 const FREE = process.argv.includes('--frei')
-const VOICE = FREE ? '194c5c7896e849139df58b34b05b6a7c' : 'ecb08917b1f348e6a235e85eb0870b68' // Nele | Gentle Greta – Friendly
+const ELEVEN = Boolean(EL_KEY) && !FREE
+const VOICE = ELEVEN
+  ? 'Ehc9dVwDGENWbpsWNTfK' // Lisa (ElevenLabs)
+  : FREE ? '194c5c7896e849139df58b34b05b6a7c' : 'ecb08917b1f348e6a235e85eb0870b68' // Nele | Gentle Greta – Friendly
 const dir = `content/lektionen/${id}`
 mkdirSync(dir, { recursive: true })
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
+/** Liefert { audio: Buffer, duration, chars } – chars = Startzeit je Zeichen des Textes */
 async function tts(text) {
+  if (ELEVEN) return elevenlabs(text)
+  const data = await heygen(text)
+  const audio = Buffer.from(await (await fetch(data.audio_url)).arrayBuffer())
+  const chars = data.original_characters
+    ? data.original_characters.map((c) => Math.round(c.start_time * 1000) / 1000)
+    : charTimes(text, data.word_timestamps)
+  return { audio, duration: data.duration, chars }
+}
+
+async function elevenlabs(text) {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE}/with-timestamps?output_format=mp3_44100_128`, {
+      method: 'POST',
+      headers: { 'xi-api-key': EL_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, model_id: 'eleven_multilingual_v2', language_code: 'de' }),
+    })
+    if (res.status === 429 || res.status >= 500) { await sleep(2 ** attempt * 2000); continue }
+    const json = await res.json()
+    if (!res.ok) throw new Error(`${res.status} ${JSON.stringify(json)}`)
+    const a = json.alignment
+    // Zeichen der Antwort auf den Text abbilden (gleiche Reihenfolge)
+    const chars = new Array(text.length).fill(0)
+    let pos = 0
+    a.characters.forEach((ch, k) => {
+      const i = text.indexOf(ch, pos)
+      if (i < 0) return
+      for (let j = pos; j <= i; j++) chars[j] = Math.round(a.character_start_times_seconds[k] * 1000) / 1000
+      pos = i + 1
+    })
+    const duration = a.character_end_times_seconds.at(-1) + 0.15
+    return { audio: Buffer.from(json.audio_base64, 'base64'), duration, chars }
+  }
+  throw new Error('ElevenLabs antwortet nicht')
+}
+
+async function heygen(text) {
   const [url, body] = FREE
     ? ['https://api.heygen.com/v3/models/audio/tts', { model: 'heygen-voice-1-turbo-free', voice_id: VOICE, text, language: 'de', with_timestamps: true }]
     : ['https://api.heygen.com/v3/voices/speech', { voice_id: VOICE, text, language: 'de' }]
@@ -63,20 +105,17 @@ try {
   const timing = existsSync(timingFile) ? JSON.parse(readFileSync(timingFile, 'utf8')) : {}
 
   if (!onlyTrack) {
-    if (!KEY) throw new Error('HEYGEN_API_KEY fehlt')
+    if (!KEY && !ELEVEN) throw new Error('ELEVENLABS_API_KEY oder HEYGEN_API_KEY fehlt')
     for (const scene of lesson.scenes) {
       if (!scene.say) continue
       const text = spokenText(scene.say)
       if (timing[scene.id]?.text === text && timing[scene.id]?.voice === VOICE && existsSync(`${dir}/${scene.id}.mp3`)) continue // unverändert
       const data = await tts(text)
-      const wav = `${dir}/${scene.id}.wav`
-      writeFileSync(wav, Buffer.from(await (await fetch(data.audio_url)).arrayBuffer()))
-      execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', wav, '-ac', '1', '-b:a', '96k', `${dir}/${scene.id}.mp3`])
-      execFileSync('rm', [wav])
-      const chars = data.original_characters
-        ? data.original_characters.map((c) => Math.round(c.start_time * 1000) / 1000)
-        : charTimes(text, data.word_timestamps)
-      timing[scene.id] = { text, voice: VOICE, duration: data.duration, chars }
+      const raw = `${dir}/${scene.id}.roh`
+      writeFileSync(raw, data.audio)
+      execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', raw, '-ac', '1', '-b:a', '96k', `${dir}/${scene.id}.mp3`])
+      execFileSync('rm', [raw])
+      timing[scene.id] = { text, voice: VOICE, duration: data.duration, chars: data.chars }
       console.log(`${scene.id}: ${data.duration.toFixed(2)} s`)
       await sleep(2200) // höchstens 30 Anfragen pro Minute
     }
