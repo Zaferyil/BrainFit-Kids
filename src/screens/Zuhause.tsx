@@ -33,7 +33,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
 
   const title = !current ? 'Alles geschafft!' : current.kind === 'unit' ? current.name : current.kind === 'game' ? current.game.name : 'Perli kennenlernen'
   const kind = !current ? '' : current.kind === 'game' ? 'Denkspiel' : current.kind === 'start' ? 'Einstufung' : `Welt ${world.n} · ${world.name}`
-  const href = !current ? '#/galaxie' : current.kind === 'unit' ? '#/einheit' : current.kind === 'game' ? `#/spiel/${current.game.id}` : '#/einstufung'
+  const href = !current ? '#/karte' : current.kind === 'unit' ? '#/einheit' : current.kind === 'game' ? `#/spiel/${current.game.id}` : '#/einstufung'
   const next = WORLDS.slice(world.n, world.n + 3)
 
   return (
@@ -64,7 +64,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           ))}
         </div>
 
-        <a href="#/galaxie" className="nk-planet" aria-label={`Zur Perlen-Galaxie. Nächste Station: ${title}`}>
+        <a href="#/karte" className="nk-planet" aria-label={`Zur Perlen-Galaxie. Nächste Station: ${title}`}>
           <Perli mood="happy" size={92} />
           <span className="nk-planet-kind">{kind}</span>
           <span className="nk-planet-title">{title}</span>
