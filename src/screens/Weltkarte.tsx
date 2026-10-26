@@ -24,11 +24,6 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
 
   const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
   const teile = useMemo(() => etappen(stops.length), [stops.length])
-  const pages = teile.length
-  const aktuell = stops.findIndex((s) => s.state === 'current')
-  const [page, setPage] = useState(() => Math.max(0, teile.findIndex((t) => aktuell >= t.start && aktuell < t.start + t.anzahl)))
-  const { karte, start } = teile[Math.min(page, pages - 1)]
-  const first = stops.slice(start, start + karte.plaetze.length)
 
   // Beim Öffnen zur aktuellen Station scrollen
   useEffect(() => {
@@ -81,33 +76,27 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </div>
 
         <div className="inseln" ref={scroller}>
-          <section className="insel">
-            <img className="insel-bg" src={karte.bild} alt="" draggable={false} />
-            {karte.plaetze.map(([x, y], i) => {
-              const s = first[i]
-              if (!s) return <span key={i} className="insel-coin" style={{ left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
-              return (
-                <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={{ left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }}>
-                  <Node stop={s} n={start + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+          {[...teile].reverse().map(({ karte, start }) => (
+            <section key={start} className="insel">
+              <img className="insel-bg" src={karte.bild} alt="" draggable={false} />
+              {karte.plaetze.map(([x, y], i) => {
+                const s = stops[start + i]
+                const pos = { left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }
+                if (!s) return <span key={i} className="insel-coin" style={pos} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
+                return (
+                  <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
+                    <Node stop={s} n={start + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+                  </div>
+                )
+              })}
+              {start === 0 && (
+                <div className="insel-perli">
+                  <div className="map-bubble" role="status">{say}</div>
+                  <Perli mood="happy" size={96} />
                 </div>
-              )
-            })}
-            {page === 0 && (
-              <div className="insel-perli">
-                <div className="map-bubble" role="status">{say}</div>
-                <Perli mood="happy" size={96} />
-              </div>
-            )}
-          </section>
-          <div className="etappe">
-            <button type="button" className="etappe-btn" disabled={page === 0} onClick={() => setPage(page - 1)} aria-label="Vorherige Etappe">
-              <Icon name="left" color="#231A4F" size={22} strokeWidth={3} />
-            </button>
-            <span>Etappe {page + 1} von {pages} · Station {start + 1}–{Math.min(stops.length, start + karte.plaetze.length)}</span>
-            <button type="button" className="etappe-btn" disabled={page >= pages - 1} onClick={() => setPage(page + 1)} aria-label="Nächste Etappe">
-              <Icon name="right" color="#231A4F" size={22} strokeWidth={3} />
-            </button>
-          </div>
+              )}
+            </section>
+          ))}
         </div>
       </div>
 
