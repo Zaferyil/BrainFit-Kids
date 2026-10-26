@@ -838,7 +838,7 @@ button { font-family: inherit; }
 .sf-brand { margin-left: auto; font-family: var(--font-display); font-weight: 800; font-size: 38px; color: var(--lilac); }
 .sf-brand b { color: var(--yellow); }
 
-.sf-board { position: absolute; left: 420px; right: 60px; top: 130px; bottom: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+.sf-board { position: absolute; left: 480px; right: 60px; top: 130px; bottom: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
 .sf-abakus-wrap { position: relative; }
 .sf-caption { display: flex; align-items: center; gap: 18px; padding: 12px 30px; border-radius: 999px; background: #FFFFFF; color: var(--ink); font-weight: 900; font-size: 38px; }
 .sf-caption img { width: 64px; height: 64px; }
@@ -852,23 +852,23 @@ button { font-family: inherit; }
 .sf-countdown { position: absolute; right: 120px; top: 50%; translate: 0 -50%; width: 220px; height: 220px; border-radius: 50%; display: grid; place-items: center;
   background: #FFFFFF; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 150px; box-shadow: 0 0 0 14px rgba(255,255,255,.25); }
 
-.sf-card { position: absolute; left: 470px; right: 110px; top: 170px; bottom: 190px; border-radius: 48px; background: #FFFFFF; color: var(--ink); padding: 50px 70px;
+.sf-card { position: absolute; left: 520px; right: 110px; top: 170px; bottom: 190px; border-radius: 48px; background: #FFFFFF; color: var(--ink); padding: 50px 70px;
   display: flex; flex-direction: column; justify-content: center; gap: 28px; box-shadow: 0 16px 0 #D8D1FF; }
 .sf-card h2 { margin: 0 0 10px; font-family: var(--font-display); font-weight: 800; font-size: 72px; line-height: 1; }
 .sf-card-line { display: flex; align-items: center; gap: 34px; font-size: 48px; font-weight: 900; }
 .sf-card-icon { width: 130px; display: flex; justify-content: center; }
 .sf-card-icon img { width: 110px; height: 110px; }
 
-.sf-teacher { position: absolute; left: 50px; bottom: 50px; width: 330px; }
-.sf-teacher-win { width: 330px; height: 412px; border-radius: 44px; overflow: hidden; border: 8px solid var(--yellow); background: #fff; box-shadow: 0 18px 0 #120C33; }
-.sf-teacher-win img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sf-teacher { position: absolute; left: 40px; bottom: 46px; width: 400px; }
+.sf-teacher-win { width: 400px; height: 896px; border-radius: 44px; overflow: hidden; border: 8px solid var(--yellow); background: #fff; box-shadow: 0 18px 0 #120C33; }
+.sf-teacher-win img, .sf-teacher-win video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; display: block; }
 .sf-teacher-name { position: absolute; left: 50%; bottom: -26px; translate: -50% 0; display: flex; align-items: center; gap: 14px; padding: 8px 26px; border-radius: 999px;
   background: var(--orange); color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 36px; }
 .sf-wave { display: flex; align-items: center; gap: 4px; height: 32px; }
 .sf-wave i { width: 6px; border-radius: 3px; background: var(--ink); display: block; }
-.sf-teacher-hand { position: absolute; right: -40px; top: 40px; width: 110px; transform-origin: 50% 90%; }
+.sf-teacher-hand { position: absolute; right: -50px; top: 300px; width: 110px; transform-origin: 50% 90%; }
 
-.sf-subtitle { position: absolute; left: 440px; right: 80px; bottom: 44px; text-align: center; padding: 18px 34px; border-radius: 28px; background: rgba(11,7,38,.82);
+.sf-subtitle { position: absolute; left: 490px; right: 80px; bottom: 44px; text-align: center; padding: 18px 34px; border-radius: 28px; background: rgba(11,7,38,.82);
   font-size: 42px; font-weight: 800; line-height: 1.3; }
 
 .sf-titlecard { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; }
@@ -882,7 +882,7 @@ button { font-family: inherit; }
 .sf-lesson strong { font-family: var(--font-display); font-size: 84px; line-height: 1; }
 .sf-title-perli { position: absolute; right: 180px; bottom: 120px; }
 .sf-titlecard.end .sf-lesson strong { font-size: 110px; }
-.sf-quiz { position: absolute; left: 440px; right: 70px; top: 140px; bottom: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px; }
+.sf-quiz { position: absolute; left: 490px; right: 70px; top: 140px; bottom: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px; }
 .sf-quiz-q { display: flex; align-items: center; gap: 24px; padding: 22px 44px; border-radius: 36px; background: #FFFFFF; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 56px; line-height: 1.1; text-align: center; }
 .sf-quiz-q span { flex-shrink: 0; width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: var(--orange); font-size: 56px; }
 .sf-quiz-options { display: flex; gap: 40px; }

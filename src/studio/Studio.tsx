@@ -200,7 +200,7 @@ function Teacher({ speaking, t, wave }: { speaking: boolean; t: number; wave: bo
   return (
     <div className="sf-teacher">
       <div className="sf-teacher-win" style={{ boxShadow: speaking ? '0 0 0 8px rgba(255,197,49,.35), 0 18px 0 #120C33' : undefined }}>
-        <img src={lehrerin} alt="Lisa" style={{ transform: `translateY(${bob}px) scale(1.04)` }} />
+        <img src={lehrerin} alt="Lisa" style={{ transform: `translateY(${bob}px) scale(1.02)` }} />
       </div>
       <div className="sf-teacher-name">
         Lisa
