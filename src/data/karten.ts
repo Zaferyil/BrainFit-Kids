@@ -1,6 +1,7 @@
 import insel1 from '../assets/karte/insel.webp'
 import insel2 from '../assets/karte/insel-2.webp'
 import insel3 from '../assets/karte/insel-3.webp'
+import insel4 from '../assets/karte/insel-4.webp'
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
 // mit ihren Plätzen auf dem Weg, von unten (Start) nach oben. Gibt es mehr Etappen als Bilder,
@@ -20,6 +21,10 @@ export const KARTEN: Karte[] = [
   {
     bild: insel3, w: 941, h: 1407,
     plaetze: [[366, 1220], [558, 1060], [297, 817], [535, 682], [701, 912], [663, 542], [331, 422], [381, 297], [704, 302], [529, 234], [773, 175]],
+  },
+  {
+    bild: insel4, w: 941, h: 1407,
+    plaetze: [[366, 1240], [498, 1100], [595, 915], [263, 805], [478, 634], [664, 592], [357, 433], [260, 291], [546, 235], [732, 338], [770, 172]],
   },
 ]
 
