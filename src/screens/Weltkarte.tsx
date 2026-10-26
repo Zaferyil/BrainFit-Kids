@@ -150,7 +150,7 @@ function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onL
         </a>
       )}
       <div className={stop.state === 'done' ? 'path-stars done' : 'path-stars'} aria-hidden="true">
-        {[0, 1, 2].map((i) => <Icon key={i} name="star" color="#FFFFFF" size={16} strokeWidth={1.5} />)}
+        {[0, 1, 2].map((i) => <Star3D key={i} on={stop.state === 'done'} />)}
       </div>
       {current && (
         <div className="path-label">
@@ -159,5 +159,25 @@ function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onL
         </div>
       )}
     </div>
+  )
+}
+
+/** Dicker, glänzender Stern unter den Stationen (gold = geschafft, grau = offen). */
+function Star3D({ on }: { on: boolean }) {
+  const id = on ? 'st-gold' : 'st-grau'
+  const [hi, lo, edge] = on ? ['#FFE58A', '#FFB21E', '#D07A00'] : ['#F1F3F8', '#C4CAD8', '#8A93A8']
+  const d = 'M12 2.6c.5 0 .9.3 1.1.7l2.3 4.7 5.2.8c1 .1 1.4 1.3.7 2l-3.8 3.7.9 5.2c.2 1-.9 1.7-1.7 1.3L12 18.5l-4.7 2.5c-.9.5-1.9-.3-1.7-1.3l.9-5.2-3.8-3.7c-.7-.7-.3-1.9.7-2l5.2-.8 2.3-4.7c.2-.4.6-.7 1.1-.7z'
+  return (
+    <svg className="star3d" viewBox="0 0 24 24" aria-hidden="true">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={hi} />
+          <stop offset="1" stopColor={lo} />
+        </linearGradient>
+      </defs>
+      <path d={d} transform="translate(0 1.4)" fill={edge} />
+      <path d={d} fill={`url(#${id})`} stroke={edge} strokeWidth="1.1" strokeLinejoin="round" />
+      <path d="M9.3 9.2l1.7-3.4M8 10.2l-2.6.4" stroke="#FFFFFF" strokeOpacity=".75" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+    </svg>
   )
 }
