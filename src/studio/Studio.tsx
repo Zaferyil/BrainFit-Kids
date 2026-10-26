@@ -3,7 +3,8 @@ import { Abakus } from '../components/Abakus'
 import { BEAD_H, BEAD_W, COL_LEFT, DOT, DOT_TOP, EARTH_BOTTOM, H, HEAVEN_TOP, PITCH, digitsFor, earthTop, frameWidth, heavenTop } from '../components/abakusGeometry'
 import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
-import vorlage from '../assets/lehrerin/vorlage-leer-1080.jpg'
+import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
+import vorlageCreme from '../assets/lehrerin/vorlage-creme-1080.jpg'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
 import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
 
@@ -102,12 +103,14 @@ function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: 
   // Beim Export über das HeyGen-Video bleibt alles außer den Tafel-Inhalten durchsichtig.
   const overlay = window.location.hash.includes('overlay')
   const section = sectionIndex(lesson, scene.id)
+  // Vorlage: helle Tafel (Standard) oder grüne Kreidetafel (?gruen)
+  const gruen = window.location.hash.includes('gruen')
 
   return (
     <div className={overlay ? 'sf transparent' : 'sf'}>
-      {!overlay && <img className="sf-room" src={vorlage} alt="" />}
-      <div className="sf-chalk">
-        <ChalkDoodles />
+      {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
+      <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>
+        {gruen && <ChalkDoodles />}
         <div className="sf-lesson-pill">
           <BookIcon />
           <div><b>Lektion {lesson.number}</b><span>{lesson.title}</span></div>

@@ -963,3 +963,24 @@ button { font-family: inherit; }
 .sf-titleboard .sf-title-perli { position: absolute; right: 40px; bottom: 10px; }
 .sf-stage .sf-place { font-size: 28px; }
 .sf-stage .sf-place.low { top: calc(100% + 44px); }
+
+/* Helle Vorlage (Standard): Innenfläche 580/98, 1271×838; Deko (Stern, Zahlenwürfel) ist im Hintergrundbild */
+.sf-chalk.creme { left: 580px; top: 98px; width: 1271px; height: 838px; color: var(--ink); }
+.creme .sf-lesson-pill { top: 0; }
+.creme .sf-progress { top: 162px; }
+.creme .sf-stage { left: 70px; right: 40px; top: 264px; bottom: 176px; }
+.creme .sf-bottom { left: 50px; right: 120px; bottom: 30px; min-height: 112px; background: #FFFDF7; border: 5px solid #F5C842; box-shadow: 0 6px 0 rgba(150,110,40,.18); font-size: 40px; }
+.creme .sf-stage .sf-caption { background: var(--ink); color: #fff; }
+.creme .sf-stage .sf-place { color: var(--ink); text-shadow: none; }
+.creme .sf-stage .sf-glow { box-shadow: 0 0 0 6px var(--orange), 0 0 40px 12px rgba(255,138,31,.6); }
+.creme .sf-stage .sf-card { color: var(--ink); }
+.creme .sf-stage .sf-card h2 { color: #1F7A43; }
+.creme .sf-stage .sf-quiz-opt { background: #FFFFFF; border-color: #E8DDC4; box-shadow: 0 8px 0 #E8DDC4; }
+.creme .sf-stage .sf-quiz-text { color: var(--ink); }
+.creme .sf-stage .sf-quiz-opt.right { background: #3DBE5B; border-color: #fff; }
+.creme .sf-stage .sf-quiz-opt.right .sf-quiz-text { color: #fff; }
+.creme .sf-stage .sf-countdown { background: var(--ink); color: #fff; }
+.creme .sf-chalk-title { color: var(--ink); }
+.creme .sf-chalk-title.big { color: #1F7A43; }
+.creme .sf-chalk-sub { color: #5A5094; }
+.creme .sf-titleboard .sf-logo .brain { color: var(--ink); }
