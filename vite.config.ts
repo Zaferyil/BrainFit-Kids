@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       // Abakus-Grafiken und Klickton auch offline
-      workbox: { globPatterns: ['**/*.{js,css,html,png,svg,mp3,webmanifest}'] },
+      workbox: { globPatterns: ['**/*.{js,css,html,png,jpg,svg,mp3,webmanifest}'], maximumFileSizeToCacheInBytes: 8 * 1024 * 1024 },
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'BrainFit Kids',

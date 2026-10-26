@@ -2,15 +2,15 @@ import { digitsFor } from './abakusGeometry'
 import {
   BEAD_W3, BEAM_Y3, DOT_H3, DOT_W3, EARTH_H3, H3, HEAVEN_H3, PITCH3, colCenter3, colLeft3, earthTop3, frameWidth3, heavenTop3,
 } from './abakus3dGeometry'
-import himmel from '../assets/video/perle-himmel.png'
-import erde from '../assets/video/perle-erde.png'
-import markiert from '../assets/video/perle-markiert.png'
-import punkt from '../assets/video/punkt.png'
+import himmel from '../assets/video/perle-himmel.webp'
+import erde from '../assets/video/perle-erde.webp'
+import markiert from '../assets/video/perle-markiert.webp'
+import punkt from '../assets/video/punkt.webp'
 
 // 3D-Abakus der Lernvideos (Grafik aus der Video-Vorlage). Nur Anzeige: Die Perlen stehen zwischen
 // „from“ und value, je nach progress (0–1) – das Video-Studio setzt die Zeit Bild für Bild.
 
-const FRAMES = import.meta.glob('../assets/video/rahmen-*.png', { eager: true, import: 'default' }) as Record<string, string>
+const FRAMES = import.meta.glob('../assets/video/rahmen-*.webp', { eager: true, import: 'default' }) as Record<string, string>
 
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
 
@@ -38,7 +38,7 @@ export function Abakus3D({ value, cols, colw, from, progress = 1 }: Props) {
       role="img"
       aria-label={`Abakus zeigt ${value}`}
       data-value={value}
-      style={{ width: px(frameWidth3(n)), height: px(H3), backgroundImage: `url(${FRAMES[`../assets/video/rahmen-${n}.png`]})` }}
+      style={{ width: px(frameWidth3(n)), height: px(H3), backgroundImage: `url(${FRAMES[`../assets/video/rahmen-${n}.webp`]})` }}
     >
       {Array.from({ length: n }, (_, ci) => {
         const fromRight = n - 1 - ci

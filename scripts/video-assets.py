@@ -95,3 +95,15 @@ Image.fromarray(b2.astype('uint8')).crop((60, 190, 1950, 480)).save(f'{OUT}/fort
 Image.open(f'{SRC}/zurueck.webp').convert('RGBA').crop((90, 90, 1165, 1165)).save(f'{OUT}/zurueck.png')
 Image.open(f'{SRC}/klasse.webp').convert('RGBA').crop((95, 100, 1905, 545)).save(f'{OUT}/klasse.png')
 print('ok')
+
+# Für die App verkleinern (doppelte Anzeigegröße) und als WebP speichern
+import glob, os
+SIZES = {'zurueck': 220, 'klasse': 640, 'lektion-schild': 1080, 'fortschritt': 1120, 'punkt-aktiv': 160, 'punkt-leer': 140}
+for f in glob.glob(f'{OUT}/*.png'):
+    name = os.path.basename(f)[:-4]
+    im = Image.open(f).convert('RGBA')
+    if name in SIZES and im.width > SIZES[name]:
+        im = im.resize((SIZES[name], round(im.height * SIZES[name] / im.width)), Image.LANCZOS)
+    im.save(f'{OUT}/{name}.webp', quality=90, method=6)
+    os.remove(f)
+print('webp ok')

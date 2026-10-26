@@ -8,13 +8,14 @@ import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
 import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
 import vorlageCreme from '../assets/lehrerin/vorlage-creme-1080.jpg'
-import schild from '../assets/video/lektion-schild.png'
-import fortschritt from '../assets/video/fortschritt.png'
-import punktAktiv from '../assets/video/punkt-aktiv.png'
-import zurueck from '../assets/video/zurueck.png'
-import klasse from '../assets/video/klasse.png'
+import schild from '../assets/video/lektion-schild.webp'
+import fortschritt from '../assets/video/fortschritt.webp'
+import punktAktiv from '../assets/video/punkt-aktiv.webp'
+import zurueck from '../assets/video/zurueck.webp'
+import klasse from '../assets/video/klasse.webp'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
-import { abakusAt, buildTimeline, sceneAt, type SceneAudio, type TimedMove, type TimedScene } from './timeline'
+import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
+import { lessonAudio } from './audio'
 
 // Video-Studio: zeichnet eine Lektion als 1920×1080-Bild zur Zeit t.
 // Vorschau im Browser mit Abspielen/Spulen; für den Export setzt ein Skript die Zeit Bild für Bild
@@ -22,10 +23,6 @@ import { abakusAt, buildTimeline, sceneAt, type SceneAudio, type TimedMove, type
 
 const HANDS = import.meta.glob('../assets/hand/*.svg', { eager: true, import: 'default' }) as Record<string, string>
 const handSrc = (h: HandIcon) => HANDS[`../assets/hand/${h}.svg`]
-
-// Aufnahmen von Lisa je Lektion (scripts/lisa-stimme.mjs): content/lektionen/<id>/timing.json
-const TIMINGS = import.meta.glob('../../content/lektionen/*/timing.json', { eager: true, import: 'default' }) as Record<string, Record<string, SceneAudio>>
-const AUDIO = Object.fromEntries(Object.entries(TIMINGS).map(([k, v]) => [k.split('/').slice(-2)[0], v]))
 
 const W = 1920
 const HEIGHT = 1080
@@ -44,7 +41,7 @@ export function Studio({ id }: { id: string }) {
 
 function StudioPlayer({ lesson }: { lesson: Lesson }) {
   const exporting = window.location.hash.includes('export')
-  const tl = useMemo(() => buildTimeline(lesson, AUDIO[lesson.id] ?? {}), [lesson])
+  const tl = useMemo(() => buildTimeline(lesson, lessonAudio(lesson.id)), [lesson])
   const [t, setT] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [scale, setScale] = useState(1)
@@ -108,7 +105,7 @@ function StudioPlayer({ lesson }: { lesson: Lesson }) {
 
 const fmt = (x: number) => `${Math.floor(x / 60)}:${String(Math.floor(x % 60)).padStart(2, '0')}`
 
-function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: number; t: number }) {
+export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: number; t: number }) {
   const { scene } = s
   const fadeIn = ease(local / 0.5)
   const kind = scene.kind ?? 'tafel'
@@ -121,7 +118,7 @@ function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: 
   return (
     <div className={overlay ? 'sf transparent' : 'sf'}>
       {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
-      <img className="sf-zurueck" src={zurueck} alt="Zurück" />
+      <a className="sf-zurueck" href="#/einheit" aria-label="Zurück zur Einheit"><img src={zurueck} alt="" /></a>
       <img className="sf-klasse" src={klasse} alt="Klasse LINZ-7K" />
       <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>
         {gruen && <ChalkDoodles />}

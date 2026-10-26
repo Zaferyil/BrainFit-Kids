@@ -3,6 +3,7 @@ import { Icon } from '../../components/Icon'
 import { drivePreviewUrl, driveViewUrl, youtubeUrl, type Video } from '../../data/videos'
 import { finishStation } from '../../lib/progress'
 import { StationDone, StationShell } from './StationShell'
+import { LessonPlayer } from '../../studio/LessonPlayer'
 
 type Props = { kidId: string; title: string; videos: Video[]; learn?: string[]; rule?: string[] }
 
@@ -72,8 +73,10 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
               ))}
             </div>
           )}
-          <div className="video-box">
-            {video.source === 'drive' ? (
+          <div className={video.source === 'lektion' ? 'video-box lektion' : 'video-box'}>
+            {video.source === 'lektion' ? (
+              <LessonPlayer key={video.id} id={video.id} onEnded={markWatched} />
+            ) : video.source === 'drive' ? (
               <iframe
                 key={video.id}
                 title={`Lernvideo: ${video.title}`}
@@ -94,10 +97,10 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
             )}
           </div>
           <div className="video-actions">
-            <a href={video.source === 'drive' ? driveViewUrl(video.id) : youtubeUrl(video.id)} target="_blank" rel="noreferrer" className="watch-btn" onClick={markWatched}>
+            {video.source !== 'lektion' && <a href={video.source === 'drive' ? driveViewUrl(video.id) : youtubeUrl(video.id)} target="_blank" rel="noreferrer" className="watch-btn" onClick={markWatched}>
               <span className="watch-icon"><Icon name="play" color="#FFFFFF" fill="#FFFFFF" size={22} /></span>
               {video.source === 'drive' ? 'Video groß öffnen' : 'Auf YouTube ansehen'}
-            </a>
+            </a>}
             <span className="video-status">
               {isDone(video)
                 ? 'Angesehen ✓'
@@ -128,7 +131,7 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
             {allWatched ? 'Weiter' : videos.length > 1 ? `Erst alle ${videos.length} Videos ansehen` : 'Erst das Video ansehen'}
             {allWatched && <Icon name="right" size={26} color="#231A4F" strokeWidth={3} />}
           </button>
-          {!allWatched && fallback && need === null && (
+          {!allWatched && fallback && need === null && video.source !== 'lektion' && (
             <button type="button" className="text-btn" onClick={finish}>Video lässt sich nicht abspielen? Trotzdem weiter</button>
           )}
         </aside>

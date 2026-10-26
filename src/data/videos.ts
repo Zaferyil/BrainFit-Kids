@@ -1,12 +1,14 @@
 // Lernvideos je Einheit, aus MathKids („Watch Video“-Knopf je Level), siehe content/videos.json.
-export type Video = { id: string; title: string; source: 'youtube' | 'drive'; seconds?: number }
+export type Video = { id: string; title: string; source: 'youtube' | 'drive' | 'lektion'; seconds?: number }
 
 const v = (id: string, title: string): Video => ({ id, title, source: 'youtube' })
 // MP4 aus dem Drive-Ordner „Bitmis-Video Dersler-Youtube icin“ (siehe content/videos.json)
 const drive = (id: string, title: string, seconds: number): Video => ({ id, title, source: 'drive', seconds })
+// Eigene Lernvideos mit Lisa, in der App abgespielt (src/studio, Lektion-ID aus lektionen.ts)
+const lektion = (id: string, title: string): Video => ({ id, title, source: 'lektion' })
 
 export const UNIT_VIDEOS: Record<string, Video[]> = {
-  '1-1': [v('Zto6YuVKFaI', 'Erd- und Himmelsperlen')],
+  '1-1': [lektion('lektion-1', 'Lektion 1: Der Abakus')],
   '1-2': [drive('16ZbfblAYiKU_VoNMjjzbUNWAkNNHA30U', '2. Lektion: 1 bis 9', 112)],
   '1-3': [drive('1-eg7e_UsxmAHQIMnwZmxsIXvYW03rEe5', '3. Lektion: Zehner und Einer', 115)],
   '2-1': [v('UUrV0frw8aI', 'Big Friends +9'), v('fHMDL8jGRdE', 'Big Friends +8')],

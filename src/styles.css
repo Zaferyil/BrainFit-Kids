@@ -997,6 +997,31 @@ button { font-family: inherit; }
 .sf-fortschritt img { position: absolute; top: 49%; width: 80px; height: 80px; translate: -50% -50%; }
 .sf-fortschritt img.fertig { width: 62px; height: 62px; }
 .sf-fortschritt b { position: absolute; left: 89.4%; top: 50%; translate: -50% -50%; font-family: var(--font-display); font-weight: 800; font-size: 36px; color: #0B46C8; }
-.sf-zurueck { position: absolute; left: 34px; top: 26px; width: 104px; height: 104px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+.sf-zurueck { position: absolute; left: 34px; top: 26px; width: 104px; height: 104px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); z-index: 5; }
+.sf-zurueck img { width: 100%; height: 100%; display: block; }
 .sf-klasse { position: absolute; left: 150px; top: 40px; height: 76px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
 .creme .sf-stage { top: 262px; }
+
+/* Lektion in der App (LessonPlayer) */
+.video-box.lektion { position: relative; background: #000; }
+.lesson-player { position: relative; width: 100%; height: 100%; background: #000; }
+.lesson-player:fullscreen { display: flex; align-items: center; justify-content: center; }
+.lesson-fit { position: absolute; inset: 0; }
+.lesson-frame { width: 1920px; height: 1080px; cursor: pointer; }
+.lesson-play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 112px; height: 112px; border-radius: 50%; border: 0; cursor: pointer;
+  background: rgba(35,26,79,.85); box-shadow: 0 0 0 10px rgba(255,255,255,.25); display: grid; place-items: center; padding-left: 8px; }
+.lesson-bar { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; align-items: center; gap: 12px; padding: 6px 12px; border-radius: 16px;
+  background: rgba(14,10,42,.72); color: #fff; font-weight: 800; font-size: 14px; opacity: .92; }
+.lesson-bar button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(255,255,255,.14); display: grid; place-items: center; cursor: pointer; flex-shrink: 0; }
+.lesson-bar input { flex: 1; accent-color: var(--yellow); }
+.lesson-pause { width: 14px; height: 16px; border-left: 5px solid #fff; border-right: 5px solid #fff; box-sizing: border-box; }
+.lesson-player { container-type: inline-size; }
+.lesson-bar { transition: opacity .3s; }
+.lesson-player.playing .lesson-bar { opacity: 0; pointer-events: none; }
+.lesson-player.playing:hover .lesson-bar { opacity: .92; pointer-events: auto; }
+@container (max-width: 520px) {
+  .lesson-bar { left: 6px; right: 6px; bottom: 6px; gap: 6px; padding: 3px 6px; font-size: 11px; border-radius: 12px; }
+  .lesson-bar button { width: 28px; height: 28px; }
+  .lesson-bar span { display: none; }
+  .lesson-play { width: 72px; height: 72px; }
+}
