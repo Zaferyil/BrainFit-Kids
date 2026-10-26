@@ -179,4 +179,11 @@ const LEKTION_1: Lesson = {
 }
 
 export const LESSONS: Lesson[] = [LEKTION_1]
+
+const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
+/** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie
+ *  nötig für die Zeitmarken – Stellen im Text werden über diese Funktion auf den Sprechtext abgebildet. */
+export const spokenText = (t: string) => t
+  .replace(/\b(Die|die) (\d)\b/g, (_, d: string, n: string) => `${d} ${WORDS[+n][0].toUpperCase()}${WORDS[+n].slice(1)}`)
+  .replace(/\b(\d)\b/g, (_, n: string) => WORDS[+n])
 export const findLesson = (id: string) => LESSONS.find((l) => l.id === id) ?? null

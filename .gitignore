@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Tonspur der Lernvideos (wird aus den Szenen-Aufnahmen erzeugt)
+content/lektionen/*/ton.wav

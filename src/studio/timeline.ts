@@ -1,4 +1,4 @@
-import type { Lesson, Scene } from './lektionen'
+import { spokenText, type Lesson, type Scene } from './lektionen'
 
 // Zeitplan eines Videos: wann jede Szene beginnt, wie lange sie dauert und wann sich
 // die Perlen bewegen. Ohne Aufnahme wird die Sprechdauer aus der Textlänge geschätzt.
@@ -11,6 +11,9 @@ const COUNTDOWN = 3.2
 
 export type TimedMove = { start: number; dur: number; to: number; hand: boolean }
 
+/** Aufnahme einer Szene: Länge und Startzeit jedes Zeichens im Sprechtext (Sekunden) */
+export type SceneAudio = { duration: number; chars: number[] }
+
 export type TimedScene = {
   scene: Scene
   start: number
@@ -20,14 +23,16 @@ export type TimedScene = {
   cols: number
   value: number
   moves: TimedMove[]
+  /** Szenenzeit, zu der Lisa diese Stelle des Satzes sagt (Infinity, wenn nicht im Satz) */
+  at: (text: string) => number
 }
 
 export type Timeline = { scenes: TimedScene[]; duration: number }
 
 export const estimateSpeech = (text?: string) => (text ? text.length * SEC_PER_CHAR : 0)
 
-/** @param durations echte Länge der Aufnahme je Szene (Sekunden), sobald vorhanden */
-export function buildTimeline(lesson: Lesson, durations: Record<string, number> = {}): Timeline {
+/** @param audio Aufnahmen je Szene; ohne Aufnahme wird die Sprechdauer aus der Textlänge geschätzt */
+export function buildTimeline(lesson: Lesson, audio: Record<string, SceneAudio> = {}): Timeline {
   const scenes: TimedScene[] = []
   let t = 0
   let cols = 4
@@ -35,12 +40,19 @@ export function buildTimeline(lesson: Lesson, durations: Record<string, number> 
   for (const scene of lesson.scenes) {
     cols = scene.cols ?? cols
     value = scene.value ?? value
-    const talk = durations[scene.id] ?? estimateSpeech(scene.say)
+    const rec = audio[scene.id]
+    const talk = rec?.duration ?? estimateSpeech(scene.say)
     const speech = { start: scene.say ? LEAD : 0, end: scene.say ? LEAD + talk : 0 }
-    const anchor = (at: string | number) => {
-      if (typeof at === 'number') return at
-      const i = scene.say?.indexOf(at) ?? -1
-      return i < 0 ? speech.start : speech.start + (i / scene.say!.length) * talk
+    const spoken = scene.say ? spokenText(scene.say) : ''
+    const at = (text: string) => {
+      const i = spoken.indexOf(spokenText(text))
+      if (i < 0) return Infinity
+      return speech.start + (rec ? rec.chars[i] ?? 0 : (i / spoken.length) * talk)
+    }
+    const anchor = (a: string | number) => {
+      if (typeof a === 'number') return a
+      const t = at(a)
+      return t === Infinity ? speech.start : t
     }
     const moves: TimedMove[] = (scene.moves ?? []).map((m) => ({
       start: typeof m.at === 'number' ? m.at * Math.max(talk, 1) : anchor(m.at),
@@ -58,7 +70,7 @@ export function buildTimeline(lesson: Lesson, durations: Record<string, number> 
     if (scene.quiz) dur = speech.end + COUNTDOWN + 2.4
     const lastMove = Math.max(0, ...moves.map((m) => m.start + m.dur + 0.4))
     dur = Math.max(dur, lastMove, scene.min ?? 0)
-    scenes.push({ scene, start: t, dur, speech, cols, value, moves })
+    scenes.push({ scene, start: t, dur, speech, cols, value, moves, at })
     t += dur
     value = moves.length ? moves[moves.length - 1].to : value
   }

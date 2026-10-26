@@ -6,7 +6,7 @@ import { Perli } from '../components/Perli'
 import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
 import vorlageCreme from '../assets/lehrerin/vorlage-creme-1080.jpg'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
-import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
+import { abakusAt, buildTimeline, sceneAt, type SceneAudio, type TimedMove, type TimedScene } from './timeline'
 
 // Video-Studio: zeichnet eine Lektion als 1920×1080-Bild zur Zeit t.
 // Vorschau im Browser mit Abspielen/Spulen; für den Export setzt ein Skript die Zeit Bild für Bild
@@ -14,6 +14,10 @@ import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } fro
 
 const HANDS = import.meta.glob('../assets/hand/*.svg', { eager: true, import: 'default' }) as Record<string, string>
 const handSrc = (h: HandIcon) => HANDS[`../assets/hand/${h}.svg`]
+
+// Aufnahmen von Lisa je Lektion (scripts/lisa-stimme.mjs): content/lektionen/<id>/timing.json
+const TIMINGS = import.meta.glob('../../content/lektionen/*/timing.json', { eager: true, import: 'default' }) as Record<string, Record<string, SceneAudio>>
+const AUDIO = Object.fromEntries(Object.entries(TIMINGS).map(([k, v]) => [k.split('/').slice(-2)[0], v]))
 
 const W = 1920
 const HEIGHT = 1080
@@ -32,7 +36,7 @@ export function Studio({ id }: { id: string }) {
 
 function StudioPlayer({ lesson }: { lesson: Lesson }) {
   const exporting = window.location.hash.includes('export')
-  const tl = useMemo(() => buildTimeline(lesson), [lesson])
+  const tl = useMemo(() => buildTimeline(lesson, AUDIO[lesson.id] ?? {}), [lesson])
   const [t, setT] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [scale, setScale] = useState(1)
@@ -212,16 +216,9 @@ function BottomLine({ s, local }: { s: TimedScene; local: number }) {
 }
 
 function currentSentence(s: TimedScene, local: number) {
-  const text = s.scene.say!
-  const sentences = text.split(/(?<=[.!?])\s+/)
-  const talk = s.speech.end - s.speech.start
-  let pos = 0
+  const sentences = s.scene.say!.split(/(?<=[.!?])\s+/)
   let current = sentences[0]
-  for (const sent of sentences) {
-    const at = s.speech.start + (pos / text.length) * talk
-    if (local >= at - 0.1) current = sent
-    pos += sent.length + 1
-  }
+  for (const sent of sentences) if (local >= s.at(sent) - 0.1) current = sent
   return current
 }
 
@@ -285,11 +282,6 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
   const k = colw / PITCH
   const width = frameWidth(cols) * k
   const glow = 0.55 + Math.sin(t * 5) * 0.3
-  const talk = s.speech.end - s.speech.start
-  const wordAt = (w: string) => {
-    const i = scene.say?.indexOf(w) ?? -1
-    return i < 0 ? Infinity : s.speech.start + (i / scene.say!.length) * talk
-  }
   const task = scene.task !== undefined
   const countdown = task ? local - s.speech.end : -1
   const revealed = task && ab.value === scene.task && (ab.progress >= 1 || ab.move)
@@ -321,7 +313,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
         {scene.labels && Array.from({ length: cols }, (_, ci) => {
           const fromRight = cols - 1 - ci
           const name = PLACES[fromRight]
-          const show = ease((local - wordAt(name)) / 0.4)
+          const show = ease((local - s.at(name)) / 0.4)
           // abwechselnd zwei Zeilen, damit lange Wörter nebeneinander Platz haben
           return <div key={ci} className={fromRight % 2 ? 'sf-place low' : 'sf-place'} style={{ left: (COL_LEFT[ci] + BEAD_W / 2) * k, opacity: show, transform: `translate(-50%, ${(1 - show) * 20}px)` }}>{name}</div>
         })}

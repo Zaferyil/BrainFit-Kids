@@ -4,14 +4,9 @@
 import { createServer } from 'vite'
 
 const id = process.argv[2] ?? 'lektion-1'
-const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
-// Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest
-const spoken = (t) => t
-  .replace(/\b(Die|die) (\d)\b/g, (_, d, n) => `${d} ${WORDS[n][0].toUpperCase()}${WORDS[n].slice(1)}`)
-  .replace(/\b(\d)\b/g, (_, n) => WORDS[n])
 const server = await createServer({ server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' })
 try {
-  const { findLesson } = await server.ssrLoadModule('/src/studio/lektionen.ts')
+  const { findLesson, spokenText: spoken } = await server.ssrLoadModule('/src/studio/lektionen.ts')
   const { buildTimeline } = await server.ssrLoadModule('/src/studio/timeline.ts')
   const lesson = findLesson(id)
   const tl = buildTimeline(lesson)
