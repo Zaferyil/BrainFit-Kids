@@ -7,27 +7,27 @@ import numpy as np
 
 KARTEN = [
     {
-        'quelle': 'docs/referenz/karte-vorlage.webp', 'ziel': 'src/assets/karte/insel.webp', 'top': 132, 'bottom': 1535,
+        'quelle': 'docs/referenz/karte-vorlage.webp', 'ziel': 'src/assets/karte/insel.webp', 'top': 132, 'bottom': 1525,
         'punkte': [(555,1305),(325,1178),(157,1055),(262,845),(449,925),(700,1003),(766,800),(559,670),(329,603),(319,430),(565,395),(700,295)],
         'figur': True,
     },
     {
-        'quelle': 'docs/referenz/karte-vorlage-2.webp', 'ziel': 'src/assets/karte/insel-2.webp', 'top': 128, 'bottom': 1535,
+        'quelle': 'docs/referenz/karte-vorlage-2.webp', 'ziel': 'src/assets/karte/insel-2.webp', 'top': 128, 'bottom': 1525,
         'punkte': [(307,1338),(402,1213),(645,1087),(297,985),(524,820),(702,700),(513,630),(281,580),(357,467),(568,478),(744,425),(715,320)],
         'figur': False,
     },
     {
-        'quelle': 'docs/referenz/karte-vorlage-3.webp', 'ziel': 'src/assets/karte/insel-3.webp', 'top': 128, 'bottom': 1535,
+        'quelle': 'docs/referenz/karte-vorlage-3.webp', 'ziel': 'src/assets/karte/insel-3.webp', 'top': 128, 'bottom': 1525,
         'punkte': [(366,1348),(558,1188),(297,945),(535,810),(701,1040),(663,670),(331,550),(381,425),(704,430),(529,362),(773,303)],
         'figur': False,
     },
     {
-        'quelle': 'docs/referenz/karte-vorlage-4.webp', 'ziel': 'src/assets/karte/insel-4.webp', 'top': 128, 'bottom': 1535,
+        'quelle': 'docs/referenz/karte-vorlage-4.webp', 'ziel': 'src/assets/karte/insel-4.webp', 'top': 128, 'bottom': 1525,
         'punkte': [(366,1368),(498,1228),(595,1043),(263,933),(478,762),(664,720),(357,561),(260,419),(546,363),(732,466),(770,300)],
         'figur': False,
     },
     {
-        'quelle': 'docs/referenz/karte-vorlage-5.webp', 'ziel': 'src/assets/karte/insel-5.webp', 'top': 128, 'bottom': 1535,
+        'quelle': 'docs/referenz/karte-vorlage-5.webp', 'ziel': 'src/assets/karte/insel-5.webp', 'top': 128, 'bottom': 1525,
         'punkte': [(392,1325),(663,1210),(463,1077),(685,970),(428,898),(573,773),(321,680),(647,610),(470,515),(285,425),(491,365),(635,305)],
         'figur': False,
     },

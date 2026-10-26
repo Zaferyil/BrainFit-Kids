@@ -76,8 +76,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </div>
 
         <div className="inseln" ref={scroller}>
-          {[...teile].reverse().map(({ karte, start }) => (
-            <section key={start} className="insel">
+          {[...teile].reverse().map(({ karte, start }, k) => (
+            <section key={start} className="insel" style={{ zIndex: teile.length - k }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} />
               {karte.plaetze.map(([x, y], i) => {
                 const s = stops[start + i]

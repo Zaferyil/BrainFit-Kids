@@ -1123,7 +1123,14 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-stop.rand-l .path-start { --pfeil: 15%; }
 .insel-stop.rand-r .path-start { --pfeil: 85%; }
 .insel-stop:has(.path-node.current) { z-index: 4; }
-/* Inseln gehen weich ineinander über: der Himmel der unteren Insel blendet unter die obere */
-.inseln > .insel + .insel { margin-top: -12cqw; }
-.inseln > .insel + .insel .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 12cqw); }
-.inseln > .insel:not(:last-child) { z-index: 1; }
+/* Übergang zwischen zwei Inseln (obere Insel liegt höher, siehe zIndex in Weltkarte): die untere schiebt sich unter die obere, deren Wasser blendet weich
+   in den Himmel der unteren über; kleine Wolken lockern die Kante auf. */
+.inseln > .insel:not(:last-child) { margin-bottom: -10cqw; }
+.inseln > .insel:not(:last-child) .insel-bg { mask-image: linear-gradient(to top, transparent, #000 10cqw); }
+.inseln > .insel .insel-stop { z-index: 4; }
+.inseln > .insel:not(:last-child)::after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 12cqw; translate: 0 30%; pointer-events: none;
+  background:
+    radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,255,255,.6) 60%, transparent) 2% 60% / 16% 55% no-repeat,
+    radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,.5) 60%, transparent) 20% 40% / 12% 40% no-repeat,
+    radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,.5) 60%, transparent) 82% 45% / 14% 45% no-repeat,
+    radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,255,255,.6) 60%, transparent) 99% 62% / 17% 55% no-repeat; }
