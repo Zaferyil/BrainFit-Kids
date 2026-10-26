@@ -985,3 +985,18 @@ button { font-family: inherit; }
 .creme .sf-chalk-sub { color: #5A5094; }
 .creme .sf-titleboard .sf-logo .brain { color: var(--ink); }
 .sf-lesson-pill { color: #FFFFFF; }
+
+/* 3D-Abakus und Bedienelemente aus der Video-Vorlage */
+.abakus3d { position: relative; flex-shrink: 0; background-size: 100% 100%; background-repeat: no-repeat; }
+.abakus3d-bead, .abakus3d-dot { position: absolute; display: block; pointer-events: none; }
+.sf-schild { position: absolute; top: -6px; left: 50%; translate: -50% 0; width: 540px; height: 173px; background-size: 100% 100%;
+  display: flex; flex-direction: column; justify-content: center; padding-left: 196px; color: #fff; text-shadow: 0 3px 0 rgba(0,90,50,.35); }
+.sf-schild b { font-family: var(--font-display); font-weight: 800; font-size: 64px; line-height: .9; }
+.sf-schild span { font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1.1; }
+.sf-fortschritt { position: absolute; top: 166px; left: 50%; translate: -50% 0; width: 560px; height: 86px; background-size: 100% 100%; }
+.sf-fortschritt img { position: absolute; top: 49%; width: 80px; height: 80px; translate: -50% -50%; }
+.sf-fortschritt img.fertig { width: 62px; height: 62px; }
+.sf-fortschritt b { position: absolute; left: 89.4%; top: 50%; translate: -50% -50%; font-family: var(--font-display); font-weight: 800; font-size: 36px; color: #0B46C8; }
+.sf-zurueck { position: absolute; left: 34px; top: 26px; width: 104px; height: 104px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+.sf-klasse { position: absolute; left: 150px; top: 40px; height: 76px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+.creme .sf-stage { top: 262px; }

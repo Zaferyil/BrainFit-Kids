@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { Abakus } from '../components/Abakus'
-import { BEAD_H, BEAD_W, COL_LEFT, DOT, DOT_TOP, EARTH_BOTTOM, H, HEAVEN_TOP, PITCH, digitsFor, earthTop, frameWidth, heavenTop } from '../components/abakusGeometry'
+import { Abakus3D } from '../components/Abakus3D'
+import { digitsFor } from '../components/abakusGeometry'
+import {
+  BEAD_W3 as BEAD_W, BEAM_Y3, EARTH_H3 as BEAD_H, H3 as H, HEAVEN_H3, PITCH3 as PITCH, colLeft3, earthTop3 as earthTop, frameWidth3 as frameWidth, heavenTop3 as heavenTop,
+} from '../components/abakus3dGeometry'
 import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
 import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
 import vorlageCreme from '../assets/lehrerin/vorlage-creme-1080.jpg'
+import schild from '../assets/video/lektion-schild.png'
+import fortschritt from '../assets/video/fortschritt.png'
+import punktAktiv from '../assets/video/punkt-aktiv.png'
+import zurueck from '../assets/video/zurueck.png'
+import klasse from '../assets/video/klasse.png'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
 import { abakusAt, buildTimeline, sceneAt, type SceneAudio, type TimedMove, type TimedScene } from './timeline'
 
@@ -113,15 +121,17 @@ function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: 
   return (
     <div className={overlay ? 'sf transparent' : 'sf'}>
       {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
+      <img className="sf-zurueck" src={zurueck} alt="Zurück" />
+      <img className="sf-klasse" src={klasse} alt="Klasse LINZ-7K" />
       <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>
         {gruen && <ChalkDoodles />}
-        <div className="sf-lesson-pill">
-          <BookIcon />
-          <div><b>Lektion {lesson.number}</b><span>{lesson.title}</span></div>
+        <div className="sf-schild" style={{ backgroundImage: `url(${schild})` }}>
+          <b>Lektion {lesson.number}</b><span>{lesson.title}</span>
         </div>
-        <div className="sf-progress" aria-label={`Teil ${section + 1} von ${lesson.sections.length}`}>
-          {lesson.sections.map((_, i) => (
-            <span key={i} className={i < section ? 'done' : i === section ? 'current' : ''}><i /></span>
+        <div className="sf-fortschritt" style={{ backgroundImage: `url(${fortschritt})` }} aria-label={`Teil ${section + 1} von ${lesson.sections.length}`}>
+          {/* Punktmitten im Bild (1890 px breit): 135, 463, 757, 1048, 1343 */}
+          {[135, 463, 757, 1048, 1343].slice(0, lesson.sections.length).map((x, i) => i <= section && (
+            <img key={i} src={punktAktiv} alt="" className={i === section ? 'aktiv' : 'fertig'} style={{ left: `${(x / 1890) * 100}%` }} />
           ))}
           <b>{section + 1}/{lesson.sections.length}</b>
         </div>
@@ -160,16 +170,6 @@ const sectionIndex = (lesson: Lesson, id: string) => {
   let cur = 0
   lesson.sections.forEach((sec, i) => { if (order.indexOf(sec.start) <= order.indexOf(id)) cur = i })
   return cur
-}
-
-function BookIcon() {
-  return (
-    <svg width="70" height="56" viewBox="0 0 70 56" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinejoin="round" aria-hidden="true">
-      <path d="M35 12 C26 5 14 5 5 8 V48 C14 45 26 45 35 52 C44 45 56 45 65 48 V8 C56 5 44 5 35 12 Z" />
-      <path d="M35 12 V52" />
-      <path d="M12 17 C18 15.5 24 16 29 18 M12 26 C18 24.5 24 25 29 27 M12 35 C18 33.5 24 34 29 36 M41 18 C46 16 52 15.5 58 17 M41 27 C46 25 52 24.5 58 26 M41 36 C46 34 52 33.5 58 35" strokeWidth="2.5" />
-    </svg>
-  )
 }
 
 /** Kreide-Sterne und gelbe Striche wie in der Vorlage */
@@ -277,7 +277,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
   const { scene, cols } = s
   const ab = abakusAt(s, local)
   // Platz auf der Tafel: Bühne 484 px hoch, abzüglich Überschrift und Stellenwerte
-  const room = 470 - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
+  const room = 430 - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
   const colw = Math.min(cols === 1 ? 170 : 165, (room / H) * PITCH)
   const k = colw / PITCH
   const width = frameWidth(cols) * k
@@ -296,18 +296,18 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
       )}
       {task && <div className="sf-caption task">Stell die {scene.task} ein!</div>}
       <div className="sf-abakus-wrap" style={{ width, height: H * k }}>
-        <Abakus value={ab.value} from={ab.from} progress={ab.progress} cols={cols} colw={colw} interactive={false} sound={false} />
+        <Abakus3D value={ab.value} from={ab.from} progress={ab.progress} cols={cols} colw={colw} />
         {scene.highlight && Array.from({ length: cols }, (_, ci) => {
-          const left = COL_LEFT[ci]
+          const left = colLeft3(ci)
           const box = scene.highlight === 'erd'
-            ? { x: left - 8, y: EARTH_BOTTOM - 4 * BEAD_H - 8, w: BEAD_W + 16, h: 4 * BEAD_H + 16 }
+            ? { x: left - 8, y: earthTop(0, 0) - 8, w: BEAD_W + 16, h: earthTop(0, 3) + BEAD_H - earthTop(0, 0) + 16 }
             : scene.highlight === 'himmel'
-              ? { x: left - 8, y: HEAVEN_TOP - 8, w: BEAD_W + 16, h: BEAD_H + 16 }
+              ? { x: left - 8, y: heavenTop(0) - 8, w: BEAD_W + 16, h: HEAVEN_H3 + 16 }
               : null
           return box && <div key={ci} className="sf-glow" style={{ left: box.x * k, top: box.y * k, width: box.w * k, height: box.h * k, opacity: glow * ease(local / 0.6) }} />
         })}
         {scene.highlight === 'leiste' && (
-          <div className="sf-glow bar" style={{ left: 20 * k, top: (DOT_TOP + DOT / 2 - 16) * k, width: width - 40 * k, height: 32 * k, opacity: glow * ease(local / 0.6) }} />
+          <div className="sf-glow bar" style={{ left: 40 * k, top: (BEAM_Y3 - 22) * k, width: width - 80 * k, height: 44 * k, opacity: glow * ease(local / 0.6) }} />
         )}
         {ab.move?.hand !== false && <Hands s={s} local={local} k={k} />}
         {scene.labels && Array.from({ length: cols }, (_, ci) => {
@@ -315,7 +315,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
           const name = PLACES[fromRight]
           const show = ease((local - s.at(name)) / 0.4)
           // abwechselnd zwei Zeilen, damit lange Wörter nebeneinander Platz haben
-          return <div key={ci} className={fromRight % 2 ? 'sf-place low' : 'sf-place'} style={{ left: (COL_LEFT[ci] + BEAD_W / 2) * k, opacity: show, transform: `translate(-50%, ${(1 - show) * 20}px)` }}>{name}</div>
+          return <div key={ci} className={fromRight % 2 ? 'sf-place low' : 'sf-place'} style={{ left: (colLeft3(ci) + BEAD_W / 2) * k, opacity: show, transform: `translate(-50%, ${(1 - show) * 20}px)` }}>{name}</div>
         })}
       </div>
       {scene.badge && <div className="sf-badge" style={{ opacity: ease((local - 0.6) / 0.4), transform: `scale(${0.7 + 0.3 * ease((local - 0.6) / 0.4)})` }}>{scene.badge}</div>}
@@ -336,12 +336,12 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
   const p = ease((local - m.start) / m.dur)
   const show = Math.min(ease((local - (m.start - 0.45)) / 0.3), 1 - ease((local - (m.start + m.dur + 0.05)) / 0.3))
   const lerp = (x: number, y: number) => x + (y - x) * p
-  const left = COL_LEFT[0]
-  const size = Math.max(84, BEAD_W * k * 1.05)
+  const left = colLeft3(0)
+  const size = Math.max(84, BEAD_W * k * 0.9)
   const hands: { icon: HandIcon; x: number; y: number }[] = []
   if ((a >= 5) !== (b >= 5)) {
     const top = lerp(heavenTop(a), heavenTop(b))
-    hands.push(b >= 5 ? { icon: 'zeige-runter', x: left + BEAD_W * 0.62, y: top - size / k * 0.85 } : { icon: 'zeige-hoch', x: left + BEAD_W * 0.62, y: top + BEAD_H * 0.7 })
+    hands.push(b >= 5 ? { icon: 'zeige-runter', x: left + BEAD_W * 0.62, y: top - size / k * 0.85 } : { icon: 'zeige-hoch', x: left + BEAD_W * 0.62, y: top + HEAVEN_H3 * 0.7 })
   }
   const la = a % 5
   const lb = b % 5
