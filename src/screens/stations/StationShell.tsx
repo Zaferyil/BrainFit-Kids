@@ -85,19 +85,29 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
   const key = JSON.stringify(spoken)
   useEffect(() => { void speak(JSON.parse(key)) }, [key])
   return (
-    <div className="done-overlay" role="dialog" aria-label="Station geschafft">
-      <div className="done-card">
-        <Perli mood="cheer" size={150} />
-        <h2>{title}</h2>
-        <div className="done-stars" aria-label={`${stars} von 3 Sternen`}>
+    <div className="done-overlay erfolg" role="dialog" aria-label="Station geschafft">
+      <svg className="erfolg-konfetti" viewBox="0 0 390 300" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+        <rect x="40" y="40" width="12" height="20" rx="3" fill="#FFC531" transform="rotate(20 46 50)" />
+        <rect x="320" y="70" width="12" height="20" rx="3" fill="#2ECC8F" transform="rotate(-25 326 80)" />
+        <rect x="90" y="170" width="10" height="18" rx="3" fill="#FF8FB1" transform="rotate(40 95 179)" />
+        <rect x="290" y="200" width="10" height="18" rx="3" fill="#FFC531" transform="rotate(-10 295 209)" />
+        <circle cx="200" cy="30" r="6" fill="#3BA7FF" /><circle cx="60" cy="250" r="5" fill="#2ECC8F" /><circle cx="340" cy="150" r="6" fill="#FF8FB1" />
+      </svg>
+      <div className="erfolg-inhalt popin">
+        <div className="erfolg-sterne" aria-label={`${stars} von 3 Sternen`}>
           {[0, 1, 2].map((k) => (
-            <Icon key={k} name="star" size={64} color="#DE9800" fill={k < stars ? '#FFC531' : 'none'} strokeWidth={1.8} />
+            <Icon key={k} name="star" size={k === 1 ? 96 : 74} color={k < stars ? '#E0A100' : 'rgba(255,255,255,.5)'} fill={k < stars ? '#FFC531' : 'rgba(255,255,255,.18)'} strokeWidth={1.4} />
           ))}
         </div>
+        <Perli mood="cheer" size={130} />
+        <h2>{title}</h2>
         <p>{text}</p>
-        <div className="done-reward"><Bead color="yellow" width={36} /> +{perlen} Perlen</div>
+        <div className="erfolg-chips">
+          <div><span>STERNE</span><b className="gelb">{stars} / 3</b></div>
+          <div><span>PERLEN</span><b className="gruen">+{perlen}</b></div>
+        </div>
         {extra}
-        <a href={href} className="btn-primary small">Weiter <Icon name="right" size={26} color="#231A4F" strokeWidth={3} /></a>
+        <a href={href} className="nk-btn yellow big">Weiter <Icon name="right" size={26} color="#2B2257" strokeWidth={3} /></a>
       </div>
     </div>
   )

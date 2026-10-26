@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
-import { Abakus } from '../../components/Abakus'
+import { Abakus3D } from '../../components/Abakus3D'
 import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
@@ -99,7 +99,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             <div className="eyebrow light">TREFFER {hits} VON {HITS}</div>
             {q.kind === 'read' ? (
               <div className="boss-q-read">
-                <Abakus key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} interactive={false} />
+                <Abakus3D key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} />
                 <span>Welche Zahl?</span>
               </div>
             ) : (

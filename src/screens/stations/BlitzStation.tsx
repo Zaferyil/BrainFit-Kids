@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Fit } from '../../components/Fit'
-import { Abakus } from '../../components/Abakus'
+import { Abakus3D } from '../../components/Abakus3D'
 import { Icon } from '../../components/Icon'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
@@ -94,7 +94,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
           <Fit className="board-fit">
           <div className="blitz-window">
             {phase === 'ready' && <div className="blitz-ready"><Icon name="bolt" color="#FFC531" fill="#FFC531" size={72} /> Achtung …</div>}
-            {showAbakus && <Abakus key={index} value={n} cols={content.cols} colw={content.cols > 1 ? 100 : 120} interactive={false} />}
+            {showAbakus && <Abakus3D key={index} value={n} cols={content.cols} colw={content.cols > 1 ? 100 : 120} />}
             {(phase === 'answer' || phase === 'right') && (
               <div className={phase === 'right' ? 'blitz-cover right' : 'blitz-cover'}>
                 {phase === 'right' ? n : input || '?'}
