@@ -1123,3 +1123,6 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-stop.rand-l .path-start { --pfeil: 15%; }
 .insel-stop.rand-r .path-start { --pfeil: 85%; }
 .insel-stop:has(.path-node.current) { z-index: 4; }
+.etappe { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: min(100%, 760px); padding: 10px 14px; font-weight: 900; font-size: 15px; text-align: center; }
+.etappe-btn { width: 44px; height: 44px; flex-shrink: 0; border: 0; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+.etappe-btn:disabled { opacity: .35; cursor: default; }

@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import insel from '../assets/karte/insel.webp'
-import { KartenLand } from '../components/KartenLand'
-import { LAND_W, landLayout } from '../components/kartenLandLayout'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -15,8 +13,8 @@ import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
-// Eine durchgehende Karte: unten die Startinsel (Bild ohne Stationen, siehe scripts/karte-bild.py) mit 12 Plätzen,
-// darüber zeichnet KartenLand den Weg im gleichen Stil weiter. Die Stationen sind durchnummeriert.
+// Die Karte ist die Insel (Bild ohne Stationen, siehe scripts/karte-bild.py) mit 12 Plätzen auf dem Weg.
+// Die Stationen sind durchnummeriert und in Etappen zu 12 aufgeteilt; gezeigt wird die Etappe der aktuellen Station.
 const IMG_W = 941
 const IMG_H = 1403
 const SLOTS: [number, number][] = [
@@ -34,9 +32,10 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const scroller = useRef<HTMLDivElement>(null)
 
   const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
-  const first = stops.slice(0, SLOTS.length)
-  const rest = stops.slice(SLOTS.length)
-  const land = useMemo(() => landLayout(rest.length), [rest.length])
+  const pages = Math.max(1, Math.ceil(stops.length / SLOTS.length))
+  const currentPage = Math.max(0, Math.floor(stops.findIndex((s) => s.state === 'current') / SLOTS.length))
+  const [page, setPage] = useState(currentPage)
+  const first = stops.slice(page * SLOTS.length, (page + 1) * SLOTS.length)
 
   // Beim Öffnen zur aktuellen Station scrollen
   useEffect(() => {
@@ -89,24 +88,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </div>
 
         <div className="inseln" ref={scroller}>
-          {rest.length > 0 && (
-            <section className="insel land" style={{ aspectRatio: `${LAND_W} / ${land.height}` }}>
-              <KartenLand n={rest.length} />
-              {rest.map((s, i) => (
-                <div key={s.id} className={`insel-stop ${edge(land.stops[i].x / LAND_W)}`} style={{ left: `${(land.stops[i].x / LAND_W) * 100}%`, top: `${(land.stops[i].y / land.height) * 100}%` }}>
-                  <Node stop={s} n={SLOTS.length + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
-                </div>
-              ))}
-            </section>
-          )}
           <section className="insel">
             <img className="insel-bg" src={insel} alt="" draggable={false} />
             {SLOTS.map(([x, y], i) => {
               const s = first[i]
-              if (!s) return null
+              if (!s) return <span key={i} className="insel-coin" style={{ left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
               return (
                 <div key={s.id} className={`insel-stop ${edge(x / IMG_W)}`} style={{ left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }}>
-                  <Node stop={s} n={i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+                  <Node stop={s} n={page * SLOTS.length + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
                 </div>
               )
             })}
@@ -115,6 +104,15 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               <Perli mood="happy" size={96} />
             </div>
           </section>
+          <div className="etappe">
+            <button type="button" className="etappe-btn" disabled={page === 0} onClick={() => setPage(page - 1)} aria-label="Vorherige Etappe">
+              <Icon name="left" color="#231A4F" size={22} strokeWidth={3} />
+            </button>
+            <span>Etappe {page + 1} von {pages} · Station {page * SLOTS.length + 1}–{Math.min(stops.length, (page + 1) * SLOTS.length)}</span>
+            <button type="button" className="etappe-btn" disabled={page >= pages - 1} onClick={() => setPage(page + 1)} aria-label="Nächste Etappe">
+              <Icon name="right" color="#231A4F" size={22} strokeWidth={3} />
+            </button>
+          </div>
         </div>
       </div>
 
