@@ -73,7 +73,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
     : `Einheit ${unit} geschafft! Einheit ${unit + 1} ist jetzt offen.`
 
   return (
-    <Stage background="#160F3A">
+    <Stage >
       <div className="boss">
         <div className="boss-top">
           <a href="#/einheit" aria-label="Aufgeben" className="round-btn big"><Icon name="x" color="#FFFFFF" size={26} /></a>
