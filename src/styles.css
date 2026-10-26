@@ -174,6 +174,8 @@ button { font-family: inherit; }
 .kid { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px; border-radius: 22px; border: 4px solid transparent; background: var(--night); color: #FFFFFF; font-weight: 900; font-size: 16px; cursor: pointer; }
 .kid:hover { border-color: var(--violet-line); }
 .kid.active { background: var(--violet); border-color: var(--yellow); }
+.kid-card { width: 100%; max-width: 120px; aspect-ratio: 336 / 254; object-fit: cover; border-radius: 16px; display: block; }
+.kid.active .kid-card { box-shadow: 0 0 0 3px #FFFFFF; }
 .kids-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; font-weight: 700; color: #A99FE8; }
 .text-btn { border: 0; background: none; padding: 8px 4px; color: var(--yellow); font-weight: 900; font-size: 15px; text-decoration: underline; cursor: pointer; }
 
@@ -671,6 +673,7 @@ button { font-family: inherit; }
   .kids-grid { gap: 8px; margin-top: 14px; }
   .kid { padding: 8px 2px; font-size: 14px; border-width: 3px; }
   .kid svg { width: 56px; height: 56px; }
+  .kid-card { border-radius: 12px; }
   .kids-foot { flex-wrap: wrap; margin-top: 12px; }
   .pw-slots { gap: 8px; }
   .pw-slot, .pw-del { width: 56px; height: 56px; }

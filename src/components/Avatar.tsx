@@ -10,12 +10,25 @@ type Props = {
   belt?: string
   glasses?: boolean
   bg?: string
+  /** Bild des Kindes; ersetzt die gezeichnete Figur */
+  photo?: string
 }
 
 export function Avatar({
   size = 160, skin = '#F6C9A6', hair = '#6B3E1F', shirt = '#3BA7FF', hat = 'none',
-  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6',
+  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6', photo,
 }: Props) {
+  if (photo) {
+    return (
+      <img
+        src={photo}
+        alt="Avatar"
+        width={size}
+        height={size}
+        style={{ borderRadius: '50%', flexShrink: 0, display: 'block', background: bg, boxShadow: belt ? `0 0 0 ${Math.max(2, size / 20)}px ${belt}` : undefined }}
+      />
+    )
+  }
   return (
     <svg width={size} height={size} viewBox="0 0 120 120" role="img" aria-label="Avatar" style={{ borderRadius: '50%', flexShrink: 0, display: 'block' }}>
       {bg && bg !== 'none' && <circle cx="60" cy="60" r="60" fill={bg} />}

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { kidCard } from '../data/kinderBilder'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
@@ -122,7 +123,9 @@ function KidPicker({ schoolClass, selected, onSelect, onChangeClass }: {
       <div className="kids-grid">
         {schoolClass.kids.map((k) => (
           <button key={k.id} type="button" className={k.id === selected?.id ? 'kid active' : 'kid'} aria-pressed={k.id === selected?.id} onClick={() => onSelect(k)}>
-            <Avatar size={76} {...k.avatar} bg={k.id === selected?.id ? '#5B47D6' : '#3A2F80'} />
+            {kidCard(k.id)
+              ? <img className="kid-card" src={kidCard(k.id)} alt="" />
+              : <Avatar size={76} {...k.avatar} bg={k.id === selected?.id ? '#5B47D6' : '#3A2F80'} />}
             <span>{k.name}</span>
           </button>
         ))}
