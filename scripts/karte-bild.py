@@ -14,5 +14,7 @@ for x, y in B:
     cv2.ellipse(m, (x, y + 38), (48, 22), 0, 0, 360, 255, -1)
 cv2.ellipse(m, (388, 1365), (78, 120), 0, 0, 360, 255, -1)   # Figur
 cv2.rectangle(m, (300, 1255), (470, 1480), 255, -1)
-out = cv2.inpaint(im, cv2.dilate(m, np.ones((5, 5))), 9, cv2.INPAINT_TELEA)[132:1535]
+out = cv2.inpaint(im, cv2.dilate(m, np.ones((5, 5))), 9, cv2.INPAINT_TELEA)
+out[1385:1480, 436:572] = im[1385:1480, 436:572]   # Start-Schild unverändert lassen
+out = out[132:1535]
 cv2.imwrite(sys.argv[2], out, [cv2.IMWRITE_WEBP_QUALITY, 82])
