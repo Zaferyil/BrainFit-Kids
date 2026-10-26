@@ -4,6 +4,7 @@ import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
+import { TopBar } from '../components/TopBar'
 import type { Kid } from '../data/demo'
 import type { Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
@@ -19,7 +20,6 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const current = path.find((s) => s.state === 'current')
   const [say, setSay] = useState(() => greeting(current))
   const [questsOpen, setQuestsOpen] = useState(false)
-  const [menu, setMenu] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
   const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
@@ -39,22 +39,17 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const questsDone = quests.filter((q) => q.done >= q.goal).length
 
   return (
-    <Stage background="linear-gradient(180deg, #4B2FC2 0%, #7B5CFF 40%, #FF9AC8 100%)">
-      <header className="nk-hello nk-map-head">
-        <button type="button" className="nk-me" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
-          <Avatar size={48} {...kid.avatar} />
-        </button>
-        <div className="nk-hello-text">
-          <strong>Hallo {kid.name}!</strong>
-          <span>Level {progress.level}</span>
-        </div>
-        <span className="nk-chip"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{progress.perlen}</span>
-        {menu && (
-          <div className="nk-menu popin">
-            <button type="button" onClick={onLogout}><Icon name="logout" color="#2B2257" size={20} />Abmelden</button>
-          </div>
-        )}
-      </header>
+    <Stage>
+      <TopBar
+        name={kid.name}
+        level={progress.level}
+        xp={progress.xp}
+        perlen={progress.perlen}
+        gems={progress.gems}
+        streak={progress.streak}
+        avatar={{ ...kid.avatar, belt: progress.world > 1 ? '#F2F0FF' : undefined }}
+        onLogout={onLogout}
+      />
 
       <div className="path-screen">
         <div className="path-tools">
@@ -105,7 +100,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </div>
       </div>
 
-      <NavBar active="karte" />
+      <div className="nav-dock"><NavBar active="karte" /></div>
     </Stage>
   )
 }

@@ -5,7 +5,6 @@ import { Studio } from './studio/Studio'
 import { Placeholder } from './screens/Placeholder'
 import { Anmelden } from './screens/Anmelden'
 import { Weltkarte } from './screens/Weltkarte'
-import { Zuhause } from './screens/Zuhause'
 import { Einheit } from './screens/Einheit'
 import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
@@ -36,7 +35,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'zuhause', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -62,7 +61,6 @@ export default function App() {
     if (!kid) return <Anmelden />
     const logout = () => { saveSession(null); window.location.hash = '#/anmelden' }
     const progress = getProgress(kid.id)
-    if (route === 'zuhause') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'karte') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
     if (route === 'einstufung') return <Einstufung kid={kid} />

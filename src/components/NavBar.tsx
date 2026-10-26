@@ -1,23 +1,23 @@
 import { Icon, type IconName } from './Icon'
 
-export type NavId = 'karte' | 'denkpark' | 'pokale' | 'garderobe'
+export type NavId = 'karte' | 'denkpark' | 'shop' | 'garderobe' | 'pokale'
 
-// Schwebende Menüleiste unten (neuer Look): vier runde Knöpfe, der aktive ist violett.
 const items: { id: NavId; label: string; icon: IconName }[] = [
-  { id: 'karte', label: 'Abenteuer', icon: 'home' },
-  { id: 'denkpark', label: 'Denkspiele', icon: 'bolt' },
+  { id: 'karte', label: 'Karte', icon: 'map' },
+  { id: 'denkpark', label: 'Denk-Park', icon: 'brain' },
+  { id: 'shop', label: 'Shop', icon: 'bag' },
+  { id: 'garderobe', label: 'Garderobe', icon: 'shirt' },
   { id: 'pokale', label: 'Pokale', icon: 'trophy' },
-  { id: 'garderobe', label: 'Ich', icon: 'user' },
 ]
 
 export function NavBar({ active = 'karte' }: { active?: NavId }) {
   return (
-    <nav aria-label="Hauptnavigation" className="nk-nav">
+    <nav aria-label="Hauptnavigation" className="navbar">
       {items.map((it) => {
         const on = it.id === active
         return (
-          <a key={it.id} href={`#/${it.id}`} className={on ? 'active' : ''} aria-current={on ? 'page' : undefined} aria-label={it.label}>
-            <Icon name={it.icon} size={26} color={on ? '#FFFFFF' : '#8A82B5'} strokeWidth={2.4} />
+          <a key={it.id} href={`#/${it.id}`} className={on ? 'navbar-item active' : 'navbar-item'} aria-current={on ? 'page' : undefined}>
+            <Icon name={it.icon} size={30} color={on ? '#231A4F' : '#6B61A8'} strokeWidth={on ? 2.6 : 2.2} />
             <span>{it.label}</span>
           </a>
         )

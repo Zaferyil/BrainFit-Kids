@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { kidPhoto } from '../data/kinderBilder'
+import { kidCard } from '../data/kinderBilder'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
@@ -39,50 +39,46 @@ export function Anmelden() {
   const instructionSay = step === 2 ? [`Hallo ${kid?.name ?? ''}!`, 'In welche Klasse gehst du?'] : instruction
 
   return (
-    <Stage className="nk" background="var(--nk-sky)">
-      <Funkeln />
-      <div className="nk-login">
-        <div className="nk-top">
-          <a href="#/" className="nk-round ghost" aria-label="Zurück"><Icon name="left" color="#FFFFFF" size={22} strokeWidth={3} /></a>
-          <ol className="nk-dots" aria-label={`Schritt ${step + 1} von ${STEPS.length}: ${STEPS[step]}`}>
-            {STEPS.map((label, i) => <li key={label} className={i < step ? 'done' : i === step ? 'current' : ''} />)}
+    <Stage>
+      <div className="login">
+        <div className="login-head">
+          <a href="#/" className="pill-link">
+            <Icon name="left" color="#FFFFFF" size={22} />
+            Zurück
+          </a>
+          <ol className="login-steps" aria-label="Schritte">
+            {STEPS.map((label, i) => (
+              <li key={label} className={i < step ? 'done' : i === step ? 'current' : ''} aria-current={i === step ? 'step' : undefined}>
+                {i + 1} {label}
+              </li>
+            ))}
           </ol>
-          <button type="button" className="nk-round yellow" aria-label="Vorlesen" onClick={() => void speak(instructionSay)}>
-            <Icon name="volume" color="#2B2257" size={24} />
+          <button type="button" className="round-btn" aria-label="Vorlesen" onClick={() => void speak(instructionSay)}>
+            <Icon name="volume" color="#FFFFFF" size={26} />
           </button>
         </div>
 
         {schoolClass ? (
-          !kid ? (
-            <KidPicker
-              key="kind"
-              schoolClass={schoolClass}
-              onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
-              onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
-            />
-          ) : stufe === null ? (
-            <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
-          ) : (
-            <PicturePassword key={`pw-${kid.id}`} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />
-          )
+          <div className="login-body single">
+            {!kid ? (
+              <KidPicker
+                key="kind"
+                schoolClass={schoolClass}
+                selected={kid}
+                onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
+                onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
+              />
+            ) : stufe === null ? (
+              <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
+            ) : (
+              <PicturePassword key={`pw-${kid.id}`} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />
+            )}
+          </div>
         ) : (
           <ClassCode onFound={(c) => { saveClass(c.code); setSchoolClass(c) }} />
         )}
       </div>
     </Stage>
-  )
-}
-
-/** Sterne und Lichtflecken im Hintergrund des neuen Looks */
-export function Funkeln() {
-  return (
-    <svg className="nk-funkeln" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <circle cx="340" cy="80" r="70" fill="#FFFFFF" opacity=".13" />
-      <circle cx="20" cy="620" r="100" fill="#FFFFFF" opacity=".09" />
-      <path d="M60 140l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFE58A" />
-      <path d="M320 760l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFE58A" />
-      <circle cx="120" cy="60" r="2" fill="#FFFFFF" /><circle cx="250" cy="200" r="1.6" fill="#FFFFFF" /><circle cx="360" cy="420" r="2" fill="#FFFFFF" opacity=".8" />
-    </svg>
   )
 }
 
@@ -101,17 +97,13 @@ function ClassCode({ onFound }: { onFound: (c: SchoolClass) => void }) {
   }
 
   return (
-    <section className="nk-step popin">
-      <header className="nk-title">
-        <Perli mood={error ? 'think' : 'happy'} size={120} />
-        <h1>Wie heißt deine Klasse?</h1>
-        <p>Den Code bekommst du von deiner Lehrerin.</p>
-      </header>
-      <form className="nk-code" onSubmit={submit}>
-        <label htmlFor="class-code" className="sr-only">Klassen-Code</label>
+    <div className="code-wrap">
+      <Perli mood={error ? 'think' : 'happy'} size={200} />
+      <form className="code-card" onSubmit={submit}>
+        <label htmlFor="class-code" className="code-title">Wie heißt deine Klasse?</label>
         <input
           id="class-code"
-          className={error ? 'error' : ''}
+          className={error ? 'code-input error' : 'code-input'}
           value={code}
           onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(false) }}
           placeholder="z. B. LINZ-7K"
@@ -120,39 +112,45 @@ function ClassCode({ onFound }: { onFound: (c: SchoolClass) => void }) {
           spellCheck={false}
           maxLength={12}
         />
-        {error && <p className="nk-wrong" role="alert">Diesen Code kennen wir nicht. Schau nochmal nach.</p>}
-        <button type="submit" className="nk-btn yellow big" disabled={code.trim().length < 3}>
+        <p className={error ? 'code-hint error' : 'code-hint'} role={error ? 'alert' : undefined}>
+          {error ? 'Diesen Code kennen wir nicht. Schau nochmal nach.' : 'Den Klassen-Code bekommst du von deiner Lehrerin.'}
+        </p>
+        <button type="submit" className="btn-primary small" disabled={code.trim().length < 3}>
           Weiter
-          <Icon name="right" size={26} color="#2B2257" strokeWidth={3} />
+          <Icon name="right" size={26} color="#231A4F" strokeWidth={3} />
         </button>
-        <p className="nk-foot dim">Zum Ausprobieren: LINZ-7K</p>
+        <p className="dev-hint">Zum Ausprobieren: LINZ-7K</p>
       </form>
-    </section>
+    </div>
   )
 }
 
-const NEIGUNG = [-6, 5, 4, -4, 7, -3, 5, -5]
-
-function KidPicker({ schoolClass, onSelect, onChangeClass }: {
+function KidPicker({ schoolClass, selected, onSelect, onChangeClass }: {
   schoolClass: SchoolClass
+  selected: Kid | null
   onSelect: (k: Kid) => void
   onChangeClass: () => void
 }) {
   return (
-    <section className="nk-step popin" aria-labelledby="nk-wer">
-      <header className="nk-title">
-        <h1 id="nk-wer">Wer bist du?</h1>
-        <p>Tippe auf dein Bild.</p>
-      </header>
-      <div className="nk-kids">
-        {schoolClass.kids.map((k, i) => (
-          <button key={k.id} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onSelect(k)}>
-            {kidPhoto(k.id) ? <img src={kidPhoto(k.id)} alt="" /> : <Avatar size={96} {...k.avatar} />}
+    <section className="kids-panel popin">
+      <div className="kids-head">
+        <h2>Wer bist du?</h2>
+        <span className="class-chip">Klasse {schoolClass.code}</span>
+      </div>
+      <div className="kids-grid">
+        {schoolClass.kids.map((k) => (
+          <button key={k.id} type="button" className={k.id === selected?.id ? 'kid active' : 'kid'} aria-pressed={k.id === selected?.id} onClick={() => onSelect(k)}>
+            {kidCard(k.id)
+              ? <img className="kid-card" src={kidCard(k.id)} alt="" />
+              : <Avatar size={76} {...k.avatar} bg={k.id === selected?.id ? '#5B47D6' : '#3A2F80'} />}
             <span>{k.name}</span>
           </button>
         ))}
       </div>
-      <p className="nk-foot">Nicht dabei? <button type="button" onClick={onChangeClass}>Andere Klasse</button></p>
+      <div className="kids-foot">
+        <span>Nicht dabei? Frag deine Lehrerin.</span>
+        <button type="button" className="text-btn" onClick={onChangeClass}>Andere Klasse</button>
+      </div>
     </section>
   )
 }
@@ -160,23 +158,23 @@ function KidPicker({ schoolClass, onSelect, onChangeClass }: {
 function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) => void; onBack: () => void }) {
   const saved = getStufe(kid.id)
   return (
-    <section className="nk-step popin" aria-labelledby="nk-stufe">
-      <header className="nk-title">
-        <Avatar size={84} {...kid.avatar} />
-        <p>Hallo {kid.name}!</p>
-        <h1 id="nk-stufe">In welche Klasse gehst du?</h1>
-      </header>
-      <button type="button" className={saved === 0 ? 'nk-kiga active' : 'nk-kiga'} onClick={() => onPick(0)}>
-        <strong>Kiga</strong><span>Kindergarten</span>
-      </button>
-      <div className="nk-stufen">
-        {STUFEN.slice(1).map((s, i) => (
-          <button key={s.id} type="button" aria-label={s.lang} className={s.id === saved ? 'nk-perle active' : 'nk-perle'} style={{ rotate: `${NEIGUNG[i] / 1.5}deg` }} onClick={() => onPick(s.id)}>
-            <strong>{s.label}</strong><span>Klasse</span>
+    <section className="pw-panel popin">
+      <div className="pw-head">
+        <Avatar size={64} {...kid.avatar} />
+        <div>
+          <div className="pw-hello">Hallo {kid.name}!</div>
+          <h2>In welche Klasse gehst du?</h2>
+        </div>
+        <button type="button" className="text-btn pw-back" onClick={onBack}>Anderes Kind</button>
+      </div>
+      <div className="stufe-grid">
+        {STUFEN.map((s) => (
+          <button key={s.id} type="button" className={s.id === saved ? 'stufe active' : 'stufe'} aria-label={s.lang} onClick={() => onPick(s.id)}>
+            <strong>{s.label}</strong>
+            <span>{s.id === 0 ? 'Kindergarten' : 'Klasse'}</span>
           </button>
         ))}
       </div>
-      <p className="nk-foot"><button type="button" onClick={onBack}>Anderes Kind</button></p>
     </section>
   )
 }
@@ -212,41 +210,48 @@ function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClas
   }
 
   return (
-    <section className="nk-step popin" aria-labelledby="nk-pw">
-      <header className="nk-title">
-        <h1 id="nk-pw">Dein Geheim-Code</h1>
-        <p>Hallo {kid.name}! Tippe deine 4 Bilder.</p>
-      </header>
-      <div className={`nk-slots ${status}`}>
+    <section className="pw-panel popin">
+      <div className="pw-head">
+        <Avatar size={64} {...kid.avatar} />
+        <div>
+          <div className="pw-hello">Hallo {kid.name}!</div>
+          <h2>Tippe deine 4 Bilder</h2>
+        </div>
+        <button type="button" className="text-btn pw-back" onClick={onBack}>Klasse ändern</button>
+      </div>
+      <div className={`pw-slots ${status}`}>
         {[0, 1, 2, 3].map((i) => {
           const p = PICTURES.find((x) => x.id === picks[i])
           return (
-            <span key={i} className={p ? 'nk-slot filled' : 'nk-slot'} aria-label={p ? p.label : `Bild ${i + 1} leer`}>
-              {p && <Icon name={p.icon} color={p.color} fill={p.fill} size={30} strokeWidth={2} />}
-            </span>
+            <div key={i} className={p ? 'pw-slot filled' : 'pw-slot'} aria-label={p ? p.label : `Bild ${i + 1} leer`}>
+              {p && <Icon name={p.icon} color={p.color} fill={p.fill} size={40} strokeWidth={2} />}
+            </div>
           )
         })}
-        <button type="button" className="nk-round ghost small" aria-label="Löschen" disabled={status !== 'input' || picks.length === 0} onClick={() => setPicks(picks.slice(0, -1))}>
-          <Icon name="del" color="#FFFFFF" size={22} />
+        <button type="button" className="pw-del" aria-label="Löschen" disabled={status !== 'input' || picks.length === 0} onClick={() => setPicks(picks.slice(0, -1))}>
+          <Icon name="del" color="#6B61A8" size={34} />
         </button>
       </div>
-      {status === 'right' ? (
-        <a href="#/karte" className="nk-btn yellow big popin">
-          <Icon name="play" color="#2B2257" size={26} />
-          Los geht’s!
-        </a>
-      ) : (
-        <div className="nk-pics">
-          {PICTURES.map((p) => (
-            <button key={p.id} type="button" className="nk-pic" aria-label={p.label} onClick={() => pick(p.id)} disabled={status !== 'input'}>
-              <Icon name={p.icon} color={p.color} fill={p.fill} size={46} strokeWidth={2} />
-            </button>
-          ))}
-        </div>
+      <div className="pw-grid">
+        {PICTURES.map((p) => (
+          <button key={p.id} type="button" className="pw-pic" onClick={() => pick(p.id)} disabled={status !== 'input'}>
+            <Icon name={p.icon} color={p.color} fill={p.fill} size={52} strokeWidth={2} />
+            <span>{p.label}</span>
+          </button>
+        ))}
+      </div>
+      {status === 'wrong' && (
+        <div className="pw-banner wrong" role="alert">Das war nicht richtig. Probier es nochmal!</div>
       )}
-      {status === 'wrong' && <p className="nk-wrong" role="alert">Das war nicht richtig. Probier es nochmal!</p>}
-      {status === 'input' && kid.id === 'lena' && <p className="nk-foot dim">Zum Ausprobieren: Stern, Herz, Blitz, Krone</p>}
-      <p className="nk-foot"><button type="button" onClick={onBack}>Klasse ändern</button></p>
+      {status === 'right' && (
+        <a href="#/karte" className="btn-primary los" role="status">
+          Los geht’s!
+          <Icon name="right" size={28} color="#231A4F" strokeWidth={3} />
+        </a>
+      )}
+      {status === 'input' && kid.id === 'lena' && (
+        <p className="dev-hint pw-dev">Zum Ausprobieren: Stern, Herz, Blitz, Krone</p>
+      )}
     </section>
   )
 }
