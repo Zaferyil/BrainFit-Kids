@@ -7,10 +7,19 @@ import { Stage } from '../components/Stage'
 import { findClass, PICTURES, type Kid, type PictureId, type SchoolClass } from '../data/demo'
 import { getSavedClass, saveClass, saveSession } from '../lib/session'
 import { speak } from '../lib/speak'
+import { load, save } from '../lib/storage'
 
 type Status = 'input' | 'wrong' | 'right'
 
-const STEPS = ['Klassen-Code', 'Wer bist du?', 'Bild-Passwort']
+const STEPS = ['Klassen-Code', 'Wer bist du?', 'Schulstufe', 'Bild-Passwort']
+
+// Schulstufe des Kindes (Kindergarten bis 6. Klasse), pro Kind auf dem Gerät gemerkt
+const STUFEN = [
+  { id: 0, label: 'Kiga', lang: 'Kindergarten' },
+  ...[1, 2, 3, 4, 5, 6].map((n) => ({ id: n, label: `${n}.`, lang: `${n}. Klasse` })),
+]
+const stufeKey = (kidId: string) => `bfk.stufe.${kidId}`
+const getStufe = (kidId: string) => load<number | null>(stufeKey(kidId), null)
 
 export function Anmelden() {
   const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(() => {
@@ -18,14 +27,16 @@ export function Anmelden() {
     return saved ? findClass(saved) ?? null : null
   })
   const [kid, setKid] = useState<Kid | null>(null)
+  const [stufe, setStufe] = useState<number | null>(null)
 
-  const step = !schoolClass ? 0 : !kid ? 1 : 2
+  const step = !schoolClass ? 0 : !kid ? 1 : stufe === null ? 2 : 3
   const instruction = [
     'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',
     'Wer bist du? Tippe auf dein Bild.',
-    `Hallo ${kid?.name ?? ''}! Tippe deine vier Bilder.`,
+    `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
+    'Tippe deine vier Bilder.',
   ][step]
-  const instructionSay = step === 2 ? [`Hallo ${kid?.name ?? ''}!`, 'Tippe deine vier Bilder.'] : instruction
+  const instructionSay = step === 2 ? [`Hallo ${kid?.name ?? ''}!`, 'In welche Klasse gehst du?'] : instruction
 
   return (
     <Stage>
@@ -52,10 +63,12 @@ export function Anmelden() {
             <KidPicker
               schoolClass={schoolClass}
               selected={kid}
-              onSelect={(k) => { setKid(k); void speak([`Hallo ${k.name}!`, 'Tippe deine vier Bilder.']) }}
+              onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
               onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
             />
-            <PicturePassword key={kid?.id ?? 'none'} schoolClass={schoolClass} kid={kid} />
+            {kid && stufe === null
+              ? <StufePicker kid={kid} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
+              : <PicturePassword key={kid?.id ?? 'none'} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />}
           </div>
         ) : (
           <ClassCode onFound={(c) => { saveClass(c.code); setSchoolClass(c) }} />
@@ -138,7 +151,30 @@ function KidPicker({ schoolClass, selected, onSelect, onChangeClass }: {
   )
 }
 
-function PicturePassword({ schoolClass, kid }: { schoolClass: SchoolClass; kid: Kid | null }) {
+function StufePicker({ kid, onPick }: { kid: Kid; onPick: (n: number) => void }) {
+  const saved = getStufe(kid.id)
+  return (
+    <section className="pw-panel">
+      <div className="pw-head">
+        <Avatar size={64} {...kid.avatar} />
+        <div>
+          <div className="pw-hello">Hallo {kid.name}!</div>
+          <h2>In welche Klasse gehst du?</h2>
+        </div>
+      </div>
+      <div className="stufe-grid">
+        {STUFEN.map((s) => (
+          <button key={s.id} type="button" className={s.id === saved ? 'stufe active' : 'stufe'} aria-label={s.lang} onClick={() => onPick(s.id)}>
+            <strong>{s.label}</strong>
+            <span>{s.id === 0 ? 'Kindergarten' : 'Klasse'}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClass; kid: Kid | null; onBack: () => void }) {
   const [picks, setPicks] = useState<PictureId[]>([])
   const [status, setStatus] = useState<Status>('input')
 
@@ -160,7 +196,7 @@ function PicturePassword({ schoolClass, kid }: { schoolClass: SchoolClass; kid: 
     if (next.every((p, i) => p === kid.password[i])) {
       setStatus('right')
       saveSession({ classCode: schoolClass.code, kidId: kid.id })
-      void speak(['Richtig!', `Willkommen zurück, ${kid.name}!`])
+      void speak('Richtig!')
     } else {
       setStatus('wrong')
       speak('Das war nicht richtig. Probier es nochmal!')
@@ -176,6 +212,7 @@ function PicturePassword({ schoolClass, kid }: { schoolClass: SchoolClass; kid: 
           <div className="pw-hello">Hallo {kid.name}!</div>
           <h2>Tippe deine 4 Bilder</h2>
         </div>
+        <button type="button" className="text-btn pw-back" onClick={onBack}>Klasse ändern</button>
       </div>
       <div className={`pw-slots ${status}`}>
         {[0, 1, 2, 3].map((i) => {
@@ -202,10 +239,10 @@ function PicturePassword({ schoolClass, kid }: { schoolClass: SchoolClass; kid: 
         <div className="pw-banner wrong" role="alert">Das war nicht richtig. Probier es nochmal!</div>
       )}
       {status === 'right' && (
-        <div className="pw-banner right" role="status">
-          <span>Richtig! Willkommen zurück.</span>
-          <a href="#/karte">Zur Karte</a>
-        </div>
+        <a href="#/karte" className="btn-primary los" role="status">
+          Los geht’s!
+          <Icon name="right" size={28} color="#231A4F" strokeWidth={3} />
+        </a>
       )}
       {status === 'input' && kid.id === 'lena' && (
         <p className="dev-hint pw-dev">Zum Ausprobieren: Stern, Herz, Blitz, Krone</p>
