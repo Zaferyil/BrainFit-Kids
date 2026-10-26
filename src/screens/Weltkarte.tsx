@@ -93,7 +93,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             <section className="insel land" style={{ aspectRatio: `${LAND_W} / ${land.height}` }}>
               <KartenLand n={rest.length} />
               {rest.map((s, i) => (
-                <div key={s.id} className="insel-stop" style={{ left: `${(land.stops[i].x / LAND_W) * 100}%`, top: `${(land.stops[i].y / land.height) * 100}%` }}>
+                <div key={s.id} className={`insel-stop ${edge(land.stops[i].x / LAND_W)}`} style={{ left: `${(land.stops[i].x / LAND_W) * 100}%`, top: `${(land.stops[i].y / land.height) * 100}%` }}>
                   <Node stop={s} n={SLOTS.length + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
                 </div>
               ))}
@@ -105,7 +105,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               const s = first[i]
               if (!s) return null
               return (
-                <div key={s.id} className="insel-stop" style={{ left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }}>
+                <div key={s.id} className={`insel-stop ${edge(x / IMG_W)}`} style={{ left: `${(x / IMG_W) * 100}%`, top: `${(y / IMG_H) * 100}%` }}>
                   <Node stop={s} n={i + 1} kid={kid} onLocked={(text) => setSay(text)} />
                 </div>
               )
@@ -122,6 +122,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
     </Stage>
   )
 }
+
+/** Stationen am Rand: Beschriftung nach innen schieben, damit sie nicht aus dem Bild ragt. */
+const edge = (fx: number) => (fx < 0.25 ? 'rand-l' : fx > 0.75 ? 'rand-r' : '')
 
 function greeting(s?: MapStop) {
   if (!s) return 'Du hast alles geschafft!'

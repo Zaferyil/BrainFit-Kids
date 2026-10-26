@@ -1087,7 +1087,7 @@ button { font-family: inherit; }
 
 /* Karte als Inseln: Bild + Stationen in % des Bildes, Größen relativ zur Inselbreite */
 .inseln { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 0 0 24px; }
-.insel { position: relative; flex-shrink: 0; width: min(100%, 620px); container-type: inline-size; }
+.insel { position: relative; flex-shrink: 0; width: min(100%, 760px); container-type: inline-size; }
 .insel-bg { display: block; width: 100%; height: auto; user-select: none; }
 .insel.land { z-index: 2; }
 .land-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -1117,3 +1117,9 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-perli svg { width: min(110px, 19cqw); height: auto; flex-shrink: 0; }
 .insel-perli .map-bubble { width: min(150px, 30cqw); margin-bottom: 9cqw; border-radius: 18px 18px 4px 18px; }
 @media (max-width: 600px) { .insel-perli .map-bubble { display: none; } }
+.insel-stop.rand-l .path-label, .insel-stop.rand-l .path-start { translate: 35% 0; }
+.insel-stop.rand-r .path-label, .insel-stop.rand-r .path-start { translate: -35% 0; }
+.insel-stop .path-start::after { left: var(--pfeil, 50%); }
+.insel-stop.rand-l .path-start { --pfeil: 15%; }
+.insel-stop.rand-r .path-start { --pfeil: 85%; }
+.insel-stop:has(.path-node.current) { z-index: 4; }
