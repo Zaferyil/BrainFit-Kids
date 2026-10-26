@@ -1317,3 +1317,31 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .gx-los { position: absolute; left: 0; top: -100px; translate: -50% 0; z-index: 3; padding: 5px 18px; border-radius: 999px; background: var(--nk-yellow); color: var(--nk-ink); font-weight: 900; font-size: 17px; box-shadow: 0 4px 0 var(--nk-yellow-dark); }
 .gx-name { position: absolute; left: 0; top: 64px; translate: -50% 0; z-index: 3; white-space: nowrap; padding: 4px 12px; border-radius: 999px; background: rgba(43,26,122,.6); font-weight: 900; font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { .gx-perle.current { animation: none; } }
+
+/* Neuer Look für die übrigen Bildschirme: die alten Farb-Variablen auf Glas und Gelb umstellen */
+.nk {
+  --night: rgba(43,26,122,.38);
+  --night-2: rgba(43,26,122,.28);
+  --board: rgba(255,255,255,.16);
+  --violet-line: rgba(255,255,255,.4);
+  --violet: #6C4CF1;
+  --muted: #E6DDFF;
+  --orange: #FFC531;
+  --orange-dark: #D69A00;
+}
+.nk .round-btn { background: rgba(255,255,255,.22); border-radius: 50%; }
+.nk .btn-primary { border-radius: 999px; }
+.nk .done-overlay { background: rgba(43,26,122,.55); backdrop-filter: blur(4px); }
+.nk .done-card { border-radius: 36px; box-shadow: 0 10px 0 rgba(75,47,194,.35), 0 30px 60px rgba(43,26,122,.4); }
+.nk .station, .nk .rule-card, .nk .unit-head { border-radius: 30px; }
+.nk .key { border-radius: 50%; box-shadow: 0 6px 0 var(--nk-violet-dark); }
+.nk .key-alt { box-shadow: 0 6px 0 #B9A9F5; }
+.nk .eyebrow.light, .nk .unit-title p, .nk .station-num, .nk .station-text, .nk .station.locked .station-text, .nk .station.locked .station-title, .nk .station.skipped .station-title,
+.nk .unit-reward, .nk .board-label, .nk .blitz-count, .nk .game-hint, .nk .park-area-head span, .nk .park-game, .nk .park-badge.lock, .nk .dev-hint, .nk .quests-head span, .nk .blitz-streak { color: rgba(255,255,255,.88); }
+.nk .discover-steps li { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.4); }
+.nk .step-num { color: #FFFFFF; }
+.nk .task-dot { background: rgba(255,255,255,.35); }
+.nk .task-dot.current { background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,.35); }
+.nk .discover-steps li.current { color: var(--ink); }
+.nk .discover-steps li.current .step-num { color: var(--ink); }
+.nk .discover-steps li.done { color: #FFFFFF; }
