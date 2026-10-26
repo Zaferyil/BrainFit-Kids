@@ -8,7 +8,7 @@ import { TopBar } from '../components/TopBar'
 import type { Kid } from '../data/demo'
 import type { Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
-import { PRO_ETAPPE, karteFuer } from '../data/karten'
+import { etappen } from '../data/karten'
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
@@ -23,11 +23,12 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const scroller = useRef<HTMLDivElement>(null)
 
   const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
-  const pages = Math.max(1, Math.ceil(stops.length / PRO_ETAPPE))
-  const currentPage = Math.max(0, Math.floor(stops.findIndex((s) => s.state === 'current') / PRO_ETAPPE))
-  const [page, setPage] = useState(currentPage)
-  const first = stops.slice(page * PRO_ETAPPE, (page + 1) * PRO_ETAPPE)
-  const karte = karteFuer(page)
+  const teile = useMemo(() => etappen(stops.length), [stops.length])
+  const pages = teile.length
+  const aktuell = stops.findIndex((s) => s.state === 'current')
+  const [page, setPage] = useState(() => Math.max(0, teile.findIndex((t) => aktuell >= t.start && aktuell < t.start + t.anzahl)))
+  const { karte, start } = teile[Math.min(page, pages - 1)]
+  const first = stops.slice(start, start + karte.plaetze.length)
 
   // Beim Öffnen zur aktuellen Station scrollen
   useEffect(() => {
@@ -87,7 +88,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               if (!s) return <span key={i} className="insel-coin" style={{ left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
               return (
                 <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={{ left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }}>
-                  <Node stop={s} n={page * PRO_ETAPPE + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+                  <Node stop={s} n={start + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
                 </div>
               )
             })}
@@ -102,7 +103,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             <button type="button" className="etappe-btn" disabled={page === 0} onClick={() => setPage(page - 1)} aria-label="Vorherige Etappe">
               <Icon name="left" color="#231A4F" size={22} strokeWidth={3} />
             </button>
-            <span>Etappe {page + 1} von {pages} · Station {page * PRO_ETAPPE + 1}–{Math.min(stops.length, (page + 1) * PRO_ETAPPE)}</span>
+            <span>Etappe {page + 1} von {pages} · Station {start + 1}–{Math.min(stops.length, start + karte.plaetze.length)}</span>
             <button type="button" className="etappe-btn" disabled={page >= pages - 1} onClick={() => setPage(page + 1)} aria-label="Nächste Etappe">
               <Icon name="right" color="#231A4F" size={22} strokeWidth={3} />
             </button>
