@@ -46,7 +46,8 @@ Handgrafiken: Twemoji (CC-BY 4.0, https://github.com/jdecked/twemoji).
 2. Begrüßung und Ziel (15 s)
 3. Wiederholung der letzten Lektion (ab Lektion 2, 20–30 s)
 4. Erklärung (1,5–2,5 min)
-5. Mitmachen: 2–4 Aufgaben mit 3-2-1 und Lösung
+5. Mitmachen: 2–4 Aufgaben mit 3-2-1 und Lösung; Quizfragen (z. B. „Welcher Finger für die 5?“)
+   mit großen Antwortkarten, 3-2-1, richtige Antwort leuchtet grün, danach zeigt Lisa es am Abakus
 6. Merk-Karte (10 s) – gleicher Merksatz wie in der App
 7. Abschluss (10 s) – „Jetzt bist du dran!“ mit Verweis auf die App-Station
 

@@ -55,6 +55,7 @@ export function buildTimeline(lesson: Lesson, durations: Record<string, number> 
       moves.push({ start: reveal, dur: MOVE, to: scene.task, hand: cols === 1 })
       dur = reveal + MOVE + 2
     }
+    if (scene.quiz) dur = speech.end + COUNTDOWN + 2.4
     const lastMove = Math.max(0, ...moves.map((m) => m.start + m.dur + 0.4))
     dur = Math.max(dur, lastMove, scene.min ?? 0)
     scenes.push({ scene, start: t, dur, speech, cols, value, moves })

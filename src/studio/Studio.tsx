@@ -131,9 +131,37 @@ function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: 
         </div>
       )}
       {(kind === 'tafel' || kind === 'aufgabe') && <Board s={s} local={local} t={t} />}
+      {kind === 'quiz' && scene.quiz && <QuizCard s={s} local={local} />}
 
       {kind !== 'titel' && <Teacher speaking={speaking} t={t} wave={scene.id === 'hallo' && local < 2.5} />}
       {scene.say && kind !== 'titel' && <Subtitle s={s} local={local} />}
+    </div>
+  )
+}
+
+/** Quizfrage: Antworten als große Karten, 3-2-1, dann leuchtet die richtige Antwort grün. */
+function QuizCard({ s, local }: { s: TimedScene; local: number }) {
+  const quiz = s.scene.quiz!
+  const countdown = local - s.speech.end
+  const revealed = countdown >= 3.2
+  const fade = ease(local / 0.5)
+  return (
+    <div className="sf-quiz" style={{ opacity: fade }}>
+      <div className="sf-quiz-q"><span>?</span>{quiz.question}</div>
+      <div className="sf-quiz-options">
+        {quiz.options.map((o, i) => {
+          const pop = ease((local - 0.5 - i * 0.35) / 0.4)
+          const state = !revealed ? '' : i === quiz.correct ? ' right' : ' wrong'
+          return (
+            <div key={i} className={`sf-quiz-opt${state}`} style={{ transform: `scale(${(0.8 + 0.2 * pop) * (revealed && i === quiz.correct ? 1.06 : 1)})`, opacity: pop * (state === ' wrong' ? 0.35 : 1) }}>
+              <div className="sf-quiz-icons">{o.icons.map((ic) => <img key={ic} src={handSrc(ic)} alt="" />)}</div>
+              <div className="sf-quiz-text">{o.text}</div>
+              {state === ' right' && <div className="sf-quiz-check">✓</div>}
+            </div>
+          )
+        })}
+      </div>
+      {countdown >= 0 && !revealed && <div className="sf-countdown quiz">{Math.max(1, Math.ceil(3 - countdown))}</div>}
     </div>
   )
 }
