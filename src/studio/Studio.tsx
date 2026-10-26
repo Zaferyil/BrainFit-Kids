@@ -3,7 +3,7 @@ import { Abakus } from '../components/Abakus'
 import { BEAD_H, BEAD_W, COL_LEFT, DOT, DOT_TOP, EARTH_BOTTOM, H, HEAVEN_TOP, PITCH, digitsFor, earthTop, frameWidth, heavenTop } from '../components/abakusGeometry'
 import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
-import lehrerin from '../assets/lehrerin/lehrerin.jpg'
+import klassenzimmer from '../assets/lehrerin/klassenzimmer-vorschau.jpg'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
 import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
 
@@ -100,41 +100,48 @@ function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; local: 
   const fadeIn = ease(local / 0.5)
   const speaking = local >= s.speech.start && local <= s.speech.end
   const kind = scene.kind ?? 'tafel'
+  // Titel und Abschluss: eigene Markenbilder. Alle anderen Szenen: Klassenzimmer mit Lisa links und Tafel rechts.
+  const room = kind !== 'titel' && kind !== 'ende'
+  // Beim Export über das HeyGen-Video bleibt der Hintergrund durchsichtig.
+  const overlay = window.location.hash.includes('overlay')
 
   return (
-    <div className="sf">
-      <div className="sf-stars" />
-      {kind !== 'titel' && (
-        <header className="sf-head">
-          <span className="sf-chip">Lektion {lesson.number}</span>
-          <span className="sf-title">{lesson.title}</span>
-          <span className="sf-brand">BrainFit <b>Kids</b></span>
-        </header>
-      )}
-
+    <div className={overlay && room ? 'sf transparent' : 'sf'}>
+      {!room && <div className="sf-stars" />}
+      {room && !overlay && <img className="sf-room" src={klassenzimmer} alt="" />}
       {kind === 'titel' && <TitleCard lesson={lesson} local={local} />}
       {kind === 'ende' && <EndCard local={local} />}
-      {kind === 'karte' && scene.card && (
-        <div className="sf-card" style={{ opacity: fadeIn, transform: `translateY(${(1 - fadeIn) * 40}px)` }}>
-          <h2>{scene.card.title}</h2>
-          {scene.card.lines.map((l, i) => {
-            const show = ease((local - 0.4 - i * 0.6) / 0.4)
-            return (
-              <div key={i} className="sf-card-line" style={{ opacity: show, transform: `translateX(${(1 - show) * -30}px)` }}>
-                <span className="sf-card-icon">
-                  {l.icon === 'erd' ? <Bead color="yellow" width={110} /> : l.icon === 'himmel' ? <Bead color="green" width={110} /> : l.icon ? <img src={handSrc(l.icon)} alt="" /> : null}
-                </span>
-                <span>{l.text}</span>
-              </div>
-            )
-          })}
+
+      {room && (
+        <div className="sf-whiteboard">
+          <div className="sf-wb-head">
+            <span className="sf-chip">Lektion {lesson.number}</span>
+            <span className="sf-title">{lesson.title}</span>
+            <span className="sf-brand">BrainFit <b>Kids</b></span>
+          </div>
+          {kind === 'karte' && scene.card && (
+            <div className="sf-card" style={{ opacity: fadeIn, transform: `translateY(${(1 - fadeIn) * 30}px)` }}>
+              <h2>{scene.card.title}</h2>
+              {scene.card.lines.map((l, i) => {
+                const show = ease((local - 0.4 - i * 0.6) / 0.4)
+                return (
+                  <div key={i} className="sf-card-line" style={{ opacity: show, transform: `translateX(${(1 - show) * -30}px)` }}>
+                    <span className="sf-card-icon">
+                      {l.icon === 'erd' ? <Bead color="yellow" width={110} /> : l.icon === 'himmel' ? <Bead color="green" width={110} /> : l.icon ? <img src={handSrc(l.icon)} alt="" /> : null}
+                    </span>
+                    <span>{l.text}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+          {(kind === 'tafel' || kind === 'aufgabe') && <Board s={s} local={local} t={t} />}
+          {kind === 'quiz' && scene.quiz && <QuizCard s={s} local={local} />}
         </div>
       )}
-      {(kind === 'tafel' || kind === 'aufgabe') && <Board s={s} local={local} t={t} />}
-      {kind === 'quiz' && scene.quiz && <QuizCard s={s} local={local} />}
 
-      {kind !== 'titel' && <Teacher speaking={speaking} t={t} wave={scene.id === 'hallo' && local < 2.5} />}
-      {scene.say && kind !== 'titel' && <Subtitle s={s} local={local} />}
+      {room && <TeacherTag speaking={speaking} t={t} />}
+      {room && scene.say && <Subtitle s={s} local={local} />}
     </div>
   )
 }
@@ -195,20 +202,14 @@ function EndCard({ local }: { local: number }) {
   )
 }
 
-function Teacher({ speaking, t, wave }: { speaking: boolean; t: number; wave: boolean }) {
-  const bob = speaking ? Math.sin(t * 5.2) * 3 + Math.sin(t * 2.1) * 2 : Math.sin(t * 1.4) * 2
+/** Namensschild von Lisa mit Sprech-Anzeige; Lisa selbst ist im Hintergrund (Bild oder HeyGen-Video). */
+function TeacherTag({ speaking, t }: { speaking: boolean; t: number }) {
   return (
-    <div className="sf-teacher">
-      <div className="sf-teacher-win" style={{ boxShadow: speaking ? '0 0 0 8px rgba(255,197,49,.35), 0 18px 0 #120C33' : undefined }}>
-        <img src={lehrerin} alt="Lisa" style={{ transform: `translateY(${bob}px) scale(1.02)` }} />
-      </div>
-      <div className="sf-teacher-name">
-        Lisa
-        <span className="sf-wave" aria-hidden="true">
-          {[0, 1, 2, 3].map((i) => <i key={i} style={{ height: speaking ? 8 + Math.abs(Math.sin(t * 9 + i * 1.7)) * 22 : 6 }} />)}
-        </span>
-      </div>
-      {wave && <img className="sf-teacher-hand" src={handSrc('winken')} alt="" style={{ transform: `rotate(${Math.sin(t * 8) * 18}deg)` }} />}
+    <div className="sf-teacher-name">
+      Lisa
+      <span className="sf-wave" aria-hidden="true">
+        {[0, 1, 2, 3].map((i) => <i key={i} style={{ height: speaking ? 8 + Math.abs(Math.sin(t * 9 + i * 1.7)) * 22 : 6 }} />)}
+      </span>
     </div>
   )
 }
@@ -230,7 +231,7 @@ function Subtitle({ s, local }: { s: TimedScene; local: number }) {
 function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
   const { scene, cols } = s
   const ab = abakusAt(s, local)
-  const colw = cols === 1 ? 195 : cols <= 4 ? 190 : 150
+  const colw = cols === 1 ? 190 : cols <= 4 ? 165 : 130
   const k = colw / PITCH
   const width = frameWidth(cols) * k
   const glow = 0.55 + Math.sin(t * 5) * 0.3

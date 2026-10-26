@@ -2,6 +2,13 @@
 
 Sprecherin: Lisa · Sprache: Deutsch · langsam und freundlich, für Kinder von 5 bis 12
 
+## Einstellungen in HeyGen
+
+- Format 16:9 (1920×1080), MP4, ohne Untertitel und ohne Musik
+- Hintergrund: Klassenzimmer; Lisa steht links im linken Viertel (bis etwa 500 px von links)
+- Die rechte Seite bleibt frei oder darf eine Tafel zeigen – sie wird im fertigen Video von der Tafel mit dem Abakus verdeckt
+- Das Video beginnt mit dem ersten Satz (Titel und Abschlussbild kommen aus dem Studio)
+
 ## Zum Kopieren
 
 Jede Pause als Pause in HeyGen einfügen (gleiche Länge).

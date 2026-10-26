@@ -25,6 +25,11 @@ try {
   const out = []
   out.push(`# HeyGen-Sprechtext · Lektion ${lesson.number}: ${lesson.title}`, '')
   out.push('Sprecherin: Lisa · Sprache: Deutsch · langsam und freundlich, für Kinder von 5 bis 12', '')
+  out.push('## Einstellungen in HeyGen', '')
+  out.push('- Format 16:9 (1920×1080), MP4, ohne Untertitel und ohne Musik')
+  out.push('- Hintergrund: Klassenzimmer; Lisa steht links im linken Viertel (bis etwa 500 px von links)')
+  out.push('- Die rechte Seite bleibt frei oder darf eine Tafel zeigen – sie wird im fertigen Video von der Tafel mit dem Abakus verdeckt')
+  out.push('- Das Video beginnt mit dem ersten Satz (Titel und Abschlussbild kommen aus dem Studio)', '')
   out.push('## Zum Kopieren', '')
   out.push('Jede Pause als Pause in HeyGen einfügen (gleiche Länge).', '')
   out.push('```')
