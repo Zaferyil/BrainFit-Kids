@@ -333,19 +333,24 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
   const lerp = (x: number, y: number) => x + (y - x) * p
   const left = colLeft3(0)
   const size = Math.max(84, BEAD_W * k * 0.9)
+  // Hände von der Seite wie beim echten Abakus: Fingerspitze (Bildanteil tx, ty) liegt an der Perle
+  const S = size / k
   const hands: { icon: HandIcon; x: number; y: number }[] = []
+  const daumen = (tipX: number, tipY: number) => hands.push({ icon: 'daumen-seite', x: tipX, y: tipY - 0.51 * S })
+  const zeige = (tipX: number, tipY: number) => hands.push({ icon: 'zeige-seite', x: tipX, y: tipY - 0.4 * S })
   if ((a >= 5) !== (b >= 5)) {
     const top = lerp(heavenTop(a), heavenTop(b))
-    hands.push(b >= 5 ? { icon: 'zeige-runter', x: left + BEAD_W * 0.62, y: top - size / k * 0.85 } : { icon: 'zeige-hoch', x: left + BEAD_W * 0.62, y: top + HEAVEN_H3 * 0.7 })
+    // runter: Fingerspitze oben auf der Himmelsperle; hoch: unten an der Himmelsperle
+    zeige(left + BEAD_W * 0.6, b >= 5 ? top + HEAVEN_H3 * 0.12 : top + HEAVEN_H3 * 0.88)
   }
   const la = a % 5
   const lb = b % 5
   if (lb > la) {
-    const i = lb - 1 // unterste bewegte Perle
-    hands.push({ icon: 'daumen-hoch', x: left + BEAD_W * 0.62, y: lerp(earthTop(a, i), earthTop(b, i)) + BEAD_H * 0.75 })
+    const i = lb - 1 // unterste bewegte Perle: der Daumen schiebt sie von unten
+    daumen(left + BEAD_W * 0.55, lerp(earthTop(a, i), earthTop(b, i)) + BEAD_H * 0.85)
   } else if (lb < la) {
-    const i = lb // oberste bewegte Perle
-    hands.push({ icon: 'zeige-runter', x: left + BEAD_W * 0.62, y: lerp(earthTop(a, i), earthTop(b, i)) - size / k * 0.85 })
+    const i = lb // oberste bewegte Perle: der Zeigefinger drückt sie von oben
+    zeige(left + BEAD_W * 0.6, lerp(earthTop(a, i), earthTop(b, i)) + BEAD_H * 0.12)
   }
   return (
     <>

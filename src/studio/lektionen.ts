@@ -13,7 +13,7 @@ export type Move = {
 }
 
 export type Card = { title: string; lines: { icon?: HandIcon | 'erd' | 'himmel'; text: string }[] }
-export type HandIcon = 'daumen-hoch' | 'zeige-runter' | 'zeige-hoch' | 'zeigefinger' | 'winken'
+export type HandIcon = 'daumen-hoch' | 'zeige-runter' | 'zeige-hoch' | 'zeigefinger' | 'winken' | 'daumen-seite' | 'zeige-seite'
 
 export type Scene = {
   id: string
