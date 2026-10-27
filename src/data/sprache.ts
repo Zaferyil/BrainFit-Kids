@@ -93,6 +93,7 @@ export function alleBausteine(): Record<string, string> {
   ;[
     'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',
     'Wer bist du? Tippe auf dein Bild.',
+    'In welche Klasse gehst du?',
     'Tippe deine vier Bilder.',
     'Diesen Code kennen wir nicht. Schau nochmal nach.',
     'Das war nicht richtig. Probier es nochmal!',
