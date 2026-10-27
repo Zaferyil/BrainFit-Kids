@@ -1546,3 +1546,8 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   background: radial-gradient(closest-side, rgba(255,230,140,.75), rgba(255,154,200,.35) 55%, transparent 100%); }
 .sf.himmel .sf-bottom { display: none; }
 .sf.himmel .creme .sf-stage, .sf.himmel .sf-stage { bottom: 30px; }
+
+/* Startseite: runder Zurück-Knopf zur Anmeldung */
+.nk-zurueck { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: rgba(255,255,255,.22); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 4px 0 rgba(43,34,87,.25); backdrop-filter: blur(8px); }
+.nk-zurueck:active { translate: 0 3px; box-shadow: 0 1px 0 rgba(43,34,87,.25); }

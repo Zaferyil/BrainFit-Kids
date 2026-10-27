@@ -32,6 +32,9 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
       <Funkeln />
       <div className="nk-home">
         <header className="nk-hello">
+          <button type="button" className="nk-zurueck" aria-label="Zurück zur Startseite" onClick={onLogout}>
+            <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />
+          </button>
           <button type="button" className="nk-me" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
             <Avatar size={52} {...kid.avatar} />
           </button>
