@@ -128,6 +128,7 @@ export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; 
           <b>{section + 1}/{lesson.sections.length}</b>
         </div>
 
+        {!gruen && !overlay && <Sprecher an={local >= s.speech.start && local < s.speech.end} t={t} />}
         <div className="sf-stage">
           {kind === 'titel' && <TitleBoard lesson={lesson} local={local} />}
           {kind === 'ende' && <EndBoard local={local} />}
@@ -351,5 +352,21 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
         <img key={i} className="sf-hand" src={handSrc(h.icon)} alt="" style={{ left: h.x * k, top: h.y * k, width: size, height: size, opacity: show } as CSSProperties} />
       ))}
     </>
+  )
+}
+
+/** Zeigt, dass gerade jemand spricht: Lautsprecher mit tanzenden Tonbalken (still, wenn niemand spricht). */
+function Sprecher({ an, t }: { an: boolean; t: number }) {
+  return (
+    <div className={an ? 'sf-sprecher an' : 'sf-sprecher'} aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="sf-sprecher-icon"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff" /></svg>
+      <div className="sf-sprecher-balken">
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+        // Pseudo-Lautstärke aus der Zeit, damit die Balken beim Pausieren stehen bleiben
+        const h = an ? 0.25 + 0.75 * Math.abs(Math.sin(t * (7 + i * 1.7) + i * 1.3) * Math.sin(t * 3.1 + i)) : 0.18
+        return <span key={i} style={{ height: `${h * 100}%` }} />
+      })}
+      </div>
+    </div>
   )
 }

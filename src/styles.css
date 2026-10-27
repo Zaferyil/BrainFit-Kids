@@ -1576,3 +1576,15 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .welt-schild { bottom: auto; top: 50%; translate: 0 -50%; font-size: 15px; padding: 6px 12px 8px; }
 .welt-schild.links { left: auto; right: calc(50% + 15cqw); }
 .welt-schild.rechts { left: calc(50% + 15cqw); }
+
+/* Lernvideo: Sprech-Anzeige oben rechts, damit man sieht, dass jemand spricht */
+.sf-sprecher { position: absolute; z-index: 5; right: 70px; top: 40px; height: 120px; padding: 0 40px 0 30px; border-radius: 60px; display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(180deg, #8B5CF6, #6C4CF1); border: 5px solid rgba(255,255,255,.85); box-shadow: 0 10px 0 #3F2AA8, 0 18px 40px rgba(30,18,90,.35);
+  opacity: .55; transition: opacity .3s, transform .3s; }
+.sf-sprecher.an { opacity: 1; transform: scale(1.04); }
+.sf-sprecher-icon { width: 70px; height: 70px; margin-right: 6px; }
+.sf-sprecher span { width: 16px; max-height: 72px; min-height: 12px; border-radius: 8px; background: #FFE066; }
+.sf-sprecher { right: auto; left: 40px; top: 50%; translate: 0 -50%; height: auto; width: 300px; padding: 40px 0 46px; border-radius: 80px; flex-direction: column; gap: 26px; border-width: 8px; }
+.sf-sprecher-icon { width: 130px; height: 130px; margin: 0; }
+.sf-sprecher-balken { display: flex; align-items: center; gap: 14px; height: 130px; }
+.sf-sprecher span { width: 22px; max-height: 130px; min-height: 18px; border-radius: 11px; }
