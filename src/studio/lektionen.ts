@@ -70,7 +70,7 @@ const LEKTION_1: Lesson = {
   ],
   scenes: [
     { id: 'titel', kind: 'titel', min: 4.5, cols: 4, value: 0 },
-    { id: 'hallo', say: 'Hallo! Ich bin Lisa. Heute lernst du den Abakus kennen. Am Ende kannst du alle Zahlen von 0 bis 9 zeigen!' },
+    { id: 'hallo', say: 'Hallo! Heute lernst du den Abakus kennen. Am Ende kannst du alle Zahlen von 0 bis 9 zeigen!' },
     { id: 'erdperlen', highlight: 'erd', say: 'Das ist ein Abakus. Unten siehst du die gelben Erdperlen. Jede Erdperle ist 1 wert.' },
     { id: 'himmelsperle', highlight: 'himmel', say: 'Oben ist die grüne Himmelsperle. Sie ist 5 wert.' },
     { id: 'leiste', highlight: 'leiste', say: 'In der Mitte ist die Leiste. Wir zählen nur die Perlen, die die Leiste berühren.' },
