@@ -13,7 +13,7 @@ export const STATION_INTRO: Record<Exclude<StationId, 'video'>, string> = {
   ueben: 'Jetzt übst du mit dem Abakus. Manchmal schiebst du die Perlen selbst, manchmal liest du die Zahl ab und tippst sie ein.',
   blitz: 'Gleich blitzt der Abakus ganz kurz auf. Schau genau hin und merk dir die Perlen. Dann tippst du die Zahl ein.',
   kopfrechnen: 'Jetzt geht es ohne Abakus. Ich sage dir die Perlen. Stell sie dir im Kopf vor und tippe die Zahl ein.',
-  boss: 'Grummel, der Zahlenfresser, ist da! Beantworte zehn Fragen richtig, dann ist er besiegt. Aber Vorsicht: Du hast nur drei Herzen.',
+  boss: 'Grummel, der Zahlenfresser, ist da! Beantworte acht Fragen richtig, dann ist er besiegt. Aber Vorsicht: Du hast nur drei Herzen.',
 }
 
 export const SAY = {
@@ -33,6 +33,7 @@ export const SAY = {
   bossGewonnen: 'Du hast Grummel besiegt!',
   bossVerloren: 'Grummel hat diesmal gewonnen. Probier es nochmal!',
   geschafft: 'Geschafft!',
+  tagGeschafft: 'Du hast deine Tagesaufgabe geschafft. Du bist großartig!',
   rechne: 'Rechne:',
   plus: 'plus',
   minus: 'minus',

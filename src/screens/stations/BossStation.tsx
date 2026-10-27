@@ -11,7 +11,7 @@ import { speak } from '../../lib/speak'
 import { SayButton, StationDone, StationIntro } from './StationShell'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 
-const HITS = 10
+const HITS = 8
 const LIVES = 3
 
 type Question = { kind: 'read' | 'describe'; n: number; options: number[]; a?: number }
@@ -146,13 +146,16 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
       )}
       {result === 'won' && reward && (
         <StationDone
-          title="Grummel besiegt!"
+          title="Tagesaufgabe geschafft!"
           stars={lives}
           perlen={reward.perlen}
           text={nextText}
-          say={[SAY.bossGewonnen]}
+          say={[SAY.bossGewonnen, SAY.tagGeschafft]}
           href={reward.worldDone ? '#/karte' : '#/einheit'}
-          extra={<div className="done-trophy"><Icon name="trophy" color="#DE9800" fill="#FFE58F" size={40} /> Pokal: {content.title}</div>}
+          extra={<>
+            <div className="done-tag">Du hast deine Lektion für heute geschafft. Du bist großartig!</div>
+            <div className="done-trophy"><Icon name="trophy" color="#DE9800" fill="#FFE58F" size={40} /> Pokal: {content.title}</div>
+          </>}
         />
       )}
     </Stage>

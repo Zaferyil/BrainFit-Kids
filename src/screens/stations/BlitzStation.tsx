@@ -9,7 +9,7 @@ import { SAY, STATION_INTRO } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
-const COUNT = 10
+const COUNT = 8
 /** Anzeigedauer des Abakus in ms – für alle Kinder gleich */
 const FLASH_MS = 1500
 

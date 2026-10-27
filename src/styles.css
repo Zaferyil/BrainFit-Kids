@@ -1697,3 +1697,4 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .kurs-zahl.leer { display: none; }
 @keyframes kurs-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .task-card.lesen .kurs-zahl, .task-card.lesen .kurs-zahl.alt { color: #FFFFFF; text-shadow: 0 3px 0 rgba(43,34,87,.35); }
+.done-tag { margin: 4px 0 10px; padding: 12px 18px; border-radius: 18px; background: #E9FBF2; color: #157A4F; font-weight: 900; font-size: 18px; text-align: center; }

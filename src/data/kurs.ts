@@ -143,8 +143,8 @@ const STUFEN: Record<string, KursAufgabe[]> = {
   ],
 }
 
-/** Kurs-Übungen einer Einheit (Lektion 1: beide Stufen) oder null */
+/** Kurs-Übungen einer Einheit oder null. Lektion 1 nimmt nur Stufe 1, damit die Lektion mit dem langen Video in 15 Minuten passt. */
 export function kursAufgaben(world: number, unit: number): KursAufgabe[] | null {
-  if (world === 1 && unit === 1) return [...STUFEN['1-1a'], ...STUFEN['1-1b']]
+  if (world === 1 && unit === 1) return STUFEN['1-1a']
   return STUFEN[`${world}-${unit}`] ?? null
 }
