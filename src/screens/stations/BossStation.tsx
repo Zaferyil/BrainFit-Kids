@@ -137,7 +137,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
           <div className="done-card">
             <Grummel size={180} />
             <h2>Fast geschafft!</h2>
-            <p>Grummel hat diesmal gewonnen. Du hast {hits} von {HITS} Treffern geschafft.</p>
+            <p>Grummel hat diesmal gewonnen. Du hast {hits} von {HITS} Treffern geschafft. Bestehe den Test, dann geht es zur nächsten Lektion!</p>
             <div className="done-actions">
               <a href="#/einheit" className="btn-outline dark">Zur Einheit</a>
               <button type="button" className="btn-primary small" onClick={retry}>Nochmal kämpfen</button>
