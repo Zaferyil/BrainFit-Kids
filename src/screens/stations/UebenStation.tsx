@@ -3,25 +3,33 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeNumber, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, makeSum, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
-type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean }
+/** a: Startwert auf dem Abakus bei Rechen-Einheiten (a + add = n) */
+type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean; a?: number }
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
 const COUNT = 10
 
-function makeTasks(range: [number, number]): Task[] {
+function makeTasks(content: UnitContent): Task[] {
   const tasks: Task[] = []
   let prev: number | undefined
   for (let i = 0; i < COUNT; i++) {
-    const n = randomIn(range, prev)
-    prev = n
-    tasks.push({ kind: i % 2 === 0 ? 'set' : 'read', n, id: i })
+    const kind = i % 2 === 0 ? 'set' : 'read'
+    if (content.add) {
+      const { a, n } = makeSum(content, prev)
+      prev = a
+      tasks.push({ kind, n, a, id: i })
+    } else {
+      const n = randomIn(content.range, prev)
+      prev = n
+      tasks.push({ kind, n, id: i })
+    }
   }
   return tasks
 }
@@ -29,7 +37,7 @@ function makeTasks(range: [number, number]): Task[] {
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
 export function UebenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [queue, setQueue] = useState(() => makeTasks(content.range))
+  const [queue, setQueue] = useState(() => makeTasks(content))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -39,7 +47,10 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
   const [started, setStarted] = useState(false)
   const task = queue[index]
-  const question = task.kind === 'set' ? [SAY.stelleEin, String(task.n)] : [SAY.welcheZahlAbakus]
+  const sum = task.a !== undefined ? `${task.a} + ${content.add}` : null
+  const question = sum
+    ? [SAY.rechne, String(task.a), SAY.plus, String(content.add), task.kind === 'set' ? SAY.rechneAbakus : SAY.wievielIst]
+    : task.kind === 'set' ? [SAY.stelleEin, String(task.n)] : [SAY.welcheZahlAbakus]
   const questionKey = question.join('|')
 
   // Jede Aufgabe wird vorgelesen – viele Kinder lesen noch nicht sicher.
@@ -67,8 +78,8 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
     setQueue(q)
     setErrors(errors + 1)
     setResults({ ...results, [task.id]: 'wrong' })
-    const text = `Fast! Das ist die ${task.n}.`
-    setFeedback({ type: 'wrong', text, sub: `${task.n} = ${describeNumber(task.n)}. Die Aufgabe kommt später noch einmal.` })
+    const text = sum ? `Fast! ${sum} = ${task.n}.` : `Fast! Das ist die ${task.n}.`
+    setFeedback({ type: 'wrong', text, sub: sum ? `${content.rule[0]}. Die Aufgabe kommt später noch einmal.` : `${task.n} = ${describeNumber(task.n)}. Die Aufgabe kommt später noch einmal.` })
     void speak([SAY.fastDasIst, String(task.n), ...sayDescribe(task.n)])
     setTimeout(() => next(q, errors + 1), 3600)
   }
@@ -88,19 +99,30 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
 
   const hint = () => {
     setErrors(errors + 1)
-    setFeedback({ type: 'hint', text: `Tipp: ${task.n} = ${describeNumber(task.n)}` })
-    void speak([SAY.tipp, ...sayDescribe(task.n)])
+    if (sum) {
+      setFeedback({ type: 'hint', text: `Tipp: ${content.rule[0]}` })
+      void speak(content.discover[0].say)
+    } else {
+      setFeedback({ type: 'hint', text: `Tipp: ${task.n} = ${describeNumber(task.n)}` })
+      void speak([SAY.tipp, ...sayDescribe(task.n)])
+    }
     setTimeout(() => setFeedback(null), 3200)
   }
 
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title="Perlen einstellen und ablesen" dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>
-          {task.kind === 'set' ? (
+          {sum ? (
+            <>
+              <div className="task-ask">{task.kind === 'set' ? 'Rechne mit dem Abakus:' : 'Rechne:'}</div>
+              <div className="task-number">{sum}</div>
+              {task.kind === 'read' && <div className={`task-answer ${feedback?.type ?? ''} ${input ? 'filled' : ''}`}>{input || '?'}</div>}
+            </>
+          ) : task.kind === 'set' ? (
             <>
               <div className="task-ask">Stelle ein:</div>
               <div className="task-number">{task.n}</div>
@@ -119,11 +141,11 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
         </section>
 
         <div className="practice-board">
-          <div className="board-hint">{task.kind === 'set' ? 'Tippe auf die Perlen' : 'Schau genau hin'}</div>
+          <div className="board-hint">{task.kind === 'set' ? 'Tippe auf die Perlen' : sum ? 'Rechne mit Hilfe des Abakus' : 'Schau genau hin'}</div>
           <Fit className="board-fit">
             <Abakus
               key={`${index}-${task.id}`}
-              value={task.kind === 'read' ? task.n : 0}
+              value={task.a ?? (task.kind === 'read' ? task.n : 0)}
               cols={content.cols}
               colw={content.cols > 1 ? 110 : 130}
               interactive={task.kind === 'set' && !feedback}
@@ -148,7 +170,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
             <Keypad onKey={onKey} disabled={!!feedback} />
           ) : (
             <div className="perli-say column">
-              <div className="say-bubble">Schiebe die Perlen, bis der Abakus {task.n} zeigt. Du musst nichts drücken – ich schaue mit!</div>
+              <div className="say-bubble">{sum ? `${sum}: ${content.rule[0]}. Schiebe die Perlen – ich schaue mit!` : `Schiebe die Perlen, bis der Abakus ${task.n} zeigt. Du musst nichts drücken – ich schaue mit!`}</div>
               <Perli mood="happy" size={150} />
             </div>
           )}

@@ -33,7 +33,9 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
   const [started, setStarted] = useState(false)
   const timer = useRef<number | undefined>(undefined)
-  const n = numbers[index]
+  // Rechen-Einheit: der Abakus blitzt die Startzahl, gefragt ist Startzahl + add
+  const shown = numbers[index]
+  const n = content.add ? shown + content.add : shown
 
   // Ablauf je Aufgabe: kurz „Achtung“, dann blitzt der Abakus auf.
   useEffect(() => {
@@ -42,9 +44,10 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
       void speak(SAY.achtung)
       timer.current = window.setTimeout(() => setPhase('flash'), 1100)
     }
-    if (phase === 'answer') void speak(SAY.welcheZahlWar)
+    if (phase === 'answer') void speak(content.add ? [SAY.rechne, String(shown), SAY.plus, String(content.add), SAY.wievielIst] : SAY.welcheZahlWar)
     if (phase === 'flash') timer.current = window.setTimeout(() => setPhase('answer'), FLASH_MS)
     return () => window.clearTimeout(timer.current)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, index, started])
 
   const next = (res: ('right' | 'wrong')[]) => {
@@ -76,7 +79,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const showAbakus = phase === 'flash' || phase === 'wrong'
 
   return (
-    <StationShell station="blitz" title="Blitz-Abakus: Welche Zahl war es?" dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
+    <StationShell station="blitz" title={content.add ? `Blitz-Abakus: +${content.add}` : 'Blitz-Abakus: Welche Zahl war es?'} dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
       <div className="blitz">
         <aside className="blitz-side">
           <div className="blitz-stat">
@@ -94,7 +97,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
           <Fit className="board-fit">
           <div className="blitz-window">
             {phase === 'ready' && <div className="blitz-ready"><Icon name="bolt" color="#FFC531" fill="#FFC531" size={72} /> Achtung …</div>}
-            {showAbakus && <Abakus3D key={index} value={n} cols={content.cols} colw={content.cols > 1 ? 100 : 120} />}
+            {showAbakus && <Abakus3D key={index} value={phase === 'wrong' ? n : shown} cols={content.cols} colw={content.cols > 1 ? 100 : 120} />}
             {(phase === 'answer' || phase === 'right') && (
               <div className={phase === 'right' ? 'blitz-cover right' : 'blitz-cover'}>
                 {phase === 'right' ? n : input || '?'}
@@ -104,10 +107,10 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
           </Fit>
           <div className={`blitz-say ${phase}`} role="status">
             {phase === 'ready' && 'Gleich blitzt der Abakus auf. Schau genau hin!'}
-            {phase === 'flash' && 'Merk dir die Perlen!'}
-            {phase === 'answer' && 'Welche Zahl war es? Tippe sie ein.'}
+            {phase === 'flash' && (content.add ? `Merk dir die Zahl – gleich rechnest du +${content.add}!` : 'Merk dir die Perlen!')}
+            {phase === 'answer' && (content.add ? `Es war die ${shown}. Rechne ${shown} + ${content.add}!` : 'Welche Zahl war es? Tippe sie ein.')}
             {phase === 'right' && 'Richtig! Blitzschnell.'}
-            {phase === 'wrong' && `Es war die ${n}: ${describeNumber(n)}.`}
+            {phase === 'wrong' && (content.add ? `${shown} + ${content.add} = ${n}` : `Es war die ${n}: ${describeNumber(n)}.`)}
           </div>
         </div>
 

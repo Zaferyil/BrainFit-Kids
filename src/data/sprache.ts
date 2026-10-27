@@ -33,6 +33,10 @@ export const SAY = {
   bossGewonnen: 'Du hast Grummel besiegt!',
   bossVerloren: 'Grummel hat diesmal gewonnen. Probier es nochmal!',
   geschafft: 'Geschafft!',
+  rechne: 'Rechne:',
+  plus: 'plus',
+  wievielIst: 'Wie viel ist das? Tippe es ein.',
+  rechneAbakus: 'Rechne mit dem Abakus.',
 } as const
 
 /** Perlen einer Zahl als Bausteine, z. B. ['Zehner:', '3 Erdperlen', 'Einer:', 'die Himmelsperle']. */
@@ -75,7 +79,7 @@ export function alleBausteine(): Record<string, string> {
   for (let d = 0; d <= 9; d++) add(describeDigit(d))
   for (let n = 1; n <= 99; n++) add(String(n), zahlwort(n))
   for (let w = 1; w <= 9; w++) {
-    for (let u = 1; u <= 3; u++) unitContent(w, u)?.discover.forEach((s) => add(s.say))
+    for (let u = 1; u <= 12; u++) unitContent(w, u)?.discover.forEach((s) => add(s.say))
   }
   ;[
     'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',

@@ -14,9 +14,17 @@ import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 const HITS = 10
 const LIVES = 3
 
-type Question = { kind: 'read' | 'describe'; n: number; options: number[] }
+type Question = { kind: 'read' | 'describe'; n: number; options: number[]; a?: number }
 
-function makeQuestion(range: [number, number], prev?: number): Question {
+function makeQuestion(range: [number, number], prev?: number, add?: number): Question {
+  if (add) {
+    // Rechen-Einheit: Abakus zeigt a, gefragt ist a + add; Ablenker liegen nah dran
+    const a = randomIn(range, prev === undefined ? undefined : prev - add)
+    const n = a + add
+    const opts = new Set([n])
+    for (const x of [n + 1, n - 1, n + 10, n - 2, n + 2]) if (opts.size < 4 && x > 0) opts.add(x)
+    return { kind: 'read', n, a, options: [...opts].sort(() => Math.random() - 0.5) }
+  }
   const n = randomIn(range, prev)
   const opts = new Set([n])
   // bei zwei Stellen: ähnliche Zahlen (Ziffern vertauscht, ±1, ±10) als Ablenkung
@@ -27,7 +35,7 @@ function makeQuestion(range: [number, number], prev?: number): Question {
 }
 
 export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
-  const [q, setQ] = useState(() => makeQuestion(content.range))
+  const [q, setQ] = useState(() => makeQuestion(content.range, undefined, content.add))
   const [hits, setHits] = useState(0)
   const [lives, setLives] = useState(LIVES)
   const [picked, setPicked] = useState<number | null>(null)
@@ -35,7 +43,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
   const [reward, setReward] = useState<{ perlen: number; worldDone: boolean } | null>(null)
   const [started, setStarted] = useState(false)
   const hp = Math.round(((HITS - hits) / HITS) * 100)
-  const question = q.kind === 'read' ? [SAY.welcheZahlAbakus] : [...sayDescribe(q.n), SAY.welcheZahlIst]
+  const question = q.a !== undefined ? [SAY.rechne, String(q.a), SAY.plus, String(content.add), SAY.wievielIst] : q.kind === 'read' ? [SAY.welcheZahlAbakus] : [...sayDescribe(q.n), SAY.welcheZahlIst]
   const questionKey = question.join('|')
 
   useEffect(() => { if (started) void speak(questionKey.split('|')) }, [started, questionKey, q])
@@ -62,11 +70,11 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
       } else if (nextLives <= 0) {
         setResult('lost')
         void speak(SAY.bossVerloren)
-      } else setQ(makeQuestion(content.range, q.n))
+      } else setQ(makeQuestion(content.range, q.n, content.add))
     }, ok ? 800 : 1800)
   }
 
-  const retry = () => { setQ(makeQuestion(content.range)); setHits(0); setLives(LIVES); setResult(null) }
+  const retry = () => { setQ(makeQuestion(content.range, undefined, content.add)); setHits(0); setLives(LIVES); setResult(null) }
   const w = WORLDS[world - 1]
   const nextText = reward?.worldDone
     ? `Welt ${world} geschafft! Du bekommst den ${w.belt} Gürtel und 1 Diamant.`
@@ -99,8 +107,8 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             <div className="eyebrow light">TREFFER {hits} VON {HITS}</div>
             {q.kind === 'read' ? (
               <div className="boss-q-read">
-                <Abakus3D key={`${hits}-${lives}`} value={q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} />
-                <span>Welche Zahl?</span>
+                <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} />
+                <span>{q.a !== undefined ? `${q.a} + ${content.add} = ?` : 'Welche Zahl?'}</span>
               </div>
             ) : (
               <div className="boss-q-text">{describeNumber(q.n)[0].toUpperCase() + describeNumber(q.n).slice(1)} = ?</div>

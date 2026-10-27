@@ -12,6 +12,7 @@ import { typeDigit } from '../../lib/typeDigit'
 
 const COUNT = 8
 
+/** Zahlen (bzw. bei Rechen-Einheiten die Startzahl a) für alle Aufgaben */
 const randomNumbers = (range: [number, number]) => {
   const out: number[] = []
   while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
@@ -27,12 +28,15 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
   const [state, setState] = useState<'ask' | 'right' | 'wrong'>('ask')
   const [results, setResults] = useState<('right' | 'wrong')[]>([])
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
-  const n = numbers[index]
-  const phrase = describeNumber(n)
+  const add = content.add
+  const n = add ? numbers[index] + add : numbers[index]
+  const sum = add ? `${numbers[index]} + ${add}` : null
+  const phrase = sum ?? describeNumber(n)
   const [started, setStarted] = useState(false)
-  const question = [...sayDescribe(n), SAY.welcheZahlIst]
+  const question = sum ? [SAY.rechne, String(numbers[index]), SAY.plus, String(add), SAY.wievielIst] : [...sayDescribe(n), SAY.welcheZahlIst]
+  const questionKey = question.join('|')
 
-  useEffect(() => { if (started) void speak([...sayDescribe(n), SAY.welcheZahlIst]) }, [started, n, index])
+  useEffect(() => { if (started) void speak(questionKey.split('|')) }, [started, questionKey, index])
 
   const onKey = (k: string) => {
     if (state !== 'ask') return
@@ -69,13 +73,13 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
           <div className="mental-perli">
             <Perli mood={state === 'right' ? 'cheer' : 'think'} size={170} />
             <div className="say-bubble">
-              {state === 'wrong' ? `So sieht die ${n} aus: ${phrase}.` : 'Mach die Augen zu und stell dir die Perlen vor.'}
+              {state === 'wrong' ? (sum ? `${sum} = ${n}. ${content.rule[0]}.` : `So sieht die ${n} aus: ${phrase}.`) : 'Mach die Augen zu und stell dir die Perlen vor.'}
             </div>
           </div>
         </div>
         <section className="mental-task">
           <div className="mental-q">
-            <div className="eyebrow">AUFGABE {index + 1} VON {COUNT} · STELL DIR VOR</div>
+            <div className="eyebrow">AUFGABE {index + 1} VON {COUNT} · {sum ? 'RECHNE IM KOPF' : 'STELL DIR VOR'}</div>
             <div className="mental-phrase">{phrase[0].toUpperCase() + phrase.slice(1)}</div>
             <div className="mental-eq">
               <span>=</span>

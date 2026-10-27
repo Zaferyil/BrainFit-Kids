@@ -35,6 +35,8 @@ export type UnitContent = {
   /** Beschriftung über dem Abakus */
   board: string
   discover: DiscoverStep[]
+  /** Rechen-Einheit (z. B. Big Friend +9): Üben, Blitz, Kopfrechnen und Boss fragen „a + add“ statt einer Zahl */
+  add?: number
 }
 
 const UNITS: Record<string, UnitContent> = {
@@ -63,6 +65,41 @@ const UNITS: Record<string, UnitContent> = {
       { text: 'Fertig! Erdperle = 1, Himmelsperle = 5.', say: 'Toll gemacht! Jetzt kennst du alle Perlen.', mood: 'cheer', start: 7, goal: null },
     ],
   },
+}
+
+const bigFriend = (k: number, lead: string, say: string): UnitContent => ({
+  title: `Big Friend +${k}`,
+  lead,
+  rule: [`+${k} = +10 − ${10 - k}`],
+  learn: [`${k} und ${10 - k} sind zusammen 10`, `Plus ${k} heißt: 10 dazu, ${10 - k} weg`, 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: `Der Video-Tutor zeigt dir den Trick für +${k}.`,
+    entdecken: `Perli rechnet mit dir Schritt für Schritt +${k}.`,
+    ueben: `10 Aufgaben – du rechnest +${k} mit dem Abakus.`,
+    blitz: `Der Abakus blitzt auf. Rechne +${k} dazu!`,
+    kopfrechnen: `Rechne +${k} im Kopf.`,
+    boss: 'Besiege Grummel und hol dir den Pokal!',
+  },
+  cols: 2,
+  range: [10 - k, 9],
+  board: 'Zehner · Einer',
+  add: k,
+  discover: [
+    { text: `Big Friends: ${k} und ${10 - k} sind 10.`, say, mood: 'happy', start: 0, goal: null },
+    { text: 'Stelle zuerst die 3 ein.', say: 'Stell zuerst die drei ein. Drei Erdperlen bei den Einern hoch.', mood: 'happy', start: 0, goal: 3 },
+    { text: 'Jetzt 10 dazu: eine Perle bei den Zehnern hoch.', say: 'Jetzt zehn dazu: Eine Perle bei den Zehnern hoch.', mood: 'think', start: 3, goal: 13 },
+    { text: `Und ${10 - k} weg: bei den Einern runter.`, say: `Und jetzt ${10 - k} weg: Bei den Einern runter.`, mood: 'think', start: 13, goal: 13 - (10 - k) },
+    { text: `Fertig! 3 + ${k} = ${3 + k}.`, say: `Super! Drei plus ${k} ist ${3 + k}.`, mood: 'cheer', start: 3 + k, goal: null },
+  ],
+})
+
+UNITS['1-2'] = bigFriend(9, 'Der Trick für +9: 10 dazu und 1 weg.', 'Neun und eins sind zusammen zehn. Eins ist der Big Friend von neun. Jetzt rechnen wir drei plus neun!')
+
+/** Rechenaufgabe für eine Big-Friend-Einheit: a (Einer, bei denen der Trick nötig ist) + add. */
+export function makeSum(content: UnitContent, prev?: number) {
+  const a = randomIn(content.range, prev)
+  const b = content.add ?? 0
+  return { a, b, n: a + b }
 }
 
 export const unitContent = (world: number, unit: number) => UNITS[`${world}-${unit}`] ?? null
