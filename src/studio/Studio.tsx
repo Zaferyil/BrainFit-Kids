@@ -352,12 +352,49 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
     const i = lb // oberste bewegte Perle: der Zeigefinger drückt sie von oben
     zeige(left + BEAD_W * 0.6, lerp(earthTop(a, i), earthTop(b, i)) + BEAD_H * 0.12)
   }
+  // Daumen und Zeigefinger gleichzeitig (6 bis 9): eine Hand, die die Perlen von der Seite greift – wie am echten Abakus
+  const z = hands.find((h) => h.icon === 'zeige-seite')
+  const d = hands.find((h) => h.icon === 'daumen-seite')
+  if (z && d) {
+    return <Greifhand x={left + BEAD_W * 0.58} yZeige={z.y + 0.4 * S} yDaumen={d.y + 0.51 * S} k={k} opacity={show} />
+  }
   return (
     <>
       {hands.map((h, i) => (
         <img key={i} className="sf-hand" src={handSrc(h.icon)} alt="" style={{ left: h.x * k, top: h.y * k, width: size, height: size, opacity: show } as CSSProperties} />
       ))}
     </>
+  )
+}
+
+/** Comic-Hand von der Seite: Zeigefinger oben, Daumen unten, beide zeigen nach links auf die Perlen.
+ *  x: Fingerspitzen, yZeige/yDaumen: Höhe der beiden Fingerspitzen (alles in Pixeln des Rahmenbilds). */
+function Greifhand({ x, yZeige, yDaumen, k, opacity }: { x: number; yZeige: number; yDaumen: number; k: number; opacity: number }) {
+  const top = yZeige - 70
+  const bottom = yDaumen + 70
+  const mid = (yZeige + yDaumen) / 2
+  const w = 360
+  // Zahl der eingerollten Finger zwischen Zeigefinger und Daumen
+  const curls = Math.max(1, Math.min(3, Math.floor((yDaumen - yZeige - 50) / 48)))
+  const gap = (yDaumen - yZeige - 50) / curls
+  const line = { stroke: '#151515', strokeWidth: 9, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const }
+  return (
+    <svg className="sf-hand" viewBox={`${x} ${top} ${w} ${bottom - top}`} style={{ left: x * k, top: top * k, width: w * k, height: (bottom - top) * k, opacity }} aria-hidden="true">
+      {/* Bündchen */}
+      <rect x={x + 270} y={mid - 85} width={70} height={170} rx={30} fill="#fff" {...line} />
+      {/* Handfläche */}
+      <rect x={x + 120} y={yZeige - 50} width={180} height={yDaumen - yZeige + 100} rx={90} fill="#fff" {...line} />
+      {/* eingerollte Finger */}
+      {Array.from({ length: curls }, (_, i) => (
+        <rect key={i} x={x + 95} y={yZeige + 28 + i * gap} width={95} height={Math.min(56, gap + 4)} rx={28} fill="#fff" {...line} />
+      ))}
+      {/* Zeigefinger (Spitze leicht nach unten auf die Perle) */}
+      <path d={`M${x + 200},${yZeige - 26} L${x + 26},${yZeige - 26} Q${x},${yZeige - 24} ${x},${yZeige + 2} Q${x + 2},${yZeige + 26} ${x + 28},${yZeige + 24} L${x + 200},${yZeige + 24}`} fill="#fff" {...line} />
+      {/* Daumen */}
+      <path d={`M${x + 210},${yDaumen - 30} L${x + 30},${yDaumen - 26} Q${x + 2},${yDaumen - 24} ${x + 2},${yDaumen + 2} Q${x + 4},${yDaumen + 28} ${x + 32},${yDaumen + 28} L${x + 220},${yDaumen + 32}`} fill="#fff" {...line} />
+      {/* Falte am Daumenballen */}
+      <path d={`M${x + 215},${yDaumen - 60} Q${x + 245},${yDaumen - 20} ${x + 238},${yDaumen + 10}`} fill="none" {...line} strokeWidth={7} />
+    </svg>
   )
 }
 
