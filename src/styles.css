@@ -1391,3 +1391,9 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .dp-kachel.bald { background: rgba(255,255,255,.18); box-shadow: inset 0 0 0 3px rgba(255,255,255,.35); color: #FFFFFF; }
 .dp-invite { align-self: center; }
 @media (min-width: 700px) { .dp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* Handy: Abakus oben und groß (leichter zu tippen), Aufgabe darunter */
+@media (max-width: 760px) {
+  .practice-board, .discover-board { order: -1; flex: none; height: min(58vh, 520px); padding: 8px; }
+  .practice-board .board-hint { display: none; }
+  .practice .task-card { padding: 10px 16px; }
+}
