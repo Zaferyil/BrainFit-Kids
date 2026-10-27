@@ -1471,3 +1471,5 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .video-status { color: #FFFFFF; font-weight: 900; }
 .nk .btn-primary:disabled { background: rgba(255,255,255,.3); color: #FFFFFF; box-shadow: 0 6px 0 rgba(43,26,122,.35); }
 .nk .btn-primary:disabled svg { stroke: #FFFFFF; }
+.nk-planet-go { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 9vw, 40px); line-height: 1; color: var(--nk-ink); }
+.nk-beads-link { text-decoration: none; padding: 10px; }

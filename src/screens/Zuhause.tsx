@@ -32,7 +32,6 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
   const done = beads.filter((s) => s.state === 'done').length
 
   const title = !current ? 'Alles geschafft!' : current.kind === 'unit' ? current.name : current.kind === 'game' ? current.game.name : 'Perli kennenlernen'
-  const kind = !current ? '' : current.kind === 'game' ? 'Denkspiel' : current.kind === 'start' ? 'Einstufung' : `Welt ${world.n} · ${world.name}`
   const href = !current ? '#/inseln' : current.kind === 'unit' ? '#/einheit' : current.kind === 'game' ? `#/spiel/${current.game.id}` : '#/einstufung'
   const next = WORLDS.slice(world.n, world.n + 3)
 
@@ -64,19 +63,15 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           ))}
         </div>
 
-        <a href="#/inseln" className="nk-planet" aria-label={`Zur Karte. Nächste Station: ${title}`}>
+        <a href={href} className="nk-planet" aria-label={`Los geht’s: ${title}`} onClick={() => { if (current?.kind === 'game') startStop(current.id) }}>
           <Perli mood="happy" size={92} />
-          <span className="nk-planet-kind">{kind}</span>
-          <span className="nk-planet-title">{title}</span>
+          <span className="nk-planet-go"><Icon name="play" color="#2B2257" fill="#2B2257" size={30} />Los geht’s</span>
         </a>
 
-        <ol className="nk-beads" aria-label={`${done} von ${beads.length} Stationen in dieser Welt geschafft`}>
-          {beads.map((s) => <li key={s.id} className={s.state} />)}
-        </ol>
-
-        <a href={href} className="nk-btn yellow big nk-go" onClick={() => { if (current?.kind === 'game') startStop(current.id) }}>
-          <Icon name="play" color="#2B2257" fill="#2B2257" size={24} />
-          Los geht’s
+        <a href="#/inseln" className="nk-beads-link" aria-label={`Zur Karte: ${done} von ${beads.length} Stationen in dieser Welt geschafft`}>
+          <ol className="nk-beads">
+            {beads.map((s) => <li key={s.id} className={s.state} />)}
+          </ol>
         </a>
       </div>
       <NavBar active="karte" />
