@@ -1590,3 +1590,8 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf-sprecher-icon { width: 130px; height: 130px; margin: 0; }
 .sf-sprecher-balken { display: flex; align-items: center; gap: 14px; height: 130px; }
 .sf-sprecher span { width: 22px; max-height: 130px; min-height: 18px; border-radius: 11px; }
+/* Sprech-Anzeige: nur die Tonwelle, mittig über dem Abakus, sichtbar nur beim Sprechen */
+.sf-sprecher { left: 50%; top: 0; translate: -50% 0; width: auto; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; opacity: 0; transform: none; }
+.sf-sprecher.an { opacity: 1; transform: none; }
+.sf-sprecher-balken { height: 110px; gap: 16px; }
+.sf-sprecher span { width: 20px; max-height: 110px; min-height: 16px; border-radius: 10px; background: #FFE066; box-shadow: 0 4px 0 #D9A400, 0 0 24px rgba(255,224,102,.6); }

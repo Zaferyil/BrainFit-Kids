@@ -355,11 +355,10 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
   )
 }
 
-/** Zeigt, dass gerade jemand spricht: Lautsprecher mit tanzenden Tonbalken (still, wenn niemand spricht). */
+/** Zeigt, dass gerade jemand spricht: tanzende Tonbalken über dem Abakus, nur während gesprochen wird. */
 function Sprecher({ an, t }: { an: boolean; t: number }) {
   return (
     <div className={an ? 'sf-sprecher an' : 'sf-sprecher'} aria-hidden="true">
-      <svg viewBox="0 0 24 24" className="sf-sprecher-icon"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff" /></svg>
       <div className="sf-sprecher-balken">
       {[0, 1, 2, 3, 4, 5, 6].map((i) => {
         // Pseudo-Lautstärke aus der Zeit, damit die Balken beim Pausieren stehen bleiben
