@@ -1,4 +1,7 @@
 import { useState, type FormEvent } from 'react'
+import { createPortal } from 'react-dom'
+import { getProgress } from '../lib/progress'
+import { nextStop } from '../lib/mapPath'
 import { kidPhoto } from '../data/kinderBilder'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
@@ -231,10 +234,7 @@ function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClas
         </button>
       </div>
       {status === 'right' ? (
-        <a href="#/karte" className="nk-btn yellow big popin">
-          <Icon name="play" color="#2B2257" size={26} />
-          Los geht’s!
-        </a>
+        <LosPopup kid={kid} />
       ) : (
         <div className="nk-pics">
           {PICTURES.map((p) => (
@@ -248,5 +248,24 @@ function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClas
       {status === 'input' && kid.id === 'lena' && <p className="nk-foot dim">Zum Ausprobieren: Stern, Herz, Blitz, Krone</p>}
       <p className="nk-foot"><button type="button" onClick={onBack}>Klasse ändern</button></p>
     </section>
+  )
+}
+
+/** Nach dem richtigen Geheim-Code: großer runder Knopf, der direkt in die nächste Lektion führt. */
+function LosPopup({ kid }: { kid: Kid }) {
+  const next = nextStop(kid, getProgress(kid.id))
+  // ins body, damit der Schleier den ganzen Bildschirm bedeckt (der Schritt selbst ist animiert und würde fixed einsperren)
+  return createPortal(
+    <div className="nk-los-popup" role="dialog" aria-modal="true" aria-label="Los geht’s">
+      <div className="nk-los-karte popin">
+        <small>Richtig, {kid.name}!</small>
+        <strong>{next.title}</strong>
+        <a href={next.href} className="zh-los" onClick={next.go}>
+          <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
+          <span>Los geht’s</span>
+        </a>
+      </div>
+    </div>,
+    document.body,
   )
 }

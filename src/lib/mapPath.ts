@@ -74,3 +74,12 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
 export function clearActiveStop() {
   try { sessionStorage.removeItem(ACTIVE) } catch { /* egal */ }
 }
+
+/** Nächster Schritt auf dem Lernweg: Titel und Ziel für den großen „Los geht’s“-Knopf. */
+export function nextStop(kid: Kid, progress: Progress) {
+  const current = buildPath(kid, progress).find((s) => s.state === 'current' && s.kind !== 'world')
+  if (!current || current.kind === 'world') return { title: 'Alles geschafft!', href: '#/inseln', go: () => {} }
+  if (current.kind === 'unit') return { title: current.name, href: '#/einheit', go: () => {} }
+  if (current.kind === 'game') return { title: current.game.name, href: `#/spiel/${current.game.id}`, go: () => startStop(current.id) }
+  return { title: 'Perli kennenlernen', href: '#/einstufung', go: () => {} }
+}

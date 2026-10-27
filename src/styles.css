@@ -1551,3 +1551,11 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk-zurueck { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
   background: rgba(255,255,255,.22); border: 2px solid rgba(255,255,255,.55); box-shadow: 0 4px 0 rgba(43,34,87,.25); backdrop-filter: blur(8px); }
 .nk-zurueck:active { translate: 0 3px; box-shadow: 0 1px 0 rgba(43,34,87,.25); }
+
+/* Anmeldung: Popup mit großem „Los geht’s“ direkt nach dem Geheim-Code */
+.nk-los-popup { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(30,18,90,.45); backdrop-filter: blur(6px); }
+.nk-los-karte { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 26px 28px 34px; border-radius: 36px; text-align: center;
+  background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(240,232,255,.95)); box-shadow: 0 24px 60px rgba(30,18,90,.4); max-width: 340px; width: 100%; }
+.nk-los-karte small { font-weight: 900; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: #6C4CF1; }
+.nk-los-karte strong { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.05; color: #1E1757; }
+.nk-los-karte .zh-los { margin-top: 22px; width: min(60vw, 210px); }
