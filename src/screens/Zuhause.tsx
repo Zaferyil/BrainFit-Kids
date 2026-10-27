@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -6,26 +6,19 @@ import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
-import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 import type { Progress } from '../lib/progress'
 import { Funkeln } from './Anmelden'
 
 // Startseite im neuen Look: ein leuchtender Planet zeigt die nächste Station,
-// Perlen darunter den Fortschritt in der aktuellen Welt. Der Planet führt zur Inselkarte (#/inseln).
+// ein einziger großer Knopf führt zur Inselkarte (#/inseln).
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
-type Stop = Exclude<MapStop, { kind: 'world' }>
 
 export function Zuhause({ kid, progress, onLogout }: Props) {
   const [menu, setMenu] = useState(false)
-  const path = useMemo(() => buildPath(kid, progress), [kid, progress])
-  const stops = path.filter((s): s is Stop => s.kind !== 'world')
-  const current = stops.find((s) => s.state === 'current')
   const world = WORLDS[progress.world - 1] ?? WORLDS[0]
 
 
-  const title = !current ? 'Alles geschafft!' : current.kind === 'unit' ? current.name : current.kind === 'game' ? current.game.name : 'Perli kennenlernen'
-  const href = !current ? '#/inseln' : current.kind === 'unit' ? '#/einheit' : current.kind === 'game' ? `#/spiel/${current.game.id}` : '#/einstufung'
 
   return (
     <Stage className="nk" background="linear-gradient(180deg, #4B2FC2 0%, #7B5CFF 38%, #FF9AC8 78%, #FFD27A 100%)">
@@ -58,14 +51,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <span className="zh-podest" />
         </div>
 
-        {current && (
-          <a href="#/inseln" className="zh-wolke" aria-label="Zur Karte">
-            <small>{current.kind === 'game' ? 'Denkspiel' : current.kind === 'start' ? 'Einstufung' : `Welt ${world.n} · ${world.name}`}</small>
-            <strong>{title}</strong>
-          </a>
-        )}
-
-        <a href={href} className="zh-los" onClick={() => { if (current?.kind === 'game') startStop(current.id) }}>
+        <a href="#/inseln" className="zh-los" aria-label="Los geht’s – zur Karte">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
           <span>Los geht’s</span>
         </a>
