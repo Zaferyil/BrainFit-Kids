@@ -1334,8 +1334,9 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .done-overlay { background: rgba(43,26,122,.55); backdrop-filter: blur(4px); }
 .nk .done-card { border-radius: 36px; box-shadow: 0 10px 0 rgba(75,47,194,.35), 0 30px 60px rgba(43,26,122,.4); }
 .nk .station, .nk .rule-card, .nk .unit-head { border-radius: 30px; }
-.nk .key { border-radius: 50%; box-shadow: 0 6px 0 var(--nk-violet-dark); }
-.nk .key-alt { box-shadow: 0 6px 0 #B9A9F5; }
+.nk .key { border-radius: 22px; color: var(--nk-ink); background: radial-gradient(120% 140% at 30% 15%, #FFFFFF, #EFE9FF 70%); box-shadow: 0 6px 0 var(--nk-violet-dark); }
+.nk .key:active:not(:disabled) { box-shadow: 0 2px 0 var(--nk-violet-dark); }
+.nk .key-alt { background: radial-gradient(120% 140% at 30% 15%, #FFF3B0, #FFC531 70%); box-shadow: 0 6px 0 var(--nk-yellow-dark); }
 .nk .eyebrow.light, .nk .unit-title p, .nk .station-num, .nk .station-text, .nk .station.locked .station-text, .nk .station.locked .station-title, .nk .station.skipped .station-title,
 .nk .unit-reward, .nk .board-label, .nk .blitz-count, .nk .game-hint, .nk .park-area-head span, .nk .park-game, .nk .park-badge.lock, .nk .dev-hint, .nk .quests-head span, .nk .blitz-streak { color: rgba(255,255,255,.88); }
 .nk .discover-steps li { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.4); }
@@ -1393,7 +1394,23 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 @media (min-width: 700px) { .dp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 /* Handy: Abakus oben und groß (leichter zu tippen), Aufgabe darunter */
 @media (max-width: 760px) {
-  .practice-board, .discover-board { order: -1; flex: none; height: min(58vh, 520px); padding: 8px; }
+  .station-screen { padding: 10px 14px 14px; gap: 8px; }
+  .station-bar { flex-wrap: nowrap; gap: 8px; }
+  .station-bar .eyebrow { display: none; }
+  .station-bar-title { flex: 1; min-width: 0; }
+  .station-bar-title h1 { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .station-bar .round-btn.big { width: 44px; height: 44px; }
+  .station-bar .task-dots { order: 9; flex-basis: 100%; margin: 0; }
+  .station-bar { flex-wrap: wrap; }
+  .station-bar .task-dot { height: 10px; }
+  .practice { gap: 8px; }
+  .practice-board, .discover-board { order: -1; flex: 1 1 auto; min-height: 220px; padding: 6px; }
+  .practice .task-card { gap: 4px 10px; }
+  .practice .task-card .eyebrow { display: none; }
+  .practice .task-ask { font-size: 18px; }
+  .practice .task-answer { height: 54px; font-size: 40px; }
+  .practice .keypad { gap: 8px; }
+  .practice .key { height: 50px; font-size: 28px; border-radius: 18px; }
   .practice-board .board-hint { display: none; }
   .practice .task-card { padding: 10px 16px; }
 }
