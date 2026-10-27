@@ -1595,3 +1595,11 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf-sprecher.an { opacity: 1; transform: none; }
 .sf-sprecher-balken { height: 110px; gap: 16px; }
 .sf-sprecher span { width: 20px; max-height: 110px; min-height: 16px; border-radius: 10px; background: #FFE066; box-shadow: 0 4px 0 #D9A400, 0 0 24px rgba(255,224,102,.6); }
+
+/* Karte: kleines Gehirn-Abzeichen auf Denkspiel-Stationen */
+.path-node { position: relative; }
+.path-gehirn { position: absolute; top: -4%; right: -4%; width: 34%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: #FF4F9A; border: 2px solid #fff; box-shadow: 0 2px 0 #C21F6A; pointer-events: none; }
+.path-gehirn svg { width: 70%; height: 70%; }
+.path-gehirn { width: 48%; top: -12%; right: -12%; border-width: 2.5px; }
+.path-gehirn svg { width: 74%; height: 74%; }

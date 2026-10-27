@@ -129,7 +129,13 @@ function Node({ stop, n, kid, links, onLocked }: { stop: Stop; n: number; kid: K
   const cls = `path-node ${stop.kind} ${stop.state}`
   const label = stop.kind === 'unit' ? stop.name : stop.kind === 'game' ? stop.game.name : 'Perli kennenlernen'
   const href = stop.kind === 'unit' ? '#/einheit' : stop.kind === 'game' ? `#/spiel/${stop.game.id}` : '#/einstufung'
-  const inner = <span className="path-num">{n}</span>
+  // Denkspiele (nicht Mental-Arithmetik) tragen ein kleines Gehirn auf der Nummer
+  const inner = (
+    <>
+      <span className="path-num">{n}</span>
+      {stop.kind === 'game' && <span className="path-gehirn" aria-hidden="true"><Icon name="brain" color="#FFFFFF" size={14} strokeWidth={2.6} /></span>}
+    </>
+  )
 
   return (
     <div className="path-stop">
