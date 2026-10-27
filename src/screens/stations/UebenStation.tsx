@@ -169,10 +169,14 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
           {task.kind === 'read' ? (
             <Keypad onKey={onKey} disabled={!!feedback} />
           ) : (
+            <>
+            {/* unsichtbarer Platzhalter: hält auf dem Handy den Platz der Tasten frei, damit der Abakus nicht springt */}
+            <div className="keypad-platz" aria-hidden="true"><Keypad onKey={() => {}} disabled /></div>
             <div className="perli-say column">
               <div className="say-bubble">{sum ? `${sum}: ${content.rule[0]}. Schiebe die Perlen – ich schaue mit!` : `Schiebe die Perlen, bis der Abakus ${task.n} zeigt. Du musst nichts drücken – ich schaue mit!`}</div>
               <Perli mood="happy" size={150} />
             </div>
+            </>
           )}
         </div>
       </div>

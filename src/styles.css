@@ -1683,3 +1683,8 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sz-perle { height: 50px; } .sz-perle > * { width: 52px !important; height: auto !important; }
 .sz-deckel { font-size: 44px; }
 .sz-optionen { gap: 12px; } .sz-opt { width: 88px; height: 84px; border-radius: 24px; font-size: 46px; }
+
+/* Üben: Tasten-Platzhalter nur auf dem Handy (dort ist Perli ausgeblendet) */
+.keypad-platz { display: none; }
+@media (max-width: 900px) and (orientation: portrait) { .keypad-platz { display: block; visibility: hidden; } }
+@media (max-width: 900px) and (orientation: portrait) { .practice .task-card { min-height: 132px; align-content: center; } }
