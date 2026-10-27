@@ -42,8 +42,8 @@ export function Abakus3D({ value, cols, colw, from, progress = 1 }: Props) {
       data-value={value}
       style={{ width: px(frameWidth3(n)), height: px(H3) }}
     >
-      <div className="abakus3d-rahmen" style={{ top: 0, height: px(RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}`, backgroundPosition: 'top' }} />
-      <div className="abakus3d-rahmen" style={{ top: px(RAHMEN_SCHNITT3), height: px(H3 - RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}`, backgroundPosition: 'bottom' }} />
+      <div className="abakus3d-rahmen" style={{ top: 0, height: px(RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}px`, backgroundPosition: 'top' }} />
+      <div className="abakus3d-rahmen" style={{ top: px(RAHMEN_SCHNITT3), height: px(H3 - RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}px`, backgroundPosition: 'bottom' }} />
       {Array.from({ length: n }, (_, ci) => {
         const fromRight = n - 1 - ci
         const marked = fromRight % 3 === 0
