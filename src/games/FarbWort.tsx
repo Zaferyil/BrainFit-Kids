@@ -3,7 +3,7 @@ import { speak } from '../lib/speak'
 import { randInt, shuffle, type GameProps } from './types'
 
 // „Sag die richtige Farbe!“ (Stroop, aus Anzan Meister): Tippe die Farbe der Schrift, nicht das Wort.
-// Stufe 1–4: Wort und Farbe gleich · 5–10: verschieden · ab 11: mehr Farben und weniger Zeit.
+// Wort und Schriftfarbe sind immer verschieden; richtig ist die Schriftfarbe. Mehr Farben und weniger Zeit mit steigender Stufe.
 
 const FARBEN = [
   { wort: 'ROT', farbe: '#FF3B5C' },
@@ -17,16 +17,15 @@ const ROUNDS = 10
 
 function setup(level: number) {
   const anzahl = level <= 4 ? 3 : level <= 10 ? 4 : level <= 15 ? 5 : 6
-  const gleich = level <= 4
-  const zeit = Math.max(1.8, 5 - level * 0.18) // Sekunden pro Aufgabe
-  return { anzahl, gleich, zeit }
+  const zeit = Math.max(2.2, 6 - level * 0.18) // Sekunden pro Aufgabe
+  return { anzahl, zeit }
 }
 
 function aufgabe(level: number) {
-  const { anzahl, gleich } = setup(level)
+  const { anzahl } = setup(level)
   const farben = shuffle(FARBEN).slice(0, anzahl)
   const wort = farben[randInt(0, anzahl - 1)]
-  const tinte = gleich ? wort : shuffle(farben.filter((f) => f !== wort))[0]
+  const tinte = shuffle(farben.filter((f) => f !== wort))[0]
   return { farben, wort: wort.wort, tinte }
 }
 
