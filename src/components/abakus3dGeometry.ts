@@ -4,7 +4,7 @@
 export const PITCH3 = 217
 /** Rahmenbild ist 641 px hoch; die untere Leiste wird um RAHMEN_PLUS tiefer gesetzt, damit sie die unterste Erdperle nicht verdeckt. */
 export const RAHMEN_H3 = 641
-export const RAHMEN_SCHNITT3 = 578
+export const RAHMEN_SCHNITT3 = 450
 export const RAHMEN_PLUS3 = 40
 export const H3 = RAHMEN_H3 + RAHMEN_PLUS3
 export const BEAD_W3 = 194
