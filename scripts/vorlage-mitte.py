@@ -18,3 +18,12 @@ mask = cv2.GaussianBlur(mask, (0, 0), 3)[..., None]
 out = raum.copy().astype(np.float32)
 out[:, x0 + DX:x1 + DX] = tafel * mask + out[:, x0 + DX:x1 + DX] * (1 - mask)
 cv2.imwrite('src/assets/lehrerin/vorlage-mitte-1080.jpg', out.astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 88])
+
+# Nur die Tafel (ohne Raum) als PNG mit Transparenz – für den App-Hintergrund im Lernvideo
+from PIL import Image, ImageDraw
+L, T, R, B, RAD = 300, 50, 1612, 962, 86
+tafel_png = Image.open('src/assets/lehrerin/vorlage-mitte-1080.jpg').convert('RGBA')
+maske = Image.new('L', tafel_png.size, 0)
+ImageDraw.Draw(maske).rounded_rectangle((L, T, R, B), RAD, fill=255)
+tafel_png.putalpha(maske)
+tafel_png.crop((L, T, R + 1, B + 1)).save('src/assets/lehrerin/tafel.webp', quality=88)

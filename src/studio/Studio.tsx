@@ -7,7 +7,7 @@ import {
 import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
 import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
-import vorlageCreme from '../assets/lehrerin/vorlage-mitte-1080.jpg'
+import tafelBild from '../assets/lehrerin/tafel.webp'
 import schild from '../assets/video/lektion-schild.webp'
 import fortschritt from '../assets/video/fortschritt.webp'
 import punktAktiv from '../assets/video/punkt-aktiv.webp'
@@ -114,8 +114,8 @@ export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; 
   const gruen = window.location.hash.includes('gruen')
 
   return (
-    <div className={overlay ? 'sf transparent' : 'sf'}>
-      {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
+    <div className={overlay ? 'sf transparent' : gruen ? 'sf' : 'sf himmel'}>
+      {!overlay && (gruen ? <img className="sf-room" src={vorlageGruen} alt="" /> : <img className="sf-tafel" src={tafelBild} alt="" />)}
       <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>
         {gruen && <ChalkDoodles />}
         <div className="sf-schild" style={{ backgroundImage: `url(${schild})` }}>
@@ -270,7 +270,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
   const { scene, cols } = s
   const ab = abakusAt(s, local)
   // Platz auf der Tafel: Bühne 484 px hoch, abzüglich Überschrift und Stellenwerte
-  const room = 430 - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
+  const room = 465 - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
   const colw = Math.min(cols === 1 ? 170 : 165, (room / H) * PITCH)
   const k = colw / PITCH
   const width = frameWidth(cols) * k

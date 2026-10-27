@@ -1505,3 +1505,18 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .zh-los { flex-shrink: 0; margin: 16px 0 8px; width: min(62vw, 230px, 26dvh); }
 .zh-los svg { width: min(58px, 6dvh); height: auto; }
 .zh-los span { font-size: min(34px, 4dvh); }
+/* Lernvideo im App-Look: Farbverlauf statt Raum, Tafel als Bild in der Mitte */
+.sf.himmel { background: linear-gradient(170deg, #FF9AC8 0%, #A47BFF 45%, #5B3FE0 100%); }
+.sf-tafel { position: absolute; left: 300px; top: 50px; width: 1313px; height: 913px; filter: drop-shadow(0 18px 30px rgba(43,26,122,.35)); }
+/* Kopf über dem Lernvideo: Holzschild mit Lektion, violette Pille mit dem Thema */
+.vid-kopf { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 14px; }
+.vid-schild { position: relative; display: flex; flex-direction: column; align-items: center; padding: 10px 40px 12px; border-radius: 22px; rotate: -1.5deg;
+  background: linear-gradient(180deg, #F4C98C 0%, #E3A964 100%); box-shadow: inset 0 -5px 0 #C98B47, 0 6px 0 #9C6530, 0 10px 18px rgba(43,26,122,.3); color: #4A2A10; }
+.vid-schild::before, .vid-schild::after { content: ''; position: absolute; width: 26px; height: 18px; border-radius: 50% 0; background: #6FC25A; box-shadow: inset 0 -3px 0 #3E9A3A; }
+.vid-schild::before { left: -10px; top: 38%; rotate: -30deg; }
+.vid-schild::after { right: -10px; top: -6px; rotate: 30deg; }
+.vid-schild strong { font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 8vw, 44px); line-height: 1; }
+.vid-schild span { font-weight: 900; font-size: clamp(15px, 4vw, 20px); }
+.vid-thema { display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 12px 24px; border-radius: 999px; background: #6C4CF1; box-shadow: 0 5px 0 #4B2FC2;
+  color: #FFFFFF; font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 5vw, 24px); line-height: 1.1; text-align: center; }
+.station-screen:has(.vid-kopf) .station-bar-title { visibility: hidden; }
