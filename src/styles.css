@@ -1429,3 +1429,27 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .task-card.lesen { background: none; box-shadow: none; padding: 0; justify-content: center; }
 .nk .task-card.lesen .eyebrow, .nk .task-card.lesen .task-ask { display: none; }
 .nk .task-card.lesen .task-answer { flex: none; width: min(70%, 300px); height: 64px; margin: 0 auto; font-size: 44px; box-shadow: 0 5px 0 #D08A00; }
+/* Pokale und Ich */
+.pk-box { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 28px; background: rgba(255,255,255,.18); box-shadow: inset 0 0 0 2px rgba(255,255,255,.25); }
+.pk-box h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 22px; }
+.pk-quest { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 20px; background: #FFFFFF; color: var(--nk-ink); box-shadow: 0 4px 0 #C3C6E6; }
+.pk-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; display: grid; place-items: center; background: var(--nk-violet); }
+.pk-quest.fertig .pk-icon { background: var(--nk-green); }
+.pk-body { flex: 1; min-width: 0; }
+.pk-body strong { font-weight: 900; font-size: 15px; }
+.pk-track { height: 10px; border-radius: 5px; background: #ECE7FF; margin-top: 6px; overflow: hidden; }
+.pk-track div { height: 100%; border-radius: 5px; background: var(--nk-yellow); }
+.pk-quest.fertig .pk-track div { background: var(--nk-green); }
+.pk-quest b { font-weight: 900; font-size: 15px; color: #6B6394; }
+.pk-guertel { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px 8px; }
+.pk-g { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pk-g span { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 0 0 3px #FFFFFF, 0 5px 0 3px rgba(43,26,122,.35); }
+.pk-g.zu span { background: rgba(255,255,255,.2); box-shadow: inset 0 0 0 2px rgba(255,255,255,.4); }
+.pk-g small { font-weight: 900; font-size: 12px; }
+.ich { align-items: center; text-align: center; padding-top: 40px; }
+.ich-bild { border-radius: 50%; box-shadow: 0 0 0 6px var(--nk-yellow), 0 10px 0 6px var(--nk-yellow-dark); }
+.ich-bild img, .ich-bild svg { display: block; border-radius: 50%; }
+.ich h1 { margin: 12px 0 0; font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; }
+.ich p { margin: 0; font-weight: 800; font-size: 16px; opacity: .9; }
+.ich-chips { max-width: 380px; }
+.ich-chips b { font-size: 22px; }

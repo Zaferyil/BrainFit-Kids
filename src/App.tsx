@@ -17,6 +17,7 @@ import { unitContent, STATIONS } from './data/units'
 import { unitVideos } from './data/videos'
 import { WORLDS } from './data/curriculum'
 import { DenkPark } from './screens/DenkPark'
+import { Ich, Pokale } from './screens/Pokale'
 import { Denkspiel } from './screens/Denkspiel'
 import { Einstufung } from './screens/Einstufung'
 import { findGame } from './games/registry'
@@ -64,6 +65,8 @@ export default function App() {
     const progress = getProgress(kid.id)
     if (route === 'karte') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
+    if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
+    if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
     if (route === 'einstufung') return <Einstufung kid={kid} />
     if (route.startsWith('spiel/')) {
