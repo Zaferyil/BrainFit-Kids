@@ -85,6 +85,7 @@ export function alleBausteine(): Record<string, string> {
     'Super!',
     'Blitzschnell und fehlerfrei!', 'Deine Augen werden immer schneller.',
     'Der Abakus ist jetzt in deinem Kopf!', 'Alles richtig – wow!', 'Gut geübt! Du wirst immer besser.',
+    'Du hast das Video angesehen.',
     // Einstufung
     'Die Perlen leuchten nacheinander. Tippe sie danach in der gleichen Reihenfolge.',
     'Was kommt als Nächstes? Tippe die richtige Perle oder Zahl.',
