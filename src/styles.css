@@ -1610,3 +1610,4 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf-sprecher { bottom: calc(100% + 64px); }
 .sf.himmel .creme .sf-stage, .sf.himmel .sf-stage { top: 170px; }
 .sf-sprecher { bottom: calc(100% + 46px); }
+.vid-schild-bild { display: block; width: min(100%, 520px); height: auto; }

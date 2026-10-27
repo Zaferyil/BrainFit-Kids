@@ -4,6 +4,7 @@ import { drivePreviewUrl, driveViewUrl, youtubeUrl, type Video } from '../../dat
 import { finishStation } from '../../lib/progress'
 import { StationDone, StationShell } from './StationShell'
 import { LessonPlayer } from '../../studio/LessonPlayer'
+import lektion1Schild from '../../assets/video/lektion-1-schild.webp'
 
 type Props = { kidId: string; title: string; videos: Video[]; learn?: string[]; rule?: string[] }
 
@@ -68,10 +69,15 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
             const m = video.title.match(/^Lektion (\d+):?\s*(.*)$/) ?? video.title.match(/^(\d+)\. Lektion:?\s*(.*)$/)
             return (
               <div className="vid-kopf">
-                <div className="vid-schild">
-                  <strong>{m ? `Lektion ${m[1]}` : 'Video-Tutor'}</strong>
-                  <span>{m ? `Video-Tutor: ${title}` : title}</span>
-                </div>
+                {m?.[1] === '1' ? (
+                  // Lektion 1 hat ein fertig gestaltetes Schild (Vorlage, unverändert übernommen)
+                  <img className="vid-schild-bild" src={lektion1Schild} alt={`Lektion 1 – Video-Tutor: ${title}`} />
+                ) : (
+                  <div className="vid-schild">
+                    <strong>{m ? `Lektion ${m[1]}` : 'Video-Tutor'}</strong>
+                    <span>{m ? `Video-Tutor: ${title}` : title}</span>
+                  </div>
+                )}
               </div>
             )
           })()}
