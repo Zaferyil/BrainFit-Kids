@@ -1623,3 +1623,14 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf-abakus-wrap .sf-badge { right: auto; left: 50%; top: calc(100% + 70px); translate: -50% 0; font-size: 120px; padding: 10px 56px; border-radius: 44px; }
 .sf.himmel .sf-abakus-wrap { margin-bottom: 230px; }
 .sf-abakus-wrap .sf-badge { top: calc(100% + 60px); }
+/* Lernvideo (App-Hintergrund): Karten, Titel und Schluss groß und gut lesbar auf dem Handy */
+.sf.himmel .sf-stage .sf-card { inset: 20px 300px 60px; padding: 60px 90px; border-radius: 64px; background: rgba(255,255,255,.94); color: #1E1757;
+  box-shadow: 0 16px 0 rgba(75,47,194,.35), 0 30px 70px rgba(30,18,90,.3); gap: 34px; }
+.sf.himmel .sf-stage .sf-card h2 { font-size: 110px; color: #6C4CF1; }
+.sf.himmel .sf-stage .sf-card-line { font-size: 80px; }
+.sf.himmel .sf-stage .sf-card-icon { width: 150px; }
+.sf.himmel .sf-stage .sf-card-icon img { width: 140px; height: 140px; }
+.sf.himmel .sf-titleboard .sf-logo { font-size: 170px; }
+.sf.himmel .sf-titleboard .sf-sub { font-size: 90px; }
+.sf.himmel .sf-chalk-title, .sf.himmel .sf-chalk-title.big { font-size: 150px; color: #fff; text-shadow: 0 8px 0 #4B2FC2; }
+.sf.himmel .sf-chalk-sub { font-size: 80px; color: #fff; }

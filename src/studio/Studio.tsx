@@ -259,7 +259,7 @@ function EndBoard({ local }: { local: number }) {
   return (
     <div className="sf-titleboard" style={{ opacity: a }}>
       <div className="sf-chalk-title big">Jetzt bist du dran!</div>
-      <div className="sf-chalk-sub">Station „Entdecken“ in der App</div>
+      <div className="sf-chalk-sub">Drück unten auf „Weiter“</div>
       <div className="sf-title-perli"><Perli mood="cheer" size={170} /></div>
     </div>
   )

@@ -174,11 +174,54 @@ const LEKTION_1: Lesson = {
       },
       say: 'Das merkst du dir: Eine Erdperle ist 1. Die Himmelsperle ist 5. Der Daumen schiebt hoch, der Zeigefinger schiebt runter.',
     },
-    { id: 'ende', kind: 'ende', min: 6, say: 'Super gemacht! Jetzt bist du dran: Öffne in der App die Station Entdecken. Bis zum nächsten Mal – tschüss!' },
+    { id: 'ende', kind: 'ende', min: 6, say: 'Super gemacht! Jetzt kennst du die Perlen. Drück unten auf Weiter und zeig, was du gelernt hast. Los geht’s, das Abenteuer beginnt!' },
   ],
 }
 
-export const LESSONS: Lesson[] = [LEKTION_1]
+
+// Lektion 2: kurz (höchstens 1:30) und ganz einfach – der Trick „+9 = +10 − 1“
+const LEKTION_2: Lesson = {
+  id: 'lektion-2',
+  number: 2,
+  title: 'Big Friend +9',
+  world: 1,
+  sections: [
+    { title: 'Big Friends', start: 'titel' },
+    { title: 'Der Trick', start: 'trick' },
+    { title: 'Üben', start: 'beispiel-2' },
+  ],
+  scenes: [
+    { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+    { id: 'hallo', say: 'Hallo! Heute lernst du einen tollen Trick. Wir rechnen plus 9.' },
+    {
+      id: 'freunde', kind: 'karte', min: 6,
+      card: { title: 'Big Friends', lines: [{ text: '9 und 1 sind 10' }, { icon: 'daumen-hoch', text: 'Der Big Friend von 9 ist 1' }] },
+      say: 'Big Friends sind zwei Zahlen, die zusammen 10 ergeben. 9 und 1 sind 10. Also ist 1 der Big Friend von 9.',
+    },
+    { id: 'aufgabe-zeigen', cols: 2, value: 3, badge: '3 + 9', say: 'Wir haben 3. Jetzt rechnen wir plus 9. Aber unten sind nicht genug Perlen frei!' },
+    {
+      id: 'trick', kind: 'karte', min: 5,
+      card: { title: 'Der Trick', lines: [{ icon: 'daumen-hoch', text: '10 dazu' }, { icon: 'zeige-runter', text: '1 weg' }] },
+      say: 'Der Trick: Plus 9 heißt: 10 dazu und 1 weg.',
+    },
+    { id: 'zehn-dazu', cols: 2, value: 3, badge: '+ 10', moves: [{ at: 'bei den Zehnern', to: 13 }], say: 'Zuerst eine Perle bei den Zehnern hoch. Das sind 10.' },
+    { id: 'eins-weg', badge: '− 1', moves: [{ at: 'bei den Einern', to: 12 }], say: 'Dann eine Perle bei den Einern runter. Das ist 1 weg.' },
+    { id: 'ergebnis', badge: '3 + 9 = 12', min: 3.5, say: 'Fertig! 3 plus 9 ist 12.' },
+    {
+      id: 'beispiel-2', cols: 2, value: 6, badge: '6 + 9 = 15', moves: [{ at: 'Zehnern hoch', to: 16 }, { at: 'Einern runter', to: 15 }],
+      say: 'Noch einmal: 6 plus 9. Eine Perle bei den Zehnern hoch, eine Perle bei den Einern runter. Das ist 15!',
+    },
+    { id: 'aufgabe-13', kind: 'aufgabe', cols: 2, value: 4, task: 13, say: 'Jetzt du! Rechne 4 plus 9. Zehn dazu, 1 weg.' },
+    {
+      id: 'merksatz', kind: 'karte', min: 5,
+      card: { title: 'Das merkst du dir', lines: [{ text: 'Plus 9 = 10 dazu, 1 weg' }] },
+      say: 'Merk dir: Plus 9 ist 10 dazu und 1 weg.',
+    },
+    { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+  ],
+}
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

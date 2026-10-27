@@ -9,7 +9,7 @@ const lektion = (id: string, title: string): Video => ({ id, title, source: 'lek
 
 export const UNIT_VIDEOS: Record<string, Video[]> = {
   '1-1': [lektion('lektion-1', 'Lektion 1: Der Abakus')],
-  '1-2': [v('UUrV0frw8aI', 'Big Friends +9')],
+  '1-2': [lektion('lektion-2', 'Lektion 2: Big Friend +9')],
   '1-3': [v('fHMDL8jGRdE', 'Big Friends +8')],
   '1-4': [v('h5YNF3tvTx8', 'Big Friends +7')],
   '1-5': [v('5OeEtNZIILM', 'Big Friends +6')],
