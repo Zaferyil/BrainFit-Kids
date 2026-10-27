@@ -1636,3 +1636,9 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf.himmel .sf-chalk-sub { font-size: 80px; color: #fff; }
 .sf.himmel .sf-caption { margin-bottom: 150px; }
 .sf.himmel .sf-stage .sf-card h2 { font-size: 84px; }
+/* Karten im Lernvideo: alles passt in die Karte (breiter, Schrift etwas kleiner) */
+.sf.himmel .sf-stage .sf-card { inset: 0 110px 10px; padding: 50px 80px; gap: 26px; justify-content: center; }
+.sf.himmel .sf-stage .sf-card h2 { font-size: 80px; line-height: 1.05; }
+.sf.himmel .sf-stage .sf-card-line { font-size: 64px; line-height: 1.12; }
+.sf.himmel .sf-stage .sf-card-icon { width: 130px; flex-shrink: 0; }
+.sf.himmel .sf-stage .sf-card-icon img { width: 120px; height: 120px; object-fit: contain; }
