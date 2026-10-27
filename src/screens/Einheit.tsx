@@ -27,12 +27,6 @@ export function Einheit({ progress }: { progress: Progress }) {
               {content && <p>{content.lead}</p>}
             </div>
           </div>
-          {content && (
-            <div className="rule-card">
-              <div className="eyebrow rule-eyebrow"><Icon name="bulb" color="#8A5A00" size={18} /> MERKSATZ</div>
-              <div className="rule-text">{content.rule.map((r) => <div key={r}>{r}</div>)}</div>
-            </div>
-          )}
         </div>
 
         <div className="stations">

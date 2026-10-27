@@ -44,7 +44,7 @@ const UNITS: Record<string, UnitContent> = {
     rule: ['Erdperle = 1', 'Himmelsperle = 5'],
     learn: ['Unten sind 4 Erdperlen. Jede ist 1 wert.', 'Oben ist die Himmelsperle. Sie ist 5 wert.', 'Zahlen von 1 bis 9 einstellen'],
     stationText: {
-      video: 'Frau Lehrerin zeigt dir den Abakus.',
+      video: 'Der Video-Tutor zeigt dir den Abakus.',
       entdecken: 'Perli zeigt dir jede Perle.',
       ueben: '10 Aufgaben – du schiebst die Perlen.',
       blitz: 'Der Abakus blitzt auf. Welche Zahl war es?',
