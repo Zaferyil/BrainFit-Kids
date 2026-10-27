@@ -10,6 +10,10 @@ import { MusterMeister } from '../games/MusterMeister'
 import { PerlenKette } from '../games/PerlenKette'
 import { PerlenMemory } from '../games/PerlenMemory'
 import { PerlenJagd } from '../games/PerlenJagd'
+import { FarbWort } from '../games/FarbWort'
+import { ZahlenMerken } from '../games/ZahlenMerken'
+import { ZahlenVergleichen } from '../games/ZahlenVergleichen'
+import { SchnellZaehlen } from '../games/SchnellZaehlen'
 import { AREAS, type GameMeta } from '../games/registry'
 import type { GameProps } from '../games/types'
 import { rewardGame } from '../lib/progress'
@@ -22,6 +26,11 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   muster: MusterMeister,
   kette: PerlenKette,
   jagd: PerlenJagd,
+  // aus Anzan Meister übernommen
+  farbwort: FarbWort,
+  zahlenmerken: ZahlenMerken,
+  vergleich: ZahlenVergleichen,
+  schnellzaehlen: SchnellZaehlen,
 }
 
 

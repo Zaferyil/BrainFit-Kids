@@ -47,6 +47,10 @@ export const GAME_INTRO: Record<string, string> = {
   muster: 'Schau dir die Reihe an. Was kommt als Nächstes?',
   kette: 'Die Perlen leuchten nacheinander. Tippe sie danach in der gleichen Reihenfolge.',
   jagd: 'Tippe so schnell du kannst alle Perlen in der gesuchten Farbe an.',
+  farbwort: 'Schau auf die Farbe der Schrift, nicht auf das Wort. Tippe die richtige Farbe!',
+  zahlenmerken: 'Merk dir die Zahlen. Danach tippst du sie ein.',
+  vergleich: 'Lies die Abakusse ab. Tippe auf den richtigen!',
+  schnellzaehlen: 'Die Perlen blitzen kurz auf. Zähle die Perlen in der gesuchten Farbe!',
 }
 
 const ONES = ['', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
@@ -92,6 +96,7 @@ export function alleBausteine(): Record<string, string> {
     'Finde alle Perlen in der gesuchten Farbe.',
     'Jetzt: Muster finden.', 'Jetzt: Perlen suchen.',
     'Fertig! Jetzt kenne ich dich.',
+    'Tippe die Zahlen rückwärts.', 'Tippe die Zahlen der Reihe nach.',
   ].forEach((t) => add(t))
   CLASSES.flatMap((c) => c.kids).forEach((k) => { add(`Hallo ${k.name}!`); add(`Willkommen zurück, ${k.name}!`) })
   return out

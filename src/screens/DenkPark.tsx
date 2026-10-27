@@ -10,7 +10,7 @@ import { Funkeln } from './Anmelden'
 
 // Denkspiele im neuen Look: oben das Spiel des Tages, darunter die spielbaren Spiele als bunte Kacheln.
 
-const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb' }
+const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff' }
 
 const KACHEL: { bg: string; rand: string; ink: string; icon: IconName }[] = [
   { bg: 'radial-gradient(circle at 30% 20%, #FFE58A, #FFC531 60%, #F2A900)', rand: '#C98A00', ink: '#2B2257', icon: 'brain' },

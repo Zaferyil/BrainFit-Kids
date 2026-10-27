@@ -1642,3 +1642,44 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf.himmel .sf-stage .sf-card-line { font-size: 64px; line-height: 1.12; }
 .sf.himmel .sf-stage .sf-card-icon { width: 130px; flex-shrink: 0; }
 .sf.himmel .sf-stage .sf-card-icon img { width: 120px; height: 120px; object-fit: contain; }
+
+/* Denkspiele aus Anzan Meister: Farb-Wort, Zahlen merken, Zahlen vergleichen, Schnell zählen */
+.fw, .zm, .zv, .sz { width: 760px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.fw-zeit, .zm-uhr { width: 100%; height: 14px; border-radius: 999px; background: rgba(255,255,255,.25); overflow: hidden; }
+.fw-zeit span, .zm-uhr span { display: block; height: 100%; background: #FFC531; border-radius: 999px; }
+.zm-uhr span { width: 100%; animation: zm-ablauf linear forwards; transform-origin: left; }
+@keyframes zm-ablauf { to { transform: scaleX(0); } }
+.fw-wort { font-family: var(--font-display); font-weight: 800; font-size: 130px; line-height: 1; padding: 30px 60px; border-radius: 40px; background: #fff; box-shadow: 0 10px 0 rgba(43,34,87,.25); }
+.fw-wort.right { outline: 8px solid #2ECC8F; } .fw-wort.wrong { outline: 8px solid #FF4D6D; }
+.fw-knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+.fw-knopf { width: 120px; height: 120px; border-radius: 50%; border: 6px solid #fff; box-shadow: 0 8px 0 rgba(0,0,0,.25); cursor: pointer; }
+.fw-knopf.richtig { outline: 8px solid #FFC531; }
+.zm-reihe { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.zm-feld { width: 84px; height: 104px; border-radius: 22px; display: grid; place-items: center; background: rgba(255,255,255,.25); border: 4px solid rgba(255,255,255,.6);
+  font-family: var(--font-display); font-weight: 800; font-size: 64px; color: #fff; }
+.zm-feld.zeigen { background: #fff; color: #2B2257; } .zm-feld.right { background: #2ECC8F; } .zm-feld.wrong { background: #FF4D6D; }
+.zm-tasten { width: 520px; }
+.zv-reihe { display: flex; gap: 26px; justify-content: center; }
+.zv-karte { position: relative; padding: 22px; border-radius: 34px; background: rgba(255,255,255,.3); border: 5px solid rgba(255,255,255,.7); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.zv-karte.right { border-color: #2ECC8F; background: rgba(46,204,143,.35); } .zv-karte.wrong { border-color: #FF4D6D; background: rgba(255,77,109,.3); } .zv-karte.dim { opacity: .55; }
+.zv-zahl { font-family: var(--font-display); font-weight: 800; font-size: 54px; color: #fff; }
+.sz-feld { position: relative; display: grid; grid-template-columns: repeat(5, 90px); gap: 12px; padding: 24px; border-radius: 34px; background: rgba(255,255,255,.25); }
+.sz-perle { display: grid; place-items: center; height: 70px; } .sz-perle.dim { opacity: .25; }
+.sz-feld.zu .sz-perle { visibility: hidden; }
+.sz-deckel { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 60px; color: #fff; }
+.sz-farbe { padding: 0 10px; border-radius: 10px; color: #2B2257; } .sz-farbe.yellow { background: #FFD54A; } .sz-farbe.green { background: #7EE08A; } .sz-farbe.blue { background: #8EC5FF; } .sz-farbe.pink { background: #FFB1D3; } .sz-farbe.orange { background: #FFB36B; }
+.sz-optionen { display: flex; gap: 22px; }
+.sz-opt { width: 130px; height: 120px; border-radius: 32px; border: 0; background: #fff; color: #2B2257; font-family: var(--font-display); font-weight: 800; font-size: 64px; box-shadow: 0 8px 0 rgba(43,34,87,.3); cursor: pointer; }
+.sz-opt.right { background: #2ECC8F; color: #fff; } .sz-opt.wrong { background: #FF4D6D; color: #fff; } .sz-opt.dim { opacity: .5; }
+/* … schmaler gebaut, damit sie auf dem Handy groß erscheinen */
+.fw, .zm, .zv, .sz { width: 420px; gap: 18px; }
+.fw .game-hint, .zm .game-hint, .zv .game-hint, .sz .game-hint { font-size: 18px; text-align: center; }
+.fw-wort { font-size: 76px; padding: 18px 36px; border-radius: 28px; }
+.fw-knoepfe { gap: 14px; } .fw-knopf { width: 80px; height: 80px; border-width: 5px; }
+.zm-reihe { gap: 8px; } .zm-feld { width: 52px; height: 66px; border-radius: 16px; font-size: 40px; border-width: 3px; }
+.zm-tasten { width: 400px; }
+.zv-reihe { gap: 14px; } .zv-karte { padding: 12px; border-radius: 24px; } .zv-zahl { font-size: 38px; }
+.sz-feld { grid-template-columns: repeat(5, 70px); gap: 8px; padding: 16px; border-radius: 26px; }
+.sz-perle { height: 50px; } .sz-perle > * { width: 52px !important; height: auto !important; }
+.sz-deckel { font-size: 44px; }
+.sz-optionen { gap: 12px; } .sz-opt { width: 88px; height: 84px; border-radius: 24px; font-size: 46px; }
