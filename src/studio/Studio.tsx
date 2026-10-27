@@ -353,10 +353,15 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
     zeige(left + BEAD_W * 0.6, lerp(earthTop(a, i), earthTop(b, i)) + BEAD_H * 0.12)
   }
   // Daumen und Zeigefinger gleichzeitig (6 bis 9): eine Hand, die die Perlen von der Seite greift – wie am echten Abakus
-  const z = hands.find((h) => h.icon === 'zeige-seite')
-  const d = hands.find((h) => h.icon === 'daumen-seite')
-  if (z && d) {
-    return <Greifhand x={left + BEAD_W * 0.58} yZeige={z.y + 0.4 * S} yDaumen={d.y + 0.51 * S} k={k} opacity={show} />
+  // Himmelsperle und Erdperlen gleichzeitig: eine Hand – der Zeigefinger bewegt die Himmelsperle, der Daumen die Erdperle
+  // (hin: Zeigefinger drückt runter, Daumen schiebt hoch; zurück: Zeigefinger schiebt hoch, Daumen drückt runter)
+  if ((a >= 5) !== (b >= 5) && la !== lb) {
+    const top = lerp(heavenTop(a), heavenTop(b))
+    const yZeige = b >= 5 ? top + HEAVEN_H3 * 0.12 : top + HEAVEN_H3 * 0.88
+    const i = lb > la ? lb - 1 : lb
+    const bead = lerp(earthTop(a, i), earthTop(b, i))
+    const yDaumen = lb > la ? bead + BEAD_H * 0.85 : bead + BEAD_H * 0.15
+    return <Greifhand x={left + BEAD_W * 0.58} yZeige={yZeige} yDaumen={yDaumen} k={k} opacity={show} />
   }
   return (
     <>
