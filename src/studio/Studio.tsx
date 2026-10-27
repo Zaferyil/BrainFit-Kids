@@ -13,6 +13,9 @@ import fortschritt from '../assets/video/fortschritt.webp'
 import punktAktiv from '../assets/video/punkt-aktiv.webp'
 import zurueck from '../assets/video/zurueck.webp'
 import klasse from '../assets/video/klasse.webp'
+import mundZu from '../assets/lehrerin/mund/zu.png'
+import mundHalb from '../assets/lehrerin/mund/halb.png'
+import mundOffen from '../assets/lehrerin/mund/offen.png'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
 import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
 import { lessonAudio } from './audio'
@@ -20,6 +23,15 @@ import { lessonAudio } from './audio'
 // Video-Studio: zeichnet eine Lektion als 1920×1080-Bild zur Zeit t.
 // Vorschau im Browser mit Abspielen/Spulen; für den Export setzt ein Skript die Zeit Bild für Bild
 // (window.__studio.seek) und nimmt jedes Bild auf.
+
+// Lisa spricht: Mundöffnung je 1/25 s aus der Lautstärke der Stimme (scripts/lisa-mund-takt.py)
+const MUND_TAKT = import.meta.glob('../assets/lektionen/*-mund.json', { eager: true, import: 'default' }) as Record<string, { fps: number; mund: string }>
+const MUND = [mundZu, mundHalb, mundOffen]
+function mundAt(lessonId: string, t: number) {
+  const m = MUND_TAKT[`../assets/lektionen/${lessonId}-mund.json`]
+  if (!m) return null
+  return MUND[Number(m.mund[Math.floor(t * m.fps)] ?? 0)]
+}
 
 const HANDS = import.meta.glob('../assets/hand/*.svg', { eager: true, import: 'default' }) as Record<string, string>
 const handSrc = (h: HandIcon) => HANDS[`../assets/hand/${h}.svg`]
@@ -118,6 +130,7 @@ export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; 
   return (
     <div className={overlay ? 'sf transparent' : 'sf'}>
       {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
+      {!overlay && !gruen && mundAt(lesson.id, t) && <img className="sf-mund" src={mundAt(lesson.id, t)!} alt="" />}
       <a className="sf-zurueck" href="#/einheit" aria-label="Zurück zur Einheit"><img src={zurueck} alt="" /></a>
       <img className="sf-klasse" src={klasse} alt="Klasse LINZ-7K" />
       <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>

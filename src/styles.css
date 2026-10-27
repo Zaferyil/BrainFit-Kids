@@ -1471,3 +1471,4 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .video-status { color: #FFFFFF; font-weight: 900; }
 .nk .btn-primary:disabled { background: rgba(255,255,255,.3); color: #FFFFFF; box-shadow: 0 6px 0 rgba(43,26,122,.35); }
 .nk .btn-primary:disabled svg { stroke: #FFFFFF; }
+.sf-mund { position: absolute; left: 300px; top: 258px; width: 110px; height: 68px; pointer-events: none; }
