@@ -64,17 +64,14 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
       <div className="video-layout">
         <div className="video-main">
           {(() => {
-            // Holzschild „Lektion 1 – Der Abakus“ und das Thema der Einheit, gut lesbar über dem Video
+            // Ein Holzschild über dem Video: „Lektion 1“ und darunter „Video-Tutor: Thema der Einheit“
             const m = video.title.match(/^Lektion (\d+):?\s*(.*)$/) ?? video.title.match(/^(\d+)\. Lektion:?\s*(.*)$/)
             return (
               <div className="vid-kopf">
-                {m && (
-                  <div className="vid-schild">
-                    <strong>Lektion {m[1]}</strong>
-                    {m[2] && <span>{m[2]}</span>}
-                  </div>
-                )}
-                <div className="vid-thema"><Icon name="video" color="#FFFFFF" size={26} />Video: {title}</div>
+                <div className="vid-schild">
+                  <strong>{m ? `Lektion ${m[1]}` : 'Video-Tutor'}</strong>
+                  <span>{m ? `Video-Tutor: ${title}` : title}</span>
+                </div>
               </div>
             )
           })()}

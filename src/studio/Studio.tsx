@@ -128,7 +128,6 @@ export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; 
           <b>{section + 1}/{lesson.sections.length}</b>
         </div>
 
-        {!gruen && !overlay && <Sprecher an={local >= s.speech.start && local < s.speech.end} t={t} />}
         <div className="sf-stage">
           {kind === 'titel' && <TitleBoard lesson={lesson} local={local} />}
           {kind === 'ende' && <EndBoard local={local} />}
@@ -291,6 +290,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
       {task && <div className="sf-caption task">Stell die {scene.task} ein!</div>}
       <div className="sf-abakus-wrap" style={{ width, height: H * k }}>
         <Abakus3D value={ab.value} from={ab.from} progress={ab.progress} cols={cols} colw={colw} />
+        {!gruen && <Sprecher an={local >= s.speech.start && local < s.speech.end} t={t} />}
         {scene.highlight && Array.from({ length: cols }, (_, ci) => {
           const left = colLeft3(ci)
           const box = scene.highlight === 'erd'

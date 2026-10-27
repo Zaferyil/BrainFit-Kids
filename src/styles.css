@@ -1603,3 +1603,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .path-gehirn svg { width: 70%; height: 70%; }
 .path-gehirn { width: 48%; top: -12%; right: -12%; border-width: 2.5px; }
 .path-gehirn svg { width: 74%; height: 74%; }
+/* Tonwelle sitzt jetzt im Abakus-Rahmen: mittig über dem Abakus */
+.sf-sprecher { position: absolute; left: 50%; top: auto; bottom: calc(100% + 26px); translate: -50% 0; }
+.sf-sprecher-balken { height: 120px; }
+.vid-schild span { text-align: center; }
+.sf-sprecher { bottom: calc(100% + 64px); }
+.sf.himmel .creme .sf-stage, .sf.himmel .sf-stage { top: 170px; }
+.sf-sprecher { bottom: calc(100% + 46px); }
