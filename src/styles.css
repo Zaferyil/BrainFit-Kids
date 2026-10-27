@@ -1491,3 +1491,17 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   animation: path-pulse 2s ease-in-out infinite; }
 .zh-los span { font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 8vw, 36px); color: #2B1A7A; line-height: 1; }
 @media (prefers-reduced-motion: reduce) { .zh-los { animation: none; } }
+/* Startseite passt immer auf den Bildschirm: Größen nach der Bildschirmhöhe */
+.nk-home { height: 100dvh; min-height: 0; padding-bottom: 104px; justify-content: space-between; }
+.zh-buehne { flex: 1 1 auto; height: auto; min-height: 150px; max-height: 300px; }
+.zh-perli { top: 50%; translate: -50% -58%; }
+.zh-perli svg { width: min(170px, 18dvh); height: auto; }
+.zh-op { width: min(62px, 7dvh); height: min(62px, 7dvh); font-size: min(40px, 4.5dvh); }
+.zh-op.plus { top: 12%; } .zh-op.minus { top: 58%; } .zh-op.mal { top: 8%; } .zh-op.geteilt { top: 44%; }
+.zh-ring { top: 40%; }
+.zh-podest { width: min(190px, 22dvh); height: min(44px, 5dvh); }
+.zh-wolke { margin-top: 0; padding: 10px 28px; flex-shrink: 0; }
+.zh-wolke strong { font-size: min(32px, 4dvh); }
+.zh-los { flex-shrink: 0; margin: 16px 0 8px; width: min(62vw, 230px, 26dvh); }
+.zh-los svg { width: min(58px, 6dvh); height: auto; }
+.zh-los span { font-size: min(34px, 4dvh); }
