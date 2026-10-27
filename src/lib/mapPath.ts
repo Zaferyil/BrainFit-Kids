@@ -46,7 +46,7 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
   const games = GAMES.filter((g) => g.ready && tierRank(tier) >= tierRank(g.minTier))
   const done = new Set(doneStops(kid.id))
   const raw: Raw[] = []
-  raw.push({ kind: 'start', id: 'einstufung' })
+  // Der Weg beginnt direkt mit Lektion 1; Perli kennenlernen bleibt bei den Denkspielen erreichbar.
   let g = 0
   for (const w of WORLDS) {
     raw.push({ kind: 'world', id: `welt-${w.n}`, world: w })
