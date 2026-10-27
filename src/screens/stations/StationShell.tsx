@@ -114,7 +114,7 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
 }
 
 export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
-  const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', 'C', '0', 'del']
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', '0', '9', 'del']
   return (
     <div className="keypad" aria-label="Zahlen-Tasten">
       {keys.map((k) => (
