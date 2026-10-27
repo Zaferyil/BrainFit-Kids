@@ -10,6 +10,7 @@ import { Einheit } from './screens/Einheit'
 import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
+import { Rangliste } from './screens/Rangliste'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
 import { klasseVon } from './lib/klasse'
@@ -35,12 +36,13 @@ const TITLES: Record<string, string> = {
   shop: 'Shop',
   garderobe: 'Garderobe',
   pokale: 'Pokale & Abzeichen',
+  rangliste: 'Rangliste',
   eltern: 'Eltern-Login',
   admin: 'Admin-Dashboard',
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -69,6 +71,7 @@ export default function App() {
     if (route === 'karte') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
+    if (route === 'rangliste') return <Rangliste kid={kid} />
     if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
     if (route === 'einstufung') return <Einstufung kid={kid} />

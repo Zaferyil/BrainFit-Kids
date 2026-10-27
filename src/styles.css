@@ -1698,3 +1698,27 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 @keyframes kurs-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .task-card.lesen .kurs-zahl, .task-card.lesen .kurs-zahl.alt { color: #FFFFFF; text-shadow: 0 3px 0 rgba(43,34,87,.35); }
 .done-tag { margin: 4px 0 10px; padding: 12px 18px; border-radius: 18px; background: #E9FBF2; color: #157A4F; font-weight: 900; font-size: 18px; text-align: center; }
+
+/* Rangliste */
+.pk-rangliste { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 24px; background: #FFC531; color: #2B2257; text-decoration: none; box-shadow: 0 6px 0 #C98A00; }
+.pk-rangliste span { flex: 1; display: flex; flex-direction: column; } .pk-rangliste strong { font-family: var(--font-display); font-size: 22px; } .pk-rangliste small { font-weight: 800; font-size: 14px; }
+.rl-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.rl-tab { flex-shrink: 0; border: 0; padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,.25); color: #fff; font-weight: 900; font-size: 15px; cursor: pointer; }
+.rl-tab.an { background: #fff; color: #4B2FC2; }
+.rl-info { margin: 0; color: #fff; font-weight: 800; font-size: 14px; opacity: .9; }
+.rl-podest { display: flex; align-items: flex-end; justify-content: center; gap: 10px; margin-top: 6px; }
+.rl-stufe { flex: 1; max-width: 120px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #fff; text-align: center; }
+.rl-stufe strong { font-family: var(--font-display); font-size: 17px; } .rl-stufe span { font-weight: 800; font-size: 13px; opacity: .9; }
+.rl-stufe.ich strong { color: #FFE58A; }
+.rl-sockel { width: 100%; border-radius: 16px 16px 6px 6px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 34px; color: #2B2257; box-shadow: inset 0 -6px 0 rgba(0,0,0,.12); }
+.rl-stufe.p1 .rl-sockel { height: 96px; } .rl-stufe.p2 .rl-sockel { height: 70px; } .rl-stufe.p3 .rl-sockel { height: 54px; }
+.rl-init { display: grid; place-items: center; border-radius: 50%; background: #A06BFF; color: #fff; font-family: var(--font-display); font-weight: 800; border: 3px solid #fff; }
+.rl-ich { display: flex; flex-direction: column; gap: 8px; }
+.rl-zeile { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,.22); color: #fff; font-weight: 900; }
+.rl-zeile.ich { background: #fff; color: #2B2257; box-shadow: 0 0 0 3px #FFC531; }
+.rl-zeile span { flex: 1; } .rl-zeile em { font-style: normal; }
+.rl-motiv { margin: 0; text-align: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 18px; }
+.rl-balken { display: flex; align-items: center; gap: 10px; margin: 8px 0; } .rl-balken span { width: 128px; font-weight: 900; font-size: 14px; } .rl-balken .pk-track { flex: 1; } .rl-balken b { width: 30px; text-align: right; }
+.rl-hinweis { display: flex; gap: 6px; align-items: center; margin: 10px 0 0; font-size: 13px; font-weight: 800; color: #8A5A00; }
+.rl-demo { margin: 0; text-align: center; color: #fff; font-size: 13px; font-weight: 700; opacity: .85; }
+.rl-init { flex: 0 0 auto; aspect-ratio: 1; } .rl-zeile span { text-align: left; }
