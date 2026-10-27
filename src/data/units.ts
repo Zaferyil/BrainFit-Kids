@@ -67,7 +67,10 @@ const UNITS: Record<string, UnitContent> = {
   },
 }
 
-const bigFriend = (k: number, lead: string, say: string): UnitContent => ({
+const ZAHLWORT = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn']
+
+/** Big-Friend-Einheit +k. Beispiel: kleinste Startzahl a, bei der der Trick nötig ist (mindestens 3). */
+const bigFriend = (k: number, lead: string, say: string, a = Math.max(3, 10 - k)): UnitContent => ({
   title: `Big Friend +${k}`,
   lead,
   rule: [`+${k} = +10 − ${10 - k}`],
@@ -86,13 +89,20 @@ const bigFriend = (k: number, lead: string, say: string): UnitContent => ({
   add: k,
   discover: [
     { text: `Big Friends: ${k} und ${10 - k} sind 10.`, say, mood: 'happy', start: 0, goal: null },
-    { text: 'Stelle zuerst die 3 ein.', say: 'Stell zuerst die drei ein. Drei Erdperlen bei den Einern hoch.', mood: 'happy', start: 0, goal: 3 },
-    { text: 'Jetzt 10 dazu: eine Perle bei den Zehnern hoch.', say: 'Jetzt zehn dazu: Eine Perle bei den Zehnern hoch.', mood: 'think', start: 3, goal: 13 },
-    { text: `Und ${10 - k} weg: bei den Einern runter.`, say: `Und jetzt ${10 - k} weg: Bei den Einern runter.`, mood: 'think', start: 13, goal: 13 - (10 - k) },
-    { text: `Fertig! 3 + ${k} = ${3 + k}.`, say: `Super! Drei plus ${k} ist ${3 + k}.`, mood: 'cheer', start: 3 + k, goal: null },
+    { text: `Stelle zuerst die ${a} ein.`, say: a === 3 ? 'Stell zuerst die drei ein. Drei Erdperlen bei den Einern hoch.' : `Stell zuerst die ${ZAHLWORT[a]} ein.`, mood: 'happy', start: 0, goal: a },
+    { text: 'Jetzt 10 dazu: eine Perle bei den Zehnern hoch.', say: 'Jetzt zehn dazu: Eine Perle bei den Zehnern hoch.', mood: 'think', start: a, goal: a + 10 },
+    { text: `Und ${10 - k} weg: bei den Einern runter.`, say: `Und jetzt ${ZAHLWORT[10 - k]} weg: Bei den Einern runter.`, mood: 'think', start: a + 10, goal: a + k },
+    { text: `Fertig! ${a} + ${k} = ${a + k}.`, say: `Super! ${ZAHLWORT[a][0].toUpperCase()}${ZAHLWORT[a].slice(1)} plus ${ZAHLWORT[k]} ist ${ZAHLWORT[a + k]}.`, mood: 'cheer', start: a + k, goal: null },
   ],
 })
 
+UNITS['1-4'] = bigFriend(7, 'Der Trick für +7: 10 dazu und 3 weg.', 'Sieben und drei sind zusammen zehn. Drei ist der Big Friend von sieben. Jetzt rechnen wir drei plus sieben!')
+UNITS['1-5'] = bigFriend(6, 'Der Trick für +6: 10 dazu und 4 weg.', 'Sechs und vier sind zusammen zehn. Vier ist der Big Friend von sechs. Jetzt rechnen wir vier plus sechs!')
+UNITS['1-6'] = bigFriend(5, 'Der Trick für +5: 10 dazu und 5 weg.', 'Fünf und fünf sind zusammen zehn. Fünf ist der Big Friend von fünf. Jetzt rechnen wir fünf plus fünf!')
+UNITS['1-7'] = bigFriend(4, 'Der Trick für +4: 10 dazu und 6 weg.', 'Vier und sechs sind zusammen zehn. Sechs ist der Big Friend von vier. Jetzt rechnen wir sechs plus vier!')
+UNITS['1-8'] = bigFriend(3, 'Der Trick für +3: 10 dazu und 7 weg.', 'Drei und sieben sind zusammen zehn. Sieben ist der Big Friend von drei. Jetzt rechnen wir sieben plus drei!')
+UNITS['1-9'] = bigFriend(2, 'Der Trick für +2: 10 dazu und 8 weg.', 'Zwei und acht sind zusammen zehn. Acht ist der Big Friend von zwei. Jetzt rechnen wir acht plus zwei!')
+UNITS['1-10'] = bigFriend(1, 'Der Trick für +1: 10 dazu und 9 weg.', 'Eins und neun sind zusammen zehn. Neun ist der Big Friend von eins. Jetzt rechnen wir neun plus eins!')
 UNITS['1-3'] = bigFriend(8, 'Der Trick für +8: 10 dazu und 2 weg.', 'Acht und zwei sind zusammen zehn. Zwei ist der Big Friend von acht. Jetzt rechnen wir drei plus acht!')
 UNITS['1-2'] = bigFriend(9, 'Der Trick für +9: 10 dazu und 1 weg.', 'Neun und eins sind zusammen zehn. Eins ist der Big Friend von neun. Jetzt rechnen wir drei plus neun!')
 

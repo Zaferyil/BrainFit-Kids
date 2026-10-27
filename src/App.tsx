@@ -10,6 +10,8 @@ import { Einheit } from './screens/Einheit'
 import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
+import { KursStation } from './screens/stations/KursStation'
+import { kursAufgaben } from './data/kurs'
 import { BlitzStation } from './screens/stations/BlitzStation'
 import { KopfrechnenStation } from './screens/stations/KopfrechnenStation'
 import { BossStation } from './screens/stations/BossStation'
@@ -93,6 +95,9 @@ export default function App() {
         return <VideoStation kidId={kid.id} title={title} lektion={lektion} videos={videos} learn={content?.learn} rule={content?.rule} />
       }
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
+      // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
+      const kurs = kursAufgaben(progress.world, progress.unit)
+      if (kurs && id === 'ueben') return <KursStation kidId={kid.id} aufgaben={kurs} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
       if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />
       if (content && id === 'kopfrechnen') return <KopfrechnenStation kidId={kid.id} content={content} />

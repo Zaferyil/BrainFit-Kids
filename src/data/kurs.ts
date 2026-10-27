@@ -1,0 +1,150 @@
+// Übungen aus der Abakus-App „Abakus Math für Anfänger“ (Unity, Level 1), Stufe für Stufe übernommen.
+// einstellen: Zahl auf dem Abakus zeigen · lesen: Abakus ablesen · kette: Zahlen kommen nacheinander (wie Anzan), am Ende das Ergebnis
+// rechnung: Aufgabe als Text. Schlüssel = Welt-Einheit; Lektion 1 hat zwei Stufen.
+
+export type KursAufgabe =
+  | { art: 'einstellen'; zahl: number }
+  | { art: 'lesen'; zahl: number }
+  | { art: 'kette'; zahlen: number[]; antwort: number }
+  | { art: 'rechnung'; text: string; antwort: number }
+
+const STUFEN: Record<string, KursAufgabe[]> = {
+  '1-1a': [
+    { art: 'einstellen', zahl: 25 },
+    { art: 'einstellen', zahl: 24 },
+    { art: 'einstellen', zahl: 16 },
+    { art: 'einstellen', zahl: 18 },
+    { art: 'einstellen', zahl: 19 },
+    { art: 'lesen', zahl: 24 },
+    { art: 'lesen', zahl: 15 },
+    { art: 'lesen', zahl: 17 },
+    { art: 'kette', zahlen: [13, 21], antwort: 34 },
+    { art: 'kette', zahlen: [23, -12, 5], antwort: 16 },
+  ],
+  '1-1b': [
+    { art: 'einstellen', zahl: 50 },
+    { art: 'einstellen', zahl: 58 },
+    { art: 'einstellen', zahl: 63 },
+    { art: 'einstellen', zahl: 74 },
+    { art: 'einstellen', zahl: 89 },
+    { art: 'lesen', zahl: 54 },
+    { art: 'lesen', zahl: 75 },
+    { art: 'lesen', zahl: 86 },
+    { art: 'kette', zahlen: [53, 21], antwort: 74 },
+    { art: 'kette', zahlen: [74, -12, 5], antwort: 67 },
+  ],
+  '1-2': [
+    { art: 'kette', zahlen: [4, 9], antwort: 13 },
+    { art: 'kette', zahlen: [7, 9], antwort: 16 },
+    { art: 'kette', zahlen: [7, 1, 9], antwort: 17 },
+    { art: 'kette', zahlen: [3, -1, 9], antwort: 11 },
+    { art: 'kette', zahlen: [12, 9], antwort: 21 },
+    { art: 'kette', zahlen: [18, 9, 10], antwort: 37 },
+    { art: 'kette', zahlen: [36, 9, -5], antwort: 40 },
+    { art: 'rechnung', text: '24+9', antwort: 33 },
+    { art: 'rechnung', text: '41+9', antwort: 50 },
+    { art: 'rechnung', text: '27+9', antwort: 36 },
+  ],
+  '1-3': [
+    { art: 'kette', zahlen: [2, 8], antwort: 10 },
+    { art: 'kette', zahlen: [7, 8], antwort: 15 },
+    { art: 'kette', zahlen: [7, 1, 8], antwort: 16 },
+    { art: 'kette', zahlen: [12, 8], antwort: 20 },
+    { art: 'kette', zahlen: [18, 8], antwort: 26 },
+    { art: 'kette', zahlen: [18, 8, 10], antwort: 36 },
+    { art: 'kette', zahlen: [37, 8, -5], antwort: 40 },
+    { art: 'rechnung', text: '32+8', antwort: 40 },
+    { art: 'rechnung', text: '33+8', antwort: 41 },
+    { art: 'rechnung', text: '27+8', antwort: 35 },
+  ],
+  '1-4': [
+    { art: 'kette', zahlen: [4, 7], antwort: 11 },
+    { art: 'kette', zahlen: [9, 7], antwort: 16 },
+    { art: 'kette', zahlen: [7, 1, 7], antwort: 15 },
+    { art: 'kette', zahlen: [4, -1, 7], antwort: 10 },
+    { art: 'kette', zahlen: [14, 7], antwort: 21 },
+    { art: 'kette', zahlen: [19, 7, 10], antwort: 36 },
+    { art: 'kette', zahlen: [38, 7, -5], antwort: 40 },
+    { art: 'rechnung', text: '33+7', antwort: 40 },
+    { art: 'rechnung', text: '38+7', antwort: 45 },
+    { art: 'rechnung', text: '18+7', antwort: 25 },
+  ],
+  '1-5': [
+    { art: 'kette', zahlen: [4, 6], antwort: 10 },
+    { art: 'kette', zahlen: [19, 6], antwort: 25 },
+    { art: 'kette', zahlen: [9, 6], antwort: 15 },
+    { art: 'kette', zahlen: [8, 1, 6], antwort: 15 },
+    { art: 'kette', zahlen: [14, 6], antwort: 20 },
+    { art: 'kette', zahlen: [24, 6], antwort: 30 },
+    { art: 'kette', zahlen: [39, 6, -5], antwort: 40 },
+    { art: 'rechnung', text: '39+6', antwort: 45 },
+    { art: 'rechnung', text: '24+6', antwort: 30 },
+    { art: 'rechnung', text: '19+6', antwort: 25 },
+  ],
+  '1-6': [
+    { art: 'kette', zahlen: [5, 5], antwort: 10 },
+    { art: 'kette', zahlen: [19, 5], antwort: 24 },
+    { art: 'kette', zahlen: [9, 5], antwort: 14 },
+    { art: 'kette', zahlen: [18, 1, 5], antwort: 24 },
+    { art: 'kette', zahlen: [15, 5], antwort: 20 },
+    { art: 'kette', zahlen: [26, 5], antwort: 31 },
+    { art: 'kette', zahlen: [37, 5, 7], antwort: 49 },
+    { art: 'rechnung', text: '39+5', antwort: 44 },
+    { art: 'rechnung', text: '27+5', antwort: 32 },
+    { art: 'rechnung', text: '26+5', antwort: 31 },
+  ],
+  '1-7': [
+    { art: 'kette', zahlen: [6, 4], antwort: 10 },
+    { art: 'kette', zahlen: [28, 4], antwort: 32 },
+    { art: 'kette', zahlen: [19, 4], antwort: 23 },
+    { art: 'kette', zahlen: [18, 1, 4], antwort: 23 },
+    { art: 'kette', zahlen: [37, 4], antwort: 41 },
+    { art: 'kette', zahlen: [26, 4], antwort: 30 },
+    { art: 'kette', zahlen: [37, 4, 7], antwort: 48 },
+    { art: 'rechnung', text: '37+4', antwort: 41 },
+    { art: 'rechnung', text: '29+4', antwort: 33 },
+    { art: 'rechnung', text: '26+4', antwort: 30 },
+  ],
+  '1-8': [
+    { art: 'kette', zahlen: [7, 3], antwort: 10 },
+    { art: 'kette', zahlen: [29, 3], antwort: 32 },
+    { art: 'kette', zahlen: [67, 3], antwort: 70 },
+    { art: 'kette', zahlen: [18, 3, 6], antwort: 27 },
+    { art: 'kette', zahlen: [37, 2, 3], antwort: 42 },
+    { art: 'kette', zahlen: [26, 3, 3], antwort: 32 },
+    { art: 'kette', zahlen: [37, 3, 7], antwort: 47 },
+    { art: 'rechnung', text: '37+3', antwort: 40 },
+    { art: 'rechnung', text: '29+3', antwort: 32 },
+    { art: 'rechnung', text: '67+3', antwort: 70 },
+  ],
+  '1-9': [
+    { art: 'kette', zahlen: [8, 2], antwort: 10 },
+    { art: 'kette', zahlen: [29, 2], antwort: 31 },
+    { art: 'kette', zahlen: [68, 2], antwort: 70 },
+    { art: 'kette', zahlen: [18, 1, 2], antwort: 21 },
+    { art: 'kette', zahlen: [37, 2, 2], antwort: 41 },
+    { art: 'kette', zahlen: [76, 2, 2], antwort: 80 },
+    { art: 'kette', zahlen: [55, 3, 2], antwort: 60 },
+    { art: 'rechnung', text: '38+2', antwort: 40 },
+    { art: 'rechnung', text: '78+2', antwort: 80 },
+    { art: 'rechnung', text: '58+2', antwort: 60 },
+  ],
+  '1-10': [
+    { art: 'kette', zahlen: [9, 1], antwort: 10 },
+    { art: 'kette', zahlen: [29, 1], antwort: 30 },
+    { art: 'kette', zahlen: [69, 1], antwort: 70 },
+    { art: 'kette', zahlen: [18, 1, 1], antwort: 20 },
+    { art: 'kette', zahlen: [37, 2, 1], antwort: 40 },
+    { art: 'kette', zahlen: [76, 3, 1], antwort: 80 },
+    { art: 'kette', zahlen: [75, 4, 1], antwort: 80 },
+    { art: 'rechnung', text: '39+1', antwort: 40 },
+    { art: 'rechnung', text: '79+1', antwort: 80 },
+    { art: 'rechnung', text: '59+1', antwort: 60 },
+  ],
+}
+
+/** Kurs-Übungen einer Einheit (Lektion 1: beide Stufen) oder null */
+export function kursAufgaben(world: number, unit: number): KursAufgabe[] | null {
+  if (world === 1 && unit === 1) return [...STUFEN['1-1a'], ...STUFEN['1-1b']]
+  return STUFEN[`${world}-${unit}`] ?? null
+}

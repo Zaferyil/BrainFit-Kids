@@ -1688,3 +1688,12 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .keypad-platz { display: none; }
 @media (max-width: 900px) and (orientation: portrait) { .keypad-platz { display: block; visibility: hidden; } }
 @media (max-width: 900px) and (orientation: portrait) { .practice .task-card { min-height: 132px; align-content: center; } }
+
+/* Kurs-Übung: Zahlen der Kette erscheinen nacheinander */
+.kurs-kette { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; min-height: 80px; flex-basis: 100%; }
+.kurs-zahl { font-family: var(--font-display); font-weight: 800; font-size: 56px; line-height: 1; color: var(--orange); }
+.kurs-zahl.alt { font-size: 34px; color: #8C83C9; }
+.kurs-zahl.neu { animation: kurs-pop .35s ease-out; }
+.kurs-zahl.leer { display: none; }
+@keyframes kurs-pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.task-card.lesen .kurs-zahl, .task-card.lesen .kurs-zahl.alt { color: #FFFFFF; text-shadow: 0 3px 0 rgba(43,34,87,.35); }

@@ -35,6 +35,7 @@ export const SAY = {
   geschafft: 'Geschafft!',
   rechne: 'Rechne:',
   plus: 'plus',
+  minus: 'minus',
   wievielIst: 'Wie viel ist das? Tippe es ein.',
   rechneAbakus: 'Rechne mit dem Abakus.',
 } as const
