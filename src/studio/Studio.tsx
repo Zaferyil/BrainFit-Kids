@@ -11,8 +11,6 @@ import vorlageCreme from '../assets/lehrerin/vorlage-mitte-1080.jpg'
 import schild from '../assets/video/lektion-schild.webp'
 import fortschritt from '../assets/video/fortschritt.webp'
 import punktAktiv from '../assets/video/punkt-aktiv.webp'
-import zurueck from '../assets/video/zurueck.webp'
-import klasse from '../assets/video/klasse.webp'
 import { findLesson, type HandIcon, type Lesson } from './lektionen'
 import { abakusAt, buildTimeline, sceneAt, type TimedMove, type TimedScene } from './timeline'
 import { lessonAudio } from './audio'
@@ -118,8 +116,6 @@ export function Frame({ lesson, s, local, t }: { lesson: Lesson; s: TimedScene; 
   return (
     <div className={overlay ? 'sf transparent' : 'sf'}>
       {!overlay && <img className="sf-room" src={gruen ? vorlageGruen : vorlageCreme} alt="" />}
-      <a className="sf-zurueck" href="#/einheit" aria-label="Zurück zur Einheit"><img src={zurueck} alt="" /></a>
-      <img className="sf-klasse" src={klasse} alt="Klasse LINZ-7K" />
       <div className={gruen ? 'sf-chalk' : 'sf-chalk creme'}>
         {gruen && <ChalkDoodles />}
         <div className="sf-schild" style={{ backgroundImage: `url(${schild})` }}>
