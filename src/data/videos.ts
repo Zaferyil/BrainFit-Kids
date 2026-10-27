@@ -11,7 +11,7 @@ export const UNIT_VIDEOS: Record<string, Video[]> = {
   '1-1': [lektion('lektion-1', 'Lektion 1: Der Abakus')],
   '1-2': [lektion('lektion-2', 'Lektion 2: Big Friend +9')],
   '1-3': [lektion('lektion-3', 'Lektion 3: Big Friend +8')],
-  '1-4': [v('h5YNF3tvTx8', 'Big Friends +7')],
+  '1-4': [lektion('lektion-4', 'Lektion 4: Big Friend +7')],
   '1-5': [v('5OeEtNZIILM', 'Big Friends +6')],
   '1-6': [v('WlkEGQAyIq4', 'Big Friends +5')],
   '1-7': [v('DCgAPgrH0J8', 'Big Friends +4')],

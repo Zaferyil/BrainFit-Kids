@@ -102,7 +102,8 @@ export function KursStation({ kidId, aufgaben }: { kidId: string; aufgaben: Kurs
           {kette && (
             <div className="kurs-kette" aria-live="polite">
               {a.zahlen.map((z, i) => (
-                <span key={i} className={i < schritt - 1 || ketteFertig ? 'kurs-zahl alt' : i === schritt - 1 ? 'kurs-zahl neu' : 'kurs-zahl leer'}>{i < schritt ? zeichen(z, i) : ''}</span>
+                // die gerade gesprochene Zahl (Index schritt) ist sofort sichtbar
+                <span key={i} className={i < schritt || ketteFertig ? 'kurs-zahl alt' : i === schritt ? 'kurs-zahl neu' : 'kurs-zahl leer'}>{i <= schritt ? zeichen(z, i) : ''}</span>
               ))}
               {ketteFertig && <span className="kurs-zahl alt">=</span>}
             </div>
