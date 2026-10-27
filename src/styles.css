@@ -991,6 +991,7 @@ button { font-family: inherit; }
 
 /* 3D-Abakus und Bedienelemente aus der Video-Vorlage */
 .abakus3d { position: relative; flex-shrink: 0; background-size: 100% 100%; background-repeat: no-repeat; }
+.abakus3d-rahmen { position: absolute; left: 0; right: 0; background-repeat: no-repeat; pointer-events: none; }
 .abakus3d-bead, .abakus3d-dot { position: absolute; display: block; pointer-events: none; }
 .sf-schild { position: absolute; top: -6px; left: 50%; translate: -50% 0; width: 540px; height: 173px; background-size: 100% 100%;
   display: flex; flex-direction: column; justify-content: center; padding-left: 196px; color: #fff; text-shadow: 0 3px 0 rgba(0,90,50,.35); }
@@ -1535,3 +1536,11 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf.himmel .sf-bottom { left: 80px; right: 80px; bottom: 30px; min-height: 170px; font-size: 64px; border-width: 6px; padding: 14px 110px 14px 50px; border-radius: 48px; }
 .sf.himmel .sf-bottom b { font-size: 68px; }
 .sf.himmel .sf-bottom-star { right: 20px; width: 90px; height: 90px; }
+
+/* Lernvideo: modernes Glas-Podest mit Lichthof hinter dem Abakus */
+.sf.himmel .sf-abakus-wrap { position: relative; isolation: isolate; }
+.sf.himmel .sf-abakus-wrap::before { content: ''; position: absolute; inset: -46px -70px; z-index: -1; border-radius: 72px;
+  background: linear-gradient(160deg, rgba(255,255,255,.42), rgba(255,255,255,.12));
+  border: 4px solid rgba(255,255,255,.65); box-shadow: 0 30px 70px rgba(60,30,160,.35), inset 0 2px 0 rgba(255,255,255,.8); backdrop-filter: blur(14px); }
+.sf.himmel .sf-abakus-wrap::after { content: ''; position: absolute; inset: -160px -220px; z-index: -2; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255,230,140,.75), rgba(255,154,200,.35) 55%, transparent 100%); }

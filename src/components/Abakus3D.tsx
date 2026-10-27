@@ -1,6 +1,6 @@
 import { digitsFor } from './abakusGeometry'
 import {
-  BEAD_W3, BEAM_Y3, DOT_H3, DOT_W3, EARTH_H3, H3, HEAVEN_H3, PITCH3, colCenter3, colLeft3, earthTop3, frameWidth3, heavenTop3,
+  BEAD_W3, BEAM_Y3, DOT_H3, DOT_W3, EARTH_H3, H3, RAHMEN_H3, RAHMEN_SCHNITT3, HEAVEN_H3, PITCH3, colCenter3, colLeft3, earthTop3, frameWidth3, heavenTop3,
 } from './abakus3dGeometry'
 import himmel from '../assets/video/perle-himmel.webp'
 import erde from '../assets/video/perle-erde.webp'
@@ -32,14 +32,18 @@ export function Abakus3D({ value, cols, colw, from, progress = 1 }: Props) {
   const e = easeInOut(Math.min(1, Math.max(0, progress)))
   const lerp = (ci: number, top: (d: number) => number) => top(start[ci]) + (top(to[ci]) - top(start[ci])) * e
 
+  const rahmen = `url(${FRAMES[`../assets/video/rahmen-${n}.webp`]})`
+
   return (
     <div
       className="abakus3d"
       role="img"
       aria-label={`Abakus zeigt ${value}`}
       data-value={value}
-      style={{ width: px(frameWidth3(n)), height: px(H3), backgroundImage: `url(${FRAMES[`../assets/video/rahmen-${n}.webp`]})` }}
+      style={{ width: px(frameWidth3(n)), height: px(H3) }}
     >
+      <div className="abakus3d-rahmen" style={{ top: 0, height: px(RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}`, backgroundPosition: 'top' }} />
+      <div className="abakus3d-rahmen" style={{ top: px(RAHMEN_SCHNITT3), height: px(H3 - RAHMEN_SCHNITT3), backgroundImage: rahmen, backgroundSize: `100% ${px(RAHMEN_H3)}`, backgroundPosition: 'bottom' }} />
       {Array.from({ length: n }, (_, ci) => {
         const fromRight = n - 1 - ci
         const marked = fromRight % 3 === 0
