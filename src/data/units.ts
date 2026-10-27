@@ -48,7 +48,7 @@ const UNITS: Record<string, UnitContent> = {
     stationText: {
       video: 'Der Video-Tutor zeigt dir den Abakus.',
       entdecken: 'Perli zeigt dir jede Perle.',
-      ueben: '10 Aufgaben – du schiebst die Perlen.',
+      ueben: 'Du schiebst die Perlen.',
       blitz: 'Der Abakus blitzt auf. Welche Zahl war es?',
       kopfrechnen: 'Stell dir die Perlen im Kopf vor.',
       boss: 'Besiege Grummel und hol dir den Pokal!',
@@ -78,7 +78,7 @@ const bigFriend = (k: number, lead: string, say: string, a = Math.max(3, 10 - k)
   stationText: {
     video: `Der Video-Tutor zeigt dir den Trick für +${k}.`,
     entdecken: `Perli rechnet mit dir Schritt für Schritt +${k}.`,
-    ueben: `10 Aufgaben – du rechnest +${k} mit dem Abakus.`,
+    ueben: `Du rechnest +${k} mit dem Abakus.`,
     blitz: `Der Abakus blitzt auf. Rechne +${k} dazu!`,
     kopfrechnen: `Rechne +${k} im Kopf.`,
     boss: 'Besiege Grummel und hol dir den Pokal!',

@@ -7,11 +7,11 @@ import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { completeUnit, finishStation } from '../../lib/progress'
+import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
 import { SayButton, StationDone, StationIntro } from './StationShell'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 
-const HITS = 8
 const LIVES = 3
 
 type Question = { kind: 'read' | 'describe'; n: number; options: number[]; a?: number }
@@ -35,6 +35,7 @@ function makeQuestion(range: [number, number], prev?: number, add?: number): Que
 }
 
 export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
+  const [HITS] = useState(() => klasseVon(kidId).aufgaben)
   const [q, setQ] = useState(() => makeQuestion(content.range, undefined, content.add))
   const [hits, setHits] = useState(0)
   const [lives, setLives] = useState(LIVES)

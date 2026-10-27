@@ -5,15 +5,15 @@ import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
+import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
-const COUNT = 8
 
 /** Zahlen (bzw. bei Rechen-Einheiten die Startzahl a) für alle Aufgaben */
-const randomNumbers = (range: [number, number]) => {
+const randomNumbers = (range: [number, number], COUNT: number) => {
   const out: number[] = []
   while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
   return out
@@ -22,7 +22,8 @@ const randomNumbers = (range: [number, number]) => {
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 1 ? 2 : 1)
 
 export function KopfrechnenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [numbers] = useState(() => randomNumbers(content.range))
+  const [COUNT] = useState(() => klasseVon(kidId).aufgaben)
+  const [numbers] = useState(() => randomNumbers(content.range, COUNT))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [state, setState] = useState<'ask' | 'right' | 'wrong'>('ask')

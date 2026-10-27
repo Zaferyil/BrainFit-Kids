@@ -6,6 +6,7 @@ import { Perli } from '../../components/Perli'
 import type { KursAufgabe } from '../../data/kurs'
 import { describeNumber } from '../../data/units'
 import { finishStation } from '../../lib/progress'
+import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
 import { SAY, STATION_INTRO } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
@@ -15,7 +16,6 @@ import { typeDigit } from '../../lib/typeDigit'
 // einstellen (Perlen schieben), lesen (Abakus ablesen), kette (Zahlen kommen alle 3 Sekunden nacheinander,
 // das Kind rechnet mit dem Abakus mit und tippt am Ende das Ergebnis) und rechnung (Aufgabe als Text).
 
-const TAKT_MS = 3000
 const COLS = 2
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
@@ -26,6 +26,7 @@ const zeichen = (n: number, i: number) => (i === 0 ? String(n) : n < 0 ? `− ${
 const sprich = (n: number, i: number) => (i === 0 ? [String(n)] : n < 0 ? [SAY.minus, String(-n)] : [SAY.plus, String(n)])
 
 export function KursStation({ kidId, aufgaben }: { kidId: string; aufgaben: KursAufgabe[] }) {
+  const [TAKT_MS] = useState(() => klasseVon(kidId).takt * 1000)
   const [index, setIndex] = useState(0)
   const [schritt, setSchritt] = useState(0) // bei Ketten: wie viele Zahlen schon gezeigt
   const [input, setInput] = useState('')
@@ -51,7 +52,7 @@ export function KursStation({ kidId, aufgaben }: { kidId: string; aufgaben: Kurs
       return () => window.clearTimeout(t)
     }
     void speak(SAY.wievielIst)
-  }, [started, index, schritt, a, done])
+  }, [started, index, schritt, a, done, TAKT_MS])
 
   const weiter = (ok: boolean) => {
     const res = [...results, ok ? 'right' as const : 'wrong' as const]

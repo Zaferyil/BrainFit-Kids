@@ -12,6 +12,7 @@ import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
+import { klasseVon } from './lib/klasse'
 import { BlitzStation } from './screens/stations/BlitzStation'
 import { KopfrechnenStation } from './screens/stations/KopfrechnenStation'
 import { BossStation } from './screens/stations/BossStation'
@@ -96,7 +97,7 @@ export default function App() {
       }
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
       // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
-      const kurs = kursAufgaben(progress.world, progress.unit)
+      const kurs = klasseVon(kid.id).aufgaben <= 6 ? null : kursAufgaben(progress.world, progress.unit)
       if (kurs && id === 'ueben') return <KursStation kidId={kid.id} aufgaben={kurs} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
       if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />

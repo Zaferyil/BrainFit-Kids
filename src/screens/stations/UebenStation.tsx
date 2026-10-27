@@ -5,6 +5,7 @@ import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
 import { describeNumber, makeSum, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
+import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
@@ -14,9 +15,8 @@ import { typeDigit } from '../../lib/typeDigit'
 type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean; a?: number }
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
-const COUNT = 10
 
-function makeTasks(content: UnitContent): Task[] {
+function makeTasks(content: UnitContent, COUNT: number): Task[] {
   const tasks: Task[] = []
   let prev: number | undefined
   for (let i = 0; i < COUNT; i++) {
@@ -37,7 +37,8 @@ function makeTasks(content: UnitContent): Task[] {
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
 export function UebenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [queue, setQueue] = useState(() => makeTasks(content))
+  const [{ aufgaben: COUNT, tipp }] = useState(() => klasseVon(kidId))
+  const [queue, setQueue] = useState(() => makeTasks(content, klasseVon(kidId).aufgaben))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -133,7 +134,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
               <div className={`task-answer ${feedback?.type ?? ''} ${input ? 'filled' : ''}`}>{input || '?'}</div>
             </>
           )}
-          {task.kind === 'set' && (
+          {task.kind === 'set' && tipp && (
             <button type="button" className="btn-outline hint-btn" disabled={!!feedback} onClick={hint}>
               <Icon name="bulb" color="#5A5094" size={22} /> Tipp
             </button>

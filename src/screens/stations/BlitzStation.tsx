@@ -4,18 +4,17 @@ import { Abakus3D } from '../../components/Abakus3D'
 import { Icon } from '../../components/Icon'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
+import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
 import { SAY, STATION_INTRO } from '../../data/sprache'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
-const COUNT = 8
 /** Anzeigedauer des Abakus in ms – für alle Kinder gleich */
-const FLASH_MS = 1500
 
 type Phase = 'ready' | 'flash' | 'answer' | 'right' | 'wrong'
 
-const randomNumbers = (range: [number, number]) => {
+const randomNumbers = (range: [number, number], COUNT: number) => {
   const out: number[] = []
   while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
   return out
@@ -24,7 +23,9 @@ const randomNumbers = (range: [number, number]) => {
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
 export function BlitzStation({ kidId, content }: { kidId: string; content: UnitContent }) {
-  const [numbers] = useState(() => randomNumbers(content.range))
+  // Klasse bestimmt Anzahl und Blitzdauer
+  const [{ aufgaben: COUNT, blitzMs: FLASH_MS }] = useState(() => klasseVon(kidId))
+  const [numbers] = useState(() => randomNumbers(content.range, COUNT))
   const [input, setInput] = useState('')
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>('ready')
@@ -48,7 +49,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
     if (phase === 'flash') timer.current = window.setTimeout(() => setPhase('answer'), FLASH_MS)
     return () => window.clearTimeout(timer.current)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, index, started])
+  }, [phase, index, started, FLASH_MS])
 
   const next = (res: ('right' | 'wrong')[]) => {
     if (index + 1 >= COUNT) {
