@@ -2,6 +2,7 @@ import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
 import { addDaily } from './daily'
 import { unitVideos } from '../data/videos'
+import { ALLES_OFFEN } from './testmodus'
 
 // Fortschritt eines Kindes, bis Supabase angebunden ist: nur auf diesem Gerät.
 export type Progress = {
@@ -43,12 +44,13 @@ export function setReplay(kidId: string, unit: { world: number; unit: number } |
 export function viewProgress(kidId: string): Progress {
   const p = getProgress(kidId)
   const v = load<{ world: number; unit: number } | null>(viewKey(kidId), null)
-  return v && isBefore(v, p) ? { ...p, world: v.world, unit: v.unit } : p
+  return v && (isBefore(v, p) || ALLES_OFFEN) ? { ...p, world: v.world, unit: v.unit } : p
 }
 
 export const isReplay = (kidId: string) => {
   const v = viewProgress(kidId)
-  return isBefore(v, getProgress(kidId))
+  const p = getProgress(kidId)
+  return v.world !== p.world || v.unit !== p.unit
 }
 
 export function stationStars(p: Progress) {
@@ -64,6 +66,7 @@ export function stationSkipped(p: Progress, index: number) {
 export function currentStation(p: Progress) {
   const stars = stationStars(p)
   const i = stars.findIndex((s, k) => s === 0 && !stationSkipped(p, k))
+  if (ALLES_OFFEN) return STATIONS.length
   return i === -1 ? STATIONS.length : i
 }
 

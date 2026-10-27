@@ -1,5 +1,6 @@
 import { WORLDS, type World } from '../data/curriculum'
 import type { Kid } from '../data/demo'
+import { ALLES_OFFEN } from './testmodus'
 import { GAMES, type GameMeta } from '../games/registry'
 import { getPlacement, tierFor, tierRank } from '../games/engine'
 import type { Progress } from './progress'
@@ -66,7 +67,7 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
     if (s.kind === 'world') return { ...s, state: s.world.n <= progress.world ? 'done' : 'locked' } as MapStop
     if (isDone(s)) return { ...s, state: 'done' } as MapStop
     if (!found) { found = true; return { ...s, state: 'current' } as MapStop }
-    return { ...s, state: 'locked' } as MapStop
+    return { ...s, state: ALLES_OFFEN ? 'done' : 'locked' } as MapStop
   })
 }
 
