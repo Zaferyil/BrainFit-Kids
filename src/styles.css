@@ -1344,6 +1344,8 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .step-num { color: #FFFFFF; }
 .nk .task-dot { background: rgba(255,255,255,.35); }
 .nk .task-dot.current { background: #FFFFFF; box-shadow: 0 0 0 3px rgba(255,255,255,.35); }
+.nk .task-dot.right { background: #2ECC8F; box-shadow: 0 2px 0 #1F9E6C; }
+.nk .task-dot.wrong { background: #FF4D6D; box-shadow: 0 2px 0 #C2264E; }
 .nk .discover-steps li.current { color: var(--ink); }
 .nk .discover-steps li.current .step-num { color: var(--ink); }
 .nk .discover-steps li.done { color: #FFFFFF; }
