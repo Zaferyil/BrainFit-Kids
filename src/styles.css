@@ -1425,3 +1425,7 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .practice .task-answer { border: 4px solid var(--nk-yellow); border-radius: 999px; background: #FFFBEF; color: #1E1757; }
 .nk .practice .task-answer:not(.filled) { color: #E8C24A; }
 @media (max-width: 760px) { .nk .practice .key, .nk .key { height: 52px; font-size: 28px; border-radius: 16px; } .nk .keypad { gap: 8px; padding: 10px; } }
+/* Ablesen: nur die Antwort-Pille, ohne Frage-Text (die Frage wird vorgelesen) */
+.nk .task-card.lesen { background: none; box-shadow: none; padding: 0; justify-content: center; }
+.nk .task-card.lesen .eyebrow, .nk .task-card.lesen .task-ask { display: none; }
+.nk .task-card.lesen .task-answer { flex: none; width: min(70%, 300px); height: 64px; margin: 0 auto; font-size: 44px; box-shadow: 0 5px 0 #D08A00; }

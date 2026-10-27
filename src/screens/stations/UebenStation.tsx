@@ -98,7 +98,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   return (
     <StationShell station="ueben" title="Perlen einstellen und ablesen" dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
-        <section className="task-card">
+        <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>
           {task.kind === 'set' ? (
             <>
