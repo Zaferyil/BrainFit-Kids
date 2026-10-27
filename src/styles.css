@@ -968,7 +968,7 @@ button { font-family: inherit; }
 .sf-stage .sf-place.low { top: calc(100% + 44px); }
 
 /* Helle Vorlage (Standard): Innenfläche 580/98, 1271×838; Deko (Stern, Zahlenwürfel) ist im Hintergrundbild */
-.sf-chalk.creme { left: 580px; top: 98px; width: 1271px; height: 838px; color: var(--ink); }
+.sf-chalk.creme { left: 332px; top: 98px; width: 1271px; height: 838px; color: var(--ink); }
 .creme .sf-lesson-pill { top: 0; }
 .creme .sf-progress { top: 162px; }
 .creme .sf-stage { left: 70px; right: 40px; top: 264px; bottom: 176px; }

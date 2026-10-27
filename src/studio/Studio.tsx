@@ -7,7 +7,7 @@ import {
 import { Bead } from '../components/Bead'
 import { Perli } from '../components/Perli'
 import vorlageGruen from '../assets/lehrerin/vorlage-leer-1080.jpg'
-import vorlageCreme from '../assets/lehrerin/vorlage-raum-1080.jpg'
+import vorlageCreme from '../assets/lehrerin/vorlage-mitte-1080.jpg'
 import schild from '../assets/video/lektion-schild.webp'
 import fortschritt from '../assets/video/fortschritt.webp'
 import punktAktiv from '../assets/video/punkt-aktiv.webp'
