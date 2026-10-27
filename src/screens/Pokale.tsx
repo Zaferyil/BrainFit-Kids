@@ -50,7 +50,7 @@ export function Pokale({ kid, progress }: { kid: Kid; progress: Progress }) {
                   <span style={{ background: has ? w.color : undefined, color: w.ink }}>
                     {has ? <Icon name="medal" color={w.ink} size={26} /> : <Icon name="lock" color="#FFFFFF" size={20} />}
                   </span>
-                  <small>{w.belt.replace(/(en|n)$/, '')}</small>
+                  <small>{w.belt === 'orangen' ? 'orange' : w.belt.replace(/en$/, '')}</small>
                 </div>
               )
             })}
