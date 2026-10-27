@@ -221,7 +221,49 @@ const LEKTION_2: Lesson = {
   ],
 }
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2]
+// Lektion 3: wie Lektion 2, kurz und einfach – der Trick „+8 = +10 − 2“
+const LEKTION_3: Lesson = {
+  id: 'lektion-3',
+  number: 3,
+  title: 'Big Friend +8',
+  world: 1,
+  sections: [
+    { title: 'Big Friends', start: 'titel' },
+    { title: 'Der Trick', start: 'trick' },
+    { title: 'Üben', start: 'beispiel-2' },
+  ],
+  scenes: [
+    { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+    { id: 'hallo', say: 'Hallo! Heute rechnen wir plus 8. Mit einem neuen Big Friend.' },
+    {
+      id: 'freunde', kind: 'karte', min: 6,
+      card: { title: 'Big Friends', lines: [{ text: '8 und 2 sind 10' }, { icon: 'daumen-hoch', text: 'Der Big Friend von 8 ist 2' }] },
+      say: '8 und 2 sind zusammen 10. Also ist 2 der Big Friend von 8.',
+    },
+    { id: 'aufgabe-zeigen', cols: 2, value: 3, badge: '3 + 8', say: 'Wir haben 3. Jetzt rechnen wir plus 8. Unten sind nicht genug Perlen frei!' },
+    {
+      id: 'trick', kind: 'karte', min: 5,
+      card: { title: 'Der Trick', lines: [{ icon: 'daumen-hoch', text: '10 dazu' }, { icon: 'zeige-runter', text: '2 weg' }] },
+      say: 'Der Trick: Plus 8 heißt: 10 dazu und 2 weg.',
+    },
+    { id: 'zehn-dazu', cols: 2, value: 3, badge: '+ 10', moves: [{ at: 'bei den Zehnern', to: 13 }], say: 'Zuerst eine Perle bei den Zehnern hoch. Das sind 10.' },
+    { id: 'zwei-weg', badge: '− 2', moves: [{ at: 'bei den Einern', to: 11 }], say: 'Dann zwei Perlen bei den Einern runter. Das sind 2 weg.' },
+    { id: 'ergebnis', badge: '3 + 8 = 11', min: 3.5, say: 'Fertig! 3 plus 8 ist 11.' },
+    {
+      id: 'beispiel-2', cols: 2, value: 7, badge: '7 + 8 = 15', moves: [{ at: 'Zehnern hoch', to: 17 }, { at: 'Einern runter', to: 15 }],
+      say: 'Noch einmal: 7 plus 8. Eine Perle bei den Zehnern hoch, zwei Perlen bei den Einern runter. Das ist 15!',
+    },
+    { id: 'aufgabe-12', kind: 'aufgabe', cols: 2, value: 4, task: 12, say: 'Jetzt du! Rechne 4 plus 8. Zehn dazu, 2 weg.' },
+    {
+      id: 'merksatz', kind: 'karte', min: 5,
+      card: { title: 'Das merkst du dir', lines: [{ text: 'Plus 8 = 10 dazu, 2 weg' }] },
+      say: 'Merk dir: Plus 8 ist 10 dazu und 2 weg.',
+    },
+    { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+  ],
+}
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie
