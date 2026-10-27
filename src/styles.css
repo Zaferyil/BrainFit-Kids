@@ -1619,3 +1619,7 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .vid-schild-text span { font-weight: 900; font-size: 3.6cqw; line-height: 1.1; color: #3A1600; }
 .vid-schild-text strong { font-size: 8.4cqw; white-space: nowrap; }
 .vid-schild-text span { font-size: 3.3cqw; }
+/* Zahl-Abzeichen: mittig unter dem Abakus, größer */
+.sf-abakus-wrap .sf-badge { right: auto; left: 50%; top: calc(100% + 70px); translate: -50% 0; font-size: 120px; padding: 10px 56px; border-radius: 44px; }
+.sf.himmel .sf-abakus-wrap { margin-bottom: 230px; }
+.sf-abakus-wrap .sf-badge { top: calc(100% + 60px); }

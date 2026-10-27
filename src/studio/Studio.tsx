@@ -270,7 +270,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
   const ab = abakusAt(s, local)
   // Platz auf der Tafel: Bühne 484 px hoch, abzüglich Überschrift und Stellenwerte
   const gruen = window.location.hash.includes('gruen')
-  const room = (gruen ? 465 : 780) - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
+  const room = (gruen ? 465 : 640) - (scene.caption || scene.task !== undefined ? 76 : 0) - (scene.labels ? 84 : 0)
   const colw = Math.min(gruen ? (cols === 1 ? 170 : 165) : cols === 1 ? 260 : 240, (room / H) * PITCH)
   const k = colw / PITCH
   const width = frameWidth(cols) * k
@@ -291,6 +291,8 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
       <div className="sf-abakus-wrap" style={{ width, height: H * k }}>
         <Abakus3D value={ab.value} from={ab.from} progress={ab.progress} cols={cols} colw={colw} />
         {!gruen && <Sprecher an={local >= s.speech.start && local < s.speech.end} t={t} />}
+        {scene.badge && <div className="sf-badge" style={{ opacity: ease((local - 0.6) / 0.4), transform: `scale(${0.7 + 0.3 * ease((local - 0.6) / 0.4)})` }}>{scene.badge}</div>}
+        {revealed && <div className="sf-badge">{scene.task}</div>}
         {scene.highlight && Array.from({ length: cols }, (_, ci) => {
           const left = colLeft3(ci)
           const box = scene.highlight === 'erd'
@@ -312,9 +314,7 @@ function Board({ s, local, t }: { s: TimedScene; local: number; t: number }) {
           return <div key={ci} className={fromRight % 2 ? 'sf-place low' : 'sf-place'} style={{ left: (colLeft3(ci) + BEAD_W / 2) * k, opacity: show, transform: `translate(-50%, ${(1 - show) * 20}px)` }}>{name}</div>
         })}
       </div>
-      {scene.badge && <div className="sf-badge" style={{ opacity: ease((local - 0.6) / 0.4), transform: `scale(${0.7 + 0.3 * ease((local - 0.6) / 0.4)})` }}>{scene.badge}</div>}
       {task && countdown >= 0 && countdown < 3.2 && <div className="sf-countdown" key={Math.ceil(3 - countdown)}>{Math.max(1, Math.ceil(3 - countdown))}</div>}
-      {revealed && <div className="sf-badge">{scene.task}</div>}
     </div>
   )
 }
