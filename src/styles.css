@@ -1634,3 +1634,4 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf.himmel .sf-titleboard .sf-sub { font-size: 90px; }
 .sf.himmel .sf-chalk-title, .sf.himmel .sf-chalk-title.big { font-size: 150px; color: #fff; text-shadow: 0 8px 0 #4B2FC2; }
 .sf.himmel .sf-chalk-sub { font-size: 80px; color: #fff; }
+.sf.himmel .sf-caption { margin-bottom: 150px; }

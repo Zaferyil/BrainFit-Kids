@@ -18,8 +18,9 @@ import { lessonAudio } from './audio'
 // Vorschau im Browser mit Abspielen/Spulen; für den Export setzt ein Skript die Zeit Bild für Bild
 // (window.__studio.seek) und nimmt jedes Bild auf.
 
-const HANDS = import.meta.glob('../assets/hand/*.svg', { eager: true, import: 'default' }) as Record<string, string>
-const handSrc = (h: HandIcon) => HANDS[`../assets/hand/${h}.svg`]
+// Hände: Zeigefinger und Daumen aus den Vorlagen (webp); winken bleibt als svg
+const HANDS = import.meta.glob('../assets/hand/*.{svg,webp}', { eager: true, import: 'default' }) as Record<string, string>
+const handSrc = (h: HandIcon) => HANDS[`../assets/hand/${h}.webp`] ?? HANDS[`../assets/hand/${h}.svg`]
 
 const W = 1920
 const HEIGHT = 1080
