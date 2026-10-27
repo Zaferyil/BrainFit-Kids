@@ -1520,3 +1520,18 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .vid-thema { display: flex; align-items: center; gap: 10px; max-width: 100%; padding: 12px 24px; border-radius: 999px; background: #6C4CF1; box-shadow: 0 5px 0 #4B2FC2;
   color: #FFFFFF; font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 5vw, 24px); line-height: 1.1; text-align: center; }
 .station-screen:has(.vid-kopf) .station-bar-title { visibility: hidden; }
+/* Lernvideo ohne Tafel: Inhalte direkt auf dem App-Hintergrund */
+.sf.himmel { background: transparent; }
+.video-box.lektion { background: none !important; border: 0 !important; box-shadow: none !important; }
+.sf.himmel .sf-chalk.creme { left: 160px; top: 40px; width: 1600px; height: 1000px; }
+.lesson-player { background: transparent; }
+.lesson-player:fullscreen { background: linear-gradient(170deg, #FF9AC8 0%, #A47BFF 45%, #5B3FE0 100%); }
+.sf.himmel .sf-schild { display: none; }
+.sf.himmel .sf-caption { font-size: 64px; padding: 18px 44px; }
+.sf.himmel .sf-caption.task { font-size: 72px; }
+.sf.himmel .sf-fortschritt { display: none; }
+.sf.himmel .sf-chalk.creme { left: 0; top: 0; width: 1920px; height: 1080px; }
+.sf.himmel .creme .sf-stage, .sf.himmel .sf-stage { left: 60px; right: 60px; top: 30px; bottom: 230px; }
+.sf.himmel .sf-bottom { left: 80px; right: 80px; bottom: 30px; min-height: 170px; font-size: 64px; border-width: 6px; padding: 14px 110px 14px 50px; border-radius: 48px; }
+.sf.himmel .sf-bottom b { font-size: 68px; }
+.sf.himmel .sf-bottom-star { right: 20px; width: 90px; height: 90px; }
