@@ -88,7 +88,9 @@ export default function App() {
       const videos = unitVideos(progress.world, progress.unit)
       if (id === 'video' && videos.length) {
         const title = content?.title ?? WORLDS[progress.world - 1].units[progress.unit - 1]
-        return <VideoStation kidId={kid.id} title={title} videos={videos} learn={content?.learn} rule={content?.rule} />
+        // fortlaufende Lektionsnummer über alle Welten
+        const lektion = WORLDS.slice(0, progress.world - 1).reduce((n, w) => n + w.units.length, 0) + progress.unit
+        return <VideoStation kidId={kid.id} title={title} lektion={lektion} videos={videos} learn={content?.learn} rule={content?.rule} />
       }
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />

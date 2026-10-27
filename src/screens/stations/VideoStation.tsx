@@ -5,13 +5,14 @@ import { finishStation } from '../../lib/progress'
 import { StationDone, StationShell } from './StationShell'
 import { LessonPlayer } from '../../studio/LessonPlayer'
 import lektion1Schild from '../../assets/video/lektion-1-schild.webp'
+import schildLeer from '../../assets/video/lektion-schild-leer.webp'
 
-type Props = { kidId: string; title: string; videos: Video[]; learn?: string[]; rule?: string[] }
+type Props = { kidId: string; title: string; lektion: number; videos: Video[]; learn?: string[]; rule?: string[] }
 
 /** Nach so vielen Sekunden erscheint „Trotzdem weiter“, falls der Player nicht lädt. */
 const FALLBACK_SECONDS = 25
 
-export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
+export function VideoStation({ kidId, title, lektion, videos, learn, rule }: Props) {
   const [current, setCurrent] = useState(0)
   const [watched, setWatched] = useState<string[]>([])
   const [fallback, setFallback] = useState(false)
@@ -65,17 +66,19 @@ export function VideoStation({ kidId, title, videos, learn, rule }: Props) {
       <div className="video-layout">
         <div className="video-main">
           {(() => {
-            // Ein Holzschild über dem Video: „Lektion 1“ und darunter „Video-Tutor: Thema der Einheit“
-            const m = video.title.match(/^Lektion (\d+):?\s*(.*)$/) ?? video.title.match(/^(\d+)\. Lektion:?\s*(.*)$/)
+            // Schild über dem Video: „Lektion N“ und darunter „Video-Tutor: Thema der Einheit“
             return (
               <div className="vid-kopf">
-                {m?.[1] === '1' ? (
-                  // Lektion 1 hat ein fertig gestaltetes Schild (Vorlage, unverändert übernommen)
+                {lektion === 1 ? (
+                  // Lektion 1: die gestaltete Vorlage, unverändert übernommen
                   <img className="vid-schild-bild" src={lektion1Schild} alt={`Lektion 1 – Video-Tutor: ${title}`} />
                 ) : (
-                  <div className="vid-schild">
-                    <strong>{m ? `Lektion ${m[1]}` : 'Video-Tutor'}</strong>
-                    <span>{m ? `Video-Tutor: ${title}` : title}</span>
+                  // übrige Lektionen: dieselbe Vorlage ohne Schrift, Text passend zum Thema
+                  <div className="vid-schild-bild leer" style={{ backgroundImage: `url(${schildLeer})` }} role="img" aria-label={`Lektion ${lektion} – Video-Tutor: ${title}`}>
+                    <div className="vid-schild-text">
+                      <strong>Lektion {lektion}</strong>
+                      <span>Video-Tutor: {title}</span>
+                    </div>
                   </div>
                 )}
               </div>

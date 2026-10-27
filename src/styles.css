@@ -1611,3 +1611,11 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .sf.himmel .creme .sf-stage, .sf.himmel .sf-stage { top: 170px; }
 .sf-sprecher { bottom: calc(100% + 46px); }
 .vid-schild-bild { display: block; width: min(100%, 520px); height: auto; }
+/* Lektion-Schild ohne Schrift (Vorlage) mit Text je Lektion */
+.vid-schild-bild.leer { position: relative; aspect-ratio: 2000 / 667; background-size: 100% 100%; container-type: inline-size; }
+.vid-schild-text { position: absolute; left: 36.75%; width: 44.75%; top: 22%; height: 58%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.2cqw; }
+.vid-schild-text strong { font-family: var(--font-display); font-weight: 800; font-size: 11cqw; line-height: .9; color: #fff;
+  -webkit-text-stroke: 1.6cqw #5B21B6; paint-order: stroke fill; text-shadow: 0 .8cqw 0 #3B0F80; }
+.vid-schild-text span { font-weight: 900; font-size: 3.6cqw; line-height: 1.1; color: #3A1600; }
+.vid-schild-text strong { font-size: 8.4cqw; white-space: nowrap; }
+.vid-schild-text span { font-size: 3.3cqw; }
