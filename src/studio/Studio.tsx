@@ -367,35 +367,13 @@ function Hands({ s, local, k }: { s: TimedScene; local: number; k: number }) {
   )
 }
 
-/** Comic-Hand von der Seite: Zeigefinger oben, Daumen unten, beide zeigen nach links auf die Perlen.
- *  x: Fingerspitzen, yZeige/yDaumen: Höhe der beiden Fingerspitzen (alles in Pixeln des Rahmenbilds). */
+/** Greifende Hand aus der Vorlage (hand/greifhand.webp): Zeigefinger oben, Daumen unten.
+ *  Das Bild wird so skaliert, dass die beiden Fingerspitzen genau an yZeige und yDaumen liegen. */
 function Greifhand({ x, yZeige, yDaumen, k, opacity }: { x: number; yZeige: number; yDaumen: number; k: number; opacity: number }) {
-  const top = yZeige - 70
-  const bottom = yDaumen + 70
-  const mid = (yZeige + yDaumen) / 2
-  const w = 360
-  // Zahl der eingerollten Finger zwischen Zeigefinger und Daumen
-  const curls = Math.max(1, Math.min(3, Math.floor((yDaumen - yZeige - 50) / 48)))
-  const gap = (yDaumen - yZeige - 50) / curls
-  const line = { stroke: '#151515', strokeWidth: 9, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const }
-  return (
-    <svg className="sf-hand" viewBox={`${x} ${top} ${w} ${bottom - top}`} style={{ left: x * k, top: top * k, width: w * k, height: (bottom - top) * k, opacity }} aria-hidden="true">
-      {/* Bündchen */}
-      <rect x={x + 270} y={mid - 85} width={70} height={170} rx={30} fill="#fff" {...line} />
-      {/* Handfläche */}
-      <rect x={x + 120} y={yZeige - 50} width={180} height={yDaumen - yZeige + 100} rx={90} fill="#fff" {...line} />
-      {/* eingerollte Finger */}
-      {Array.from({ length: curls }, (_, i) => (
-        <rect key={i} x={x + 95} y={yZeige + 28 + i * gap} width={95} height={Math.min(56, gap + 4)} rx={28} fill="#fff" {...line} />
-      ))}
-      {/* Zeigefinger (Spitze leicht nach unten auf die Perle) */}
-      <path d={`M${x + 200},${yZeige - 26} L${x + 26},${yZeige - 26} Q${x},${yZeige - 24} ${x},${yZeige + 2} Q${x + 2},${yZeige + 26} ${x + 28},${yZeige + 24} L${x + 200},${yZeige + 24}`} fill="#fff" {...line} />
-      {/* Daumen */}
-      <path d={`M${x + 210},${yDaumen - 30} L${x + 30},${yDaumen - 26} Q${x + 2},${yDaumen - 24} ${x + 2},${yDaumen + 2} Q${x + 4},${yDaumen + 28} ${x + 32},${yDaumen + 28} L${x + 220},${yDaumen + 32}`} fill="#fff" {...line} />
-      {/* Falte am Daumenballen */}
-      <path d={`M${x + 215},${yDaumen - 60} Q${x + 245},${yDaumen - 20} ${x + 238},${yDaumen + 10}`} fill="none" {...line} strokeWidth={7} />
-    </svg>
-  )
+  // Fingerspitzen im Bild (Anteile): Zeigefinger (0.024, 0.174), Daumen (0, 0.592); Seitenverhältnis 457 × 429
+  const h = Math.max(120, (yDaumen - yZeige) / 0.418)
+  const w = h * (457 / 429)
+  return <img className="sf-hand" src={HANDS['../assets/hand/greifhand.webp']} alt="" style={{ left: (x - 0.012 * w) * k, top: (yZeige - 0.174 * h) * k, width: w * k, height: h * k, opacity }} />
 }
 
 /** Zeigt, dass gerade jemand spricht: tanzende Tonbalken über dem Abakus, nur während gesprochen wird. */
