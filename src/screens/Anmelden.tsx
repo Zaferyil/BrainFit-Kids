@@ -251,7 +251,7 @@ function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClas
   )
 }
 
-/** Nach dem richtigen Geheim-Code: großer runder Knopf, der direkt in die nächste Lektion führt. */
+/** Nach dem richtigen Geheim-Code: großer runder Knopf, der zur Karte führt. */
 function LosPopup({ kid }: { kid: Kid }) {
   const next = nextStop(kid, getProgress(kid.id))
   // ins body, damit der Schleier den ganzen Bildschirm bedeckt (der Schritt selbst ist animiert und würde fixed einsperren)
@@ -260,7 +260,7 @@ function LosPopup({ kid }: { kid: Kid }) {
       <div className="nk-los-karte popin">
         <small>Richtig, {kid.name}!</small>
         <strong>{next.title}</strong>
-        <a href={next.href} className="zh-los" onClick={next.go}>
+        <a href="#/inseln" className="zh-los">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
           <span>Los geht’s</span>
         </a>
