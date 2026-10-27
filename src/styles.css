@@ -438,7 +438,7 @@ button { font-family: inherit; }
 .intro-card .intro-text { font-size: 22px; line-height: 1.4; color: var(--ink); }
 .intro-card .done-actions { align-items: center; }
 .btn-outline.dark { border-color: #E4DFFF; color: #5A5094; text-decoration: none; }
-.done-trophy { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; background: #F2F0FF; font-weight: 900; font-size: 18px; margin-bottom: 8px; }
+.done-trophy { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; background: #F2F0FF; color: #2A1E5C; font-weight: 900; font-size: 18px; margin-bottom: 8px; }
 
 /* Tagesplan-Zustände */
 .plan-step.done { opacity: .75; }
