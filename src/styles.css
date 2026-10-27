@@ -1559,3 +1559,6 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk-los-karte small { font-weight: 900; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: #6C4CF1; }
 .nk-los-karte strong { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.05; color: #1E1757; }
 .nk-los-karte .zh-los { margin-top: 22px; width: min(60vw, 210px); }
+/* Karte: Kopfzeile mit Zurück-Knopf bleibt beim Scrollen oben */
+.nk-map-head { position: sticky; top: 0; z-index: 30; width: 100%; max-width: none; padding: 10px 16px; background: linear-gradient(180deg, rgba(75,47,194,.95), rgba(75,47,194,.8)); backdrop-filter: blur(8px); box-shadow: 0 6px 18px rgba(30,18,90,.25); }
+.stage:has(> .nk-map-head) { overflow: visible; }

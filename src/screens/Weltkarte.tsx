@@ -41,6 +41,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   return (
     <Stage background="linear-gradient(180deg, #4B2FC2 0%, #7B5CFF 40%, #FF9AC8 100%)">
       <header className="nk-hello nk-map-head">
+        <a href="#/karte" className="nk-zurueck" aria-label="Zurück zur Startseite">
+          <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />
+        </a>
         <button type="button" className="nk-me" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
           <Avatar size={48} {...kid.avatar} />
         </button>
