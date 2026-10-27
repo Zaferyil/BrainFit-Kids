@@ -12,6 +12,7 @@ export const STATION_INTRO: Record<Exclude<StationId, 'video'>, string> = {
   entdecken: 'Perli zeigt dir Schritt für Schritt, wie der Abakus funktioniert. Hör gut zu und mach mit!',
   ueben: 'Jetzt übst du mit dem Abakus. Manchmal schiebst du die Perlen selbst, manchmal liest du die Zahl ab und tippst sie ein.',
   blitz: 'Gleich blitzt der Abakus ganz kurz auf. Schau genau hin und merk dir die Perlen. Dann tippst du die Zahl ein.',
+  buch: 'Jetzt kommt dein Arbeitsbuch! Nimm deinen Abakus und einen Stift. Rechne die Aufgaben im Buch und schreib die Ergebnisse auf. Danach tippst du sie hier ein.',
   kopfrechnen: 'Jetzt geht es ohne Abakus. Ich sage dir die Perlen. Stell sie dir im Kopf vor und tippe die Zahl ein.',
   boss: 'Grummel, der Zahlenfresser, ist da! Beantworte alle Fragen richtig, dann ist er besiegt. Aber Vorsicht: Du hast nur drei Herzen.',
 }
@@ -39,6 +40,12 @@ export const SAY = {
   minus: 'minus',
   wievielIst: 'Wie viel ist das? Tippe es ein.',
   rechneAbakus: 'Rechne mit dem Abakus.',
+  seite: 'Seite',
+  spalteA: 'Spalte A',
+  spalteB: 'Spalte B',
+  aufgabe: 'Aufgabe',
+  bis: 'bis',
+  ergebnisAufgabe: 'Tippe das Ergebnis von Aufgabe',
 } as const
 
 /** Perlen einer Zahl als Bausteine, z. B. ['Zehner:', '3 Erdperlen', 'Einer:', 'die Himmelsperle']. */

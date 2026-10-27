@@ -2,7 +2,7 @@ import type { IconName } from '../components/Icon'
 
 // Inhalte je Einheit. Bisher nur Welt 1 · Einheit 1, die übrigen folgen mit curriculum.json.
 
-export type StationId = 'video' | 'entdecken' | 'ueben' | 'blitz' | 'kopfrechnen' | 'boss'
+export type StationId = 'video' | 'entdecken' | 'ueben' | 'blitz' | 'kopfrechnen' | 'buch' | 'boss'
 
 export const STATIONS: { id: StationId; title: string; icon: IconName | 'bead'; color: string }[] = [
   { id: 'video', title: 'Video ansehen', icon: 'video', color: '#3BA7FF' },
@@ -10,6 +10,7 @@ export const STATIONS: { id: StationId; title: string; icon: IconName | 'bead'; 
   { id: 'ueben', title: 'Üben mit Abakus', icon: 'bead', color: '#FFC531' },
   { id: 'blitz', title: 'Blitz-Training', icon: 'bolt', color: '#FF8A1F' },
   { id: 'kopfrechnen', title: 'Kopfrechnen', icon: 'brain', color: '#3DBE5B' },
+  { id: 'buch', title: 'Mein Arbeitsbuch', icon: 'book', color: '#3BA7FF' },
   { id: 'boss', title: 'Boss-Kampf', icon: 'sword', color: '#FF4D6D' },
 ]
 
@@ -51,6 +52,7 @@ const UNITS: Record<string, UnitContent> = {
       ueben: 'Du schiebst die Perlen.',
       blitz: 'Der Abakus blitzt auf. Welche Zahl war es?',
       kopfrechnen: 'Stell dir die Perlen im Kopf vor.',
+      buch: 'Rechne im Buch und tippe die Ergebnisse ein.',
       boss: 'Besiege Grummel und hol dir den Pokal!',
     },
     cols: 1,
@@ -81,6 +83,7 @@ const bigFriend = (k: number, lead: string, say: string, a = Math.max(3, 10 - k)
     ueben: `Du rechnest +${k} mit dem Abakus.`,
     blitz: `Der Abakus blitzt auf. Rechne +${k} dazu!`,
     kopfrechnen: `Rechne +${k} im Kopf.`,
+    buch: 'Rechne im Buch und tippe die Ergebnisse ein.',
     boss: 'Besiege Grummel und hol dir den Pokal!',
   },
   cols: 2,

@@ -11,6 +11,8 @@ import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
+import { BuchStation } from './screens/stations/BuchStation'
+import { buchAuftrag } from './data/buch'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
 import { klasseVon } from './lib/klasse'
@@ -99,6 +101,11 @@ export default function App() {
         return <VideoStation kidId={kid.id} title={title} lektion={lektion} videos={videos} learn={content?.learn} rule={content?.rule} />
       }
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
+      // Arbeitsbuch: Seite und Spalte je Lektion; bei jeder Wiederholung die nächste Spalte
+      if (id === 'buch') {
+        const auftrag = buchAuftrag(progress.world, progress.unit, klasseVon(kid.id).aufgaben, progress.stationStars[`${progress.world}-${progress.unit}`]?.[index] ? 1 : 0)
+        if (auftrag) return <BuchStation kidId={kid.id} auftrag={auftrag} />
+      }
       // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
       const kurs = klasseVon(kid.id).aufgaben <= 6 ? null : kursAufgaben(progress.world, progress.unit)
       if (kurs && id === 'ueben') return <KursStation kidId={kid.id} aufgaben={kurs} />

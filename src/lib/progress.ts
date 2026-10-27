@@ -3,6 +3,7 @@ import { STATIONS, type StationId } from '../data/units'
 import { addDaily } from './daily'
 import { unitVideos } from '../data/videos'
 import { ALLES_OFFEN } from './testmodus'
+import { buchAuftrag } from '../data/buch'
 
 // Fortschritt eines Kindes, bis Supabase angebunden ist: nur auf diesem Gerät.
 export type Progress = {
@@ -19,6 +20,8 @@ export type Progress = {
   perlen: number
   gems: number
   streak: number
+  /** Kind hat kein Arbeitsbuch: die Buch-Station wird übersprungen */
+  ohneBuch?: boolean
 }
 
 const fresh = (): Progress => ({ world: 1, unit: 1, worldStars: {}, stationStars: {}, level: 1, xp: 0, perlen: 0, gems: 0, streak: 0 })
@@ -59,7 +62,9 @@ export function stationStars(p: Progress) {
 
 /** Station ohne Inhalt in dieser Einheit (z. B. kein Video) – wird übersprungen. */
 export function stationSkipped(p: Progress, index: number) {
-  return STATIONS[index].id === 'video' && unitVideos(p.world, p.unit).length === 0
+  const id = STATIONS[index].id
+  if (id === 'buch') return !!p.ohneBuch || !buchAuftrag(p.world, p.unit, 1)
+  return id === 'video' && unitVideos(p.world, p.unit).length === 0
 }
 
 /** Erste Station ohne Sterne; alle davor sind offen. */
@@ -116,4 +121,9 @@ export function rewardGame(kidId: string, perlen: number) {
   while (xp >= 100) { xp -= 100; level += 1 }
   saveProgress(kidId, { ...p, perlen: p.perlen + perlen, xp, level })
   addDaily(kidId, { games: 1, minutes: 2 })
+}
+
+/** „Ich habe kein Buch“: Buch-Station für dieses Kind dauerhaft überspringen (umkehrbar) */
+export function setOhneBuch(kidId: string, ohne: boolean) {
+  saveProgress(kidId, { ...getProgress(kidId), ohneBuch: ohne })
 }
