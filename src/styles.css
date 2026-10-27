@@ -1453,3 +1453,18 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .ich p { margin: 0; font-weight: 800; font-size: 16px; opacity: .9; }
 .ich-chips { max-width: 380px; }
 .ich-chips b { font-size: 22px; }
+/* Denkspiele und Einstufung im neuen Look */
+.nk .game-intro { background: #FFFFFF; color: var(--nk-ink); box-shadow: 0 4px 0 #C3C6E6; border-radius: 22px; }
+.nk .game-hint { color: #FFFFFF; font-size: 15px; }
+.nk .game-area { background: rgba(255,255,255,.16); box-shadow: inset 0 0 0 2px rgba(255,255,255,.25); }
+.nk .mem-card { border-radius: 20px; background: radial-gradient(120% 120% at 30% 15%, #B49BFF, #6C4CF1 60%, #4B1FD6); box-shadow: 0 0 0 3px #FFFFFF, 0 6px 0 3px #33138F; }
+.nk .mem-card.open { background: #FFFFFF; box-shadow: 0 0 0 3px #FFFFFF, 0 6px 0 3px #C3C6E6; }
+.nk .mem-card.found { background: #DDF7E3; box-shadow: 0 0 0 3px #FFFFFF, 0 6px 0 3px var(--nk-green-dark); }
+.nk .pat-row { background: rgba(255,255,255,.2); }
+.nk .pat-cell { background: #FFFFFF; box-shadow: 0 5px 0 #C3C6E6; }
+.nk .pat-cell.slot { background: rgba(255,255,255,.25); box-shadow: none; border-color: #FFFFFF; }
+.nk .hunt-cell { background: #FFFFFF; box-shadow: 0 5px 0 #C3C6E6; }
+.nk .chain-slot { border-color: rgba(255,255,255,.8); }
+.nk .chain-slot.filled { background: #FFFFFF; border-color: #FFFFFF; }
+.nk .placement-card { border-radius: 32px; }
+.nk .chain-bar, .nk .game-chain .game-hint { color: #FFFFFF; }
