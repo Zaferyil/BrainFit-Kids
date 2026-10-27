@@ -93,7 +93,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 if (!s) return <span key={i} className="insel-coin" style={pos} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
-                    <Node stop={s} n={start + i + 1} kid={kid} onLocked={(text) => setSay(text)} />
+                    <Node stop={s} n={start + i + 1} kid={kid} links={x / karte.w > 0.5} onLocked={(text) => setSay(text)} />
                   </div>
                 )
               })}
@@ -124,7 +124,7 @@ function greeting(s?: MapStop) {
   return ''
 }
 
-function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onLocked: (text: string) => void }) {
+function Node({ stop, n, kid, links, onLocked }: { stop: Stop; n: number; kid: Kid; links: boolean; onLocked: (text: string) => void }) {
   const current = stop.state === 'current'
   const cls = `path-node ${stop.kind} ${stop.state}`
   const label = stop.kind === 'unit' ? stop.name : stop.kind === 'game' ? stop.game.name : 'Perli kennenlernen'
@@ -133,6 +133,9 @@ function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onL
 
   return (
     <div className="path-stop">
+      {stop.kind === 'unit' && stop.unit === 1 && (
+        <div className={`welt-schild welt-${stop.world.n} ${links ? 'links' : 'rechts'}`}><small>Welt {stop.world.n}</small>{stop.world.name.replace(/-/g, ' ')}</div>
+      )}
       {current && <div className="path-start">{stop.kind === 'game' ? 'Spielen' : 'Start'}</div>}
       {current && stop.kind === 'unit' && <div className="path-me"><Avatar size={40} {...kid.avatar} /></div>}
       {stop.state === 'locked' ? (
