@@ -1370,3 +1370,24 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .boss-opt:active:not(:disabled) { box-shadow: 0 3px 0 var(--nk-violet-dark); }
 .nk .boss-opt.right { background: radial-gradient(circle at 35% 30%, #B8F5D6, #2ECC8F 65%); color: #FFFFFF; box-shadow: 0 7px 0 #1F9E6C; }
 .nk .boss-opt.wrong { background: radial-gradient(circle at 35% 30%, #FFC2D3, #FF5C7A 65%); box-shadow: 0 7px 0 #C2264E; }
+
+/* Denkspiele (neuer Look) */
+.dp { position: relative; flex: 1; width: min(100%, 620px); margin: 0 auto; padding: 22px 20px 120px; display: flex; flex-direction: column; gap: 22px; }
+.dp-head h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 38px; line-height: 1; }
+.dp-head p { margin: 4px 0 0; font-weight: 800; font-size: 15px; opacity: .9; }
+.dp-heute { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 170px; padding: 22px; border-radius: 34px; overflow: hidden; text-decoration: none; color: #FFFFFF;
+  background: radial-gradient(120% 120% at 20% 10%, #C59BFF, #8E5CFF 55%, #6C4CF1); box-shadow: 0 8px 0 #4B2FC2; }
+.dp-heute:hover { color: #FFFFFF; }
+.dp-heute-deko { position: absolute; right: 10px; top: 20px; width: 130px; height: 130px; }
+.dp-tag { padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.25); font-weight: 900; font-size: 12px; letter-spacing: .06em; }
+.dp-heute strong { font-family: var(--font-display); font-weight: 800; font-size: 32px; line-height: 1; }
+.dp-text { font-weight: 800; font-size: 14px; opacity: .9; }
+.dp-play { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; background: var(--nk-yellow); color: var(--nk-ink); font-weight: 900; font-size: 16px; box-shadow: 0 4px 0 var(--nk-yellow-dark); }
+.dp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dp-kachel { min-height: 170px; border-radius: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; text-align: center; padding: 12px; transition: transform .15s; }
+.dp-kachel:hover { transform: scale(1.03); }
+.dp-kachel strong { font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 1.05; }
+.dp-kachel span { font-weight: 900; font-size: 13px; opacity: .85; }
+.dp-kachel.bald { background: rgba(255,255,255,.18); box-shadow: inset 0 0 0 3px rgba(255,255,255,.35); color: #FFFFFF; }
+.dp-invite { align-self: center; }
+@media (min-width: 700px) { .dp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
