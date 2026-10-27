@@ -1468,3 +1468,6 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk .chain-slot.filled { background: #FFFFFF; border-color: #FFFFFF; }
 .nk .placement-card { border-radius: 32px; }
 .nk .chain-bar, .nk .game-chain .game-hint { color: #FFFFFF; }
+.nk .video-status { color: #FFFFFF; font-weight: 900; }
+.nk .btn-primary:disabled { background: rgba(255,255,255,.3); color: #FFFFFF; box-shadow: 0 6px 0 rgba(43,26,122,.35); }
+.nk .btn-primary:disabled svg { stroke: #FFFFFF; }
