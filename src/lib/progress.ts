@@ -29,6 +29,28 @@ export const saveProgress = (kidId: string, p: Progress) => save(key(kidId), p)
 
 export const unitKey = (p: Progress) => `${p.world}-${p.unit}`
 
+// Wiederholen: Auf der Karte kann ein Kind eine schon geschaffte Einheit noch einmal öffnen.
+// Die Einheit und ihre Stationen zeigen dann diese Einheit; der eigentliche Fortschritt bleibt, wo er ist.
+const viewKey = (kidId: string) => `bfk.ansicht.${kidId}`
+const isBefore = (a: { world: number; unit: number }, b: { world: number; unit: number }) => a.world < b.world || (a.world === b.world && a.unit < b.unit)
+
+/** Öffnet eine geschaffte Einheit zum Wiederholen; null = wieder die aktuelle Einheit. */
+export function setReplay(kidId: string, unit: { world: number; unit: number } | null) {
+  save(viewKey(kidId), unit)
+}
+
+/** Fortschritt so, wie Einheit und Stationen ihn sehen: bei einer Wiederholung mit deren Welt und Einheit. */
+export function viewProgress(kidId: string): Progress {
+  const p = getProgress(kidId)
+  const v = load<{ world: number; unit: number } | null>(viewKey(kidId), null)
+  return v && isBefore(v, p) ? { ...p, world: v.world, unit: v.unit } : p
+}
+
+export const isReplay = (kidId: string) => {
+  const v = viewProgress(kidId)
+  return isBefore(v, getProgress(kidId))
+}
+
 export function stationStars(p: Progress) {
   return p.stationStars[unitKey(p)] ?? STATIONS.map(() => 0)
 }
@@ -50,8 +72,9 @@ const XP_PER_STATION = 25
 /** Speichert das Ergebnis einer Station und gibt die verdienten Perlen zurück. */
 export function finishStation(kidId: string, station: StationId, stars: number, correct: number) {
   const p = getProgress(kidId)
-  const k = unitKey(p)
-  const all = stationStars(p).slice()
+  const v = viewProgress(kidId)
+  const k = unitKey(v)
+  const all = stationStars(v).slice()
   const i = STATIONS.findIndex((s) => s.id === station)
   all[i] = Math.max(all[i], stars)
   const perlen = correct + stars * 10
@@ -65,6 +88,11 @@ export function finishStation(kidId: string, station: StationId, stars: number, 
 
 /** Boss besiegt: Einheit abschließen und zur nächsten Einheit oder Welt weitergehen. */
 export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: number) {
+  // Wiederholung geschafft: nur zurück zur aktuellen Einheit, der Weg rückt nicht weiter
+  if (isReplay(kidId)) {
+    setReplay(kidId, null)
+    return { worldDone: false }
+  }
   const p = getProgress(kidId)
   const stars = stationStars(p).filter((_, k) => !stationSkipped(p, k))
   const avg = Math.round(stars.reduce((a, b) => a + b, 0) / stars.length)

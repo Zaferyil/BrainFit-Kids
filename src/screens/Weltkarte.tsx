@@ -5,7 +5,7 @@ import { NavBar } from '../components/NavBar'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
-import type { Progress } from '../lib/progress'
+import { setReplay, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
 import { etappen } from '../data/karten'
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
@@ -143,7 +143,7 @@ function Node({ stop, n, kid, links, onLocked }: { stop: Stop; n: number; kid: K
           {inner}
         </button>
       ) : (
-        <a href={href} className={cls} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id) }}>
+        <a href={href} className={cls} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id); if (stop.kind === 'unit') setReplay(kid.id, current ? null : { world: stop.world.n, unit: stop.unit }) }}>
           {inner}
         </a>
       )}

@@ -24,7 +24,7 @@ import { findGame } from './games/registry'
 import { tierFor, tierRank } from './games/engine'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
-import { currentStation, getProgress } from './lib/progress'
+import { currentStation, getProgress, viewProgress } from './lib/progress'
 
 const TITLES: Record<string, string> = {
   einheit: 'Einheit',
@@ -75,8 +75,11 @@ export default function App() {
       if (!game || !open) return <DenkPark kid={kid} progress={progress} onLogout={logout} />
       return <Denkspiel key={game.id} kid={kid} game={game} />
     }
-    if (route === 'einheit') return <Einheit progress={progress} />
+    // Einheit und Stationen zeigen bei einer Wiederholung die gewählte, schon geschaffte Einheit
+    const unitView = viewProgress(kid.id)
+    if (route === 'einheit') return <Einheit progress={unitView} />
     if (route.startsWith('station/')) {
+      const progress = unitView
       const id = route.slice(8)
       const content = unitContent(progress.world, progress.unit)
       const index = STATIONS.findIndex((s) => s.id === id)
