@@ -22,7 +22,12 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const [menu, setMenu] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
-  const stops = useMemo(() => path.filter((s): s is Stop => s.kind !== 'world'), [path])
+  // Nur die Welten bis zur aktuellen zeigen: die nächste Welt erscheint erst, wenn die jetzige geschafft ist
+  const stops = useMemo(() => {
+    const alle = path.filter((s): s is Stop => s.kind !== 'world')
+    const ende = alle.findIndex((s) => s.kind === 'unit' && s.world.n > progress.world)
+    return ende < 0 ? alle : alle.slice(0, ende)
+  }, [path, progress.world])
   const teile = useMemo(() => etappen(stops.length), [stops.length])
 
   // Beim Öffnen zur aktuellen Station scrollen
