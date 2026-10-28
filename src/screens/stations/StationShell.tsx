@@ -127,7 +127,7 @@ export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabl
           disabled={disabled}
           onClick={() => onKey(k)}
         >
-          {k === 'del' ? <Icon name="del" color="#FFFFFF" size={30} /> : k}
+          {k === 'del' ? <Icon name="del" color="#E0306A" size={30} /> : k}
         </button>
       ))}
     </div>
