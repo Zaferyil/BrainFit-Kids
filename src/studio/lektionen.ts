@@ -305,7 +305,61 @@ const LEKTION_4: Lesson = {
   ],
 }
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4]
+// Lektion 5–10: gleicher Aufbau wie Lektion 2–4 – „+k = +10 − f“ (f = Big Friend). Beispiele mit Einern, bei denen „− f“ direkt geht.
+const WORT = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
+function bigFriendLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const f = 10 - k
+  const weg = f === 1 ? '1 Perle' : `${f}`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Big Friend +${k}`,
+    world: 1,
+    sections: [
+      { title: 'Big Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Heute rechnen wir plus ${k}. Mit einem neuen Big Friend.` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Big Friends', lines: [{ text: `${k} und ${f} sind 10` }, { icon: 'daumen-hoch', text: `Der Big Friend von ${k} ist ${f}` }] },
+        say: `${k} und ${f} sind zusammen 10. Also ist ${f} der Big Friend von ${k}.`,
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} + ${k}`, say: `Wir haben ${a}. Jetzt rechnen wir plus ${k}. Unten sind nicht genug Perlen frei!` },
+      {
+        id: 'trick', kind: 'karte', min: 5,
+        card: { title: 'Der Trick', lines: [{ icon: 'daumen-hoch', text: '10 dazu' }, { icon: 'zeige-runter', text: `${f} weg` }] },
+        say: `Der Trick: Plus ${k} heißt: 10 dazu und ${f} weg.`,
+      },
+      { id: 'zehn-dazu', cols: 2, value: a, badge: '+ 10', moves: [{ at: 'bei den Zehnern', to: a + 10 }], say: 'Zuerst eine Perle bei den Zehnern hoch. Das sind 10.' },
+      { id: 'weg', badge: `− ${f}`, moves: [{ at: 'bei den Einern', to: a + k }], say: `Dann nimmst du ${weg} bei den Einern weg. Das sind ${f} weg.` },
+      { id: 'ergebnis', badge: `${a} + ${k} = ${a + k}`, min: 3.5, say: `Fertig! ${a} plus ${k} ist ${a + k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} + ${k} = ${b + k}`, moves: [{ at: 'Zehnern hoch', to: b + 10 }, { at: 'Einern weg', to: b + k }],
+        say: `Noch einmal: ${b} plus ${k}. Eine Perle bei den Zehnern hoch, ${f} bei den Einern weg. Das ist ${b + k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c + k, say: `Jetzt du! Rechne ${c} plus ${k}. Zehn dazu, ${WORT[f] ?? f} weg.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Plus ${k} = 10 dazu, ${f} weg` }] },
+        say: `Merk dir: Plus ${k} ist 10 dazu und ${f} weg.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_5 = bigFriendLektion(5, 6, 9, 4, 19)
+const LEKTION_6 = bigFriendLektion(6, 5, 7, 9, 8)
+const LEKTION_7 = bigFriendLektion(7, 4, 7, 9, 8)
+const LEKTION_8 = bigFriendLektion(8, 3, 8, 9, 7)
+const LEKTION_9 = bigFriendLektion(9, 2, 9, 8, 18)
+const LEKTION_10 = bigFriendLektion(10, 1, 9, 19, 29)
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

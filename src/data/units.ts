@@ -134,6 +134,8 @@ export function describeNumber(n: number) {
 
 /** Zufallszahl im Bereich, nicht gleich der vorigen. */
 export function randomIn([min, max]: [number, number], prev?: number) {
+  // nur eine Zahl im Bereich (z. B. +1: nur 9): Wiederholung erlauben, sonst Endlosschleife
+  if (min >= max) return min
   let n = prev
   while (n === prev) n = min + Math.floor(Math.random() * (max - min + 1))
   return n as number
