@@ -1900,3 +1900,44 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .adm-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .adm-balken-zeile { grid-template-columns: 100px 1fr 40px; }
 }
+
+/* ===== Eltern-Bereich (nutzt das Admin-Layout) ===== */
+.eltern-form { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.eltern-form input { text-align: center; font-size: 20px; letter-spacing: .08em; text-transform: uppercase; }
+.eltern-kinder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.eltern-kinder button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 4px; border: 1px solid var(--a-line); border-radius: 14px; background: #FFFFFF; font: inherit; font-weight: 800; color: var(--a-ink); cursor: pointer; }
+.eltern-kinder button:hover { background: #F7F6FD; border-color: #C9C0FF; }
+.adm-kpi b small { font-size: 14px; font-family: inherit; }
+.adm-kpi b.klein { font-size: 24px; }
+.eltern-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.eltern-ring { --p: 0%; width: 140px; height: 140px; margin: 4px auto 12px; border-radius: 50%; background: conic-gradient(#2ECC8F var(--p), #EEEAFF 0); display: grid; place-items: center; }
+.eltern-ring > div { width: 108px; height: 108px; border-radius: 50%; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.eltern-ring b { font-family: var(--font-display); font-size: 34px; line-height: 1; }
+.eltern-heute { display: flex; justify-content: space-around; gap: 8px; color: var(--a-muted); font-weight: 700; }
+.eltern-heute b { color: var(--a-ink); font-size: 18px; }
+.eltern-ok { color: #1E8A5C; font-weight: 800; text-align: center; }
+.adm-card p { margin: 10px 0 0; }
+.eltern-stationen { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.eltern-stationen li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; font-weight: 700; }
+.eltern-stationen li.jetzt { background: #FFF8E1; }
+.eltern-st-icon { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #D9D5EA; display: grid; place-items: center; flex-shrink: 0; }
+.eltern-stationen li.fertig .eltern-st-icon { background: #2ECC8F; border-color: #2ECC8F; }
+.eltern-sterne { margin-left: auto; color: #FFB21E; letter-spacing: 2px; }
+.eltern-stationen li .adm-badge { margin-left: auto; }
+.eltern-buch { display: flex; flex-direction: column; gap: 12px; }
+.eltern-buch > div { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F7F6FD; }
+.eltern-buch span { color: var(--a-muted); font-weight: 700; }
+.eltern-staerke { grid-template-columns: 170px 1fr 40px; }
+.eltern-staerke > span:first-child { display: flex; flex-direction: column; }
+.eltern-weg { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.eltern-weg-punkt { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.eltern-weg-punkt span { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; background: #EEEAFF; color: var(--a-muted); }
+.eltern-weg-punkt.fertig span { background: #2ECC8F; color: #FFFFFF; }
+.eltern-weg-punkt.jetzt span { background: var(--a-accent); color: #FFFFFF; box-shadow: 0 0 0 4px #D8D1FF; }
+.eltern-tipps ul { margin: 10px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 760px) {
+  .eltern-grid { grid-template-columns: 1fr; }
+  .eltern-weg { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .eltern-kinder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .eltern-staerke { grid-template-columns: 110px 1fr 32px; }
+}

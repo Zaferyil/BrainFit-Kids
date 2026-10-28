@@ -6,6 +6,7 @@ import { Placeholder } from './screens/Placeholder'
 import { Anmelden } from './screens/Anmelden'
 import { Weltkarte } from './screens/Weltkarte'
 import { Admin } from './screens/Admin'
+import { Eltern } from './screens/Eltern'
 import { Zuhause } from './screens/Zuhause'
 import { Einheit } from './screens/Einheit'
 import { VideoStation } from './screens/stations/VideoStation'
@@ -64,6 +65,7 @@ export default function App() {
   if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />
   if (route === 'admin') return <Admin />
+  if (route === 'eltern') return <Eltern />
   if (route.startsWith('studio/')) return <Studio id={route.slice('studio/'.length).split('?')[0]} />
 
   if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {

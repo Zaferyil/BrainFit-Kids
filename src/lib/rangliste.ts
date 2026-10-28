@@ -39,7 +39,7 @@ export function stufeVon(kid: Kid) {
 const mittel = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0)
 
 /** Werte 0–100 aus den gespeicherten Daten des Kindes */
-function echteWerte(kid: Kid): Record<Bereich, number> {
+export function echteWerte(kid: Kid): Record<Bereich, number> {
   const p = getProgress(kid.id)
   const levels = load<Record<string, number>>(`bfk.levels.${kid.id}`, {})
   const sterne = (station: string) => {
