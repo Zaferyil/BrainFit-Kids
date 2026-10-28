@@ -180,7 +180,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
 
   return (
     <Stage >
-      <div className="boss">
+      <div className={q.art === 'hoeren' && abakusZeigen ? 'boss abakus-offen' : 'boss'}>
         <div className="boss-top">
           <a href="#/einheit" aria-label="Aufgeben" className="round-btn big"><Icon name="x" color="#FFFFFF" size={26} /></a>
           <div className="boss-lives" aria-label={`${lives} von ${LIVES} Leben`}>

@@ -1941,3 +1941,23 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .eltern-kinder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .eltern-staerke { grid-template-columns: 110px 1fr 32px; }
 }
+
+/* Abschlusstest, Abakus auf dem Bildschirm (Handy hochkant): Abakus groß, alles andere kompakt */
+@media (max-width: 600px) and (orientation: portrait) {
+  .boss.abakus-offen { gap: 6px; }
+  .boss.abakus-offen .boss-hp { display: none; }
+  .boss.abakus-offen .boss-top .round-btn.big { width: 40px; height: 40px; }
+  .boss.abakus-offen .boss-lives svg { width: 28px; height: 28px; }
+  .boss.abakus-offen .boss-arena { flex: 1 1 auto; min-height: 300px; }
+  .boss.abakus-offen .boss-arena.mit-liste .fit.boss-fit { right: 26%; }
+  .boss.abakus-offen .hoer-liste { left: 76%; min-width: 0; font-size: clamp(18px, calc((100dvh - 560px) / (var(--zeilen) + .9)), 40px); }
+  .boss.abakus-offen .boss-question { padding: 8px 14px; gap: 4px; flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .boss.abakus-offen .boss-q-head { flex: 1 1 100%; }
+  .boss.abakus-offen .boss-sek { font-size: 22px; padding: 2px 10px; }
+  .boss.abakus-offen .boss-sek svg { width: 20px; height: 20px; }
+  .boss.abakus-offen .boss-timer { height: 6px; flex: 1 1 100%; }
+  .boss.abakus-offen .boss-hoer-zahl { min-height: 40px; font-size: 28px; border-radius: 14px; box-shadow: 0 3px 0 #D2650A; flex: 1; }
+  .boss.abakus-offen .boss-abakus-btn { padding: 6px 12px; font-size: 13px; }
+  .boss.abakus-offen .keypad.glas .key, .boss.abakus-offen .keypad.glas .key.key-alt, .boss.abakus-offen .keypad.glas .key.key-alt:last-child { --d: 50px; }
+  .boss.abakus-offen .keypad.glas { gap: 6px 16px; }
+}
