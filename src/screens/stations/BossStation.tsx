@@ -195,7 +195,18 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
           </div>
         </div>
 
-        <div className="boss-arena">
+        <div className={q.art === 'hoeren' && erklaert && schritt > 0 ? 'boss-arena mit-liste' : 'boss-arena'}>
+          {q.art === 'hoeren' && erklaert && schritt > 0 && (
+            // gesagte Zahlen untereinander wie beim schriftlichen Rechnen; nach der letzten Zahl Strich und Ergebnis
+            <div className="hoer-liste" aria-live="polite">
+              {q.zahlen!.slice(0, Math.min(schritt, kettenLaenge)).map((z, i) => (
+                <div key={i} className={i === schritt - 1 ? 'hoer-z neu' : 'hoer-z'}>{i === 0 ? z : z < 0 ? `− ${-z}` : `+ ${z}`}</div>
+              ))}
+              {schritt > kettenLaenge && (
+                <div className={picked === null ? 'hoer-ergebnis' : picked === q.n ? 'hoer-ergebnis right' : 'hoer-ergebnis wrong'}>{picked !== null && picked !== q.n ? q.n : input || '?'}</div>
+              )}
+            </div>
+          )}
           {q.art === 'hoeren' && abakusZeigen
             ? <Fit className="boss-fit"><Abakus key={`${hits}-${lives}-${q.zahlen?.join()}`} value={0} cols={Math.max(2, content.cols)} colw={110} /></Fit>
             : <Fit className="boss-fit"><Grummel size={280} hit={picked !== null && picked === q.n} /></Fit>}
