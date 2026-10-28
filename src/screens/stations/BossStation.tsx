@@ -68,7 +68,7 @@ function sprich(q: Question, add?: number): string[] {
 }
 
 export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
-  const [{ aufgaben: HITS, blitzMs, takt, eineStange }] = useState(() => klasseVon(kidId))
+  const [{ aufgaben: HITS, blitzMs, takt, eineStange, testSek }] = useState(() => klasseVon(kidId))
   const [ketten] = useState(() => eineStange ? [] : (kursAufgaben(world, unit) ?? []).flatMap((k) => k.art === 'kette' ? [k.zahlen] : []))
   const naechste = useMischung(content, ketten)
   const [q, setQ] = useState(() => naechste())
@@ -88,7 +88,8 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
   const bereit = q.art === 'blitz' ? !zeigen : q.art === 'kette' ? schritt > kettenLaenge : true
 
   // neue Aufgabe: Blitz und Kette zurücksetzen
-  const neu = (next: Question) => { setQ(next); setZeigen(true); setSchritt(0) }
+  const [rest, setRest] = useState(testSek)
+  const neu = (next: Question) => { setQ(next); setZeigen(true); setSchritt(0); setRest(testSek) }
 
   // Blitz: Abakus nach blitzMs ausblenden
   useEffect(() => {
@@ -110,7 +111,15 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
 
   useEffect(() => { if (started && bereit) void speak(questionKey.split('|')) }, [started, questionKey, q, bereit])
 
-  const answer = (v: number) => {
+  // Countdown je Frage: läuft erst, wenn die Frage ganz gezeigt ist; bei 0 zählt es als Fehler
+  const laeuft = started && bereit && picked === null && !result
+  useEffect(() => {
+    if (!laeuft) return
+    const t = window.setTimeout(() => { if (rest <= 1) answer(-1); else setRest(rest - 1) }, 1000)
+    return () => window.clearTimeout(t)
+  })
+
+  function answer(v: number) {
     if (picked !== null || result || !bereit) return
     setPicked(v)
     const ok = v === q.n
@@ -166,7 +175,11 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
 
         <div className="boss-panel">
           <div className="boss-question">
-            <div className="eyebrow light">TREFFER {hits} VON {HITS}</div>
+            <div className="boss-q-head">
+              <span className="eyebrow light">TREFFER {hits} VON {HITS}</span>
+              <span className={rest <= 3 && laeuft ? 'boss-sek knapp' : 'boss-sek'}><Icon name="clock" size={18} color="currentColor" /> {rest}</span>
+            </div>
+            <div className="boss-timer"><div style={{ width: `${(rest / testSek) * 100}%` }} /></div>
             {q.art === 'kette' ? (
               <div className="boss-q-text">{schritt === 0 ? 'Pass auf …' : schritt <= kettenLaenge ? (() => { const z = q.zahlen![schritt - 1]; return schritt === 1 ? z : z < 0 ? `− ${-z}` : `+ ${z}` })() : 'Wie viel ist das?'}</div>
             ) : q.art === 'kopf' ? (
@@ -177,7 +190,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               <div className="boss-q-text">Welche Zahl war es?</div>
             ) : (
               <div className="boss-q-read">
-                <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 56 : 70} />
+                <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 44 : 54} />
                 <span>{q.art === 'abakus' ? `${q.a} + ${content.add} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
               </div>
             )}

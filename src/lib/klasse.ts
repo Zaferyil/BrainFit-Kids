@@ -15,16 +15,18 @@ export type KlassenStufe = {
   aufgaben: number
   /** Tipp-Knopf beim Üben */
   tipp: boolean
+  /** Sekunden je Frage im Abschlusstest (jüngere Kinder lesen und zählen langsamer) */
+  testSek: number
 }
 
 export const KLASSEN: KlassenStufe[] = [
-  { name: 'Kiga', eineStange: true, takt: 4, blitzMs: 2500, aufgaben: 6, tipp: true },
-  { name: '1. Klasse', eineStange: false, takt: 4, blitzMs: 2000, aufgaben: 6, tipp: true },
-  { name: '2. Klasse', eineStange: false, takt: 3, blitzMs: 1500, aufgaben: 8, tipp: true },
-  { name: '3. Klasse', eineStange: false, takt: 3, blitzMs: 1200, aufgaben: 8, tipp: true },
-  { name: '4. Klasse', eineStange: false, takt: 2.5, blitzMs: 1000, aufgaben: 10, tipp: false },
-  { name: '5. Klasse', eineStange: false, takt: 2, blitzMs: 800, aufgaben: 10, tipp: false },
-  { name: '6. Klasse', eineStange: false, takt: 2, blitzMs: 800, aufgaben: 10, tipp: false },
+  { name: 'Kiga', eineStange: true, takt: 4, blitzMs: 2500, aufgaben: 6, tipp: true, testSek: 20 },
+  { name: '1. Klasse', eineStange: false, takt: 4, blitzMs: 2000, aufgaben: 6, tipp: true, testSek: 15 },
+  { name: '2. Klasse', eineStange: false, takt: 3, blitzMs: 1500, aufgaben: 8, tipp: true, testSek: 12 },
+  { name: '3. Klasse', eineStange: false, takt: 3, blitzMs: 1200, aufgaben: 8, tipp: true, testSek: 10 },
+  { name: '4. Klasse', eineStange: false, takt: 2.5, blitzMs: 1000, aufgaben: 10, tipp: false, testSek: 8 },
+  { name: '5. Klasse', eineStange: false, takt: 2, blitzMs: 800, aufgaben: 10, tipp: false, testSek: 7 },
+  { name: '6. Klasse', eineStange: false, takt: 2, blitzMs: 800, aufgaben: 10, tipp: false, testSek: 6 },
 ]
 
 /** Einstellungen für die Klasse des Kindes; ohne Angabe wie 2. Klasse (entspricht dem Levelplan: 3 Sekunden) */
