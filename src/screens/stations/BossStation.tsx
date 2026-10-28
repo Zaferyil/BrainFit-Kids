@@ -190,7 +190,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               <div className="boss-q-text">Welche Zahl war es?</div>
             ) : (
               <div className="boss-q-read">
-                <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 44 : 54} />
+                <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 40 : 46} />
                 <span>{q.art === 'abakus' ? `${q.a} + ${content.add} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
               </div>
             )}
