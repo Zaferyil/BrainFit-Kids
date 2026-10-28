@@ -177,7 +177,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
           <div className="boss-question">
             <div className="boss-q-head">
               <span className="eyebrow light">TREFFER {hits} VON {HITS}</span>
-              <span className={rest <= 3 && laeuft ? 'boss-sek knapp' : 'boss-sek'}><Icon name="clock" size={18} color="currentColor" /> {rest}</span>
+              <span className={rest <= 3 && laeuft ? 'boss-sek knapp' : 'boss-sek'}><Icon name="clock" size={30} color="currentColor" /> {rest}</span>
             </div>
             <div className="boss-timer"><div style={{ width: `${(rest / testSek) * 100}%` }} /></div>
             {q.art === 'kette' ? (

@@ -1742,10 +1742,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .boss-question { align-items: center; text-align: center; }
 .boss-q-read { flex-direction: column; gap: 6px; font-size: 28px; }
 .boss-q-head { align-self: stretch; display: flex; justify-content: space-between; align-items: center; }
-.boss-sek { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-display); font-weight: 800; font-size: 20px; }
+.boss-sek { display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; border-radius: 999px; background: rgba(255,255,255,.25); font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; }
 .boss-sek.knapp { color: #FF4D6D; animation: boss-puls .5s ease-in-out infinite alternate; }
 @keyframes boss-puls { to { transform: scale(1.18); } }
-.boss-timer { align-self: stretch; height: 8px; border-radius: 999px; background: rgba(255,255,255,.3); overflow: hidden; }
+.boss-timer { align-self: stretch; height: 12px; border-radius: 999px; background: rgba(255,255,255,.3); overflow: hidden; }
 .boss-timer div { height: 100%; border-radius: 999px; background: var(--yellow); transition: width 1s linear; }
 .boss-arena { min-height: 110px; }
 /* Handy hochkant: die 4 Antworten in einer Reihe, damit alle immer sichtbar sind */
@@ -1755,5 +1755,5 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .boss-question { padding: 12px 18px; gap: 6px; }
   .boss-q-read { font-size: 22px; }
   .boss-arena { min-height: 70px; }
-  .boss-timer { height: 6px; }
+  .boss-timer { height: 10px; }
 }
