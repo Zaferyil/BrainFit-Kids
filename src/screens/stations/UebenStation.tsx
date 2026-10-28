@@ -3,7 +3,7 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeNumber, makeSum, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, makeSum, rechnet, randomIn, type UnitContent } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
@@ -12,7 +12,7 @@ import { Keypad, StationDone, StationShell } from './StationShell'
 import { typeDigit } from '../../lib/typeDigit'
 
 /** a: Startwert auf dem Abakus bei Rechen-Einheiten (a + add = n) */
-type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean; a?: number }
+type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean; a?: number; b?: number }
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
 
@@ -21,10 +21,10 @@ function makeTasks(content: UnitContent, COUNT: number): Task[] {
   let prev: number | undefined
   for (let i = 0; i < COUNT; i++) {
     const kind = i % 2 === 0 ? 'set' : 'read'
-    if (content.add) {
-      const { a, n } = makeSum(content, prev)
+    if (rechnet(content)) {
+      const { a, b, n } = makeSum(content, prev)
       prev = a
-      tasks.push({ kind, n, a, id: i })
+      tasks.push({ kind, n, a, b, id: i })
     } else {
       const n = randomIn(content.range, prev)
       prev = n
@@ -48,9 +48,9 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
   const [started, setStarted] = useState(false)
   const task = queue[index]
-  const sum = task.a !== undefined ? `${task.a} + ${content.add}` : null
+  const sum = task.a !== undefined ? `${task.a} + ${task.b}` : null
   const question = sum
-    ? [SAY.rechne, String(task.a), SAY.plus, String(content.add), task.kind === 'set' ? SAY.rechneAbakus : SAY.wievielIst]
+    ? [SAY.rechne, String(task.a), SAY.plus, String(task.b), task.kind === 'set' ? SAY.rechneAbakus : SAY.wievielIst]
     : task.kind === 'set' ? [SAY.stelleEin, String(task.n)] : [SAY.welcheZahlAbakus]
   const questionKey = question.join('|')
 
@@ -113,7 +113,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? 'Rechnen: alle Big Friends' : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>

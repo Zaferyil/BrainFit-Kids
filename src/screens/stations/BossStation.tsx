@@ -6,7 +6,7 @@ import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
-import { describeNumber, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, makeSum, randomIn, rechnet, type UnitContent } from '../../data/units'
 import { ABSCHLUSS, type HoerAufgabe } from '../../data/abschluss'
 import { typeDigit } from '../../lib/typeDigit'
 import { completeUnit, finishStation } from '../../lib/progress'
@@ -21,7 +21,7 @@ const LIVES = 3
 // lesen (Abakus ablesen) · beschreiben (Text) · blitz (Abakus blitzt kurz) · abakus (Rechnen mit Abakus)
 // kopf (Kopfrechnen ohne Abakus) · hoeren (Zahlen kommen nacheinander, Ergebnis eintippen – 5 je Lektion aus dem Level-Plan)
 type Art = 'lesen' | 'beschreiben' | 'blitz' | 'abakus' | 'kopf' | 'hoeren'
-type Question = { art: Art; n: number; options: number[]; a?: number; zahlen?: number[] }
+type Question = { art: Art; n: number; options: number[]; a?: number; b?: number; zahlen?: number[] }
 
 function optionen(n: number, range: [number, number]): number[] {
   const opts = new Set([n])
@@ -32,14 +32,14 @@ function optionen(n: number, range: [number, number]): number[] {
 }
 
 function arten(content: UnitContent): Art[] {
-  return content.add ? ['abakus', 'kopf', 'blitz', 'lesen'] : ['lesen', 'beschreiben', 'blitz']
+  return rechnet(content) ? ['abakus', 'kopf', 'blitz', 'lesen'] : ['lesen', 'beschreiben', 'blitz']
 }
 
 function makeQuestion(art: Art, content: UnitContent, prev?: number): Question {
-  const { range, add } = content
-  if ((art === 'abakus' || art === 'kopf') && add) {
-    const a = randomIn(range, prev === undefined ? undefined : prev - add)
-    return { art, n: a + add, a, options: optionen(a + add, range) }
+  const { range } = content
+  if ((art === 'abakus' || art === 'kopf') && rechnet(content)) {
+    const { a, b, n } = makeSum(content, prev === undefined ? undefined : prev - (content.add ?? 0))
+    return { art, n, a, b, options: optionen(n, range) }
   }
   const n = randomIn(range, prev)
   return { art, n, options: optionen(n, range) }
@@ -65,9 +65,9 @@ function useMischung(content: UnitContent, hoer: HoerAufgabe[]) {
   }
 }
 
-function sprich(q: Question, add?: number): string[] {
+function sprich(q: Question): string[] {
   if (q.art === 'hoeren') return [SAY.ergebnisEintippen]
-  if (q.art === 'abakus' || q.art === 'kopf') return [SAY.rechne, String(q.a), SAY.plus, String(add), SAY.wievielIst]
+  if (q.art === 'abakus' || q.art === 'kopf') return [SAY.rechne, String(q.a), SAY.plus, String(q.b), SAY.wievielIst]
   if (q.art === 'blitz') return [SAY.welcheZahlWar]
   if (q.art === 'lesen') return [SAY.welcheZahlAbakus]
   return [...sayDescribe(q.n), SAY.welcheZahlIst]
@@ -90,7 +90,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
   const [reward, setReward] = useState<{ perlen: number; worldDone: boolean } | null>(null)
   const [started, setStarted] = useState(false)
   const hp = Math.round(((HITS - hits) / HITS) * 100)
-  const question = sprich(q, content.add)
+  const question = sprich(q)
   const questionKey = question.join('|')
   const kettenLaenge = q.zahlen?.length ?? 0
   const bereit = q.art === 'blitz' ? !zeigen : q.art === 'hoeren' ? schritt > kettenLaenge : true
@@ -230,7 +230,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
                 </button>
               </>
             ) : q.art === 'kopf' ? (
-              <div className="boss-q-text">{q.a} + {content.add} = ?</div>
+              <div className="boss-q-text">{q.a} + {q.b} = ?</div>
             ) : q.art === 'beschreiben' ? (
               <div className="boss-q-text">{describeNumber(q.n)[0].toUpperCase() + describeNumber(q.n).slice(1)} = ?</div>
             ) : q.art === 'blitz' && !zeigen ? (
@@ -238,7 +238,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             ) : (
               <div className="boss-q-read">
                 <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 40 : 46} />
-                <span>{q.art === 'abakus' ? `${q.a} + ${content.add} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
+                <span>{q.art === 'abakus' ? `${q.a} + ${q.b} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
               </div>
             )}
           </div>

@@ -3,7 +3,7 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeNumber, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent, makeSum, rechnet } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
@@ -13,9 +13,13 @@ import { typeDigit } from '../../lib/typeDigit'
 
 
 /** Zahlen (bzw. bei Rechen-Einheiten die Startzahl a) für alle Aufgaben */
-const randomNumbers = (range: [number, number], COUNT: number) => {
-  const out: number[] = []
-  while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
+/** Je Aufgabe die Zahl a und (bei Rechen-Einheiten) das „+b“ */
+const makePairs = (content: UnitContent, COUNT: number) => {
+  const out: { a: number; b: number }[] = []
+  while (out.length < COUNT) {
+    const prev = out[out.length - 1]?.a
+    out.push(rechnet(content) ? makeSum(content, prev) : { a: randomIn(content.range, prev), b: 0 })
+  }
   return out
 }
 
@@ -23,18 +27,19 @@ const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 1 ? 2 : 1)
 
 export function KopfrechnenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
   const [COUNT] = useState(() => klasseVon(kidId).aufgaben)
-  const [numbers] = useState(() => randomNumbers(content.range, COUNT))
+  const [pairs] = useState(() => makePairs(content, COUNT))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [state, setState] = useState<'ask' | 'right' | 'wrong'>('ask')
   const [results, setResults] = useState<('right' | 'wrong')[]>([])
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
-  const add = content.add
-  const n = add ? numbers[index] + add : numbers[index]
-  const sum = add ? `${numbers[index]} + ${add}` : null
+  const add = pairs[index].b
+  const a = pairs[index].a
+  const n = a + add
+  const sum = add ? `${a} + ${add}` : null
   const phrase = sum ?? describeNumber(n)
   const [started, setStarted] = useState(false)
-  const question = sum ? [SAY.rechne, String(numbers[index]), SAY.plus, String(add), SAY.wievielIst] : [...sayDescribe(n), SAY.welcheZahlIst]
+  const question = sum ? [SAY.rechne, String(a), SAY.plus, String(add), SAY.wievielIst] : [...sayDescribe(n), SAY.welcheZahlIst]
   const questionKey = question.join('|')
 
   useEffect(() => { if (started) void speak(questionKey.split('|')) }, [started, questionKey, index])
@@ -61,7 +66,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
     }, ok ? 1000 : 2400)
   }
 
-  const dots = numbers.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
+  const dots = pairs.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
 
   return (
     <StationShell station="kopfrechnen" title="Perlen im Kopf" dots={dots} perlen={results.filter((r) => r === 'right').length * 2} intro={STATION_INTRO.kopfrechnen} started={started} onStart={() => setStarted(true)} say={question}>

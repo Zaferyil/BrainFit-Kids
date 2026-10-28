@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus3D } from '../../components/Abakus3D'
 import { Icon } from '../../components/Icon'
-import { describeNumber, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent, makeSum, rechnet } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
@@ -14,9 +14,13 @@ import { typeDigit } from '../../lib/typeDigit'
 
 type Phase = 'ready' | 'flash' | 'answer' | 'right' | 'wrong'
 
-const randomNumbers = (range: [number, number], COUNT: number) => {
-  const out: number[] = []
-  while (out.length < COUNT) out.push(randomIn(range, out[out.length - 1]))
+/** Je Aufgabe die geblitzte Zahl a und (bei Rechen-Einheiten) das „+b“ */
+const makePairs = (content: UnitContent, COUNT: number) => {
+  const out: { a: number; b: number }[] = []
+  while (out.length < COUNT) {
+    const prev = out[out.length - 1]?.a
+    out.push(rechnet(content) ? makeSum(content, prev) : { a: randomIn(content.range, prev), b: 0 })
+  }
   return out
 }
 
@@ -25,7 +29,7 @@ const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 export function BlitzStation({ kidId, content }: { kidId: string; content: UnitContent }) {
   // Klasse bestimmt Anzahl und Blitzdauer
   const [{ aufgaben: COUNT, blitzMs: FLASH_MS }] = useState(() => klasseVon(kidId))
-  const [numbers] = useState(() => randomNumbers(content.range, COUNT))
+  const [pairs] = useState(() => makePairs(content, COUNT))
   const [input, setInput] = useState('')
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>('ready')
@@ -35,8 +39,9 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const [started, setStarted] = useState(false)
   const timer = useRef<number | undefined>(undefined)
   // Rechen-Einheit: der Abakus blitzt die Startzahl, gefragt ist Startzahl + add
-  const shown = numbers[index]
-  const n = content.add ? shown + content.add : shown
+  const shown = pairs[index].a
+  const plus = pairs[index].b
+  const n = shown + plus
 
   // Ablauf je Aufgabe: kurz „Achtung“, dann blitzt der Abakus auf.
   useEffect(() => {
@@ -45,7 +50,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
       void speak(SAY.achtung)
       timer.current = window.setTimeout(() => setPhase('flash'), 1100)
     }
-    if (phase === 'answer') void speak(content.add ? [SAY.rechne, String(shown), SAY.plus, String(content.add), SAY.wievielIst] : SAY.welcheZahlWar)
+    if (phase === 'answer') void speak(plus ? [SAY.rechne, String(shown), SAY.plus, String(plus), SAY.wievielIst] : SAY.welcheZahlWar)
     if (phase === 'flash') timer.current = window.setTimeout(() => setPhase('answer'), FLASH_MS)
     return () => window.clearTimeout(timer.current)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,11 +81,11 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
     window.setTimeout(() => { setInput(''); next(res) }, ok ? 900 : 2200)
   }
 
-  const dots = numbers.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
+  const dots = pairs.map((_, i) => results[i] ?? (i === index ? 'current' : 'open'))
   const showAbakus = phase === 'flash' || phase === 'wrong'
 
   return (
-    <StationShell station="blitz" title={content.add ? `Blitz-Abakus: +${content.add}` : 'Blitz-Abakus: Welche Zahl war es?'} dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
+    <StationShell station="blitz" title={content.add ? `Blitz-Abakus: +${content.add}` : content.adds ? 'Blitz-Abakus: alle Big Friends' : 'Blitz-Abakus: Welche Zahl war es?'} dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
       <div className="blitz">
         <aside className="blitz-side">
           <div className="blitz-stat">
@@ -108,10 +113,10 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
           </Fit>
           <div className={`blitz-say ${phase}`} role="status">
             {phase === 'ready' && 'Gleich blitzt der Abakus auf. Schau genau hin!'}
-            {phase === 'flash' && (content.add ? `Merk dir die Zahl – gleich rechnest du +${content.add}!` : 'Merk dir die Perlen!')}
-            {phase === 'answer' && (content.add ? `Es war die ${shown}. Rechne ${shown} + ${content.add}!` : 'Welche Zahl war es? Tippe sie ein.')}
+            {phase === 'flash' && (plus ? `Merk dir die Zahl – gleich rechnest du +${plus}!` : 'Merk dir die Perlen!')}
+            {phase === 'answer' && (plus ? `Es war die ${shown}. Rechne ${shown} + ${plus}!` : 'Welche Zahl war es? Tippe sie ein.')}
             {phase === 'right' && 'Richtig! Blitzschnell.'}
-            {phase === 'wrong' && (content.add ? `${shown} + ${content.add} = ${n}` : `Es war die ${n}: ${describeNumber(n)}.`)}
+            {phase === 'wrong' && (plus ? `${shown} + ${plus} = ${n}` : `Es war die ${n}: ${describeNumber(n)}.`)}
           </div>
         </div>
 

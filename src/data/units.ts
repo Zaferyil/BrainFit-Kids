@@ -38,6 +38,8 @@ export type UnitContent = {
   discover: DiscoverStep[]
   /** Rechen-Einheit (z. B. Big Friend +9): Üben, Blitz, Kopfrechnen und Boss fragen „a + add“ statt einer Zahl */
   add?: number
+  /** Gemischte Wiederholung (z. B. alle Big Friends): jede Aufgabe nimmt zufällig eines dieser „+k“ */
+  adds?: number[]
 }
 
 const UNITS: Record<string, UnitContent> = {
@@ -109,12 +111,53 @@ UNITS['1-10'] = bigFriend(1, 'Der Trick für +1: 10 dazu und 9 weg.', 'Eins und 
 UNITS['1-3'] = bigFriend(8, 'Der Trick für +8: 10 dazu und 2 weg.', 'Acht und zwei sind zusammen zehn. Zwei ist der Big Friend von acht. Jetzt rechnen wir drei plus acht!')
 UNITS['1-2'] = bigFriend(9, 'Der Trick für +9: 10 dazu und 1 weg.', 'Neun und eins sind zusammen zehn. Eins ist der Big Friend von neun. Jetzt rechnen wir drei plus neun!')
 
+/** Wiederholung aller Big Friends (+9 … +1 gemischt) */
+const alleBigFriends = (title: string, lead: string, b1: [number, number], b2: [number, number]): UnitContent => ({
+  title,
+  lead,
+  rule: ['+k = +10 − Big Friend'],
+  learn: ['Alle Big Friends: 9+1, 8+2, 7+3, 6+4, 5+5', 'Gemischt rechnen: 10 dazu, Big Friend weg', 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: 'Der Video-Tutor wiederholt alle Big Friends.',
+    entdecken: 'Perli rechnet mit dir zwei gemischte Aufgaben.',
+    ueben: 'Du rechnest alle Big Friends gemischt.',
+    blitz: 'Der Abakus blitzt auf. Rechne dazu!',
+    kopfrechnen: 'Rechne alle Big Friends im Kopf.',
+    buch: 'Rechne im Buch und hake ab.',
+    boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+  },
+  cols: 2,
+  range: [1, 9],
+  board: 'Zehner · Einer',
+  adds: [9, 8, 7, 6, 5, 4, 3, 2, 1],
+  discover: [
+    { text: 'Alle Big Friends: 9+1, 8+2, 7+3, 6+4, 5+5.', say: 'Du kennst jetzt alle Big Friends. Jetzt mischen wir sie!', mood: 'happy', start: 0, goal: null },
+    ...[b1, b2].flatMap(([a, k]) => [
+      { text: `Stelle die ${a} ein.`, say: `Stell die ${ZAHLWORT[a]} ein.`, mood: 'happy' as const, start: 0, goal: a },
+      { text: `+${k}: zuerst 10 dazu.`, say: `Plus ${ZAHLWORT[k]}: Zuerst zehn dazu, eine Perle bei den Zehnern hoch.`, mood: 'think' as const, start: a, goal: a + 10 },
+      { text: `Dann ${10 - k} weg.`, say: `Dann ${ZAHLWORT[10 - k]} weg bei den Einern.`, mood: 'think' as const, start: a + 10, goal: a + k },
+    ]),
+    { text: `Fertig! ${b1[0]} + ${b1[1]} = ${b1[0] + b1[1]} und ${b2[0]} + ${b2[1]} = ${b2[0] + b2[1]}.`, say: 'Super! Du kannst alle Big Friends.', mood: 'cheer', start: b2[0] + b2[1], goal: null },
+  ],
+})
+UNITS['1-11'] = alleBigFriends('Big Friends alle', 'Alle Big Friends gemischt wiederholen.', [8, 3], [9, 6])
+UNITS['1-12'] = alleBigFriends('Big Friends alle – Training', 'Training: alle Big Friends gemischt.', [9, 2], [8, 5])
+
 /** Rechenaufgabe für eine Big-Friend-Einheit: a (Einer, bei denen der Trick nötig ist) + add. */
 export function makeSum(content: UnitContent, prev?: number) {
+  if (content.adds?.length) {
+    // gemischt: zuerst ein Big Friend, dann ein Einer, bei dem der Trick nötig ist
+    const b = content.adds[Math.floor(Math.random() * content.adds.length)]
+    const a = randomIn([10 - b, 9], prev)
+    return { a, b, n: a + b }
+  }
   const a = randomIn(content.range, prev)
   const b = content.add ?? 0
   return { a, b, n: a + b }
 }
+
+/** Rechnet die Einheit „a + b“ (ein fester Big Friend oder gemischt)? */
+export const rechnet = (content: UnitContent) => !!content.add || !!content.adds?.length
 
 export const unitContent = (world: number, unit: number) => UNITS[`${world}-${unit}`] ?? null
 

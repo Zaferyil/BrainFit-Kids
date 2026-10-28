@@ -359,7 +359,50 @@ const LEKTION_8 = bigFriendLektion(8, 3, 8, 9, 7)
 const LEKTION_9 = bigFriendLektion(9, 2, 9, 8, 18)
 const LEKTION_10 = bigFriendLektion(10, 1, 9, 19, 29)
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10]
+// Lektion 11–12: Wiederholung aller Big Friends – gleicher Aufbau, aber gemischte Aufgaben
+function wiederholungLektion(number: number, title: string, hallo: string, b1: [number, number], b2: [number, number], c: [number, number]): Lesson {
+  const [a1, k1] = b1
+  const [a2, k2] = b2
+  return {
+    id: `lektion-${number}`,
+    number,
+    title,
+    world: 1,
+    sections: [
+      { title: 'Alle Big Friends', start: 'titel' },
+      { title: 'Gemischt', start: 'aufgabe-zeigen' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: hallo },
+      {
+        id: 'freunde', kind: 'karte', min: 7,
+        card: { title: 'Alle Big Friends', lines: [{ text: '9 + 1 · 8 + 2 · 7 + 3' }, { text: '6 + 4 · 5 + 5' }, { icon: 'daumen-hoch', text: 'Immer: 10 dazu, Big Friend weg' }] },
+        say: 'Neun und eins, acht und zwei, sieben und drei, sechs und vier, fünf und fünf. Das sind alle Big Friends!',
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a1, badge: `${a1} + ${k1}`, say: `Wir haben ${a1}. Jetzt kommt plus ${k1}. Welcher Big Friend hilft? Die ${10 - k1}!` },
+      { id: 'zehn-dazu', cols: 2, value: a1, badge: '+ 10', moves: [{ at: 'bei den Zehnern', to: a1 + 10 }], say: 'Zuerst eine Perle bei den Zehnern hoch. Das sind 10.' },
+      { id: 'weg', badge: `− ${10 - k1}`, moves: [{ at: 'bei den Einern', to: a1 + k1 }], say: `Dann ${10 - k1} bei den Einern weg. ${a1} plus ${k1} ist ${a1 + k1}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: a2, badge: `${a2} + ${k2} = ${a2 + k2}`, moves: [{ at: 'Zehnern hoch', to: a2 + 10 }, { at: 'Einern weg', to: a2 + k2 }],
+        say: `Und jetzt ${a2} plus ${k2}. Der Big Friend ist ${10 - k2}. Zehn dazu, ${10 - k2} weg. Das ist ${a2 + k2}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c[0], task: c[0] + c[1], say: `Jetzt du! Rechne ${c[0]} plus ${c[1]}. Denk an den Big Friend!` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: 'Erst den Big Friend finden' }, { text: 'Dann: 10 dazu, Big Friend weg' }] },
+        say: 'Merk dir: Erst den Big Friend finden. Dann zehn dazu und den Big Friend weg.',
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_11 = wiederholungLektion(11, 'Alle Big Friends', 'Hallo! Du hast alle Big Friends gelernt. Jetzt ist es Zeit, alle gemischt zu wiederholen!', [8, 3], [9, 6], [7, 4])
+const LEKTION_12 = wiederholungLektion(12, 'Big Friends Training', 'Hallo! Heute ist Training. Alle Big Friends kommen gemischt. Bist du bereit?', [9, 2], [8, 5], [4, 7])
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie
