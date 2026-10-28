@@ -603,6 +603,12 @@ button { font-family: inherit; }
   .discover-board { width: auto; flex: 1; }
   .discover-steps li:not(.current) { display: none; }
   .perli-say { margin-top: 0; }
+  /* Text wechselt je Schritt zwischen 1 und 3 Zeilen: feste Höhe, damit der Abakus nicht springt */
+  .discover-side { flex: 0 0 auto; }
+  .discover-steps li.current { min-height: calc(3 * 1.3em + 24px); }
+  .discover .say-bubble { min-height: calc(3 * 1.35em + 28px); display: flex; align-items: center; }
+  .discover-actions button { white-space: nowrap; height: 60px; padding-top: 0; padding-bottom: 0; }
+  .discover-actions .btn-primary { font-size: 18px; }
 
   .practice, .blitz, .mental { flex-direction: column; gap: 14px; }
   .task-card { width: auto; flex-direction: row; align-items: center; flex-wrap: wrap; padding: 14px 18px; gap: 8px 14px; }
