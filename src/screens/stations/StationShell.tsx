@@ -7,6 +7,10 @@ import { STATIONS, type StationId } from '../../data/units'
 import type { Say } from '../../data/sprache'
 import { speak } from '../../lib/speak'
 
+// Tasten-Bilder (Glas-Blasen aus der Vorlage, Hintergrund entfernt)
+const TASTEN = import.meta.glob('../../assets/tasten/taste-*.webp', { eager: true, import: 'default' }) as Record<string, string>
+const tastenBild = (k: string) => TASTEN[`../../assets/tasten/taste-${k}.webp`]
+
 type Props = {
   station: StationId
   title: string
@@ -127,7 +131,7 @@ export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabl
           disabled={disabled}
           onClick={() => onKey(k)}
         >
-          {k === 'del' ? <Icon name="del" color="#E0306A" size={30} /> : k}
+          <img src={tastenBild(k)} alt="" draggable={false} />
         </button>
       ))}
     </div>
