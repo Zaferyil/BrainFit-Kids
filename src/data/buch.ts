@@ -63,17 +63,22 @@ export function buchAuftrag(world: number, unit: number, anzahl: number, runde =
 }
 
 // Zweites Buch „Mental Arithmetic Work Book“ (AcademySeZa): pro Thema zwei Seiten mit Abakus-Bildern,
-// das Kind schreibt das Ergebnis darunter. Gedruckte Seitenzahlen je Lektion; Lektion 1 = Grundlagen (Seite 1–12).
+// das Kind schreibt das Ergebnis darunter. Gedruckte Seitenzahlen je Lektion.
 const WORKBOOK_SEITEN: Record<string, number[]> = {
-  '1-1': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   '1-2': [13, 14], '1-3': [15, 16], '1-4': [17, 18], '1-5': [19, 20], '1-6': [21, 22],
   '1-7': [23, 24], '1-8': [25, 26], '1-9': [27, 28], '1-10': [29, 30],
   '2-1': [31, 32], '2-2': [33, 34], '2-3': [35, 36], '2-4': [37, 38],
   '3-1': [65, 66], '3-2': [67, 68], '3-3': [69, 70], '3-4': [71, 72],
 }
 
-/** Workbook-Seite für eine Lektion; bei jeder Wiederholung die nächste Seite. Null, wenn das Workbook dazu nichts hat. */
-export function workbookSeite(world: number, unit: number, runde = 0): number | null {
+/** Pflicht-Seiten (von–bis) und freiwillige Seiten */
+export type WorkbookAuftrag = { von: number; bis: number; freiwillig?: [number, number] }
+
+/** Workbook-Auftrag einer Lektion; bei Wiederholung die nächste Seite. Lektion 1 (Grundlagen, Seite 1–12): Seite 1–2 Pflicht, 3–12 freiwillig. */
+export function workbookAuftrag(world: number, unit: number, runde = 0): WorkbookAuftrag | null {
+  if (world === 1 && unit === 1) return { von: 1, bis: 2, freiwillig: [3, 12] }
   const seiten = WORKBOOK_SEITEN[`${world}-${unit}`]
-  return seiten ? seiten[runde % seiten.length] : null
+  if (!seiten) return null
+  const seite = seiten[runde % seiten.length]
+  return { von: seite, bis: seite }
 }

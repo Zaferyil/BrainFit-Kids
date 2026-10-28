@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Icon } from '../../components/Icon'
-import type { BuchAuftrag } from '../../data/buch'
+import type { BuchAuftrag, WorkbookAuftrag } from '../../data/buch'
 import { SAY, STATION_INTRO } from '../../data/sprache'
 import { finishStation, setOhneBuch } from '../../lib/progress'
 import { speak } from '../../lib/speak'
@@ -14,12 +14,16 @@ const WORKBOOK_TITEL = 'Mental Arithmetic Work Book'
 // Arbeitsbuch-Station: Die App sagt, welche Seite, Spalte und Aufgaben im Buch dran sind.
 // Das Kind rechnet im Buch mit dem Abakus und hakt danach „Erledigt“ ab – Ergebnisse werden nicht eingetippt.
 
-export function BuchStation({ kidId, auftrag, workbook }: { kidId: string; auftrag: BuchAuftrag; workbook: number | null }) {
+const seiten = (von: number, bis: number) => von === bis ? [String(von)] : [String(von), SAY.bis, String(bis)]
+const seitenText = (von: number, bis: number) => von === bis ? `${von}` : `${von} – ${bis}`
+
+export function BuchStation({ kidId, auftrag, workbook }: { kidId: string; auftrag: BuchAuftrag; workbook: WorkbookAuftrag | null }) {
   const [done, setDone] = useState<number | null>(null)
   const [started, setStarted] = useState(false)
   const spalte = auftrag.spalte === 'A' ? SAY.spalteA : SAY.spalteB
   const auftragSagen = [SAY.buchName, SAY.seite, String(auftrag.seite), spalte, SAY.aufgabe, String(auftrag.von), SAY.bis, String(auftrag.bis),
-    ...(workbook ? [SAY.workbookName, SAY.seite, String(workbook), SAY.alleAufgaben] : [])]
+    ...(workbook ? [SAY.workbookName, SAY.seite, ...seiten(workbook.von, workbook.bis), SAY.alleAufgaben] : []),
+    ...(workbook?.freiwillig ? [SAY.freiwillig, SAY.seite, ...seiten(...workbook.freiwillig)] : [])]
 
   useEffect(() => { if (started) void speak(auftragSagen) }, [started]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -43,8 +47,9 @@ export function BuchStation({ kidId, auftrag, workbook }: { kidId: string; auftr
                 <img src={workbookCover} alt="" />
                 <div><span>Buch 2</span><b>{WORKBOOK_TITEL}</b></div>
               </div>
-              <div className="buch-zeile"><span>Seite</span><b>{workbook}</b></div>
+              <div className="buch-zeile"><span>{workbook.von === workbook.bis ? 'Seite' : 'Seiten'}</span><b>{seitenText(workbook.von, workbook.bis)}</b></div>
               <div className="buch-zeile"><span>Aufgaben</span><b>alle</b></div>
+              {workbook.freiwillig && <div className="buch-zeile freiwillig"><span>Freiwillig</span><b>Seiten {seitenText(...workbook.freiwillig)}</b></div>}
             </>
           )}
           <p>Rechne mit dem Abakus und schreib die Ergebnisse ins Buch.</p>

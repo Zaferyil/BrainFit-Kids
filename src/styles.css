@@ -1798,3 +1798,5 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .buch-karte:has(.workbook) .buch-titel img { width: 52px; }
   .buch-karte:has(.workbook) .buch-titel b { font-size: 19px; }
 }
+.buch-zeile.freiwillig span, .buch-zeile.freiwillig b { color: #3E9A12; }
+.buch-zeile.freiwillig b { font-size: 20px; }

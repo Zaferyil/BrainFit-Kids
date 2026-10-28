@@ -43,6 +43,7 @@ export const SAY = {
   buchName: 'Nimm dein Buch: Mental Arithmetic Basics Book.',
   workbookName: 'Und jetzt dein zweites Buch: Mental Arithmetic Work Book.',
   alleAufgaben: 'Mach alle Aufgaben auf dieser Seite.',
+  freiwillig: 'Wenn du Lust hast, mach freiwillig weiter:',
   seite: 'Seite',
   spalteA: 'Spalte A',
   spalteB: 'Spalte B',

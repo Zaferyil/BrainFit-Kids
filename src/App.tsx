@@ -12,7 +12,7 @@ import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { BuchStation } from './screens/stations/BuchStation'
-import { buchAuftrag, workbookSeite } from './data/buch'
+import { buchAuftrag, workbookAuftrag } from './data/buch'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
 import { klasseVon } from './lib/klasse'
@@ -105,7 +105,7 @@ export default function App() {
       if (id === 'buch') {
         const runde = progress.stationStars[`${progress.world}-${progress.unit}`]?.[index] ? 1 : 0
         const auftrag = buchAuftrag(progress.world, progress.unit, klasseVon(kid.id).aufgaben, runde)
-        if (auftrag) return <BuchStation kidId={kid.id} auftrag={auftrag} workbook={workbookSeite(progress.world, progress.unit, runde)} />
+        if (auftrag) return <BuchStation kidId={kid.id} auftrag={auftrag} workbook={workbookAuftrag(progress.world, progress.unit, runde)} />
       }
       // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
       const kurs = klasseVon(kid.id).aufgaben <= 6 ? null : kursAufgaben(progress.world, progress.unit)
