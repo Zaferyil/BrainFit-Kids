@@ -1800,3 +1800,13 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 }
 .buch-zeile.freiwillig span, .buch-zeile.freiwillig b { color: #3E9A12; }
 .buch-zeile.freiwillig b { font-size: 20px; }
+
+/* Abschlusstest – Hör-Aufgabe: große Zahlenkarte, Abakus-Knopf, Tastenfeld statt Antwortknöpfen */
+.boss-hoer-zahl { align-self: stretch; min-height: 92px; display: flex; align-items: center; justify-content: center; border-radius: 22px; background: linear-gradient(180deg, #FFB35C, #FF8A1F); color: #FFFFFF; font-family: var(--font-display); font-weight: 800; font-size: 56px; line-height: 1; box-shadow: 0 6px 0 #D2650A; text-shadow: 0 2px 0 rgba(0,0,0,.12); }
+.boss-hoer-zahl.neu { animation: hoer-pop .35s ease-out; }
+@keyframes hoer-pop { from { transform: scale(.82); opacity: .2; } to { transform: scale(1); opacity: 1; } }
+.boss-abakus-btn { border: 0; border-radius: 999px; padding: 8px 18px; background: rgba(255,255,255,.9); color: #3B2E8F; font-weight: 900; font-size: 16px; cursor: pointer; }
+.boss-keypad { display: flex; justify-content: center; }
+.boss-keypad.right .keypad { filter: drop-shadow(0 0 12px #2ECC8F); }
+.boss-keypad.wrong .keypad { filter: drop-shadow(0 0 12px #FF5C7A); }
+@media (max-width: 600px) and (orientation: portrait) { .boss-hoer-zahl { min-height: 72px; font-size: 44px; } }

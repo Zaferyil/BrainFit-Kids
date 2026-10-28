@@ -44,6 +44,8 @@ export const SAY = {
   workbookName: 'Und jetzt dein zweites Buch: Mental Arithmetic Work Book.',
   alleAufgaben: 'Mach alle Aufgaben auf dieser Seite.',
   freiwillig: 'Wenn du Lust hast, mach freiwillig weiter:',
+  hoerErklaerung: 'Jetzt kommen Zahlen nacheinander. Rechne mit deinem Abakus zu Hause mit. Wenn du keinen hast, tippe auf Abakus zeigen und rechne auf dem Bildschirm. Am Ende tippst du das Ergebnis ein.',
+  ergebnisEintippen: 'Wie viel ist das? Tippe das Ergebnis ein.',
   seite: 'Seite',
   spalteA: 'Spalte A',
   spalteB: 'Spalte B',

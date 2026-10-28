@@ -1,24 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus3D } from '../../components/Abakus3D'
+import { Abakus } from '../../components/Abakus'
 import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
 import { describeNumber, randomIn, type UnitContent } from '../../data/units'
-import { kursAufgaben } from '../../data/kurs'
+import { ABSCHLUSS, type HoerAufgabe } from '../../data/abschluss'
+import { typeDigit } from '../../lib/typeDigit'
 import { completeUnit, finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
-import { SayButton, StationDone, StationIntro } from './StationShell'
+import { Keypad, SayButton, StationDone, StationIntro } from './StationShell'
 import { SAY, STATION_INTRO, sayDescribe } from '../../data/sprache'
 
 const LIVES = 3
 
 // Abschlusstest: Mischung aus allen Übungsarten der Lektion
 // lesen (Abakus ablesen) · beschreiben (Text) · blitz (Abakus blitzt kurz) · abakus (Rechnen mit Abakus)
-// kopf (Kopfrechnen ohne Abakus) · kette (Zahlen kommen nacheinander, wie im Kurs)
-type Art = 'lesen' | 'beschreiben' | 'blitz' | 'abakus' | 'kopf' | 'kette'
+// kopf (Kopfrechnen ohne Abakus) · hoeren (Zahlen kommen nacheinander, Ergebnis eintippen – 5 je Lektion aus dem Level-Plan)
+type Art = 'lesen' | 'beschreiben' | 'blitz' | 'abakus' | 'kopf' | 'hoeren'
 type Question = { art: Art; n: number; options: number[]; a?: number; zahlen?: number[] }
 
 function optionen(n: number, range: [number, number]): number[] {
@@ -29,19 +31,12 @@ function optionen(n: number, range: [number, number]): number[] {
   return [...opts].sort(() => Math.random() - 0.5)
 }
 
-function arten(content: UnitContent, ketten: number[][]): Art[] {
-  const a: Art[] = content.add ? ['abakus', 'kopf', 'blitz', 'lesen'] : ['lesen', 'beschreiben', 'blitz']
-  if (ketten.length) a.push('kette')
-  return a
+function arten(content: UnitContent): Art[] {
+  return content.add ? ['abakus', 'kopf', 'blitz', 'lesen'] : ['lesen', 'beschreiben', 'blitz']
 }
 
-function makeQuestion(art: Art, content: UnitContent, ketten: number[][], prev?: number): Question {
+function makeQuestion(art: Art, content: UnitContent, prev?: number): Question {
   const { range, add } = content
-  if (art === 'kette') {
-    const zahlen = ketten[Math.floor(Math.random() * ketten.length)]
-    const n = zahlen.reduce((x, y) => x + y, 0)
-    return { art, n, zahlen, options: optionen(n, range) }
-  }
   if ((art === 'abakus' || art === 'kopf') && add) {
     const a = randomIn(range, prev === undefined ? undefined : prev - add)
     return { art, n: a + add, a, options: optionen(a + add, range) }
@@ -50,17 +45,28 @@ function makeQuestion(art: Art, content: UnitContent, ketten: number[][], prev?:
   return { art, n, options: optionen(n, range) }
 }
 
+/** Reihenfolge im Test: Hör-Aufgaben (Zahlen nacheinander) im Wechsel mit den übrigen Übungsarten, bis alle 5 dran waren */
+const PLAN: ('H' | 'O')[] = ['H', 'O', 'H', 'O', 'H', 'O', 'H', 'H']
+
 /** Nimmt jede Übungsart der Reihe nach (gemischt), damit alle im Test vorkommen */
-function useMischung(content: UnitContent, ketten: number[][]) {
+function useMischung(content: UnitContent, hoer: HoerAufgabe[]) {
   const deck = useRef<Art[]>([])
-  return (prev?: number) => {
-    if (!deck.current.length) deck.current = arten(content, ketten).sort(() => Math.random() - 0.5)
-    return makeQuestion(deck.current.shift()!, content, ketten, prev)
+  const nr = useRef(0)
+  const hoerRest = useRef<HoerAufgabe[]>([])
+  return (prev?: number, neuStart = false) => {
+    if (neuStart || nr.current === 0) { nr.current = 0; hoerRest.current = [...hoer] }
+    const platz = PLAN[nr.current++] ?? 'O'
+    if (platz === 'H' && hoerRest.current.length) {
+      const h = hoerRest.current.shift()!
+      return { art: 'hoeren' as const, n: h.antwort, zahlen: h.zahlen, options: [] }
+    }
+    if (!deck.current.length) deck.current = arten(content).sort(() => Math.random() - 0.5)
+    return makeQuestion(deck.current.shift()!, content, prev)
   }
 }
 
 function sprich(q: Question, add?: number): string[] {
-  if (q.art === 'kette') return [SAY.wievielIst]
+  if (q.art === 'hoeren') return [SAY.ergebnisEintippen]
   if (q.art === 'abakus' || q.art === 'kopf') return [SAY.rechne, String(q.a), SAY.plus, String(add), SAY.wievielIst]
   if (q.art === 'blitz') return [SAY.welcheZahlWar]
   if (q.art === 'lesen') return [SAY.welcheZahlAbakus]
@@ -68,11 +74,13 @@ function sprich(q: Question, add?: number): string[] {
 }
 
 export function BossStation({ kidId, content, world, unit }: { kidId: string; content: UnitContent; world: number; unit: number }) {
-  const [{ aufgaben: HITS, blitzMs, takt, eineStange, testSek }] = useState(() => klasseVon(kidId))
-  const [ketten] = useState(() => eineStange ? [] : (kursAufgaben(world, unit) ?? []).flatMap((k) => k.art === 'kette' ? [k.zahlen] : []))
-  const naechste = useMischung(content, ketten)
+  const [{ aufgaben, blitzMs, takt, testSek }] = useState(() => klasseVon(kidId))
+  const hoer = ABSCHLUSS[`${world}-${unit}`] ?? []
+  // so viele Treffer, dass alle 5 Hör-Aufgaben vorkommen
+  const HITS = hoer.length ? Math.max(aufgaben, PLAN.length) : aufgaben
+  const naechste = useMischung(content, hoer)
   const [q, setQ] = useState(() => naechste())
-  // blitz: Abakus sichtbar bis zeigen = false · kette: schritt = wie viele Zahlen schon gezeigt
+  // blitz: Abakus sichtbar bis zeigen = false · hoeren: schritt = wie viele Zahlen schon gezeigt
   const [zeigen, setZeigen] = useState(true)
   const [schritt, setSchritt] = useState(0)
   const [hits, setHits] = useState(0)
@@ -85,11 +93,15 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
   const question = sprich(q, content.add)
   const questionKey = question.join('|')
   const kettenLaenge = q.zahlen?.length ?? 0
-  const bereit = q.art === 'blitz' ? !zeigen : q.art === 'kette' ? schritt > kettenLaenge : true
+  const bereit = q.art === 'blitz' ? !zeigen : q.art === 'hoeren' ? schritt > kettenLaenge : true
+  // Hör-Aufgaben: Ergebnis eintippen, Abakus auf dem Bildschirm auf Wunsch; Erklärung beim ersten Mal
+  const [input, setInput] = useState('')
+  const [abakusZeigen, setAbakusZeigen] = useState(false)
+  const [erklaert, setErklaert] = useState(false)
 
   // neue Aufgabe: Blitz und Kette zurücksetzen
   const [rest, setRest] = useState(testSek)
-  const neu = (next: Question) => { setQ(next); setZeigen(true); setSchritt(0); setRest(testSek) }
+  const neu = (next: Question) => { setQ(next); setZeigen(true); setSchritt(0); setRest(testSek); setInput('') }
 
   // Blitz: Abakus nach blitzMs ausblenden
   useEffect(() => {
@@ -98,16 +110,24 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
     return () => window.clearTimeout(t)
   }, [started, q, zeigen, blitzMs])
 
-  // Kette: Zahlen im Takt nacheinander zeigen und sprechen
+  // Vor der ersten Hör-Aufgabe erklärt Perli, wie es geht
   useEffect(() => {
-    if (!started || q.art !== 'kette' || !q.zahlen || schritt > kettenLaenge) return
+    if (!started || q.art !== 'hoeren' || erklaert) return
+    let aktiv = true
+    void speak(SAY.hoerErklaerung).then(() => { if (aktiv) setErklaert(true) })
+    return () => { aktiv = false }
+  }, [started, q, erklaert])
+
+  // Hör-Aufgabe: Zahlen im Takt nacheinander zeigen und sprechen
+  useEffect(() => {
+    if (!started || !erklaert || q.art !== 'hoeren' || !q.zahlen || schritt > kettenLaenge) return
     if (schritt > 0) {
       const z = q.zahlen[schritt - 1]
       void speak(schritt === 1 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)])
     }
     const t = window.setTimeout(() => setSchritt((x) => x + 1), schritt === 0 ? 400 : takt * 1000)
     return () => window.clearTimeout(t)
-  }, [started, q, schritt, kettenLaenge, takt])
+  }, [started, erklaert, q, schritt, kettenLaenge, takt])
 
   useEffect(() => { if (started && bereit) void speak(questionKey.split('|')) }, [started, questionKey, q, bereit])
 
@@ -145,7 +165,14 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
     }, ok ? 800 : 1800)
   }
 
-  const retry = () => { neu(naechste()); setHits(0); setLives(LIVES); setResult(null) }
+  const onKey = (k: string) => {
+    if (picked !== null || !bereit) return
+    const t = typeDigit(input, k, q.n)
+    setInput(t.input)
+    if (t.done) answer(Number(t.input))
+  }
+
+  const retry = () => { neu(naechste(undefined, true)); setHits(0); setLives(LIVES); setResult(null) }
   const w = WORLDS[world - 1]
   const nextText = reward?.worldDone
     ? `Welt ${world} geschafft! Du bekommst den ${w.belt} Gürtel und 1 Diamant.`
@@ -169,7 +196,9 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
         </div>
 
         <div className="boss-arena">
-          <Fit className="boss-fit"><Grummel size={280} hit={picked !== null && picked === q.n} /></Fit>
+          {q.art === 'hoeren' && abakusZeigen
+            ? <Fit className="boss-fit"><Abakus key={`${hits}-${lives}-${q.zahlen?.join()}`} value={0} cols={Math.max(2, content.cols)} colw={110} /></Fit>
+            : <Fit className="boss-fit"><Grummel size={280} hit={picked !== null && picked === q.n} /></Fit>}
           {picked !== null && picked === q.n && <div className="boss-pow">−10!</div>}
         </div>
 
@@ -180,8 +209,15 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               <span className={rest <= 3 && laeuft ? 'boss-sek knapp' : 'boss-sek'}><Icon name="clock" size={30} color="currentColor" /> {rest}</span>
             </div>
             <div className="boss-timer"><div style={{ width: `${(rest / testSek) * 100}%` }} /></div>
-            {q.art === 'kette' ? (
-              <div className="boss-q-text">{schritt === 0 ? 'Pass auf …' : schritt <= kettenLaenge ? (() => { const z = q.zahlen![schritt - 1]; return schritt === 1 ? z : z < 0 ? `− ${-z}` : `+ ${z}` })() : 'Wie viel ist das?'}</div>
+            {q.art === 'hoeren' ? (
+              <>
+                <div key={schritt} className={schritt >= 1 && schritt <= kettenLaenge ? 'boss-hoer-zahl neu' : 'boss-hoer-zahl'}>
+                  {!erklaert ? 'Hör gut zu!' : schritt === 0 ? 'Pass auf …' : schritt <= kettenLaenge ? (() => { const z = q.zahlen![schritt - 1]; return schritt === 1 ? z : z < 0 ? `− ${-z}` : `+ ${z}` })() : (input || '?')}
+                </div>
+                <button type="button" className="boss-abakus-btn" onClick={() => setAbakusZeigen((x) => !x)}>
+                  {abakusZeigen ? 'Abakus ausblenden' : 'Abakus zeigen'}
+                </button>
+              </>
             ) : q.art === 'kopf' ? (
               <div className="boss-q-text">{q.a} + {content.add} = ?</div>
             ) : q.art === 'beschreiben' ? (
@@ -195,6 +231,11 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               </div>
             )}
           </div>
+          {q.art === 'hoeren' ? (
+            <div className={picked === null ? 'boss-keypad' : picked === q.n ? 'boss-keypad right' : 'boss-keypad wrong'}>
+              <Keypad onKey={onKey} disabled={picked !== null || !bereit} />
+            </div>
+          ) : (
           <div className="boss-options">
             {q.options.map((o) => (
               <button
@@ -208,6 +249,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
               </button>
             ))}
           </div>
+          )}
         </div>
       </div>
 
