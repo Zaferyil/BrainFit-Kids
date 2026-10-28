@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus3D } from '../../components/Abakus3D'
 import { Abakus } from '../../components/Abakus'
@@ -198,7 +198,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
         <div className={q.art === 'hoeren' && erklaert && schritt > 0 ? 'boss-arena mit-liste' : 'boss-arena'}>
           {q.art === 'hoeren' && erklaert && schritt > 0 && (
             // gesagte Zahlen untereinander wie beim schriftlichen Rechnen; nach der letzten Zahl Strich und Ergebnis
-            <div className="hoer-liste" aria-live="polite">
+            <div className="hoer-liste" aria-live="polite" style={{ '--zeilen': kettenLaenge + 1 } as CSSProperties}>
               {q.zahlen!.slice(0, Math.min(schritt, kettenLaenge)).map((z, i) => (
                 <div key={i} className={i === schritt - 1 ? 'hoer-z neu' : 'hoer-z'}>{i === 0 ? z : z < 0 ? `− ${-z}` : `+ ${z}`}</div>
               ))}

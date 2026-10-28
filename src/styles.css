@@ -1813,8 +1813,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 
 /* Hör-Aufgabe: Zahlen untereinander rechts vom Abakus, unter dem Strich das Ergebnis */
 .boss-arena.mit-liste .fit.boss-fit { right: 34%; }
-.hoer-liste { position: absolute; top: 0; bottom: 0; left: 68%; min-width: 80px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 2px; font-family: var(--font-display); font-weight: 800; font-size: clamp(20px, 4.2vh, 44px); line-height: 1.1; color: #FFFFFF; text-shadow: 0 2px 0 rgba(43,31,122,.35); font-variant-numeric: tabular-nums; }
+.hoer-liste { position: absolute; top: 0; bottom: 0; left: 64%; min-width: 110px; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 2px; font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, calc((100dvh - 420px) / (var(--zeilen) + .9)), 68px); line-height: 1.08; color: #FFFFFF; text-shadow: 0 2px 0 rgba(43,31,122,.35); font-variant-numeric: tabular-nums; }
 .hoer-z.neu { color: #FFE27A; animation: hoer-pop .35s ease-out; }
-.hoer-ergebnis { align-self: stretch; text-align: right; margin-top: 4px; padding-top: 4px; border-top: 4px solid #FFFFFF; color: #FFE27A; }
+.hoer-ergebnis { align-self: stretch; text-align: right; margin-top: 6px; padding-top: 6px; border-top: 5px solid #FFFFFF; color: #FFE27A; }
 .hoer-ergebnis.right { color: #7CF0B6; }
 .hoer-ergebnis.wrong { color: #FF8FA6; }
+
+@media (max-width: 600px) and (orientation: portrait) { .hoer-liste { font-size: clamp(20px, calc((100dvh - 640px) / (var(--zeilen) + .9)), 60px); } }
