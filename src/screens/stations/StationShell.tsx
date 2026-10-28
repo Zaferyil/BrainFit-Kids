@@ -114,8 +114,8 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
 }
 
 export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
-  // Anordnung wie beim Handy-Tastenfeld: 1–9 in drei Reihen, unten C · 0 · Löschen
-  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'del']
+  // 4 Kreise je Reihe: 1–4, 5–8, dann 9 · 0 · C · Löschen
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'C', 'del']
   return (
     <div className="keypad glas" aria-label="Zahlen-Tasten">
       {keys.map((k) => (
