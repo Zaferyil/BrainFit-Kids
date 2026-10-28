@@ -1786,3 +1786,15 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .buch-titel div { display: flex; flex-direction: column; text-align: left; gap: 2px; }
 .buch-titel span { font-weight: 800; font-size: 14px; color: #6B61A8; text-transform: uppercase; letter-spacing: .06em; }
 .buch-titel b { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.15; color: #E8620C; }
+.buch-titel.workbook { margin-top: 10px; padding-top: 14px; border-top: 3px solid #EFEAFF; }
+.buch-titel.workbook b { color: #3E9A12; }
+/* Mit zwei Büchern ist die Karte länger: Zeilen auf dem Handy etwas enger */
+@media (max-width: 900px) and (orientation: portrait) {
+  .buch-karte:has(.workbook) { padding-top: 16px; padding-bottom: 14px; gap: 2px; }
+  .buch-karte:has(.workbook) .buch-zeile { padding: 2px 0; }
+  .buch-karte:has(.workbook) .buch-zeile b { line-height: 1.2; }
+  .buch-karte:has(.workbook) p { margin: 6px 0 0; font-size: 14px; }
+  .buch-karte:has(.workbook) .buch-zeile b { font-size: 24px; }
+  .buch-karte:has(.workbook) .buch-titel img { width: 52px; }
+  .buch-karte:has(.workbook) .buch-titel b { font-size: 19px; }
+}

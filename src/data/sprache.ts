@@ -41,6 +41,8 @@ export const SAY = {
   wievielIst: 'Wie viel ist das? Tippe es ein.',
   rechneAbakus: 'Rechne mit dem Abakus.',
   buchName: 'Nimm dein Buch: Mental Arithmetic Basics Book.',
+  workbookName: 'Und jetzt dein zweites Buch: Mental Arithmetic Work Book.',
+  alleAufgaben: 'Mach alle Aufgaben auf dieser Seite.',
   seite: 'Seite',
   spalteA: 'Spalte A',
   spalteB: 'Spalte B',
