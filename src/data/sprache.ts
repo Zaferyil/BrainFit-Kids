@@ -40,6 +40,7 @@ export const SAY = {
   minus: 'minus',
   wievielIst: 'Wie viel ist das? Tippe es ein.',
   rechneAbakus: 'Rechne mit dem Abakus.',
+  buchName: 'Nimm dein Buch: Mental Arithmetic Basics Book.',
   seite: 'Seite',
   spalteA: 'Spalte A',
   spalteB: 'Spalte B',

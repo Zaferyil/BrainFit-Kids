@@ -5,6 +5,9 @@ import { SAY, STATION_INTRO } from '../../data/sprache'
 import { finishStation, setOhneBuch } from '../../lib/progress'
 import { speak } from '../../lib/speak'
 import { StationDone, StationShell } from './StationShell'
+import cover from '../../assets/buch-cover.webp'
+
+const BUCH_TITEL = 'Mental Arithmetic Basics Book'
 
 // Arbeitsbuch-Station: Die App sagt, welche Seite, Spalte und Aufgaben im Buch dran sind.
 // Das Kind rechnet im Buch mit dem Abakus und hakt danach „Erledigt“ ab – Ergebnisse werden nicht eingetippt.
@@ -13,7 +16,7 @@ export function BuchStation({ kidId, auftrag }: { kidId: string; auftrag: BuchAu
   const [done, setDone] = useState<number | null>(null)
   const [started, setStarted] = useState(false)
   const spalte = auftrag.spalte === 'A' ? SAY.spalteA : SAY.spalteB
-  const auftragSagen = [SAY.seite, String(auftrag.seite), spalte, SAY.aufgabe, String(auftrag.von), SAY.bis, String(auftrag.bis)]
+  const auftragSagen = [SAY.buchName, SAY.seite, String(auftrag.seite), spalte, SAY.aufgabe, String(auftrag.von), SAY.bis, String(auftrag.bis)]
 
   useEffect(() => { if (started) void speak(auftragSagen) }, [started]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -24,7 +27,10 @@ export function BuchStation({ kidId, auftrag }: { kidId: string; auftrag: BuchAu
     <StationShell station="buch" title="Mein Arbeitsbuch" intro={STATION_INTRO.buch} started={started} onStart={() => setStarted(true)} say={auftragSagen}>
       <div className="buch">
         <div className="buch-karte">
-          <Icon name="book" color="#3BA7FF" size={64} strokeWidth={2} />
+          <div className="buch-titel">
+            <img src={cover} alt="" />
+            <div><span>Dein Buch</span><b>{BUCH_TITEL}</b></div>
+          </div>
           <div className="buch-zeile"><span>Seite</span><b>{auftrag.seite}</b></div>
           <div className="buch-zeile"><span>Spalte</span><b>{auftrag.spalte}</b></div>
           <div className="buch-zeile"><span>Aufgaben</span><b>{auftrag.von} – {auftrag.bis}</b></div>

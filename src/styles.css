@@ -1779,3 +1779,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .task-card .hint-btn { position: absolute; top: 50%; right: 12px; translate: 0 -50%; margin: 0; }
   .task-card .eyebrow, .task-card .task-answer { flex-basis: 100%; }
 }
+
+/* Arbeitsbuch: Titelbild und Name des Buchs */
+.buch-titel { display: flex; align-items: center; gap: 16px; align-self: stretch; padding-bottom: 6px; }
+.buch-titel img { width: 72px; height: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(30,23,87,.25); flex-shrink: 0; }
+.buch-titel div { display: flex; flex-direction: column; text-align: left; gap: 2px; }
+.buch-titel span { font-weight: 800; font-size: 14px; color: #6B61A8; text-transform: uppercase; letter-spacing: .06em; }
+.buch-titel b { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.15; color: #E8620C; }
