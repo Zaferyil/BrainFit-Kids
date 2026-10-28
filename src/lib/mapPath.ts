@@ -9,7 +9,8 @@ import { load, save } from './storage'
 // Der Lernweg auf der Karte: alle Welten nacheinander, nach jeder Rechen-Einheit ein Denkspiel.
 // Der Weg ist linear – die erste noch offene Station ist „current“, alles danach ist gesperrt.
 
-export type StopState = 'done' | 'current' | 'locked'
+/** offen: noch nicht geschafft, im Testmodus aber trotzdem anklickbar */
+export type StopState = 'done' | 'current' | 'locked' | 'offen'
 export type MapStop =
   | { kind: 'world'; id: string; world: World; state: StopState }
   | { kind: 'start'; id: string; state: StopState }
@@ -67,7 +68,7 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
     if (s.kind === 'world') return { ...s, state: s.world.n <= progress.world ? 'done' : 'locked' } as MapStop
     if (isDone(s)) return { ...s, state: 'done' } as MapStop
     if (!found) { found = true; return { ...s, state: 'current' } as MapStop }
-    return { ...s, state: ALLES_OFFEN ? 'done' : 'locked' } as MapStop
+    return { ...s, state: ALLES_OFFEN ? 'offen' : 'locked' } as MapStop
   })
 }
 

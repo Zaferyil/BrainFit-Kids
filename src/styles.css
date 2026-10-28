@@ -1820,3 +1820,5 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .hoer-ergebnis.wrong { color: #FF8FA6; }
 
 @media (max-width: 600px) and (orientation: portrait) { .hoer-liste { font-size: clamp(20px, calc((100dvh - 640px) / (var(--zeilen) + .9)), 60px); } }
+/* Testmodus: noch nicht geschaffte Stationen grau wie gesperrt, aber anklickbar */
+.insel-stop .path-node.offen { background: radial-gradient(circle at 35% 30%, #B9C4DA, #7D8AA8 70%); box-shadow: 0 0 0 4px rgba(255,255,255,.8), 0 6px 0 4px rgba(0,0,0,.2); }
