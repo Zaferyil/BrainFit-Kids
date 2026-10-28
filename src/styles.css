@@ -402,7 +402,7 @@ button { font-family: inherit; }
 .mental-perli { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 260px; }
 .mental-perli .say-bubble { margin: 0; border-radius: 22px; text-align: center; }
 .mental-task { width: 340px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
-.mental-q { border-radius: 28px; background: #FFFFFF; color: var(--ink); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 6px 0 #D8D1FF; }
+.mental-q { border-radius: 28px; background: #FFFFFF; color: var(--ink); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; text-align: center; box-shadow: 0 6px 0 #D8D1FF; }
 .mental-phrase { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.15; color: var(--violet); }
 .mental-eq { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-weight: 800; font-size: 48px; }
 .mental-eq .task-answer { flex: 1; height: 84px; font-size: 60px; }

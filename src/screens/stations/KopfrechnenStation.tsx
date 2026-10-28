@@ -83,7 +83,6 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
             <div className="eyebrow">AUFGABE {index + 1} VON {COUNT} · {sum ? 'RECHNE IM KOPF' : 'STELL DIR VOR'}</div>
             <div className="mental-phrase">{phrase[0].toUpperCase() + phrase.slice(1)}</div>
             <div className="mental-eq">
-              <span>=</span>
               <div className={`task-answer ${state === 'ask' ? '' : state} ${input ? 'filled' : ''}`}>{input || '?'}</div>
             </div>
           </div>
