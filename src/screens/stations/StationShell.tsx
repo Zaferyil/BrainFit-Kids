@@ -114,9 +114,10 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
 }
 
 export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
-  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', '0', '9', 'del']
+  // Anordnung wie beim Handy-Tastenfeld: 1–9 in drei Reihen, unten C · 0 · Löschen
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'del']
   return (
-    <div className="keypad" aria-label="Zahlen-Tasten">
+    <div className="keypad glas" aria-label="Zahlen-Tasten">
       {keys.map((k) => (
         <button
           key={k}
@@ -126,7 +127,7 @@ export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabl
           disabled={disabled}
           onClick={() => onKey(k)}
         >
-          {k === 'del' ? <Icon name="del" color="#231A4F" size={34} /> : k}
+          {k === 'del' ? <Icon name="del" color="#FFFFFF" size={30} /> : k}
         </button>
       ))}
     </div>
