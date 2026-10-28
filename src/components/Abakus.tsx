@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { BEAD_IMAGES, type BeadColor } from './beadImages'
 import klick from '../assets/abakus/klick.mp3'
-import punktOrange from '../assets/abakus/punkt-orange.png'
-import punktBlau from '../assets/abakus/punkt-blau.png'
+import punktOrange from '../assets/abakus/punkt-orange.webp'
+import punktBlau from '../assets/abakus/punkt-blau.webp'
 import {
   BEAD_H, BEAD_W, COL_LEFT, DOT, DOT_TOP, H, PAD, PITCH, digitsFor, earthTop, frameWidth, heavenTop,
 } from './abakusGeometry'
 
 // Originalrahmen von abacus.mentalmath.at, je Stangenzahl ein Bild (1 Stange aus dem 2er-Rahmen geschnitten)
-const FRAMES = import.meta.glob('../assets/abakus/rahmen-*.png', { eager: true, import: 'default' }) as Record<string, string>
-const frameSrc = (color: FrameColor, n: number) => FRAMES[`../assets/abakus/rahmen-${color}-${n}.png`]
+const FRAMES = import.meta.glob('../assets/abakus/rahmen-*.webp', { eager: true, import: 'default' }) as Record<string, string>
+const frameSrc = (color: FrameColor, n: number) => FRAMES[`../assets/abakus/rahmen-${color}-${n}.webp`]
 
 export type FrameColor = 'orange' | 'blau'
 

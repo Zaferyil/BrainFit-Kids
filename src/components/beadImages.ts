@@ -1,9 +1,9 @@
-import gelb from '../assets/abakus/perle-gelb.png'
-import gruen from '../assets/abakus/perle-gruen.png'
-import rot from '../assets/abakus/perle-rot.png'
-import blau from '../assets/abakus/perle-blau.png'
-import lila from '../assets/abakus/perle-lila.png'
-import pink from '../assets/abakus/perle-pink.png'
+import gelb from '../assets/abakus/perle-gelb.webp'
+import gruen from '../assets/abakus/perle-gruen.webp'
+import rot from '../assets/abakus/perle-rot.webp'
+import blau from '../assets/abakus/perle-blau.webp'
+import lila from '../assets/abakus/perle-lila.webp'
+import pink from '../assets/abakus/perle-pink.webp'
 
 export type BeadColor = 'yellow' | 'green' | 'orange' | 'blue' | 'purple' | 'pink'
 
