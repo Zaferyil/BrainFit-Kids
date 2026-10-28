@@ -1767,3 +1767,15 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 @media (max-width: 900px) and (orientation: portrait) { .nk .keypad.glas .key { --d: 70px; } }
 @media (max-height: 700px) { .nk .keypad.glas .key, .nk .keypad.glas .key.key-alt, .nk .keypad.glas .key.key-alt:last-child { --d: 56px; } .nk .keypad.glas { gap: 8px 14px; } }
 .nk .mental-task .keypad.glas .key, .nk .mental-task .keypad.glas .key.key-alt, .nk .mental-task .keypad.glas .key.key-alt:last-child { --d: 58px; }
+
+/* Übungs-Karte: Frage immer mittig */
+.task-card { justify-content: center; align-items: center; text-align: center; }
+.task-card .task-answer { align-self: stretch; }
+.task-card .kurs-kette { justify-content: center; }
+@media (max-width: 900px) and (orientation: portrait) {
+  /* Karte als Reihe: Tipp-Knopf rechts außen, links gleich viel Platz, damit die Frage genau in der Mitte steht */
+  .task-card { position: relative; }
+  .task-card:has(.hint-btn) { padding-left: 104px; padding-right: 104px; }
+  .task-card .hint-btn { position: absolute; top: 50%; right: 12px; translate: 0 -50%; margin: 0; }
+  .task-card .eyebrow, .task-card .task-answer { flex-basis: 100%; }
+}
