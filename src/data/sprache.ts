@@ -1,4 +1,5 @@
 import { CLASSES } from './demo'
+import { UEBUNGEN } from './uebungen'
 import { describeDigit, unitContent, type StationId } from './units'
 
 // Alles, was Perli vorliest. Sätze werden aus kurzen Bausteinen zusammengesetzt
@@ -18,6 +19,14 @@ export const STATION_INTRO: Record<Exclude<StationId, 'video'>, string> = {
 }
 
 export const SAY = {
+  passAuf: 'Pass auf!',
+  welcheGroesser: 'Welche Aufgabe gibt mehr? Tippe sie an.',
+  merkDir: 'Merk dir die Zahlen!',
+  alleZusammen: 'Wie viel sind alle zusammen?',
+  schnellLos: 'Los geht’s! So viele wie möglich.',
+  zeitUm: 'Die Zeit ist um!',
+  paarGefunden: 'Ein Paar!',
+  findePaare: 'Finde die Paare: Aufgabe und Ergebnis.',
   richtig: 'Richtig!',
   treffer: 'Treffer!',
   stelleEin: 'Stelle ein:',
@@ -89,6 +98,7 @@ export function alleBausteine(): Record<string, string> {
   const out: Record<string, string> = {}
   const add = (t: string, spoken = t) => { out[t] = spoken }
   Object.values(STATION_INTRO).forEach((t) => add(t))
+  Object.values(UEBUNGEN).forEach((u) => add(u.intro))
   Object.values(SAY).forEach((t) => add(t))
   Object.values(GAME_INTRO).forEach((t) => add(t))
   for (let d = 0; d <= 9; d++) add(describeDigit(d))

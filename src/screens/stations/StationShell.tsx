@@ -23,10 +23,12 @@ type Props = {
   onStart?: () => void
   /** Aktuelle Frage zum Nochmal-Hören */
   say?: Say
+  /** Name der Übungsart, wenn der Platz in dieser Lektion eine andere Übung hat */
+  label?: string
   children: ReactNode
 }
 
-export function StationShell({ station, title, dots, perlen, intro, started = true, onStart, say, children }: Props) {
+export function StationShell({ station, title, dots, perlen, intro, started = true, onStart, say, label, children }: Props) {
   const i = STATIONS.findIndex((s) => s.id === station)
   return (
     <Stage>
@@ -34,7 +36,7 @@ export function StationShell({ station, title, dots, perlen, intro, started = tr
         <div className="station-bar">
           <a href="#/einheit" aria-label="Station beenden" className="round-btn big"><Icon name="x" color="#FFFFFF" size={26} /></a>
           <div className="station-bar-title">
-            <div className="eyebrow light">STATION {i + 1} VON 6 · {STATIONS[i].title.toUpperCase()}</div>
+            <div className="eyebrow light">STATION {i + 1} VON 6 · {(label ?? STATIONS[i].title).toUpperCase()}</div>
             <h1>{title}</h1>
           </div>
           {dots && (
@@ -49,7 +51,7 @@ export function StationShell({ station, title, dots, perlen, intro, started = tr
         </div>
         {children}
       </div>
-      {intro && !started && <StationIntro station={station} text={intro} onStart={onStart} />}
+      {intro && !started && <StationIntro station={station} text={intro} onStart={onStart} label={label} />}
     </Stage>
   )
 }
@@ -64,14 +66,14 @@ export function SayButton({ say, light }: { say: Say; light?: boolean }) {
 }
 
 /** Perli erklärt kurz, was in der Station zu tun ist. */
-export function StationIntro({ station, text, onStart }: { station: StationId; text: string; onStart?: () => void }) {
+export function StationIntro({ station, text, onStart, label }: { station: StationId; text: string; onStart?: () => void; label?: string }) {
   const s = STATIONS.find((x) => x.id === station)!
   useEffect(() => { void speak(text) }, [text])
   return (
     <div className="done-overlay" role="dialog" aria-label="So geht's">
       <div className="done-card intro-card">
         <Perli mood="happy" size={130} />
-        <div className="eyebrow">{s.title.toUpperCase()} · SO GEHT'S</div>
+        <div className="eyebrow">{(label ?? s.title).toUpperCase()} · SO GEHT'S</div>
         <p className="intro-text">{text}</p>
         <div className="done-actions">
           <SayButton say={text} light />

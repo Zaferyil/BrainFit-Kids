@@ -15,6 +15,8 @@ import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { BuchStation } from './screens/stations/BuchStation'
 import { buchAuftrag, workbookAuftrag } from './data/buch'
+import { UEBUNGEN, uebungsArt, type UebungsPlatz } from './data/uebungen'
+import { KettenStation, MemoryStation, MerkenStation, SchnellStation, VergleichStation } from './screens/stations/NeueUebungen'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
 import { klasseVon } from './lib/klasse'
@@ -113,6 +115,21 @@ export default function App() {
       }
       // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
       const kurs = klasseVon(kid.id).aufgaben <= 6 ? null : kursAufgaben(progress.world, progress.unit)
+      // Abwechslung: die Übungsplätze nehmen je Lektion andere Übungsarten
+      const art = content && (id === 'ueben' || id === 'blitz' || id === 'kopfrechnen') ? uebungsArt(progress.world, progress.unit, id) : null
+      if (content && art && id !== 'boss') {
+        const u = UEBUNGEN[art]
+        const props = { kidId: kid.id, content, platz: id as UebungsPlatz, art }
+        if (art === 'einstellen' && kurs) return <KursStation kidId={kid.id} aufgaben={kurs} />
+        if (art === 'einstellen' || art === 'ablesen') return <UebenStation kidId={kid.id} content={content} modus={art === 'einstellen' ? 'set' : 'read'} label={u.title} intro={u.intro} />
+        if (art === 'blitzAbakus') return <BlitzStation kidId={kid.id} content={content} />
+        if (art === 'kopfrechnen') return <KopfrechnenStation kidId={kid.id} content={content} />
+        if (art === 'zahlenBlitz' || art === 'hoerRechnen') return <KettenStation key={art} {...props} />
+        if (art === 'schnell') return <SchnellStation {...props} />
+        if (art === 'memory') return <MemoryStation {...props} />
+        if (art === 'vergleich') return <VergleichStation {...props} />
+        if (art === 'merken') return <MerkenStation {...props} />
+      }
       if (kurs && id === 'ueben') return <KursStation kidId={kid.id} aufgaben={kurs} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />
       if (content && id === 'blitz') return <BlitzStation kidId={kid.id} content={content} />

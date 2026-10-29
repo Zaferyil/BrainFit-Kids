@@ -6,6 +6,7 @@ import { WORLDS } from '../data/curriculum'
 import { STATIONS, unitContent } from '../data/units'
 import { currentStation, stationSkipped, stationStars, type Progress } from '../lib/progress'
 import { unitVideos } from '../data/videos'
+import { UEBUNGEN, uebungsArt } from '../data/uebungen'
 
 export function Einheit({ progress }: { progress: Progress }) {
   const world = WORLDS[progress.world - 1]
@@ -30,10 +31,13 @@ export function Einheit({ progress }: { progress: Progress }) {
         </div>
 
         <div className="stations">
-          {STATIONS.map((s, i) => {
+          {STATIONS.map((grund, i) => {
+            // Übungsplätze zeigen die Übungsart dieser Lektion
+            const art = grund.id === 'ueben' || grund.id === 'blitz' || grund.id === 'kopfrechnen' ? uebungsArt(progress.world, progress.unit, grund.id) : null
+            const s = art ? { ...grund, title: UEBUNGEN[art].title, icon: UEBUNGEN[art].icon, color: UEBUNGEN[art].color } : grund
             const state = stationSkipped(progress, i) ? 'skipped' : i < current ? 'done' : i === current ? 'current' : 'locked'
             const videos = unitVideos(progress.world, progress.unit)
-            const text = content?.stationText[s.id] ?? (s.id === 'video' && videos.length ? videos.map((v) => v.title).join(' · ') : '')
+            const text = art ? UEBUNGEN[art].text : content?.stationText[s.id] ?? (s.id === 'video' && videos.length ? videos.map((v) => v.title).join(' · ') : '')
             return (
               <div key={s.id} className={`station ${state}`}>
                 <div className="station-top">

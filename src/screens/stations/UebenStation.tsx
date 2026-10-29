@@ -16,11 +16,11 @@ type Task = { kind: 'set' | 'read'; n: number; id: number; retry?: boolean; a?: 
 type Feedback = { type: 'right' | 'wrong' | 'hint'; text: string; sub?: string } | null
 
 
-function makeTasks(content: UnitContent, COUNT: number): Task[] {
+function makeTasks(content: UnitContent, COUNT: number, modus: Modus): Task[] {
   const tasks: Task[] = []
   let prev: number | undefined
   for (let i = 0; i < COUNT; i++) {
-    const kind = i % 2 === 0 ? 'set' : 'read'
+    const kind = modus === 'mix' ? (i % 2 === 0 ? 'set' : 'read') : modus
     if (rechnet(content)) {
       const { a, b, n } = makeSum(content, prev)
       prev = a
@@ -34,11 +34,14 @@ function makeTasks(content: UnitContent, COUNT: number): Task[] {
   return tasks
 }
 
+/** mix: abwechselnd einstellen und ablesen · set: nur einstellen · read: nur ablesen */
+type Modus = 'mix' | 'set' | 'read'
+
 const starsFor = (errors: number) => (errors === 0 ? 3 : errors <= 2 ? 2 : 1)
 
-export function UebenStation({ kidId, content }: { kidId: string; content: UnitContent }) {
+export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { kidId: string; content: UnitContent; modus?: Modus; label?: string; intro?: string }) {
   const [{ aufgaben: COUNT, tipp }] = useState(() => klasseVon(kidId))
-  const [queue, setQueue] = useState(() => makeTasks(content, klasseVon(kidId).aufgaben))
+  const [queue, setQueue] = useState(() => makeTasks(content, klasseVon(kidId).aufgaben, modus))
   const [index, setIndex] = useState(0)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Feedback>(null)
@@ -113,7 +116,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={intro ?? STATION_INTRO.ueben} label={label} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>
