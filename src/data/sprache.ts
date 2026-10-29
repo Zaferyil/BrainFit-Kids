@@ -110,7 +110,7 @@ export function alleBausteine(): Record<string, string> {
   }
   ;[
     'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',
-    'Wer bist du? Tippe auf dein Bild.',
+    'Wähle deine Figur! Tippe auf dein Bild.',
     'In welche Klasse gehst du?',
     'Super, dein Buch ist fertig!',
     'Tippe deine vier Bilder.',

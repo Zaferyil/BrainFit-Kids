@@ -14,7 +14,7 @@ import { load, save } from '../lib/storage'
 
 type Status = 'input' | 'wrong' | 'right'
 
-const STEPS = ['Klassen-Code', 'Wer bist du?', 'Schulstufe', 'Bild-Passwort']
+const STEPS = ['Klassen-Code', 'Wähle deine Figur', 'Schulstufe', 'Bild-Passwort']
 
 // Schulstufe des Kindes (Kindergarten bis 6. Klasse), pro Kind auf dem Gerät gemerkt
 const STUFEN = [
@@ -35,7 +35,7 @@ export function Anmelden() {
   const step = !schoolClass ? 0 : !kid ? 1 : stufe === null ? 2 : 3
   const instruction = [
     'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',
-    'Wer bist du? Tippe auf dein Bild.',
+    'Wähle deine Figur! Tippe auf dein Bild.',
     `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
     'Tippe deine vier Bilder.',
   ][step]
@@ -144,14 +144,13 @@ function KidPicker({ schoolClass, onSelect, onChangeClass }: {
   return (
     <section className="nk-step popin" aria-labelledby="nk-wer">
       <header className="nk-title">
-        <h1 id="nk-wer">Wer bist du?</h1>
+        <h1 id="nk-wer">Wähle deine Figur!</h1>
         <p>Tippe auf dein Bild.</p>
       </header>
       <div className="nk-kids">
         {schoolClass.kids.map((k, i) => (
-          <button key={k.id} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onSelect(k)}>
+          <button key={k.id} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onSelect(k)} aria-label={k.name}>
             {kidPhoto(k.id) ? <img src={kidPhoto(k.id)} alt="" /> : <Avatar size={96} {...k.avatar} />}
-            <span>{k.name}</span>
           </button>
         ))}
       </div>
