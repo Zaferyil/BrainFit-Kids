@@ -1,5 +1,5 @@
 import type { Hat } from '../components/Avatar'
-import { kidPhoto } from './kinderBilder'
+import { figurVon, kidPhoto } from './kinderBilder'
 import type { IconName } from '../components/Icon'
 
 // Beispieldaten, bis Supabase angebunden ist.
@@ -63,7 +63,7 @@ export function ladeSchule(): Schule {
 export function alleKinder(sch = ladeSchule()) {
   const basis = BASIS.flatMap((c) => c.kids.map((kid) => ({ kid, klasse: c.code })))
   return [...basis, ...sch.kinder.map(({ klasse, ...kid }) => ({ kid: kid as Kid, klasse }))]
-    .map(({ kid, klasse }) => ({ kid, klasse: sch.wechsel[kid.id] ?? klasse, archiviert: sch.archiv.includes(kid.id) }))
+    .map(({ kid, klasse }) => { const f = figurVon(kid.id); return { kid: f ? { ...kid, avatar: { ...kid.avatar, photo: kidPhoto(f) } } : kid, klasse: sch.wechsel[kid.id] ?? klasse, archiviert: sch.archiv.includes(kid.id) } })
 }
 
 /** Aktive Klassen mit ihren Kindern (archivierte Kinder fehlen); wird nach jeder Änderung neu gefüllt */

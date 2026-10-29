@@ -63,6 +63,12 @@ function useRoute() {
 
 export default function App() {
   const route = useRoute()
+  // Link von der Website: #lernen-KLASSENCODE → direkt „Wähle deine Figur“
+  if (route.startsWith('lernen-')) {
+    try { localStorage.setItem('bfk.classCode', JSON.stringify(route.slice(7).toUpperCase())) } catch { /* egal */ }
+    window.location.replace('#/anmelden')
+    return null
+  }
   if (route === '') return <Start />
   if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />

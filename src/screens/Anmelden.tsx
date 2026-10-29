@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { getProgress } from '../lib/progress'
 import { nextStop } from '../lib/mapPath'
-import { kidPhoto } from '../data/kinderBilder'
+import { FIGUREN, figurVon, kidPhoto, setFigur } from '../data/kinderBilder'
+import { klassenNeuAufbauen } from '../data/demo'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
@@ -30,6 +31,7 @@ export function Anmelden() {
   })
   const [kid, setKid] = useState<Kid | null>(null)
   const [stufe, setStufe] = useState<number | null>(null)
+  const [, neu] = useState(0)
 
   const step = !schoolClass ? 0 : !kid ? 1 : stufe === null ? 2 : 3
   const instruction = [
@@ -59,9 +61,11 @@ export function Anmelden() {
             <KidPicker
               key="kind"
               schoolClass={schoolClass}
-              onSelect={(k) => { setKid(k); setStufe(null); void speak([`Hallo ${k.name}!`, 'In welche Klasse gehst du?']) }}
+              onSelect={(k) => { setKid(k); setStufe(null); void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.') }}
               onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
             />
+          ) : !figurVon(kid.id) ? (
+            <FigurPicker key="figur" kid={kid} onPick={(f) => { setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1); void speak([`Hallo ${kid.name}!`, 'In welche Klasse gehst du?']) }} />
           ) : stufe === null ? (
             <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
@@ -149,7 +153,7 @@ function KidPicker({ schoolClass, onSelect, onChangeClass }: {
       <div className="nk-kids">
         {schoolClass.kids.map((k, i) => (
           <button key={k.id} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onSelect(k)} aria-label={k.name}>
-            {kidPhoto(k.id) ? <img src={kidPhoto(k.id)} alt="" /> : <Avatar size={96} {...k.avatar} />}
+            {figurVon(k.id) ? <img src={kidPhoto(figurVon(k.id)!)} alt="" /> : <span className="nk-neu"><b>?</b>{k.name}</span>}
           </button>
         ))}
       </div>
@@ -199,5 +203,24 @@ function LosPopup({ kid }: { kid: Kid }) {
       </div>
     </div>,
     document.body,
+  )
+}
+
+/** Erster Login: Das Kind sucht sich seine Figur aus */
+function FigurPicker({ kid, onPick }: { kid: Kid; onPick: (f: string) => void }) {
+  return (
+    <section className="nk-step popin" aria-labelledby="nk-figur">
+      <header className="nk-title">
+        <h1 id="nk-figur">Hallo {kid.name}!</h1>
+        <p>Wähle deine Figur! Tippe auf dein Bild.</p>
+      </header>
+      <div className="nk-kids">
+        {FIGUREN.map((f, i) => (
+          <button key={f} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onPick(f)} aria-label={`Figur ${i + 1}`}>
+            <img src={kidPhoto(f)} alt="" />
+          </button>
+        ))}
+      </div>
+    </section>
   )
 }
