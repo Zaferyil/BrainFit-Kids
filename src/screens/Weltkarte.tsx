@@ -10,6 +10,7 @@ import { getDaily } from '../lib/daily'
 import { etappen } from '../data/karten'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
+import burgWelt2 from '../assets/karte/erfolgsburg-welt2.webp'
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
@@ -220,7 +221,7 @@ function Star3D({ on }: { on: boolean }) {
 function ErfolgsBurg({ burg }: { burg: Burg }) {
   return (
     <div className={burg.geschafft ? 'erfolgsburg geschafft' : 'erfolgsburg'} role="img" aria-label={`Tor zu Welt ${burg.welt + 1}${burg.geschafft ? ' (geöffnet)' : ''}`}>
-      <img src={burgBild} alt="" draggable={false} />
+      <img src={burg.welt === 1 ? burgWelt2 : burgBild} alt="" draggable={false} />
       <span className="erfolgsburg-schild">Willkommen Welt {burg.welt + 1}</span>
     </div>
   )
