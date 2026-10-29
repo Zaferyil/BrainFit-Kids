@@ -32,11 +32,6 @@ export const UNIT_VIDEOS: Record<string, Video[]> = {
   '3-4': [lektion('lektion-22', 'Lektion 22: Best Friend +9')],
   '3-5': [lektion('lektion-23', 'Lektion 23: Alle Best Friends')],
   '3-6': [lektion('lektion-24', 'Lektion 24: Best Friends Training')],
-  '3-1': [v('V5weiE0zbZI', 'Best Friends +6')],
-  '3-2': [v('mKfS-0taZH0', 'Best Friends +7')],
-  '3-3': [v('qmnhO7aOHBw', 'Best Friends +8')],
-  '3-4': [v('YO1jrEezMzw', 'Best Friends +9')],
-  '3-5': [v('RrollzMfpxY', 'Alle Best Friends')],
   '5-1': [v('WOKGEaTal_k', 'Big Friends −9'), v('47OaoX87960', 'Big Friends −8')],
   '5-2': [v('2590z9kSWB4', 'Big Friends −7'), v('5N8WOhDN2Os', 'Big Friends −6')],
   // In MathKids führt −4 zum selben Video wie −6; das richtige −4-Video kommt aus dem Drive-Ordner (30. Lektion).
