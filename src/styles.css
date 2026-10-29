@@ -2014,3 +2014,44 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .ue-fk-opt.right { background: #2ECC8F; color: #FFFFFF; box-shadow: 0 6px 0 #1F9E6C; }
 .ue-fk-opt.wrong { background: #FF5C7A; color: #FFFFFF; box-shadow: 0 6px 0 #C2264E; }
 .ue-fk-opt.dim { opacity: .45; }
+
+/* Karte: ruhigeres, klareres Design – flachere Stationen, Sterne nur bei geschafften, klare Hinweise */
+.nk-map-head { padding: 8px 14px; padding-top: max(8px, env(safe-area-inset-top)); }
+.nk-map-head .nk-me > * { width: 42px !important; height: 42px !important; }
+.nk-map-head .path-tools { position: static; height: auto; padding: 0; margin-left: 8px; }
+.nk-map-head .path-tools .popover { position: absolute; right: 14px; top: calc(100% + 8px); }
+@media (max-width: 420px) { .quest-wort { display: none; } }
+.quest-chip { height: 38px; padding: 0 12px; font-size: 14px; box-shadow: 0 4px 12px rgba(30,18,90,.25); }
+.insel-stop .path-node { box-shadow: 0 0 0 3px #FFFFFF, 0 6px 14px rgba(10,40,100,.35); background: linear-gradient(180deg, #4FA8FF, #1F6FE5); }
+.insel-stop .path-node::before { opacity: .55; }
+.insel-stop .path-node.game { background: linear-gradient(180deg, #A57CFF, #6A3DE8); }
+.insel-stop .path-node.start { background: linear-gradient(180deg, #FFC04D, #FF8A1F); }
+.insel-stop .path-node.locked { background: rgba(255,255,255,.82); box-shadow: 0 0 0 3px rgba(255,255,255,.95), 0 4px 10px rgba(10,40,100,.25); backdrop-filter: blur(2px); }
+.insel-stop .path-node.locked::before { display: none; }
+.insel-stop .path-node.locked .path-num { color: #8A93A8; text-shadow: none; -webkit-text-stroke: 0; }
+.insel-stop .path-num, .insel-stop .path-node.current .path-num { -webkit-text-stroke: 0; text-shadow: 0 2px 3px rgba(0,30,100,.35); }
+.insel-stop .path-node.current { box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 9px rgba(255,197,49,.9), 0 10px 22px rgba(10,40,100,.4); }
+.path-stars { margin-top: -3.4cqw; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.path-stars:not(.done) { display: none; }
+.star3d { width: max(15px, 4.6cqw); height: max(15px, 4.6cqw); }
+.path-gehirn { width: 40%; top: -10%; right: -10%; background: #FFFFFF !important; border: 0 !important; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.path-gehirn svg { stroke: #6A3DE8; }
+.path-gehirn svg * { stroke: #6A3DE8; }
+.insel-stop .path-start { top: auto; bottom: calc(100% + 12px); left: 50%; translate: -50% 0 !important; padding: 5px 12px; border-radius: 999px; background: #231A4F; color: #FFFFFF; font-size: 13px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.25); }
+.insel-stop .path-start::after { left: 50% !important; border-top-color: #231A4F; bottom: -6px; border-width: 6px; }
+.path-stop { justify-content: center; }
+.insel-stop .path-label { padding: 5px 12px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.insel-stop .path-kind { font-size: 10px; }
+.welt-schild { top: auto; bottom: calc(100% + 10px); left: 50% !important; right: auto !important; translate: -50% 0; padding: 5px 14px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 12px rgba(30,18,90,.3) !important; display: flex; align-items: baseline; gap: 6px; }
+.welt-schild small { font-size: 10px; }
+.path-stop:has(.path-start) .welt-schild { bottom: calc(100% + 50px); }
+.welt-schild.welt-1 { display: none; }
+.nk-hello-text span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nk-map-head { gap: 10px; }
+.nk-map-head .nk-hello-text { flex: 1; min-width: 0; }
+.nk-map-head .nk-hello-text strong { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 19px; }
+.nk-map-head .nk-hello-text span { display: block; font-size: 12px; }
+.nk-map-head .nk-chip { height: 36px; padding: 0 10px; gap: 4px; flex-shrink: 0; }
+.nk-map-head .quest-chip { height: 36px; padding: 0 10px; gap: 6px; flex-shrink: 0; }
+.nk-map-head .path-tools { margin-left: 0; flex-shrink: 0; }
+.nk-map-head .nk-zurueck { width: 40px; height: 40px; flex-shrink: 0; }

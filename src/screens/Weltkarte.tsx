@@ -8,6 +8,7 @@ import type { Kid } from '../data/demo'
 import { setReplay, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
 import { etappen } from '../data/karten'
+import { WORLDS } from '../data/curriculum'
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
@@ -54,21 +55,13 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </button>
         <div className="nk-hello-text">
           <strong>Hallo {kid.name}!</strong>
-          <span>Level {progress.level}</span>
+          <span>Welt {progress.world} · {WORLDS[progress.world - 1]?.name.replace(/-/g, ' ')}</span>
         </div>
         <span className="nk-chip"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{progress.perlen}</span>
-        {menu && (
-          <div className="nk-menu popin">
-            <button type="button" onClick={onLogout}><Icon name="logout" color="#2B2257" size={20} />Abmelden</button>
-          </div>
-        )}
-      </header>
-
-      <div className="path-screen">
         <div className="path-tools">
           <button type="button" className={questsOpen ? 'quest-chip open' : 'quest-chip'} onClick={() => setQuestsOpen(!questsOpen)} aria-expanded={questsOpen}>
             <Icon name="target" color="#231A4F" size={20} strokeWidth={2.6} />
-            Tagesaufgaben <b>{questsDone}/{quests.length}</b>
+            <span className="quest-wort">Aufgaben</span> <b>{questsDone}/{quests.length}</b>
           </button>
           {questsOpen && (
             <section className="quests popover">
@@ -88,6 +81,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           )}
         </div>
 
+        {menu && (
+          <div className="nk-menu popin">
+            <button type="button" onClick={onLogout}><Icon name="logout" color="#2B2257" size={20} />Abmelden</button>
+          </div>
+        )}
+      </header>
+
+      <div className="path-screen">
         <div className="inseln" ref={scroller}>
           {[...teile].reverse().map(({ karte, start }, k) => (
             <section key={start} className="insel" style={{ zIndex: teile.length - k }}>
@@ -147,7 +148,7 @@ function Node({ stop, n, kid, links, onLocked }: { stop: Stop; n: number; kid: K
       {stop.kind === 'unit' && stop.unit === 1 && (
         <div className={`welt-schild welt-${stop.world.n} ${links ? 'links' : 'rechts'}`}><small>Welt {stop.world.n}</small>{stop.world.name.replace(/-/g, ' ')}</div>
       )}
-      {current && <div className="path-start">{stop.kind === 'game' ? 'Spielen' : 'Start'}</div>}
+      {current && <div className="path-start">Du bist da</div>}
       {current && stop.kind === 'unit' && <div className="path-me"><Avatar size={40} {...kid.avatar} /></div>}
       {stop.state === 'locked' ? (
         <button type="button" className={cls} aria-label={`${label} (gesperrt)`} onClick={() => onLocked(stop.kind === 'game' ? 'Dieses Denkspiel kommt nach der Einheit davor.' : 'Das kommt später – Schritt für Schritt!')}>
