@@ -2073,3 +2073,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .erfolgsburg-schild small { font-family: var(--font-body); font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: #7A4A00; }
 .erfolgsburg.geschafft .erfolgsburg-schild { background: linear-gradient(#5FCB6F, #2F9A43); color: #FFFFFF; box-shadow: 0 4px 0 #1F7A31, 0 8px 16px rgba(0,0,0,.25); }
 .erfolgsburg.geschafft .erfolgsburg-schild small { color: #DFFFE4; }
+.erfolgsburg { width: max(170px, 52cqw); translate: -50% -72%; }
+.erfolgsburg img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
+.erfolgsburg.geschafft img { filter: drop-shadow(0 0 18px rgba(255,214,90,.85)) drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
+.erfolgsburg .erfolgsburg-schild { margin-top: -6%; font-size: 14px; padding: 4px 14px 5px; }
