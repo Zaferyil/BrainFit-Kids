@@ -35,7 +35,7 @@ for (key, _), (a, b) in zip(items, segs):
     name = 's-' + hashlib.sha1(key.encode()).hexdigest()[:10] + '.mp3'
     a, b = max(0, a - 0.06), min(dur, b + 0.12)
     subprocess.run(['ffmpeg', '-y', '-hide_banner', '-loglevel', 'error', '-ss', f'{a:.3f}', '-to', f'{b:.3f}', '-i', src,
-                    '-af', 'afade=t=in:d=0.02,areverse,afade=t=in:d=0.04,areverse', '-ac', '1', '-ar', '44100', '-b:a', '40k', os.path.join(out, name)], check=True)
+                    '-af', 'afade=t=in:d=0.02,areverse,afade=t=in:d=0.04,areverse', '-ac', '1', '-ar', '22050', '-b:a', '32k', os.path.join(out, name)], check=True)
     m[key] = name
 json.dump(m, open(man, 'w'), ensure_ascii=False, indent=1, sort_keys=True)
 print('ok')
