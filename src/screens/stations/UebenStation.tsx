@@ -116,7 +116,7 @@ export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { 
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={intro ?? STATION_INTRO.ueben} label={label} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : content.freunde === 'best' ? 'Best' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={intro ?? STATION_INTRO.ueben} label={label} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>

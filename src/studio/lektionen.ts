@@ -495,7 +495,103 @@ const LEKTION_16 = littleFriendLektion(16, 1, 4, 14, 24)
 const LEKTION_17 = littleWiederholung(17, 'Alle Little Friends', 'Hallo! Du kennst jetzt alle Little Friends. Jetzt wiederholen wir sie gemischt!', [3, 4], [2, 3], [4, 3])
 const LEKTION_18 = littleWiederholung(18, 'Little Friends Training', 'Hallo! Heute ist Training im Little Friends Wald. Alle Little Friends kommen gemischt!', [4, 2], [1, 4], [3, 2])
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18]
+// Welt 3: Best Friends +6 … +9 = Erdperlen dazu, Himmelsperle weg, 10 dazu
+function bestFriendLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const e = k - 5
+  const f = 10 - k
+  const ePerlen = e === 1 ? 'eine Erdperle' : `${e} Erdperlen`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Best Friend +${k}`,
+    world: 3,
+    sections: [
+      { title: 'Best Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Willkommen am Best Friends Berg. Heute rechnen wir plus ${k}.` },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} + ${k}`, say: `Wir haben ${a}. Plus ${k} heißt: 10 dazu und ${f} weg. Aber ${f} weg geht hier nicht direkt!` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Best Friends', lines: [{ text: `Big Friend: ${k} und ${f} sind 10` }, { text: `Little Friend hilft beim ${f} weg` }] },
+        say: 'Jetzt helfen Big Friend und Little Friend zusammen. Das sind die Best Friends!',
+      },
+      {
+        id: 'trick', kind: 'karte', min: 6,
+        card: { title: 'Der Trick', lines: [{ icon: 'daumen-hoch', text: `${e} dazu` }, { icon: 'zeige-hoch', text: '5 weg' }, { icon: 'zeige-hoch', text: '10 dazu' }] },
+        say: `Der Trick: Plus ${k} heißt: ${e} dazu, 5 weg und 10 dazu.`,
+      },
+      { id: 'erd-dazu', cols: 2, value: a, badge: `+ ${e}`, moves: [{ at: 'Erdperle', to: a + e }], say: `Zuerst ${ePerlen} hoch. Das ist plus ${e}.` },
+      { id: 'fuenf-weg', badge: '− 5', moves: [{ at: 'Himmelsperle', to: a + e - 5 }], say: 'Dann die Himmelsperle hoch. Fünf weg.' },
+      { id: 'zehn-dazu', badge: '+ 10', moves: [{ at: 'Zehner', to: a + k }], say: 'Und jetzt eine Perle bei den Zehnern hoch. Zehn dazu.' },
+      { id: 'ergebnis', badge: `${a} + ${k} = ${a + k}`, min: 3.5, say: `Fertig! ${a} plus ${k} ist ${a + k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} + ${k} = ${b + k}`, moves: [{ at: 'dazu', to: b + e }, { at: 'Himmelsperle', to: b + e - 5 }, { at: 'Zehner', to: b + k }],
+        say: `Noch einmal: ${b} plus ${k}. Erst ${e} dazu, die Himmelsperle hoch, und bei den Zehnern eine Perle hoch. Das ist ${b + k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c + k, say: `Jetzt du! Rechne ${c} plus ${k}. ${WORT[e][0].toUpperCase()}${WORT[e].slice(1)} dazu, fünf weg, zehn dazu.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Plus ${k} = ${e} dazu, 5 weg, 10 dazu` }] },
+        say: `Merk dir: Plus ${k} ist ${e} dazu, 5 weg und 10 dazu.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+// Lektion 23–24: alle Best Friends gemischt
+function bestWiederholung(number: number, title: string, hallo: string, b1: [number, number], b2: [number, number], c: [number, number]): Lesson {
+  const [a1, k1] = b1
+  const [a2, k2] = b2
+  return {
+    id: `lektion-${number}`,
+    number,
+    title,
+    world: 3,
+    sections: [
+      { title: 'Alle Best Friends', start: 'titel' },
+      { title: 'Gemischt', start: 'aufgabe-zeigen' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: hallo },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Alle Best Friends', lines: [{ text: '+6 · +7 · +8 · +9' }, { icon: 'daumen-hoch', text: 'Erdperlen dazu, 5 weg, 10 dazu' }] },
+        say: 'Plus sechs, sieben, acht und neun. Immer: Erdperlen dazu, fünf weg, zehn dazu!',
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a1, badge: `${a1} + ${k1}`, say: `Wir haben ${a1}. Jetzt kommt plus ${k1}. Das ist ${k1 - 5} dazu, 5 weg und 10 dazu.` },
+      { id: 'erd-dazu', cols: 2, value: a1, badge: `+ ${k1 - 5}`, moves: [{ at: 'hoch', to: a1 + k1 - 5 }], say: `Zuerst ${k1 - 5} hoch.` },
+      { id: 'fuenf-weg', badge: '− 5', moves: [{ at: 'Himmelsperle', to: a1 + k1 - 10 }], say: 'Dann die Himmelsperle hoch. Fünf weg.' },
+      { id: 'zehn-dazu', badge: '+ 10', moves: [{ at: 'Zehner', to: a1 + k1 }], say: `Und zehn dazu bei den Zehnern. ${a1} plus ${k1} ist ${a1 + k1}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: a2, badge: `${a2} + ${k2} = ${a2 + k2}`, moves: [{ at: 'dazu', to: a2 + k2 - 5 }, { at: 'Himmelsperle', to: a2 + k2 - 10 }, { at: 'Zehner', to: a2 + k2 }],
+        say: `Und jetzt ${a2} plus ${k2}. Erst ${k2 - 5} dazu, die Himmelsperle hoch, und bei den Zehnern eine Perle hoch. Das ist ${a2 + k2}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c[0], task: c[0] + c[1], say: `Jetzt du! Rechne ${c[0]} plus ${c[1]}. Denk an die Best Friends!` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: 'Plus 6 bis 9:' }, { text: 'Erdperlen dazu, 5 weg, 10 dazu' }] },
+        say: 'Merk dir: Erdperlen dazu, fünf weg und zehn dazu.',
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_19 = bestFriendLektion(19, 6, 7, 5, 8)
+const LEKTION_20 = bestFriendLektion(20, 7, 6, 5, 7)
+const LEKTION_21 = bestFriendLektion(21, 8, 5, 6, 15)
+const LEKTION_22 = bestFriendLektion(22, 9, 5, 15, 25)
+const LEKTION_23 = bestWiederholung(23, 'Alle Best Friends', 'Hallo! Du kennst jetzt alle Best Friends. Jetzt wiederholen wir sie gemischt!', [7, 6], [5, 9], [6, 7])
+const LEKTION_24 = bestWiederholung(24, 'Best Friends Training', 'Hallo! Heute ist Training am Best Friends Berg. Alle Best Friends kommen gemischt!', [6, 8], [8, 6], [5, 8])
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

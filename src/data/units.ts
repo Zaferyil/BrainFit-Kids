@@ -41,7 +41,7 @@ export type UnitContent = {
   /** Gemischte Wiederholung (z. B. alle Big Friends): jede Aufgabe nimmt zufällig eines dieser „+k“ */
   adds?: number[]
   /** Welche Freunde: Big Friends (über 10) oder Little Friends (über 5) – bestimmt die passenden Startzahlen */
-  freunde?: 'big' | 'little'
+  freunde?: 'big' | 'little' | 'best'
 }
 
 const UNITS: Record<string, UnitContent> = {
@@ -216,13 +216,86 @@ const alleLittleFriends = (title: string, lead: string, b1: [number, number], b2
 UNITS['2-5'] = alleLittleFriends('Little Friends alle', 'Alle Little Friends gemischt wiederholen.', [3, 4], [2, 3])
 UNITS['2-6'] = alleLittleFriends('Little Friends alle – Training', 'Training: alle Little Friends gemischt.', [4, 2], [1, 4])
 
+const GROSS = (w: string) => w[0].toUpperCase() + w.slice(1)
+
+/** Best-Friend-Einheit +k (6–9): „+k = +(k−5) − 5 + 10“. Die 5 weg geht nur über die Himmelsperle – Little und Big Friend zusammen. */
+const bestFriend = (k: number, a: number): UnitContent => {
+  const e = k - 5
+  const ePerlen = e === 1 ? 'eine Erdperle' : `${ZAHLWORT[e]} Erdperlen`
+  return {
+    title: `Best Friend +${k}`,
+    lead: `Der Trick für +${k}: ${e} dazu, 5 weg, 10 dazu.`,
+    rule: [`+${k} = +${e} − 5 + 10`],
+    learn: [`Big Friend von ${k} ist ${10 - k} – aber ${10 - k} geht nicht direkt weg`, `Plus ${k} heißt: ${e} Erdperle${e > 1 ? 'n' : ''} dazu, Himmelsperle weg, 10 dazu`, 'Mit dem Abakus und im Kopf rechnen'],
+    stationText: {
+      video: `Der Video-Tutor zeigt dir den Trick für +${k}.`,
+      entdecken: `Perli rechnet mit dir Schritt für Schritt +${k}.`,
+      ueben: `Du rechnest +${k} mit dem Abakus.`,
+      blitz: `Der Abakus blitzt auf. Rechne +${k} dazu!`,
+      kopfrechnen: `Rechne +${k} im Kopf.`,
+      buch: 'Rechne im Buch und hake ab.',
+      boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+    },
+    cols: 2,
+    range: [5, 14 - k],
+    board: 'Zehner · Einer',
+    add: k,
+    freunde: 'best',
+    discover: [
+      { text: `Best Friends: Big Friend und Little Friend helfen zusammen.`, say: `Plus ${ZAHLWORT[k]} heißt: zehn dazu und ${ZAHLWORT[10 - k]} weg. Aber manchmal geht ${ZAHLWORT[10 - k]} weg nicht direkt. Dann helfen die Best Friends!`, mood: 'happy', start: 0, goal: null },
+      { text: `Stelle zuerst die ${a} ein.`, say: `Stell zuerst die ${ZAHLWORT[a]} ein.`, mood: 'happy', start: 0, goal: a },
+      { text: `${e} dazu: ${e === 1 ? 'eine Erdperle' : `${e} Erdperlen`} hoch.`, say: `Zuerst ${ZAHLWORT[e]} dazu: ${GROSS(ePerlen)} hoch.`, mood: 'think', start: a, goal: a + e },
+      { text: '5 weg: die Himmelsperle hoch.', say: 'Dann fünf weg: Schieb die Himmelsperle hoch.', mood: 'think', start: a + e, goal: a + e - 5 },
+      { text: 'Jetzt 10 dazu: eine Perle bei den Zehnern hoch.', say: 'Jetzt zehn dazu: Eine Perle bei den Zehnern hoch.', mood: 'think', start: a + e - 5, goal: a + k },
+      { text: `Fertig! ${a} + ${k} = ${a + k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} plus ${ZAHLWORT[k]} ist ${ZAHLWORT[a + k]}.`, mood: 'cheer', start: a + k, goal: null },
+    ],
+  }
+}
+UNITS['3-1'] = bestFriend(6, 7)
+UNITS['3-2'] = bestFriend(7, 6)
+UNITS['3-3'] = bestFriend(8, 6)
+UNITS['3-4'] = bestFriend(9, 5)
+
+/** Wiederholung aller Best Friends (+6 … +9 gemischt) */
+const alleBestFriends = (title: string, lead: string, b1: [number, number], b2: [number, number]): UnitContent => ({
+  title,
+  lead,
+  rule: ['+k = +(k−5) − 5 + 10'],
+  learn: ['Alle Best Friends: +6, +7, +8, +9', 'Gemischt rechnen: Erdperlen dazu, Himmelsperle weg, 10 dazu', 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: 'Der Video-Tutor wiederholt alle Best Friends.',
+    entdecken: 'Perli rechnet mit dir zwei gemischte Aufgaben.',
+    ueben: 'Du rechnest alle Best Friends gemischt.',
+    blitz: 'Der Abakus blitzt auf. Rechne dazu!',
+    kopfrechnen: 'Rechne alle Best Friends im Kopf.',
+    buch: 'Rechne im Buch und hake ab.',
+    boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+  },
+  cols: 2,
+  range: [5, 8],
+  board: 'Zehner · Einer',
+  adds: [6, 7, 8, 9],
+  freunde: 'best',
+  discover: [
+    { text: 'Alle Best Friends: +6, +7, +8 und +9.', say: 'Du kennst jetzt alle Best Friends. Jetzt mischen wir sie!', mood: 'happy', start: 0, goal: null },
+    ...[b1, b2].flatMap(([a, k]) => [
+      { text: `Stelle die ${a} ein.`, say: `Stell die ${ZAHLWORT[a]} ein.`, mood: 'happy' as const, start: 0, goal: a },
+      { text: `+${k}: zuerst ${k - 5} dazu, dann 5 weg.`, say: `Plus ${ZAHLWORT[k]}: Zuerst ${ZAHLWORT[k - 5]} dazu, dann die Himmelsperle hoch.`, mood: 'think' as const, start: a, goal: a + k - 10 },
+      { text: 'Dann 10 dazu.', say: 'Und jetzt zehn dazu bei den Zehnern.', mood: 'think' as const, start: a + k - 10, goal: a + k },
+    ]),
+    { text: `Fertig! ${b1[0]} + ${b1[1]} = ${b1[0] + b1[1]} und ${b2[0]} + ${b2[1]} = ${b2[0] + b2[1]}.`, say: 'Super! Du kannst alle Best Friends.', mood: 'cheer', start: b2[0] + b2[1], goal: null },
+  ],
+})
+UNITS['3-5'] = alleBestFriends('Best Friends alle', 'Alle Best Friends gemischt wiederholen.', [7, 6], [5, 9])
+UNITS['3-6'] = alleBestFriends('Best Friends alle – Training', 'Training: alle Best Friends gemischt.', [6, 8], [8, 6])
+
 /** Rechenaufgabe für eine Big-Friend-Einheit: a (Einer, bei denen der Trick nötig ist) + add. */
 export function makeSum(content: UnitContent, prev?: number) {
   if (content.adds?.length) {
     // gemischt: zuerst ein Big Friend, dann ein Einer, bei dem der Trick nötig ist
     const b = content.adds[Math.floor(Math.random() * content.adds.length)]
-    // Little Friend +b: Einer 5−b … 4 (die Himmelsperle hilft); Big Friend +b: Einer 10−b … 9
-    const a = randomIn(content.freunde === 'little' ? [5 - b, 4] : [10 - b, 9], prev)
+    // Little Friend +b: Einer 5−b … 4 (die Himmelsperle hilft); Big Friend +b: Einer 10−b … 9; Best Friend +b: Einer 5 … 14−b
+    const a = randomIn(content.freunde === 'little' ? [5 - b, 4] : content.freunde === 'best' ? [5, 14 - b] : [10 - b, 9], prev)
     return { a, b, n: a + b }
   }
   const a = randomIn(content.range, prev)

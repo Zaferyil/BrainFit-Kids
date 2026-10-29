@@ -85,7 +85,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
   const showAbakus = phase === 'flash' || phase === 'wrong'
 
   return (
-    <StationShell station="blitz" title={content.add ? `Blitz-Abakus: +${content.add}` : content.adds ? `Blitz-Abakus: alle ${content.freunde === 'little' ? 'Little' : 'Big'} Friends` : 'Blitz-Abakus: Welche Zahl war es?'} dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
+    <StationShell station="blitz" title={content.add ? `Blitz-Abakus: +${content.add}` : content.adds ? `Blitz-Abakus: alle ${content.freunde === 'little' ? 'Little' : content.freunde === 'best' ? 'Best' : 'Big'} Friends` : 'Blitz-Abakus: Welche Zahl war es?'} dots={dots} perlen={results.filter((r) => r === 'right').length} intro={STATION_INTRO.blitz} started={started} onStart={() => setStarted(true)} say={phase === 'answer' ? SAY.welcheZahlWar : undefined}>
       <div className="blitz">
         <aside className="blitz-side">
           <div className="blitz-stat">
