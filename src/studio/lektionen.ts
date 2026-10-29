@@ -402,7 +402,100 @@ function wiederholungLektion(number: number, title: string, hallo: string, b1: [
 const LEKTION_11 = wiederholungLektion(11, 'Alle Big Friends', 'Hallo! Du hast alle Big Friends gelernt. Jetzt ist es Zeit, alle gemischt zu wiederholen!', [8, 3], [9, 6], [7, 4])
 const LEKTION_12 = wiederholungLektion(12, 'Big Friends Training', 'Hallo! Heute ist Training. Alle Big Friends kommen gemischt. Bist du bereit?', [9, 2], [8, 5], [4, 7])
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12]
+// Welt 2, Lektion 13–16: Little Friends – „+k = +5 − f“ (f = Little Friend, k + f = 5). Die Himmelsperle hilft.
+function littleFriendLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const f = 5 - k
+  const perlen = `${f} Erdperlen`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Little Friend +${k}`,
+    world: 2,
+    sections: [
+      { title: 'Little Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Willkommen im Little Friends Wald. Heute rechnen wir plus ${k}.` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Little Friends', lines: [{ text: `${k} und ${f} sind 5` }, { icon: 'daumen-hoch', text: `Der Little Friend von ${k} ist ${f}` }] },
+        say: `${k} und ${f} sind zusammen 5. Also ist ${f} der Little Friend von ${k}.`,
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} + ${k}`, say: `Wir haben ${a}. Jetzt rechnen wir plus ${k}. Unten sind nicht genug Erdperlen frei!` },
+      {
+        id: 'trick', kind: 'karte', min: 5,
+        card: { title: 'Der Trick', lines: [{ icon: 'zeige-runter', text: '5 dazu' }, { icon: 'zeige-runter', text: `${f} weg` }] },
+        say: `Der Trick: Plus ${k} heißt: 5 dazu und ${f} weg.`,
+      },
+      { id: 'fuenf-dazu', cols: 2, value: a, badge: '+ 5', moves: [{ at: 'Himmelsperle', to: a + 5 }], say: 'Zuerst die Himmelsperle runter. Das sind 5.' },
+      { id: 'weg', badge: `− ${f}`, moves: [{ at: 'Erdperle', to: a + k }], say: f === 1 ? 'Dann eine Erdperle runter. Eine weg.' : `Dann ${perlen} runter. ${f} weg.` },
+      { id: 'ergebnis', badge: `${a} + ${k} = ${a + k}`, min: 3.5, say: `Fertig! ${a} plus ${k} ist ${a + k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} + ${k} = ${b + k}`, moves: [{ at: 'Himmelsperle', to: b + 5 }, { at: 'weg', to: b + k }],
+        say: `Noch einmal: ${b} plus ${k}. Die Himmelsperle runter, ${f} weg. Das ist ${b + k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c + k, say: `Jetzt du! Rechne ${c} plus ${k}. Fünf dazu, ${WORT[f]} weg.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Plus ${k} = 5 dazu, ${f} weg` }] },
+        say: `Merk dir: Plus ${k} ist 5 dazu und ${f} weg.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+// Lektion 17–18: alle Little Friends gemischt
+function littleWiederholung(number: number, title: string, hallo: string, b1: [number, number], b2: [number, number], c: [number, number]): Lesson {
+  const [a1, k1] = b1
+  const [a2, k2] = b2
+  return {
+    id: `lektion-${number}`,
+    number,
+    title,
+    world: 2,
+    sections: [
+      { title: 'Alle Little Friends', start: 'titel' },
+      { title: 'Gemischt', start: 'aufgabe-zeigen' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: hallo },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Alle Little Friends', lines: [{ text: '4 + 1 · 3 + 2' }, { icon: 'daumen-hoch', text: 'Immer: 5 dazu, Little Friend weg' }] },
+        say: 'Vier und eins, drei und zwei. Das sind alle Little Friends!',
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a1, badge: `${a1} + ${k1}`, say: `Wir haben ${a1}. Jetzt kommt plus ${k1}. Welcher Little Friend hilft? Die ${5 - k1}!` },
+      { id: 'fuenf-dazu', cols: 2, value: a1, badge: '+ 5', moves: [{ at: 'Himmelsperle', to: a1 + 5 }], say: 'Zuerst die Himmelsperle runter. Das sind 5.' },
+      { id: 'weg', badge: `− ${5 - k1}`, moves: [{ at: 'Erdperle', to: a1 + k1 }], say: `Dann ${5 - k1} weg. ${a1} plus ${k1} ist ${a1 + k1}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: a2, badge: `${a2} + ${k2} = ${a2 + k2}`, moves: [{ at: 'Himmelsperle', to: a2 + 5 }, { at: 'weg', to: a2 + k2 }],
+        say: `Und jetzt ${a2} plus ${k2}. Der Little Friend ist ${5 - k2}. Fünf dazu, ${5 - k2} weg. Das ist ${a2 + k2}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c[0], task: c[0] + c[1], say: `Jetzt du! Rechne ${c[0]} plus ${c[1]}. Denk an den Little Friend!` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: 'Erst den Little Friend finden' }, { text: 'Dann: 5 dazu, Little Friend weg' }] },
+        say: 'Merk dir: Erst den Little Friend finden. Dann fünf dazu und den Little Friend weg.',
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_13 = littleFriendLektion(13, 4, 3, 1, 4)
+const LEKTION_14 = littleFriendLektion(14, 3, 3, 4, 2)
+const LEKTION_15 = littleFriendLektion(15, 2, 3, 4, 13)
+const LEKTION_16 = littleFriendLektion(16, 1, 4, 14, 24)
+const LEKTION_17 = littleWiederholung(17, 'Alle Little Friends', 'Hallo! Du kennst jetzt alle Little Friends. Jetzt wiederholen wir sie gemischt!', [3, 4], [2, 3], [4, 3])
+const LEKTION_18 = littleWiederholung(18, 'Little Friends Training', 'Hallo! Heute ist Training im Little Friends Wald. Alle Little Friends kommen gemischt!', [4, 2], [1, 4], [3, 2])
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

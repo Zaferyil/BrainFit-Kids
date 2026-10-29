@@ -113,7 +113,7 @@ export function UebenStation({ kidId, content }: { kidId: string; content: UnitC
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? 'Rechnen: alle Big Friends' : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={STATION_INTRO.ueben} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>
