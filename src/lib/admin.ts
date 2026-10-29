@@ -1,4 +1,4 @@
-import { CLASSES, type Kid } from '../data/demo'
+import { CLASSES, PICTURES, alleKinder, ladeSchule, normalizeCode, speichereSchule, type Kid, type PictureId } from '../data/demo'
 import { WORLDS } from '../data/curriculum'
 import { STATIONS, unitContent } from '../data/units'
 import { unitVideos } from '../data/videos'
@@ -99,3 +99,62 @@ export function inhaltStatus(): LektionStatus[] {
 }
 
 export const STATION_ANZAHL = STATIONS.length
+
+// ---- Kinder und Klassen verwalten (nur Vorname, keine weiteren Daten) ----
+
+/** Gleicher Vorname in der Schule: Nummer anhängen („Lena 2“) */
+export function freierName(name: string) {
+  const basis = name.trim().replace(/\s+/g, ' ')
+  const namen = new Set(alleKinder().map((k) => k.kid.name.toLowerCase()))
+  if (!namen.has(basis.toLowerCase())) return basis
+  let n = 2
+  while (namen.has(`${basis} ${n}`.toLowerCase())) n++
+  return `${basis} ${n}`
+}
+
+const FARBEN = ['#FF4D6D', '#3BA7FF', '#3DBE5B', '#FFC531', '#A06BFF', '#FF8A1F']
+const HAARE = ['#6B3E1F', '#231A4F', '#E9B949', '#C2410C']
+const HAUT = ['#F6C9A6', '#E0A47A', '#B9774E', '#7A4A2E']
+const HUETE = ['cap', 'none', 'band', 'phones', 'crown', 'wizard'] as const
+const zufall = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)]
+
+export function kindHinzufuegen(vorname: string, klasse: string): Kid | null {
+  if (!vorname.trim()) return null
+  const sch = ladeSchule()
+  const name = freierName(vorname)
+  const id = `k-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`
+  const kid: Kid = {
+    id, name, birthYear: new Date().getFullYear() - 8,
+    password: Array.from({ length: 4 }, () => zufall(PICTURES).id as PictureId),
+    avatar: { hat: zufall(HUETE), hatColor: zufall(FARBEN), shirt: zufall(FARBEN), hair: zufall(HAARE), skin: zufall(HAUT) },
+  }
+  speichereSchule({ ...sch, kinder: [...sch.kinder, { ...kid, klasse }] })
+  return kid
+}
+
+export function archivieren(kidId: string) {
+  const sch = ladeSchule()
+  if (!sch.archiv.includes(kidId)) speichereSchule({ ...sch, archiv: [...sch.archiv, kidId] })
+}
+
+export function wiederherstellen(kidId: string) {
+  const sch = ladeSchule()
+  speichereSchule({ ...sch, archiv: sch.archiv.filter((id) => id !== kidId) })
+}
+
+export function klasseWechseln(kidId: string, code: string) {
+  const sch = ladeSchule()
+  speichereSchule({ ...sch, wechsel: { ...sch.wechsel, [kidId]: code } })
+}
+
+/** Neue Klasse mit Klassen-Code (z. B. „WIEN-3A“); gibt den Code zurück oder null, wenn er schon existiert */
+export function klasseAnlegen(code: string): string | null {
+  const c = code.trim().toUpperCase().replace(/[^A-Z0-9-]/g, '')
+  if (!c || CLASSES.some((k) => normalizeCode(k.code) === normalizeCode(c))) return null
+  const sch = ladeSchule()
+  speichereSchule({ ...sch, klassen: [...sch.klassen, c] })
+  return c
+}
+
+export const klassenCodes = () => CLASSES.map((c) => c.code)
+export const archivierteKinder = () => alleKinder().filter((k) => k.archiviert)

@@ -2,7 +2,8 @@ import { Fragment, useMemo, useState, type FormEvent } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
-import { ALLE_LEKTIONEN, inhaltStatus, kidZeilen, resetKid, setLektion, setStufe, type KidZeile } from '../lib/admin'
+import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
+import { PICTURES, type Kid } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 
 // Admin-Bereich für Lehrkraft und Schule: Kinder, Lektionen, Einstellungen.
@@ -98,7 +99,7 @@ function Uebersicht({ zeilen, onKind }: { zeilen: KidZeile[]; onKind: () => void
   return (
     <>
       <div className="adm-kpis">
-        <Kpi titel="Kinder" wert={zeilen.length} sub={`in ${new Set(zeilen.map((z) => z.klassenCode)).size} Klasse`} />
+        <Kpi titel="Kinder" wert={zeilen.length} sub={`in ${new Set(zeilen.map((z) => z.klassenCode)).size} Klassen`} />
         <Kpi titel="Heute aktiv" wert={aktiv} sub={`von ${zeilen.length}`} />
         <Kpi titel="Ø Lektion" wert={schnitt} sub={`von ${max}`} />
         <Kpi titel="Lektionen fertig" wert={`${fertig} / ${max}`} sub="alle Inhalte vorhanden" />
@@ -121,44 +122,129 @@ function Uebersicht({ zeilen, onKind }: { zeilen: KidZeile[]; onKind: () => void
 
 function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void }) {
   const [offen, setOffen] = useState<string | null>(null)
+  const [filter, setFilter] = useState('alle')
+  const codes = klassenCodes()
+  const sichtbar = filter === 'alle' ? zeilen : zeilen.filter((z) => z.klassenCode === filter)
+  const archiv = archivierteKinder()
   return (
-    <section className="adm-card adm-tabelle-wrap">
-      <div className="adm-card-head"><h2>Kinder</h2><span className="adm-muted">{zeilen.length} Kinder · Klasse {zeilen[0]?.klassenCode}</span></div>
-      <table className="adm-tabelle">
-        <thead>
-          <tr><th>Kind</th><th>Klasse</th><th>Lektion</th><th>Level</th><th>Perlen</th><th>Sterne</th><th>Heute</th><th /></tr>
-        </thead>
-        <tbody>
-          {zeilen.map((z) => (
-            <Fragment key={z.kid.id}>
-              <tr>
-                <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
-                <td>{z.stufeName}</td>
-                <td><b>L{z.lektion}</b> <small>{z.lektionName}</small></td>
-                <td>{z.progress.level}</td>
-                <td>{z.progress.perlen}</td>
-                <td>{z.sterne}</td>
-                <td><small>{z.heute.minuten} Min · {z.heute.aufgaben} Aufg. · {z.heute.spiele} Spiele</small></td>
-                <td><button type="button" className="adm-btn" onClick={() => setOffen(offen === z.kid.id ? null : z.kid.id)}>{offen === z.kid.id ? 'Schließen' : 'Bearbeiten'}</button></td>
-              </tr>
-              {offen === z.kid.id && (
-                <tr className="adm-edit"><td colSpan={8}><KindBearbeiten z={z} onChange={onChange} /></td></tr>
-              )}
-            </Fragment>
-          ))}
-        </tbody>
-      </table>
+    <>
+      <NeuesKind codes={codes} onChange={onChange} />
+      <section className="adm-card adm-tabelle-wrap">
+        <div className="adm-card-head"><h2>Kinder</h2>
+          <label className="adm-filter">Klasse
+            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+              <option value="alle">Alle Klassen</option>
+              {codes.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
+          <span className="adm-muted">{sichtbar.length} Kinder</span>
+        </div>
+        <table className="adm-tabelle">
+          <thead>
+            <tr><th>Kind</th><th>Klasse</th><th>Schulstufe</th><th>Lektion</th><th>Level</th><th>Perlen</th><th>Sterne</th><th>Heute</th><th /></tr>
+          </thead>
+          <tbody>
+            {sichtbar.map((z) => (
+              <Fragment key={z.kid.id}>
+                <tr>
+                  <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
+                  <td><span className="adm-badge">{z.klassenCode}</span></td>
+                  <td>{z.stufeName}</td>
+                  <td><b>L{z.lektion}</b> <small>{z.lektionName}</small></td>
+                  <td>{z.progress.level}</td>
+                  <td>{z.progress.perlen}</td>
+                  <td>{z.sterne}</td>
+                  <td><small>{z.heute.minuten} Min · {z.heute.aufgaben} Aufg. · {z.heute.spiele} Spiele</small></td>
+                  <td><button type="button" className="adm-btn" onClick={() => setOffen(offen === z.kid.id ? null : z.kid.id)}>{offen === z.kid.id ? 'Schließen' : 'Bearbeiten'}</button></td>
+                </tr>
+                {offen === z.kid.id && (
+                  <tr className="adm-edit"><td colSpan={9}><KindBearbeiten z={z} codes={codes} onChange={() => { onChange() }} onWeg={() => { setOffen(null); onChange() }} /></td></tr>
+                )}
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <section className="adm-card">
+        <div className="adm-card-head"><h2>Archiv</h2><span className="adm-muted">{archiv.length} Kinder</span></div>
+        {archiv.length === 0 ? <p className="adm-muted">Keine archivierten Kinder. Archivierte Kinder können sich nicht anmelden; ihr Fortschritt bleibt gespeichert.</p> : (
+          <div className="adm-archiv">
+            {archiv.map(({ kid, klasse }) => (
+              <div key={kid.id} className="adm-archiv-zeile">
+                <span className="adm-kind"><Avatar size={28} {...kid.avatar} /><span><b>{kid.name}</b><small>{klasse}</small></span></span>
+                <button type="button" className="adm-btn" onClick={() => { wiederherstellen(kid.id); onChange() }}>Wiederherstellen</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    </>
+  )
+}
+
+function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void }) {
+  const [name, setName] = useState('')
+  const [klasse, setKlasse] = useState(codes[0] ?? '')
+  const [neu, setNeu] = useState<Kid | null>(null)
+  const [code, setCode] = useState('')
+  const [meldung, setMeldung] = useState('')
+  const hinzu = (e: FormEvent) => {
+    e.preventDefault()
+    const kid = kindHinzufuegen(name, klasse)
+    if (kid) { setNeu(kid); setName(''); onChange() }
+  }
+  const klasseNeu = (e: FormEvent) => {
+    e.preventDefault()
+    const c = klasseAnlegen(code)
+    setMeldung(c ? `Klasse ${c} angelegt.` : 'Diesen Klassen-Code gibt es schon oder er ist leer.')
+    if (c) { setCode(''); setKlasse(c); onChange() }
+  }
+  return (
+    <section className="adm-card adm-neu">
+      <form className="adm-neu-form" onSubmit={hinzu}>
+        <h2>Kind hinzufügen</h2>
+        <p className="adm-muted">Nur den Vornamen. Gibt es den Namen schon, bekommt er eine Nummer (z. B. „Lena 2“).</p>
+        <div className="adm-neu-reihe">
+          <label>Vorname<input id="adm-vorname" value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Sara" autoComplete="off" maxLength={24} /></label>
+          <label>Klasse<select id="adm-neu-klasse" value={klasse} onChange={(e) => setKlasse(e.target.value)}>{codes.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
+          <button type="submit" className="adm-btn primary" disabled={!name.trim()}>Hinzufügen</button>
+        </div>
+        {neu && (
+          <div className="adm-erfolg">
+            <Avatar size={40} {...neu.avatar} />
+            <div><b>{neu.name}</b> ist in der Klasse {klasse}. Anmelde-Bilder:
+              <span className="adm-bilder">{neu.password.map((p, i) => { const pic = PICTURES.find((x) => x.id === p); return <span key={i} className="adm-bild" style={{ background: pic?.fill }}><Icon name={pic?.icon ?? 'star'} size={18} color={pic?.color} /></span> })}</span>
+              <small>{neu.password.map((p) => PICTURES.find((x) => x.id === p)?.label).join(' · ')}</small>
+            </div>
+          </div>
+        )}
+      </form>
+      <form className="adm-neu-form" onSubmit={klasseNeu}>
+        <h2>Neue Klasse</h2>
+        <p className="adm-muted">Mit diesem Code melden sich die Kinder an.</p>
+        <div className="adm-neu-reihe">
+          <label>Klassen-Code<input id="adm-code" value={code} onChange={(e) => { setCode(e.target.value); setMeldung('') }} placeholder="z. B. WIEN-3A" autoComplete="off" maxLength={12} /></label>
+          <button type="submit" className="adm-btn primary" disabled={!code.trim()}>Anlegen</button>
+        </div>
+        {meldung && <div className="adm-muted">{meldung}</div>}
+      </form>
     </section>
   )
 }
 
-function KindBearbeiten({ z, onChange }: { z: KidZeile; onChange: () => void }) {
+function KindBearbeiten({ z, codes, onChange, onWeg }: { z: KidZeile; codes: string[]; onChange: () => void; onWeg: () => void }) {
+  const [frage, setFrage] = useState(false)
   const [lekt, setLekt] = useState(`${z.progress.world}-${z.progress.unit}`)
   return (
     <div className="adm-edit-box">
-      <label>Klasse
+      <label>Schulstufe
         <select value={z.stufe ?? 2} onChange={(e) => { setStufe(z.kid.id, Number(e.target.value)); onChange() }}>
           {KLASSEN.map((k, i) => <option key={k.name} value={i}>{k.name}</option>)}
+        </select>
+      </label>
+      <label>Klasse
+        <select value={z.klassenCode} onChange={(e) => { klasseWechseln(z.kid.id, e.target.value); onChange() }}>
+          {codes.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </label>
       <label>Lektion setzen
@@ -168,6 +254,12 @@ function KindBearbeiten({ z, onChange }: { z: KidZeile; onChange: () => void }) 
       </label>
       <button type="button" className="adm-btn primary" onClick={() => { const [w, u] = lekt.split('-').map(Number); setLektion(z.kid.id, w, u); onChange() }}>Übernehmen</button>
       <button type="button" className="adm-btn danger" onClick={() => { if (window.confirm(`Fortschritt von ${z.kid.name} wirklich zurücksetzen? Klasse und Einstufung bleiben.`)) { resetKid(z.kid.id); onChange() } }}>Fortschritt zurücksetzen</button>
+      {frage ? (
+        <span className="adm-frage">{z.kid.name} archivieren?
+          <button type="button" className="adm-btn danger" onClick={() => { archivieren(z.kid.id); onWeg() }}>Ja, archivieren</button>
+          <button type="button" className="adm-btn" onClick={() => setFrage(false)}>Abbrechen</button>
+        </span>
+      ) : <button type="button" className="adm-btn" onClick={() => setFrage(true)}><Icon name="archive" size={16} color="currentColor" /> Archivieren</button>}
     </div>
   )
 }

@@ -2085,3 +2085,22 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
   box-shadow: 0 5px 0 #C25E00, 0 6px 0 3px rgba(255,255,255,.9), 0 12px 18px rgba(0,0,0,.35), inset 0 -4px 0 rgba(194,94,0,.35); }
 .erfolgsburg .erfolgsburg-schild::before { content: ""; position: absolute; left: 12%; right: 12%; top: 3px; height: 42%; border-radius: 999px; background: linear-gradient(rgba(255,255,255,.75), rgba(255,255,255,0)); pointer-events: none; }
 .erfolgsburg.geschafft .erfolgsburg-schild { background: linear-gradient(180deg, #8BF06A 0%, #3DCB4F 50%, #22A33A 100%); text-shadow: 0 2px 0 #157A28, 1px 1px 0 #157A28, -1px 1px 0 #157A28; box-shadow: 0 5px 0 #157A28, 0 6px 0 3px rgba(255,255,255,.9), 0 12px 18px rgba(0,0,0,.35), inset 0 -4px 0 rgba(21,122,40,.35); }
+
+/* Admin: Kinder und Klassen verwalten */
+.adm-neu { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; }
+@media (max-width: 760px) { .adm-neu { grid-template-columns: 1fr; } }
+.adm-neu-form { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.adm-neu-form h2 { margin: 0; font-size: 18px; }
+.adm-neu-reihe { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.adm-neu-reihe label, .adm-filter { display: grid; gap: 4px; font-size: 12px; font-weight: 800; color: #6B648F; }
+.adm-neu-reihe input, .adm-neu-reihe select, .adm-filter select { height: 40px; min-width: 140px; padding: 0 12px; border: 1.5px solid #DCD6F2; border-radius: 10px; font: inherit; font-size: 15px; color: #231A4F; background: #FFFFFF; }
+.adm-neu-reihe input:focus-visible, .adm-filter select:focus-visible { outline: 3px solid #C9C0FF; border-color: #5B47D6; }
+.adm-btn:disabled { opacity: .5; cursor: default; }
+.adm-erfolg { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 12px; background: #E8F8EC; color: #1C5A2E; font-size: 14px; }
+.adm-erfolg small { display: block; color: #3B7A4D; }
+.adm-bilder { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+.adm-bild { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; }
+.adm-filter { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.adm-archiv { display: grid; gap: 8px; }
+.adm-archiv-zeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 10px; border-radius: 12px; background: #F6F4FB; }
+.adm-frage { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 800; color: #8A1F3A; }

@@ -28,7 +28,8 @@ export type Kid = {
 
 export type SchoolClass = { code: string; kids: Kid[] }
 
-export const CLASSES: SchoolClass[] = [
+/** Kinder und Klassen von Anfang an (Beispiel); Änderungen aus dem Admin-Bereich liegen in localStorage (bfk.schule). */
+const BASIS: SchoolClass[] = [
   {
     code: 'LINZ-7K',
     kids: [
@@ -43,6 +44,42 @@ export const CLASSES: SchoolClass[] = [
     ],
   },
 ]
+
+/** Änderungen der Lehrkraft: neue Klassen und Kinder, Klassenwechsel, Archiv */
+export type Schule = {
+  klassen: string[]
+  kinder: (Kid & { klasse: string })[]
+  wechsel: Record<string, string>
+  archiv: string[]
+}
+const SCHULE_KEY = 'bfk.schule'
+const leer = (): Schule => ({ klassen: [], kinder: [], wechsel: {}, archiv: [] })
+
+export function ladeSchule(): Schule {
+  try { const raw = localStorage.getItem(SCHULE_KEY); return raw ? { ...leer(), ...JSON.parse(raw) } : leer() } catch { return leer() }
+}
+
+/** Alle Kinder mit ihrer Klasse, auch archivierte */
+export function alleKinder(sch = ladeSchule()) {
+  const basis = BASIS.flatMap((c) => c.kids.map((kid) => ({ kid, klasse: c.code })))
+  return [...basis, ...sch.kinder.map(({ klasse, ...kid }) => ({ kid: kid as Kid, klasse }))]
+    .map(({ kid, klasse }) => ({ kid, klasse: sch.wechsel[kid.id] ?? klasse, archiviert: sch.archiv.includes(kid.id) }))
+}
+
+/** Aktive Klassen mit ihren Kindern (archivierte Kinder fehlen); wird nach jeder Änderung neu gefüllt */
+export const CLASSES: SchoolClass[] = []
+export function klassenNeuAufbauen() {
+  const sch = ladeSchule()
+  const codes = [...new Set([...BASIS.map((c) => c.code), ...sch.klassen])]
+  const kinder = alleKinder(sch).filter((k) => !k.archiviert)
+  CLASSES.splice(0, CLASSES.length, ...codes.map((code) => ({ code, kids: kinder.filter((k) => k.klasse === code).map((k) => k.kid) })))
+}
+klassenNeuAufbauen()
+
+export function speichereSchule(sch: Schule) {
+  try { localStorage.setItem(SCHULE_KEY, JSON.stringify(sch)) } catch { /* ohne Speicher geht es nicht */ }
+  klassenNeuAufbauen()
+}
 
 export function normalizeCode(code: string) {
   return code.toUpperCase().replace(/[^A-Z0-9]/g, '')
