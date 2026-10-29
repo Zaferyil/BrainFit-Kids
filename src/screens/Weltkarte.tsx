@@ -96,7 +96,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               {karte.plaetze.map(([x, y], i) => {
                 const s = stops[start + i]
                 const pos = { left: `${(x / karte.w) * 100}%`, top: `${(y / karte.h) * 100}%` }
-                if (!s) return <span key={i} className="insel-coin" style={pos} aria-hidden="true"><Icon name="star" color="#FFFFFF" size={18} strokeWidth={2.6} /></span>
+                // freie Plätze (nächste Welt noch gesperrt) bleiben leer
+                if (!s) return null
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
                     <Node stop={s} n={start + i + 1} kid={kid} links={x / karte.w > 0.5} onLocked={(text) => setSay(text)} />
