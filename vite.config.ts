@@ -4,8 +4,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Für die Einzeldatei-Vorschau (INLINE_ASSETS=1) werden Grafiken und Ton eingebettet
-  build: process.env.INLINE_ASSETS ? { assetsInlineLimit: 100_000_000 } : {},
+  // Für die Vorschau (INLINE_ASSETS=1) werden Grafiken und kurze Töne eingebettet;
+  // die langen Video-Tonspuren bleiben eigene Dateien neben der Seite (sonst wird die Seite zu groß)
+  build: process.env.INLINE_ASSETS ? { assetsInlineLimit: (file: string) => !/lektionen\/[^/]+-ton\.mp3$/.test(file) } : {},
   plugins: [
     react(),
     VitePWA({
