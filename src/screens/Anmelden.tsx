@@ -7,14 +7,13 @@ import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
-import { findClass, PICTURES, type Kid, type PictureId, type SchoolClass } from '../data/demo'
+import { findClass, type Kid, type SchoolClass } from '../data/demo'
 import { getSavedClass, saveClass, saveSession } from '../lib/session'
 import { speak } from '../lib/speak'
 import { load, save } from '../lib/storage'
 
-type Status = 'input' | 'wrong' | 'right'
 
-const STEPS = ['Klassen-Code', 'Wähle deine Figur', 'Schulstufe', 'Bild-Passwort']
+const STEPS = ['Klassen-Code', 'Wähle deine Figur', 'Schulstufe']
 
 // Schulstufe des Kindes (Kindergarten bis 6. Klasse), pro Kind auf dem Gerät gemerkt
 const STUFEN = [
@@ -64,9 +63,9 @@ export function Anmelden() {
               onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
             />
           ) : stufe === null ? (
-            <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); setStufe(n); void speak('Tippe deine vier Bilder.') }} />
+            <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
-            <PicturePassword key={`pw-${kid.id}`} schoolClass={schoolClass} kid={kid} onBack={() => setStufe(null)} />
+            <section className="nk-step popin"><LosPopup kid={kid} /></section>
           )
         ) : (
           <ClassCode onFound={(c) => { saveClass(c.code); setSchoolClass(c) }} />
@@ -183,72 +182,6 @@ function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) =>
   )
 }
 
-function PicturePassword({ schoolClass, kid, onBack }: { schoolClass: SchoolClass; kid: Kid | null; onBack: () => void }) {
-  const [picks, setPicks] = useState<PictureId[]>([])
-  const [status, setStatus] = useState<Status>('input')
-
-  if (!kid) {
-    return (
-      <section className="pw-panel pw-empty">
-        <Perli mood="think" size={170} />
-        <h2>Tippe zuerst auf dein Bild.</h2>
-        <p>Dann zeigt dir Perli dein Bild-Passwort.</p>
-      </section>
-    )
-  }
-
-  const pick = (id: PictureId) => {
-    if (status !== 'input' || picks.length >= 4) return
-    const next = [...picks, id]
-    setPicks(next)
-    if (next.length < 4) return
-    if (next.every((p, i) => p === kid.password[i])) {
-      setStatus('right')
-      saveSession({ classCode: schoolClass.code, kidId: kid.id })
-      void speak('Richtig!')
-    } else {
-      setStatus('wrong')
-      speak('Das war nicht richtig. Probier es nochmal!')
-      setTimeout(() => { setPicks([]); setStatus('input') }, 1200)
-    }
-  }
-
-  return (
-    <section className="nk-step popin" aria-labelledby="nk-pw">
-      <header className="nk-title">
-        <h1 id="nk-pw">Dein Geheim-Code</h1>
-        <p>Hallo {kid.name}! Tippe deine 4 Bilder.</p>
-      </header>
-      <div className={`nk-slots ${status}`}>
-        {[0, 1, 2, 3].map((i) => {
-          const p = PICTURES.find((x) => x.id === picks[i])
-          return (
-            <span key={i} className={p ? 'nk-slot filled' : 'nk-slot'} aria-label={p ? p.label : `Bild ${i + 1} leer`}>
-              {p && <Icon name={p.icon} color={p.color} fill={p.fill} size={30} strokeWidth={2} />}
-            </span>
-          )
-        })}
-        <button type="button" className="nk-round ghost small" aria-label="Löschen" disabled={status !== 'input' || picks.length === 0} onClick={() => setPicks(picks.slice(0, -1))}>
-          <Icon name="del" color="#FFFFFF" size={22} />
-        </button>
-      </div>
-      {status === 'right' ? (
-        <LosPopup kid={kid} />
-      ) : (
-        <div className="nk-pics">
-          {PICTURES.map((p) => (
-            <button key={p.id} type="button" className="nk-pic" aria-label={p.label} onClick={() => pick(p.id)} disabled={status !== 'input'}>
-              <Icon name={p.icon} color={p.color} fill={p.fill} size={46} strokeWidth={2} />
-            </button>
-          ))}
-        </div>
-      )}
-      {status === 'wrong' && <p className="nk-wrong" role="alert">Das war nicht richtig. Probier es nochmal!</p>}
-      {status === 'input' && kid.id === 'lena' && <p className="nk-foot dim">Zum Ausprobieren: Stern, Herz, Blitz, Krone</p>}
-      <p className="nk-foot"><button type="button" onClick={onBack}>Klasse ändern</button></p>
-    </section>
-  )
-}
 
 /** Nach dem richtigen Geheim-Code: großer runder Knopf, der zur Karte führt. */
 function LosPopup({ kid }: { kid: Kid }) {
@@ -257,7 +190,7 @@ function LosPopup({ kid }: { kid: Kid }) {
   return createPortal(
     <div className="nk-los-popup" role="dialog" aria-modal="true" aria-label="Los geht’s">
       <div className="nk-los-karte popin">
-        <small>Richtig, {kid.name}!</small>
+        <small>Hallo {kid.name}!</small>
         <strong>{next.title}</strong>
         <a href="#/inseln" className="zh-los">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
