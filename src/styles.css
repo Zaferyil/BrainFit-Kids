@@ -2077,3 +2077,11 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .erfolgsburg img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
 .erfolgsburg.geschafft img { filter: drop-shadow(0 0 18px rgba(255,214,90,.85)) drop-shadow(0 8px 10px rgba(0,0,0,.25)); }
 .erfolgsburg .erfolgsburg-schild { margin-top: -6%; font-size: 14px; padding: 4px 14px 5px; }
+/* Schild unter der Burg: kräftiger 3D-Knopf */
+.erfolgsburg .erfolgsburg-schild, .erfolgsburg.geschafft .erfolgsburg-schild { position: relative; margin-top: -7%; padding: 7px 20px 9px; border-radius: 999px; border: 3px solid #FFFFFF;
+  background: linear-gradient(180deg, #FFE14D 0%, #FFB800 48%, #FF8A00 100%); color: #FFFFFF;
+  font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: .02em; text-transform: uppercase;
+  text-shadow: 0 2px 0 #C25E00, 0 0 1px #C25E00, 1px 1px 0 #C25E00, -1px 1px 0 #C25E00;
+  box-shadow: 0 5px 0 #C25E00, 0 6px 0 3px rgba(255,255,255,.9), 0 12px 18px rgba(0,0,0,.35), inset 0 -4px 0 rgba(194,94,0,.35); }
+.erfolgsburg .erfolgsburg-schild::before { content: ""; position: absolute; left: 12%; right: 12%; top: 3px; height: 42%; border-radius: 999px; background: linear-gradient(rgba(255,255,255,.75), rgba(255,255,255,0)); pointer-events: none; }
+.erfolgsburg.geschafft .erfolgsburg-schild { background: linear-gradient(180deg, #8BF06A 0%, #3DCB4F 50%, #22A33A 100%); text-shadow: 0 2px 0 #157A28, 1px 1px 0 #157A28, -1px 1px 0 #157A28; box-shadow: 0 5px 0 #157A28, 0 6px 0 3px rgba(255,255,255,.9), 0 12px 18px rgba(0,0,0,.35), inset 0 -4px 0 rgba(21,122,40,.35); }

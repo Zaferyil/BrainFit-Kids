@@ -221,7 +221,7 @@ function ErfolgsBurg({ burg }: { burg: Burg }) {
   return (
     <div className={burg.geschafft ? 'erfolgsburg geschafft' : 'erfolgsburg'} role="img" aria-label={`Tor zu Welt ${burg.welt + 1}${burg.geschafft ? ' (geöffnet)' : ''}`}>
       <img src={burgBild} alt="" draggable={false} />
-      <span className="erfolgsburg-schild">Tor zu Welt {burg.welt + 1}</span>
+      <span className="erfolgsburg-schild">Willkommen Welt {burg.welt + 1}</span>
     </div>
   )
 }
