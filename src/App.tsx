@@ -16,7 +16,7 @@ import { Rangliste } from './screens/Rangliste'
 import { BuchStation } from './screens/stations/BuchStation'
 import { buchAuftrag, workbookAuftrag } from './data/buch'
 import { UEBUNGEN, uebungsArt, type UebungsPlatz } from './data/uebungen'
-import { KettenStation, MemoryStation, MerkenStation, SchnellStation, VergleichStation } from './screens/stations/NeueUebungen'
+import { FlashKartenStation, KettenStation, MemoryStation, MerkenStation, SchnellStation, VergleichStation } from './screens/stations/NeueUebungen'
 import { KursStation } from './screens/stations/KursStation'
 import { kursAufgaben } from './data/kurs'
 import { klasseVon } from './lib/klasse'
@@ -129,6 +129,7 @@ export default function App() {
         if (art === 'memory') return <MemoryStation {...props} />
         if (art === 'vergleich') return <VergleichStation {...props} />
         if (art === 'merken') return <MerkenStation {...props} />
+        if (art === 'flashkarten') return <FlashKartenStation {...props} />
       }
       if (kurs && id === 'ueben') return <KursStation kidId={kid.id} aufgaben={kurs} />
       if (content && id === 'ueben') return <UebenStation kidId={kid.id} content={content} />

@@ -20,6 +20,8 @@ export const STATION_INTRO: Record<Exclude<StationId, 'video'>, string> = {
 
 export const SAY = {
   passAuf: 'Pass auf!',
+  welcherAbakus: 'Welcher Abakus zeigt diese Zahl?',
+  welcheZahlKarte: 'Welche Zahl zeigt der Abakus?',
   welcheGroesser: 'Welche Aufgabe gibt mehr? Tippe sie an.',
   merkDir: 'Merk dir die Zahlen!',
   alleZusammen: 'Wie viel sind alle zusammen?',

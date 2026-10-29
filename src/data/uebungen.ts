@@ -5,12 +5,13 @@ import { makeSum, rechnet, unitContent, type UnitContent } from './units'
 // Abwechslung: Die drei Übungs-Stationen einer Lektion (Plätze „ueben“, „blitz“, „kopfrechnen“)
 // nehmen je Lektion andere Übungsarten – Vorbilder: Abakus-App (Unity), Math Kids, Anzan Meister.
 
-export type UebungsArt = 'einstellen' | 'ablesen' | 'blitzAbakus' | 'zahlenBlitz' | 'hoerRechnen' | 'kopfrechnen' | 'schnell' | 'memory' | 'vergleich' | 'merken'
+export type UebungsArt = 'einstellen' | 'ablesen' | 'flashkarten' | 'blitzAbakus' | 'zahlenBlitz' | 'hoerRechnen' | 'kopfrechnen' | 'schnell' | 'memory' | 'vergleich' | 'merken'
 export type UebungsPlatz = 'ueben' | 'blitz' | 'kopfrechnen'
 
 export const UEBUNGEN: Record<UebungsArt, { title: string; icon: IconName | 'bead'; color: string; text: string; intro: string }> = {
   einstellen: { title: 'Perlen einstellen', icon: 'bead', color: '#FFC531', text: 'Rechne und stelle das Ergebnis am Abakus ein.', intro: 'Jetzt rechnest du mit dem Abakus. Schieb die Perlen, bis das Ergebnis stimmt.' },
   ablesen: { title: 'Abakus ablesen', icon: 'bead', color: '#FFC531', text: 'Lies den Abakus und rechne weiter.', intro: 'Schau dir den Abakus genau an. Rechne die Aufgabe und tippe das Ergebnis ein.' },
+  flashkarten: { title: 'Abakus-Karten', icon: 'image', color: '#A06BFF', text: 'Welche Zahl? Welcher Abakus? Schnell erkennen.', intro: 'Abakus-Karten! Manchmal siehst du einen Abakus und suchst die Zahl. Manchmal siehst du die Zahl und suchst den richtigen Abakus.' },
   blitzAbakus: { title: 'Blitz-Abakus', icon: 'bolt', color: '#FF8A1F', text: 'Der Abakus blitzt kurz auf.', intro: 'Gleich blitzt der Abakus ganz kurz auf. Merk dir die Zahl und rechne weiter.' },
   zahlenBlitz: { title: 'Zahlen-Blitz', icon: 'bolt', color: '#FF8A1F', text: 'Zahlen kommen nacheinander – rechne mit.', intro: 'Gleich kommen Zahlen nacheinander. Rechne mit deinem Abakus mit und tippe am Ende das Ergebnis ein.' },
   hoerRechnen: { title: 'Hör-Rechnen', icon: 'volume', color: '#3BA7FF', text: 'Hör gut zu und rechne mit.', intro: 'Jetzt hörst du die Zahlen nur. Hör gut zu, rechne mit und tippe am Ende das Ergebnis ein.' },
@@ -30,9 +31,11 @@ const DREIER: [UebungsArt, UebungsArt, UebungsArt][] = [
   ['einstellen', 'zahlenBlitz', 'merken'],
   ['ablesen', 'hoerRechnen', 'schnell'],
   ['einstellen', 'blitzAbakus', 'memory'],
-  ['ablesen', 'zahlenBlitz', 'vergleich'],
+  ['ablesen', 'zahlenBlitz', 'flashkarten'],
   ['einstellen', 'hoerRechnen', 'kopfrechnen'],
   ['ablesen', 'blitzAbakus', 'merken'],
+  ['einstellen', 'zahlenBlitz', 'flashkarten'],
+  ['ablesen', 'hoerRechnen', 'vergleich'],
 ]
 
 /** Übungsart für einen Platz der Lektion; Lektion 1 (ohne Rechnen) behält die Grund-Übungen. */

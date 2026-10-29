@@ -2005,3 +2005,12 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
   .ue-antwort { height: 58px; font-size: 34px; }
   .ue-memory { gap: 8px; }
 }
+/* Abakus-Karten */
+.ue-fk-frage { gap: 8px; }
+.ue-fk-text { font-weight: 800; color: #6B61A8; }
+.ue-fk-optionen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: 100%; }
+.ue-fk-opt { border: 0; border-radius: 22px; background: #FFFFFF; color: var(--violet); font-family: var(--font-display); font-weight: 800; font-size: 40px; min-height: 84px; display: grid; place-items: center; padding: 8px; box-shadow: 0 6px 0 #D8D1FF; cursor: pointer; }
+.ue-fk-optionen.bilder .ue-fk-opt { min-height: 150px; }
+.ue-fk-opt.right { background: #2ECC8F; color: #FFFFFF; box-shadow: 0 6px 0 #1F9E6C; }
+.ue-fk-opt.wrong { background: #FF5C7A; color: #FFFFFF; box-shadow: 0 6px 0 #C2264E; }
+.ue-fk-opt.dim { opacity: .45; }

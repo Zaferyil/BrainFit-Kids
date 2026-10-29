@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../components/Icon'
+import { Abakus3D } from '../../components/Abakus3D'
 import { makeSum, type UnitContent } from '../../data/units'
 import { kette, kettenLaenge, UEBUNGEN, type UebungsArt, type UebungsPlatz } from '../../data/uebungen'
 import { SAY } from '../../data/sprache'
@@ -324,6 +325,67 @@ export function MerkenStation({ kidId, content, platz, art }: Props) {
         <Keypad onKey={onKey} disabled={phase !== 'tippen'} />
       </div>
       {done && <StationDone stars={done.stars} perlen={done.perlen} text={done.stars === 3 ? 'Super Gedächtnis!' : 'Gut geübt! Du wirst immer besser.'} />}
+    </StationShell>
+  )
+}
+
+/** Abakus-Karten (nach Anzan Meister „Abakus Flash Card“): Abakus → Zahl wählen oder Zahl → Abakus wählen */
+export function FlashKartenStation({ kidId, content, platz, art }: Props) {
+  const [{ aufgaben: COUNT }] = useState(() => klasseVon(kidId))
+  const [karten] = useState(() => Array.from({ length: COUNT }, (_, i) => {
+    const n = makeSum(content).n
+    // Ablenker wie bei Anzan Meister: Nachbarzahlen und Zahlen mit verwechselbaren Perlen
+    const opts = new Set([n])
+    for (const x of [n + 1, n - 1, n + 5, n - 5, n + 10, n - 10, n + 2]) if (opts.size < 4 && x >= 0 && x <= 99) opts.add(x)
+    return { n, modus: i % 2 === 0 ? 'abakus' as const : 'zahl' as const, optionen: [...opts].sort(() => Math.random() - 0.5) }
+  }))
+  const [index, setIndex] = useState(0)
+  const [gewaehlt, setGewaehlt] = useState<number | null>(null)
+  const [ergebnisse, setErgebnisse] = useState<('right' | 'wrong')[]>([])
+  const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
+  const s = useStart(art)
+  const k = karten[index]
+  const frage = k.modus === 'abakus' ? SAY.welcheZahlKarte : SAY.welcherAbakus
+
+  useEffect(() => { if (s.started) void speak(frage) }, [s.started, index, frage])
+
+  const waehlen = (o: number) => {
+    if (gewaehlt !== null) return
+    setGewaehlt(o)
+    const ok = o === k.n
+    const res = [...ergebnisse, ok ? 'right' as const : 'wrong' as const]
+    setErgebnisse(res)
+    void speak(ok ? SAY.richtig : [SAY.fastDasIst, String(k.n)])
+    window.setTimeout(() => {
+      setGewaehlt(null)
+      if (index + 1 >= COUNT) {
+        const f = res.filter((r) => r === 'wrong').length
+        setDone({ stars: sterne(f), perlen: finishStation(kidId, platz, sterne(f), COUNT - f) })
+      } else setIndex(index + 1)
+    }, ok ? 800 : 1800)
+  }
+
+  const klasse = (o: number) => (gewaehlt === null ? 'ue-fk-opt' : o === k.n ? 'ue-fk-opt right' : o === gewaehlt ? 'ue-fk-opt wrong' : 'ue-fk-opt dim')
+  const dots = Array.from({ length: COUNT }, (_, i) => ergebnisse[i] ?? (i === index ? 'current' : 'open'))
+  return (
+    <StationShell station={platz} title={UEBUNGEN[art].title} label={s.label} dots={dots} intro={s.intro} started={s.started} onStart={s.start} say={frage}>
+      <div className="ue">
+        <div className="ue-karte ue-fk-frage">
+          <div className="eyebrow">KARTE {index + 1} VON {COUNT}</div>
+          {k.modus === 'abakus'
+            ? <Abakus3D key={index} value={k.n} cols={2} colw={64} />
+            : <div className="ue-aufgabe">{k.n}</div>}
+          <span className="ue-fk-text">{k.modus === 'abakus' ? 'Welche Zahl zeigt der Abakus?' : 'Welcher Abakus zeigt diese Zahl?'}</span>
+        </div>
+        <div className={k.modus === 'abakus' ? 'ue-fk-optionen zahlen' : 'ue-fk-optionen bilder'}>
+          {k.optionen.map((o) => (
+            <button key={o} type="button" className={klasse(o)} disabled={gewaehlt !== null} onClick={() => waehlen(o)} aria-label={k.modus === 'abakus' ? String(o) : `Abakus ${o}`}>
+              {k.modus === 'abakus' ? o : <Abakus3D value={o} cols={2} colw={42} />}
+            </button>
+          ))}
+        </div>
+      </div>
+      {done && <StationDone stars={done.stars} perlen={done.perlen} text={done.stars === 3 ? 'Blitzschnell erkannt!' : 'Gut geübt! Du wirst immer besser.'} />}
     </StationShell>
   )
 }
