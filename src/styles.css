@@ -2055,3 +2055,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk-map-head .quest-chip { height: 36px; padding: 0 10px; gap: 6px; flex-shrink: 0; }
 .nk-map-head .path-tools { margin-left: 0; flex-shrink: 0; }
 .nk-map-head .nk-zurueck { width: 40px; height: 40px; flex-shrink: 0; }
+
+/* Karte: kein seitliches Wackeln auf dem Handy – Stationsboxen am Rand dürfen die Seite nicht verbreitern */
+html, body { overflow-x: clip; overscroll-behavior-x: none; }
+@media (min-width: 761px) { .insel-bg { mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); } .inseln > .insel:not(:last-child) .insel-bg { mask-image: linear-gradient(to top, transparent, #000 10cqw), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-composite: intersect; } }
+.inseln { width: 100%; overflow-x: clip; touch-action: pan-y; }
+.path-screen { width: 100%; max-width: 100%; overflow-x: clip; }
+.stage:has(> .nk-map-head) { overflow-x: clip; overflow-y: visible; }

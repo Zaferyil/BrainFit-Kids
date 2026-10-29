@@ -45,7 +45,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const questsDone = quests.filter((q) => q.done >= q.goal).length
 
   return (
-    <Stage background="linear-gradient(180deg, #4B2FC2 0%, #7B5CFF 40%, #FF9AC8 100%)">
+    <Stage background="linear-gradient(180deg, #4FC3F2, #2E9FDB)">
       <header className="nk-hello nk-map-head">
         <a href="#/karte" className="nk-zurueck" aria-label="Zurück zur Startseite">
           <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />
