@@ -2106,3 +2106,36 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-frage { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 800; color: #8A1F3A; }
 .nk-neu { width: clamp(92px, 26vw, 128px); height: clamp(92px, 26vw, 128px); border-radius: 50%; background: rgba(255,255,255,.9); color: var(--nk-ink); display: grid; place-content: center; justify-items: center; gap: 2px; font-weight: 900; font-size: 15px; box-shadow: 0 6px 0 rgba(0,0,0,.12); }
 .nk-neu b { font-family: var(--font-display); font-size: 34px; line-height: 1; color: #7B5CFF; }
+
+/* Anzan */
+.az { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 20px 16px 120px; width: min(100%, 560px); margin: 0 auto; }
+.az-kopf { text-align: center; }
+.az-kopf h1 { font-family: var(--font-display); font-size: 40px; line-height: 1; }
+.az-kopf p { font-weight: 800; opacity: .9; }
+.az-wahl { width: 100%; display: grid; gap: 18px; padding: 20px; border-radius: 28px; background: rgba(255,255,255,.14); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.25); }
+.az-gruppe { display: grid; gap: 10px; }
+.az-gruppe h2 { font-size: 18px; }
+.az-levels { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 8px; max-height: 240px; overflow-y: auto; padding: 2px; }
+.az-levels button, .az-tempo button { border: 0; font: inherit; font-weight: 900; cursor: pointer; border-radius: 14px; background: rgba(255,255,255,.9); color: #2B2257; box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.az-levels button { aspect-ratio: 1; font-size: 17px; display: grid; place-items: center; }
+.az-levels button:disabled { background: rgba(255,255,255,.25); color: rgba(255,255,255,.7); box-shadow: none; cursor: default; }
+.az-levels button.an, .az-tempo button.an { background: linear-gradient(#FFE14D, #FFB800); box-shadow: 0 4px 0 #C98A00; }
+.az-tempo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.az-tempo button { height: 48px; font-size: 16px; }
+.az-start { justify-self: center; display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font-family: var(--font-display); font-weight: 800; font-size: 22px; color: #231A4F; padding: 14px 40px; border-radius: 999px; background: linear-gradient(#FFE14D, #FFB800); box-shadow: 0 6px 0 #C98A00; }
+.az-start:disabled { opacity: .5; cursor: default; }
+.az-hinweis { text-align: center; font-weight: 800; font-size: 14px; opacity: .85; }
+.az-spiel { width: 100%; display: grid; gap: 14px; justify-items: center; }
+.az-info { width: 100%; display: flex; justify-content: space-between; font-weight: 900; }
+.az-info span { padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.18); }
+.az-tafel { width: 100%; aspect-ratio: 4 / 3; max-height: 300px; border-radius: 32px; background: #FFFFFF; display: grid; place-items: center; box-shadow: 0 10px 0 rgba(0,0,0,.15), 0 20px 40px rgba(0,0,0,.2); transition: box-shadow .2s; }
+.az-tafel.richtig { box-shadow: 0 0 0 8px #3DBE5B, 0 20px 40px rgba(0,0,0,.2); }
+.az-tafel.falsch { box-shadow: 0 0 0 8px #FF4D6D, 0 20px 40px rgba(0,0,0,.2); }
+.az-zahl { font-family: var(--font-display); font-size: clamp(90px, 28vw, 150px); line-height: 1; animation: az-blitz .35s ease-out; }
+@keyframes az-blitz { from { transform: scale(.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .az-zahl { animation: none; } }
+.az-bereit { font-family: var(--font-display); font-size: 36px; color: #7B5CFF; }
+.az-eingabe { font-family: var(--font-display); font-size: 90px; color: #2B2257; }
+.az-ende { justify-items: center; text-align: center; }
+.az-sterne { display: flex; gap: 6px; }
+.az-zurueck { border: 0; background: none; color: #FFFFFF; font: inherit; font-weight: 900; text-decoration: underline; cursor: pointer; }

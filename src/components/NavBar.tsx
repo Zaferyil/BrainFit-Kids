@@ -1,11 +1,12 @@
 import { Icon, type IconName } from './Icon'
 
-export type NavId = 'karte' | 'denkpark' | 'pokale' | 'garderobe'
+export type NavId = 'karte' | 'denkpark' | 'anzan' | 'pokale' | 'garderobe'
 
-// Schwebende Menüleiste unten (neuer Look): vier runde Knöpfe, der aktive ist violett.
+// Schwebende Menüleiste unten (neuer Look): fünf runde Knöpfe, der aktive ist violett.
 const items: { id: NavId; label: string; icon: IconName }[] = [
   { id: 'karte', label: 'Abenteuer', icon: 'home' },
   { id: 'denkpark', label: 'Denkspiele', icon: 'bolt' },
+  { id: 'anzan', label: 'Anzan', icon: 'brain' },
   { id: 'pokale', label: 'Pokale', icon: 'trophy' },
   { id: 'garderobe', label: 'Ich', icon: 'user' },
 ]

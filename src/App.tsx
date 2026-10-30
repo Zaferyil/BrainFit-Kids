@@ -26,6 +26,7 @@ import { BossStation } from './screens/stations/BossStation'
 import { unitContent, STATIONS } from './data/units'
 import { unitVideos } from './data/videos'
 import { WORLDS } from './data/curriculum'
+import { Anzan } from './screens/Anzan'
 import { DenkPark } from './screens/DenkPark'
 import { Ich, Pokale } from './screens/Pokale'
 import { Denkspiel } from './screens/Denkspiel'
@@ -48,7 +49,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -88,6 +89,7 @@ export default function App() {
     if (route === 'rangliste') return <Rangliste kid={kid} />
     if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
+    if (route === 'anzan') return <Anzan kid={kid} />
     if (route === 'einstufung') return <Einstufung kid={kid} />
     if (route.startsWith('spiel/')) {
       const game = findGame(route.slice(6))
