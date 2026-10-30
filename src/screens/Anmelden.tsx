@@ -8,13 +8,13 @@ import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
-import { findClass, type Kid, type SchoolClass } from '../data/demo'
-import { getSavedClass, saveClass, saveSession } from '../lib/session'
+import { findeLogin, type Kid, type SchoolClass } from '../data/demo'
+import { saveSession } from '../lib/session'
 import { speak } from '../lib/speak'
 import { load, save } from '../lib/storage'
 
 
-const STEPS = ['Klassen-Code', 'Wähle deine Figur', 'Schulstufe']
+const STEPS = ['Anmelden', 'Wähle deine Figur', 'Schulstufe']
 
 // Schulstufe des Kindes (Kindergarten bis 6. Klasse), pro Kind auf dem Gerät gemerkt
 const STUFEN = [
@@ -25,17 +25,14 @@ const stufeKey = (kidId: string) => `bfk.stufe.${kidId}`
 const getStufe = (kidId: string) => load<number | null>(stufeKey(kidId), null)
 
 export function Anmelden() {
-  const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(() => {
-    const saved = getSavedClass()
-    return saved ? findClass(saved) ?? null : null
-  })
+  const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(null)
   const [kid, setKid] = useState<Kid | null>(null)
   const [stufe, setStufe] = useState<number | null>(null)
   const [, neu] = useState(0)
 
-  const step = !schoolClass ? 0 : !kid ? 1 : stufe === null ? 2 : 3
+  const step = !schoolClass || !kid ? 0 : !figurVon(kid.id) ? 1 : stufe === null ? 2 : 3
   const instruction = [
-    'Wie heißt deine Klasse? Tippe den Klassen-Code ein.',
+    'Gib deinen Benutzernamen und dein Passwort ein.',
     'Wähle deine Figur! Tippe auf dein Bild.',
     `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
     'Tippe deine vier Bilder.',
@@ -56,30 +53,23 @@ export function Anmelden() {
           </button>
         </div>
 
-        {schoolClass ? (
-          !kid ? (
-            <KidPicker
-              key="kind"
-              schoolClass={schoolClass}
-              onSelect={(k) => {
-                setKid(k)
-                // Figur und Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
-                const bekannt = figurVon(k.id) ? getStufe(k.id) : null
-                if (bekannt !== null) { saveSession({ classCode: schoolClass.code, kidId: k.id }); setStufe(bekannt); return }
-                setStufe(null)
-                void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.')
-              }}
-              onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
-            />
-          ) : !figurVon(kid.id) ? (
+        {schoolClass && kid ? (
+          !figurVon(kid.id) ? (
             <FigurPicker key="figur" kid={kid} onPick={(f) => { setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1); void speak([`Hallo ${kid.name}!`, 'In welche Klasse gehst du?']) }} />
           ) : stufe === null ? (
-            <StufePicker key="stufe" kid={kid} onBack={() => setKid(null)} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
+            <StufePicker key="stufe" kid={kid} onBack={() => { setKid(null); setSchoolClass(null) }} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
             <section className="nk-step popin"><LosPopup kid={kid} /></section>
           )
         ) : (
-          <ClassCode onFound={(c) => { saveClass(c.code); setSchoolClass(c) }} />
+          <LoginForm onLogin={(c, k) => {
+            setSchoolClass(c); setKid(k)
+            // Figur und Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
+            const bekannt = figurVon(k.id) ? getStufe(k.id) : null
+            if (bekannt !== null) { saveSession({ classCode: c.code, kidId: k.id }); setStufe(bekannt); return }
+            setStufe(null)
+            void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.')
+          }} />
         )}
       </div>
     </Stage>
@@ -99,17 +89,18 @@ export function Funkeln() {
   )
 }
 
-function ClassCode({ onFound }: { onFound: (c: SchoolClass) => void }) {
-  const [code, setCode] = useState('')
+function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
+  const [benutzer, setBenutzer] = useState('')
+  const [passwort, setPasswort] = useState('')
   const [error, setError] = useState(false)
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
-    const c = findClass(code)
-    if (c) onFound(c)
+    const t = findeLogin(benutzer, passwort)
+    if (t) onLogin(t.klasse, t.kid)
     else {
       setError(true)
-      speak('Diesen Code kennen wir nicht. Schau nochmal nach.')
+      speak('Das hat nicht geklappt. Schau nochmal nach.')
     }
   }
 
@@ -117,28 +108,22 @@ function ClassCode({ onFound }: { onFound: (c: SchoolClass) => void }) {
     <section className="nk-step popin">
       <header className="nk-title">
         <Perli mood={error ? 'think' : 'happy'} size={120} />
-        <h1>Wie heißt deine Klasse?</h1>
-        <p>Den Code bekommst du von deiner Lehrerin.</p>
+        <h1>Hallo! Melde dich an.</h1>
+        <p>Benutzername und Passwort stehen in der E-Mail deiner Eltern.</p>
       </header>
       <form className="nk-code" onSubmit={submit}>
-        <label htmlFor="class-code" className="sr-only">Klassen-Code</label>
-        <input
-          id="class-code"
-          className={error ? 'error' : ''}
-          value={code}
-          onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(false) }}
-          placeholder="z. B. LINZ-7K"
-          autoComplete="off"
-          autoCapitalize="characters"
-          spellCheck={false}
-          maxLength={12}
-        />
-        {error && <p className="nk-wrong" role="alert">Diesen Code kennen wir nicht. Schau nochmal nach.</p>}
-        <button type="submit" className="nk-btn yellow big" disabled={code.trim().length < 3}>
-          Weiter
+        <label htmlFor="login-name" className="sr-only">Benutzername</label>
+        <input id="login-name" className={error ? 'error' : ''} value={benutzer} onChange={(e) => { setBenutzer(e.target.value); setError(false) }}
+          placeholder="Benutzername" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={24} />
+        <label htmlFor="login-pw" className="sr-only">Passwort</label>
+        <input id="login-pw" type="password" className={error ? 'error' : ''} value={passwort} onChange={(e) => { setPasswort(e.target.value); setError(false) }}
+          placeholder="Passwort" autoComplete="current-password" maxLength={24} />
+        {error && <p className="nk-wrong" role="alert">Das hat nicht geklappt. Schau nochmal nach.</p>}
+        <button type="submit" className="nk-btn yellow big" disabled={!benutzer.trim() || !passwort.trim()}>
+          Los
           <Icon name="right" size={26} color="#2B2257" strokeWidth={3} />
         </button>
-        <p className="nk-foot dim">Zum Ausprobieren: LINZ-7K</p>
+        <p className="nk-foot dim">Zum Ausprobieren: lena · abakus</p>
       </form>
     </section>
   )
@@ -146,28 +131,6 @@ function ClassCode({ onFound }: { onFound: (c: SchoolClass) => void }) {
 
 const NEIGUNG = [-6, 5, 4, -4, 7, -3, 5, -5]
 
-function KidPicker({ schoolClass, onSelect, onChangeClass }: {
-  schoolClass: SchoolClass
-  onSelect: (k: Kid) => void
-  onChangeClass: () => void
-}) {
-  return (
-    <section className="nk-step popin" aria-labelledby="nk-wer">
-      <header className="nk-title">
-        <h1 id="nk-wer">Wähle deine Figur!</h1>
-        <p>Tippe auf dein Bild.</p>
-      </header>
-      <div className="nk-kids">
-        {schoolClass.kids.map((k, i) => (
-          <button key={k.id} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onSelect(k)} aria-label={k.name}>
-            {figurVon(k.id) ? <img src={kidPhoto(figurVon(k.id)!)} alt="" /> : <span className="nk-neu"><b>?</b>{k.name}</span>}
-          </button>
-        ))}
-      </div>
-      <p className="nk-foot">Nicht dabei? <button type="button" onClick={onChangeClass}>Andere Klasse</button></p>
-    </section>
-  )
-}
 
 function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) => void; onBack: () => void }) {
   const saved = getStufe(kid.id)

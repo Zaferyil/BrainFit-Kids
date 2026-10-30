@@ -2139,3 +2139,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .az-ende { justify-items: center; text-align: center; }
 .az-sterne { display: flex; gap: 6px; }
 .az-zurueck { border: 0; background: none; color: #FFFFFF; font: inherit; font-weight: 900; text-decoration: underline; cursor: pointer; }
+.adm-login { font-family: ui-monospace, monospace; color: #4A4370; }
+.adm-zugang { display: block; margin-top: 2px; }

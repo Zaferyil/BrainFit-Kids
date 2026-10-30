@@ -1,4 +1,4 @@
-import { CLASSES, PICTURES, alleKinder, ladeSchule, normalizeCode, speichereSchule, type Kid, type PictureId } from '../data/demo'
+import { CLASSES, PICTURES, alleKinder, benutzerVon, ladeSchule, normalizeCode, speichereSchule, type Kid, type PictureId } from '../data/demo'
 import { WORLDS } from '../data/curriculum'
 import { STATIONS, unitContent } from '../data/units'
 import { unitVideos } from '../data/videos'
@@ -118,6 +118,19 @@ const HAUT = ['#F6C9A6', '#E0A47A', '#B9774E', '#7A4A2E']
 const HUETE = ['cap', 'none', 'band', 'phones', 'crown', 'wizard'] as const
 const zufall = <T,>(l: readonly T[]) => l[Math.floor(Math.random() * l.length)]
 
+const WOERTER = ['perle', 'stern', 'sonne', 'blitz', 'krone', 'drache', 'rakete', 'tiger']
+/** Einfaches Passwort für Kinder, z. B. „stern47“ */
+export const neuesPasswort = () => zufall(WOERTER) + (10 + Math.floor(Math.random() * 90))
+/** Benutzername aus dem Vornamen, bei Gleichheit mit Nummer („lena2“) */
+export function freierBenutzer(name: string) {
+  const basis = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '') || 'kind'
+  const vergeben = new Set(alleKinder().map((k) => benutzerVon(k.kid)))
+  if (!vergeben.has(basis)) return basis
+  let n = 2
+  while (vergeben.has(`${basis}${n}`)) n++
+  return `${basis}${n}`
+}
+
 export function kindHinzufuegen(vorname: string, klasse: string): Kid | null {
   if (!vorname.trim()) return null
   const sch = ladeSchule()
@@ -125,6 +138,7 @@ export function kindHinzufuegen(vorname: string, klasse: string): Kid | null {
   const id = `k-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`
   const kid: Kid = {
     id, name, birthYear: new Date().getFullYear() - 8,
+    benutzer: freierBenutzer(name), passwort: neuesPasswort(),
     password: Array.from({ length: 4 }, () => zufall(PICTURES).id as PictureId),
     avatar: { hat: zufall(HUETE), hatColor: zufall(FARBEN), shirt: zufall(FARBEN), hair: zufall(HAARE), skin: zufall(HAUT) },
   }

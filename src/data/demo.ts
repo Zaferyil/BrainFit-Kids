@@ -23,6 +23,9 @@ export type Kid = {
   name: string
   birthYear: number
   password: PictureId[]
+  /** Login für Kinder: Benutzername und Passwort (vom System vergeben) */
+  benutzer?: string
+  passwort?: string
   avatar: { hat: Hat; hatColor: string; shirt: string; hair: string; skin: string; glasses?: boolean; photo?: string }
 }
 
@@ -79,6 +82,18 @@ klassenNeuAufbauen()
 export function speichereSchule(sch: Schule) {
   try { localStorage.setItem(SCHULE_KEY, JSON.stringify(sch)) } catch { /* ohne Speicher geht es nicht */ }
   klassenNeuAufbauen()
+}
+
+/** Benutzername eines Kindes (Beispielkinder: Vorname klein) */
+export const benutzerVon = (k: Kid) => (k.benutzer ?? k.id).toLowerCase()
+/** Passwort (Beispielkinder: „abakus“) */
+export const passwortVon = (k: Kid) => k.passwort ?? 'abakus'
+
+/** Kind per Benutzername und Passwort finden (nur aktive Kinder) */
+export function findeLogin(benutzer: string, passwort: string) {
+  const b = benutzer.trim().toLowerCase()
+  for (const c of CLASSES) for (const k of c.kids) if (benutzerVon(k) === b && passwortVon(k) === passwort.trim()) return { klasse: c, kid: k }
+  return null
 }
 
 export function normalizeCode(code: string) {

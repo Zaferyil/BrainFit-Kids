@@ -3,7 +3,7 @@ import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
 import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
-import { PICTURES, type Kid } from '../data/demo'
+import { benutzerVon, passwortVon, type Kid } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 
 // Admin-Bereich für Lehrkraft und Schule: Kinder, Lektionen, Einstellungen.
@@ -141,13 +141,14 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
         </div>
         <table className="adm-tabelle">
           <thead>
-            <tr><th>Kind</th><th>Klasse</th><th>Schulstufe</th><th>Lektion</th><th>Level</th><th>Perlen</th><th>Sterne</th><th>Heute</th><th /></tr>
+            <tr><th>Kind</th><th>Login</th><th>Klasse</th><th>Schulstufe</th><th>Lektion</th><th>Level</th><th>Perlen</th><th>Sterne</th><th>Heute</th><th /></tr>
           </thead>
           <tbody>
             {sichtbar.map((z) => (
               <Fragment key={z.kid.id}>
                 <tr>
                   <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
+                  <td><small className="adm-login">{benutzerVon(z.kid)}<br />{passwortVon(z.kid)}</small></td>
                   <td><span className="adm-badge">{z.klassenCode}</span></td>
                   <td>{z.stufeName}</td>
                   <td><b>L{z.lektion}</b> <small>{z.lektionName}</small></td>
@@ -158,7 +159,7 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
                   <td><button type="button" className="adm-btn" onClick={() => setOffen(offen === z.kid.id ? null : z.kid.id)}>{offen === z.kid.id ? 'Schließen' : 'Bearbeiten'}</button></td>
                 </tr>
                 {offen === z.kid.id && (
-                  <tr className="adm-edit"><td colSpan={9}><KindBearbeiten z={z} codes={codes} onChange={() => { onChange() }} onWeg={() => { setOffen(null); onChange() }} /></td></tr>
+                  <tr className="adm-edit"><td colSpan={10}><KindBearbeiten z={z} codes={codes} onChange={() => { onChange() }} onWeg={() => { setOffen(null); onChange() }} /></td></tr>
                 )}
               </Fragment>
             ))}
@@ -203,7 +204,7 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
     <section className="adm-card adm-neu">
       <form className="adm-neu-form" onSubmit={hinzu}>
         <h2>Kind hinzufügen</h2>
-        <p className="adm-muted">Nur den Vornamen. Gibt es den Namen schon, bekommt er eine Nummer (z. B. „Lena 2“).</p>
+        <p className="adm-muted">Nur den Vornamen. Benutzername und Passwort vergibt das System (z. B. „lena2“ · „stern47“).</p>
         <div className="adm-neu-reihe">
           <label>Vorname<input id="adm-vorname" value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Sara" autoComplete="off" maxLength={24} /></label>
           <label>Klasse<select id="adm-neu-klasse" value={klasse} onChange={(e) => setKlasse(e.target.value)}>{codes.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
@@ -212,9 +213,8 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
         {neu && (
           <div className="adm-erfolg">
             <Avatar size={40} {...neu.avatar} />
-            <div><b>{neu.name}</b> ist in der Klasse {klasse}. Anmelde-Bilder:
-              <span className="adm-bilder">{neu.password.map((p, i) => { const pic = PICTURES.find((x) => x.id === p); return <span key={i} className="adm-bild" style={{ background: pic?.fill }}><Icon name={pic?.icon ?? 'star'} size={18} color={pic?.color} /></span> })}</span>
-              <small>{neu.password.map((p) => PICTURES.find((x) => x.id === p)?.label).join(' · ')}</small>
+            <div><b>{neu.name}</b> ist in der Klasse {klasse}.
+              <span className="adm-zugang">Benutzername: <b>{benutzerVon(neu)}</b> · Passwort: <b>{passwortVon(neu)}</b></span>
             </div>
           </div>
         )}
