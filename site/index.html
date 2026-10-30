@@ -84,6 +84,7 @@ p{margin:0}
 .stripe{display:grid;gap:10px;border-radius:16px;padding:16px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line)}
 .stripe .arten{display:flex;gap:8px;flex-wrap:wrap}
 .stripe .arten span{font-size:13px;font-weight:900;padding:6px 10px;border-radius:10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.stripe-info{margin:0;font-weight:700;line-height:1.45}
 .stripe .arten span.on{box-shadow:inset 0 0 0 2px var(--violet);color:var(--violet)}
 .sicher{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--muted)}
 
@@ -906,18 +907,14 @@ body::before{background:#100A30}
         <div class="abschnitt"><h3><b id="k-zahl-nr">3</b>Bezahlen</h3>
           <div class="stripe">
             <div class="arten"><span class="on">Karte</span><span>Apple Pay</span><span>Google Pay</span><span>SEPA-Lastschrift</span><span>EPS</span></div>
-            <div class="felder">
-              <label class="feld ganz">Kartennummer<input id="k-karte" inputmode="numeric" value="4242 4242 4242 4242"></label>
-              <label class="feld">Gültig bis<input id="k-ab" value="12 / 28"></label>
-              <label class="feld">Prüfziffer<input id="k-cvc" value="123"></label>
-            </div>
-            <span class="sicher">🔒 Sichere Zahlung über Stripe – wir sehen Ihre Kartendaten nicht.</span>
+            <p class="stripe-info">Nach dem Klick geht es zur sicheren Bezahlseite von <b>Stripe</b>. Dort wählen Sie Karte, Apple Pay, Google Pay, SEPA oder EPS. Danach kommen Sie automatisch hierher zurück.</p>
+            <span class="sicher">🔒 Ihre Zahlungsdaten geben Sie nur bei Stripe ein – sie werden nie auf unserer Seite eingegeben oder gespeichert.</span>
           </div>
           <label class="check"><input id="k-agb" type="checkbox" checked>Ich akzeptiere die AGB und die Datenschutzerklärung.</label>
           <label class="check"><input id="k-wid" type="checkbox" checked>Die App wird sofort freigeschaltet; damit erlischt mein Widerrufsrecht für die App (für Bücher und Abakus gilt es 14 Tage).</label>
           <label class="check"><input id="k-lauf" type="checkbox" checked>Mindestlaufzeit 12 Monate, danach monatlich kündbar.</label>
         </div>
-        <button class="btn gross" type="button" id="bestellen">Zahlungspflichtig bestellen</button>
+        <button class="btn gross" type="button" id="bestellen">Weiter zur Zahlung mit Stripe 🔒</button>
       </div>
       <aside class="zus" id="k-zus" aria-label="Bestellung"></aside>
     </div>
@@ -973,7 +970,7 @@ body::before{background:#100A30}
   </main>
 
   <footer class="fuss"><span>© BrainFit Kids</span><span>Impressum · AGB · Datenschutz · Verträge hier kündigen · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
-  <p class="entwurf-hinweis">Entwurf zum Ansehen – keine echte Zahlung. Später läuft die Zahlung über Stripe.</p>
+  <p class="entwurf-hinweis">Vorschau – die Zahlung läuft über Stripe, sobald die Bezahllinks eingetragen sind.</p>
 </div>
 
 <div class="schleier" id="schleier" hidden></div>
@@ -1061,7 +1058,35 @@ document.addEventListener('click',e=>{const z=e.target.closest('[data-ziel]');if
 $$('.paket').forEach((p,i)=>p.querySelector('.in-korb').onclick=()=>{korb=i+1;korbZeichnen();lade(true)});
 $('#korb-knopf').onclick=()=>{korbZeichnen();lade(true)};
 $('#lade-zu').onclick=()=>lade(false); $('#schleier').onclick=()=>{lade(false);$('#login').hidden=true;$('#schleier').hidden=true};
-$('#bestellen').onclick=()=>{if(!$('#k-agb').checked||!$('#k-lauf').checked){alert2('Bitte bestätigen Sie AGB und Mindestlaufzeit.');return} angemeldet=true; bestaetigung()};
+// Zahlung über Stripe Checkout (Payment Links): Kartendaten werden nur auf der Stripe-Seite eingegeben.
+// Je Paket und Zahlweise einen Payment Link im Stripe-Dashboard anlegen und hier eintragen.
+// Im Link als Weiterleitung nach der Zahlung einstellen: <diese Seite>?bezahlt={CHECKOUT_SESSION_ID}
+const STRIPE_LINKS={
+  1:{monat:'',jahr:''}, // Basic
+  2:{monat:'',jahr:''}, // Plus
+  3:{monat:'',jahr:''}, // Premium
+};
+const KASSE_KEY='bfk.kasse';
+const FELDER=['k-vn','k-nn','k-mail','f-kind','f-stufe','k-str','k-plz','k-ort','k-land'];
+$('#bestellen').onclick=()=>{
+  if(!$('#k-agb').checked||!$('#k-lauf').checked){alert2('Bitte bestätigen Sie AGB und Mindestlaufzeit.');return}
+  if(!$('#k-mail').value||!$('#f-kind').value){alert2('Bitte E-Mail-Adresse und Vorname Ihres Kindes eintragen.');return}
+  // Angaben merken, damit nach der Rückkehr von Stripe das Kind angelegt werden kann
+  const daten={korb,takt,felder:Object.fromEntries(FELDER.map(id=>[id,$('#'+id)?.value??'']))};
+  try{localStorage.setItem(KASSE_KEY,JSON.stringify(daten))}catch{}
+  const link=STRIPE_LINKS[korb]?.[takt];
+  if(!link){alert2('Vorschau: Der Stripe-Bezahllink ist noch nicht eingetragen. Wir zeigen den Ablauf so, als wäre die Zahlung erfolgreich.');nachZahlung();return}
+  const u=new URL(link);u.searchParams.set('prefilled_email',$('#k-mail').value);u.searchParams.set('client_reference_id',PAKETE[korb].name+'-'+takt);
+  location.href=u.toString();
+};
+// Rückkehr von Stripe (?bezahlt=…): Angaben wiederherstellen und Zugang anzeigen
+function nachZahlung(){
+  let d;try{d=JSON.parse(localStorage.getItem(KASSE_KEY)||'null')}catch{d=null}
+  if(!d)return;
+  korb=d.korb;taktSetzen(d.takt||'monat');for(const [id,v] of Object.entries(d.felder))if($('#'+id))$('#'+id).value=v;
+  try{localStorage.removeItem(KASSE_KEY)}catch{}
+  angemeldet=true;korbZeichnen();bestaetigung();
+}
 const FARBEN=['#FF4D6D','#3BA7FF','#3DBE5B','#FFC531','#A06BFF','#FF8A1F'], ZEICHEN='★♥⚡♛◆✿';
 let wahl=Math.floor(Math.random()*FARBEN.length); // Bild wird automatisch vergeben
 const BILDER=[['★','Stern','#FFC531'],['♥','Herz','#FF5C8A'],['⚡','Blitz','#9B8BFF'],['♛','Krone','#FFD24A'],['◆','Diamant','#5BB8FF'],['✿','Blume','#5FCB6F'],['🐾','Pfote','#E8B48A'],['🔥','Feuer','#FF8A1F']];
@@ -1149,4 +1174,5 @@ $$('[data-login]').forEach(b=>b.onclick=oeffneLogin);
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause()}
   b.onclick=()=>{v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play().catch(()=>{})}b.textContent=v.muted?'🔇 Ton an':'🔊 Ton aus';b.setAttribute('aria-label',v.muted?'Ton einschalten':'Ton ausschalten')}})();
 korbZeichnen(); ansicht('start');
+if(new URLSearchParams(location.search).has('bezahlt')){nachZahlung();history.replaceState(null,'',location.pathname+location.hash)}
 </script>
