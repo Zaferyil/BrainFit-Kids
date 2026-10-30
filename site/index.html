@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="/icon-192.png">
 <title>BrainFit Kids</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800;900&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 /* Layout: Kaufablauf in 5 Schritten (Pakete → Konto → Lieferung → Zahlung → Kind) als klickbarer Entwurf; Farben der App */
 :root{--flaeche1:#ECE6FF;--flaeche2:#F8F5FF;--bg:#F4F2FB;--fg:#231A4F;--muted:#6B648F;--line:#E2DDF2;--card:#FFFFFF;--violet:#5B47D6;--violet2:#7B5CFF;--gold:#FFC531;--orange:#FF8A1F;--green:#3DBE5B;--pink:#FF4D6D;
@@ -244,6 +244,7 @@ p{margin:0}
 .schluss h2{font-size:clamp(26px,4.5vw,40px);max-width:22ch}
 .schluss p{max-width:52ch;opacity:.95}
 .schluss small{font-weight:800;opacity:.9}
+.fuss a{color:inherit}
 .fuss{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;padding-top:6px}
 
 
@@ -919,9 +920,9 @@ body::before{background:#100A30}
         </div>
         <div class="abschnitt"><h3><b id="k-zahl-nr">3</b>Bezahlen</h3>
           <p class="stripe-kurz">🔒 Sie bezahlen sicher auf der Seite von <b>Stripe</b> (Karte, Apple Pay, Google Pay, SEPA, EPS).</p>
-          <label class="check"><input id="k-agb" type="checkbox" checked>Ich akzeptiere die AGB und die Datenschutzerklärung.</label>
-          <label class="check"><input id="k-wid" type="checkbox" checked>Die App wird sofort freigeschaltet; damit erlischt mein Widerrufsrecht für die App (für Bücher und Abakus gilt es 14 Tage).</label>
-          <label class="check"><input id="k-lauf" type="checkbox" checked>Mindestlaufzeit 12 Monate, danach monatlich kündbar.</label>
+          <label class="check"><input id="k-agb" type="checkbox">Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a> und habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen.</label>
+          <label class="check"><input id="k-wid" type="checkbox">Ich verlange ausdrücklich, dass die App sofort freigeschaltet wird, und weiß, dass ich damit mein <a href="widerruf.html" target="_blank">Widerrufsrecht</a> für die App verliere (für Bücher und Abakus gilt es 14 Tage).</label>
+          <label class="check"><input id="k-lauf" type="checkbox">Mindestlaufzeit 12 Monate, danach monatlich kündbar.</label>
         </div>
         <button class="btn gross" type="button" id="bestellen">Weiter zur Zahlung mit Stripe 🔒</button>
       </div>
@@ -978,7 +979,7 @@ body::before{background:#100A30}
     </div>
   </main>
 
-  <footer class="fuss"><span>© BrainFit Kids</span><span>Impressum · AGB · Datenschutz · Verträge hier kündigen · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
+  <footer class="fuss"><span>© BrainFit Kids</span><span><a href="impressum.html">Impressum</a> · <a href="agb.html">AGB</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="widerruf.html">Widerruf</a> · <a href="cookies.html">Cookies</a> · <a href="kuendigen.html">Verträge hier kündigen</a> · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
   <p class="entwurf-hinweis">Die Zahlung läuft über Stripe. Zugangsdaten gibt es erst nach erfolgreicher Zahlung.</p>
 </div>
 
@@ -1077,7 +1078,7 @@ const STRIPE_LINKS={
 const KASSE_KEY='bfk.kasse';
 const FELDER=['k-vn','k-nn','k-mail','f-kind','f-stufe','k-str','k-plz','k-ort','k-land'];
 $('#bestellen').onclick=()=>{
-  if(!$('#k-agb').checked||!$('#k-lauf').checked){alert2('Bitte bestätigen Sie AGB und Mindestlaufzeit.');return}
+  if(!$('#k-agb').checked||!$('#k-wid').checked||!$('#k-lauf').checked){alert2('Bitte bestätigen Sie AGB, sofortige Freischaltung und Mindestlaufzeit.');return}
   if(!$('#k-mail').value||!$('#f-kind').value){alert2('Bitte E-Mail-Adresse und Vorname Ihres Kindes eintragen.');return}
   if(($('#k-pw').value||'').length<8){alert2('Bitte ein Passwort mit mindestens 8 Zeichen für Ihr Eltern-Konto wählen.');return}
   try{sessionStorage.setItem('bfk.kasse-pw',$('#k-pw').value)}catch{}
