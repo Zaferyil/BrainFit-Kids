@@ -61,7 +61,14 @@ export function Anmelden() {
             <KidPicker
               key="kind"
               schoolClass={schoolClass}
-              onSelect={(k) => { setKid(k); setStufe(null); void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.') }}
+              onSelect={(k) => {
+                setKid(k)
+                // Figur und Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
+                const bekannt = figurVon(k.id) ? getStufe(k.id) : null
+                if (bekannt !== null) { saveSession({ classCode: schoolClass.code, kidId: k.id }); setStufe(bekannt); return }
+                setStufe(null)
+                void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.')
+              }}
               onChangeClass={() => { saveClass(null); setSchoolClass(null); setKid(null) }}
             />
           ) : !figurVon(kid.id) ? (
