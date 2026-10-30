@@ -78,13 +78,15 @@ export function currentStation(p: Progress) {
 const XP_PER_STATION = 25
 
 /** Speichert das Ergebnis einer Station und gibt die verdienten Perlen zurück. */
-export function finishStation(kidId: string, station: StationId, stars: number, correct: number) {
+/** belohnen = false: nur die Sterne der Station setzen (z. B. Hausaufgabe schon einmal belohnt) */
+export function finishStation(kidId: string, station: StationId, stars: number, correct: number, belohnen = true) {
   const p = getProgress(kidId)
   const v = viewProgress(kidId)
   const k = unitKey(v)
   const all = stationStars(v).slice()
   const i = STATIONS.findIndex((s) => s.id === station)
   all[i] = Math.max(all[i], stars)
+  if (!belohnen) { saveProgress(kidId, { ...p, stationStars: { ...p.stationStars, [k]: all } }); return 0 }
   const perlen = correct + stars * 10
   let xp = p.xp + XP_PER_STATION
   let level = p.level

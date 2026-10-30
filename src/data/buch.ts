@@ -50,6 +50,9 @@ const SEITEN: Record<number, { A: number[][]; B: number[][] }> = {
 /** Seiten je Lektion (Welt-Einheit) */
 const LEKTION_SEITEN: Record<string, number[]> = {'1-1': [5, 6], '1-2': [11, 12], '1-3': [13, 14], '1-4': [15, 16], '1-5': [17, 18], '1-6': [19, 20], '1-7': [21, 22], '1-8': [23, 24], '1-9': [25, 26], '1-10': [27, 28], '1-11': [29, 30], '1-12': [30, 29], '2-1': [31, 32], '2-2': [33, 34], '2-3': [35, 36], '2-4': [37, 38], '2-5': [39, 40], '2-6': [40, 39], '3-1': [71, 72], '3-2': [73, 74], '3-3': [75, 76], '3-4': [77, 78], '3-5': [79, 80], '3-6': [80, 79]}
 
+/** Alle 20 Aufgaben einer Spalte (Lösung = Summe der Zahlen) */
+export const buchAufgaben = (seite: number, spalte: 'A' | 'B'): number[][] => SEITEN[seite]?.[spalte] ?? []
+
 export type BuchAuftrag = { seite: number; spalte: 'A' | 'B'; von: number; bis: number; aufgaben: number[][] }
 
 /** Buch-Auftrag für eine Lektion. Bei jeder Wiederholung kommt die nächste Spalte bzw. Seite dran. */

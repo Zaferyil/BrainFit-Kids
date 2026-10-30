@@ -13,12 +13,20 @@ export const STATION_INTRO: Record<Exclude<StationId, 'video'>, string> = {
   entdecken: 'Perli zeigt dir Schritt für Schritt, wie der Abakus funktioniert. Hör gut zu und mach mit!',
   ueben: 'Jetzt übst du mit dem Abakus. Manchmal schiebst du die Perlen selbst, manchmal liest du die Zahl ab und tippst sie ein.',
   blitz: 'Gleich blitzt der Abakus ganz kurz auf. Schau genau hin und merk dir die Perlen. Dann tippst du die Zahl ein.',
-  buch: 'Jetzt kommt dein Arbeitsbuch! Nimm deinen Abakus und einen Stift. Rechne die Aufgaben im Buch und schreib die Ergebnisse auf. Wenn du fertig bist, drück auf Erledigt.',
+  buch: 'Jetzt kommt dein Arbeitsbuch! Nimm deinen Abakus und einen Stift. Rechne die Aufgaben im Buch und schreib die Ergebnisse auf. Wenn du fertig bist, drück auf Aufgaben überprüfen.',
   kopfrechnen: 'Jetzt geht es ohne Abakus. Ich sage dir die Perlen. Stell sie dir im Kopf vor und tippe die Zahl ein.',
   boss: 'Jetzt kommt der Abschlusstest! Grummel, der Zahlenfresser, ist da. Wenn du ihn besiegst, geht es zur nächsten Lektion. Aber Vorsicht: Du hast nur drei Herzen.',
 }
 
 export const SAY = {
+  checkStart: 'Jetzt kommt dein Wissenscheck! Tippe das Ergebnis ein, das in deinem Buch steht.',
+  checkFalsch: 'Hmm, das stimmt noch nicht. Rechne die Aufgabe nochmal mit dem Abakus nach.',
+  checkWeiter: 'Nicht schlimm! Diese Aufgabe übst du nochmal.',
+  checkFalschAbakus: 'Schau dir die Perlen nochmal genau an: Himmelsperle ist fünf, jede Erdperle ist eins.',
+  checkNochmal: 'Fast geschafft! Rechne die Aufgaben im Buch nochmal nach und probier es dann wieder.',
+  checkGeschafft: 'Du hast deinen Wissenscheck geschafft!',
+  superGemacht: 'Super gemacht!',
+  selbstDanke: 'Danke! Mach noch den Wissenscheck, dann bekommst du deine Belohnung.',
   passAuf: 'Pass auf!',
   welcherAbakus: 'Welcher Abakus zeigt diese Zahl?',
   welcheZahlKarte: 'Welche Zahl zeigt der Abakus?',

@@ -2169,3 +2169,64 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 4%, #000 88%, transparent); }
 /* Insel mit Burg liegt über der nächsten Insel: nur ihre Stationen fangen Klicks, sonst kommt man an die Stationen dahinter */
 .insel .insel-stop { pointer-events: auto; }
+
+/* Hausaufgaben: Wissenscheck (Buch 1 orange, Buch 2 grün) */
+.ha-status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px; background: #fff; color: #1E9E4A; font-weight: 900; font-size: 15px; box-shadow: 0 4px 0 rgba(75,47,194,.3); }
+.ha-status.selbst { color: #5B47D6; }
+.ha-status.wiederholen { color: #E0245E; }
+.ha-hinweis { max-width: 420px; margin: 0; padding: 12px 16px; border-radius: 18px; background: rgba(255,255,255,.9); color: #4A3F8C; font-weight: 800; text-align: center; }
+.ha-foto { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,.22); color: #fff; font-weight: 900; cursor: pointer; border: 2px dashed rgba(255,255,255,.6); }
+.ha-foto img { width: 40px; height: 40px; object-fit: cover; border-radius: 10px; }
+.ha-foto small { color: #FFE0E8; }
+.ha-check { width: min(100%, 440px); margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ha-punkte { display: flex; gap: 10px; }
+.ha-punkte span { width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,.35); }
+.ha-punkte span.current { background: #FFC531; box-shadow: 0 0 0 4px rgba(255,197,49,.35); }
+.ha-punkte span.right { background: #2ECC71; }
+.ha-punkte span.wrong { background: #FF5C7A; }
+.ha-frage { width: 100%; padding: 18px 20px 20px; border-radius: 28px; background: #fff; color: #1E1757; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 8px 0 rgba(75,47,194,.35); border-top: 8px solid #FF8A1F; }
+.ha-frage.buch2 { border-top-color: #4CB944; }
+.ha-frage.soroban { border-top-color: #5B47D6; }
+.ha-frage-kopf { align-self: stretch; display: flex; align-items: center; gap: 12px; }
+.ha-frage-kopf img { width: 46px; height: 64px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,.2); }
+.ha-frage-kopf span { display: block; font-size: 13px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: #8A7FC4; }
+.ha-frage-kopf b { font-family: var(--font-display); font-size: 24px; line-height: 1.1; color: #E8710A; }
+.ha-frage.buch2 .ha-frage-kopf b { color: #2F9A2A; }
+.ha-frage.soroban .ha-frage-kopf b { color: #5B47D6; }
+.ha-frage p { margin: 0; font-weight: 800; color: #4A3F8C; text-align: center; }
+.ha-antwort { min-width: 160px; padding: 6px 24px; border-radius: 20px; background: #F2F0FF; font-family: var(--font-display); font-size: 48px; font-weight: 800; text-align: center; color: #231A4F; }
+.ha-antwort.richtig { background: #DFF7E7; color: #1E9E4A; }
+.ha-antwort.falsch, .ha-antwort.weiter { background: #FFE4EA; color: #E0245E; }
+.ha-meldung { padding: 8px 14px; border-radius: 14px; background: #FFF3D6; color: #7A4A00; font-weight: 800; text-align: center; }
+.ha-meldung.gut { background: #DFF7E7; color: #1E7A3E; }
+.ha-abakus { display: flex; justify-content: center; max-width: 100%; overflow: hidden; }
+.ha-pruefen:disabled { opacity: .5; cursor: default; }
+.ha-nochmal { text-align: center; color: #fff; }
+.ha-nochmal h2 { margin: 0; font-family: var(--font-display); font-size: 34px; }
+.ha-nochmal p { max-width: 380px; margin: 0; font-weight: 800; }
+
+/* Admin: Hausaufgaben */
+.adm-badge.ha-bestanden { background: #DFF7E7; color: #1E7A3E; }
+.adm-badge.ha-lehrkraft { background: #1E9E4A; color: #fff; }
+.adm-badge.ha-selbst { background: #ECE8FF; color: #5B47D6; }
+.adm-badge.ha-wiederholen { background: #FFE4EA; color: #C2184B; }
+.adm-badge.ha-offen { background: #F1F1F5; color: #6B6B80; }
+.adm-tabelle b.gut { color: #1E9E4A; } .adm-tabelle b.schlecht { color: #E0245E; }
+.adm-aktionen { display: flex; gap: 6px; flex-wrap: wrap; }
+.adm-foto { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.adm-foto img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
+.adm-foto-gross { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; gap: 12px; padding: 24px; background: rgba(20,14,50,.8); }
+.adm-foto-gross img { max-width: min(92vw, 900px); max-height: 80vh; border-radius: 12px; }
+.adm-form-zeile { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin: 10px 0; }
+.adm-form-zeile label { display: flex; flex-direction: column; gap: 4px; font-weight: 800; font-size: 13px; }
+.adm-form-zeile input { width: 100px; padding: 8px 10px; border: 1px solid #D9D2FF; border-radius: 10px; font: inherit; }
+.adm-loesungen { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.adm-loesungen li { display: flex; align-items: center; gap: 10px; }
+.ha-frage .ha-pruefen { padding: 10px 40px; font-size: 22px; }
+.ha-check { gap: 10px; }
+.ha-frage { gap: 8px; padding: 14px 18px 16px; }
+.ha-antwort { font-size: 40px; padding: 2px 24px; }
+.ha-frage .ha-pruefen { background: linear-gradient(#FFD54A, #FFB300); color: #231A4F; box-shadow: 0 5px 0 #C98A00; border: 0; border-radius: 999px; font-family: var(--font-display); font-weight: 800; min-height: 0; }
+.ha-frage .ha-pruefen:disabled { background: #ECE8FF; color: #9C93D6; box-shadow: 0 5px 0 #D6CFFF; opacity: 1; }
+.adm-badge[class*="ha-"] { white-space: nowrap; }
+.btn-primary.ha-start { font-size: 26px; white-space: nowrap; padding-inline: 28px; }

@@ -2,9 +2,10 @@ import { Fragment, useMemo, useState, type FormEvent } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
-import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
+import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
 import { benutzerVon, passwortVon, type Kid } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
+import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT, workbookLoesungen, type Hausaufgabe } from '../lib/hausaufgaben'
 
 // Admin-Bereich für Lehrkraft und Schule: Kinder, Lektionen, Einstellungen.
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
@@ -12,10 +13,11 @@ import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 const PIN = '1234'
 const PIN_KEY = 'bfk.admin'
 
-type Tab = 'uebersicht' | 'kinder' | 'lektionen' | 'einstellungen'
+type Tab = 'uebersicht' | 'kinder' | 'hausaufgaben' | 'lektionen' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
+  { id: 'hausaufgaben', titel: 'Hausaufgaben', icon: 'check' },
   { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
   { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
 ]
@@ -78,6 +80,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> Daten von diesem Gerät. Für alle Geräte der Klasse braucht es den Server (Supabase).</div>
         {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
+        {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
         {tab === 'lektionen' && <Lektionen zeilen={zeilen} />}
         {tab === 'einstellungen' && <Einstellungen />}
       </main>
@@ -308,6 +311,101 @@ function Einstellungen() {
           <p>Die PIN ist fest eingestellt (1234). Mit dem Server bekommt jede Lehrkraft ein eigenes Konto.</p>
         </div>
       </div>
+    </section>
+  )
+}
+
+const datum = (iso?: string) => iso ? new Date(iso).toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '–'
+
+/** Hausaufgaben aller Kinder: Status, Wissenscheck, Foto; bestätigen oder zum Wiederholen zurückgeben */
+function Hausaufgaben({ zeilen }: { zeilen: KidZeile[] }) {
+  const [, neu] = useState(0)
+  const [foto, setFoto] = useState<string | null>(null)
+  const [filter, setFilter] = useState<'alle' | Hausaufgabe['status']>('alle')
+  const liste = zeilen.flatMap((z) => Object.values(alleHausaufgaben(z.kid.id)).map((h) => ({ z, h })))
+    .filter(({ h }) => filter === 'alle' || h.status === filter)
+    .sort((a, b) => (b.h.datum ?? '').localeCompare(a.h.datum ?? ''))
+  const entscheiden = (kidId: string, key: string, e: 'lehrkraft' | 'wiederholen') => { lehrkraftEntscheidet(kidId, key, e); neu((x) => x + 1) }
+  return (
+    <>
+      <section className="adm-card adm-tabelle-wrap">
+        <div className="adm-card-head"><h2>Hausaufgaben</h2>
+          <label className="adm-filter">Status
+            <select value={filter} onChange={(e) => setFilter(e.target.value as typeof filter)}>
+              <option value="alle">Alle</option>
+              {(Object.keys(STATUS_TEXT) as Hausaufgabe['status'][]).map((s) => <option key={s} value={s}>{STATUS_TEXT[s]}</option>)}
+            </select>
+          </label>
+          <span className="adm-muted">{liste.length} Einträge</span>
+        </div>
+        <p className="adm-muted">„Wissenscheck bestanden“ heißt: 3 zufällige Aufgaben aus dem Buch und die Abakus-Frage waren richtig. Das zeigt, dass das Kind gerechnet hat – es beweist nicht jede einzelne Aufgabe.</p>
+        <table className="adm-tabelle">
+          <thead><tr><th>Kind</th><th>Lektion</th><th>Buch 1 · Basics Book</th><th>Buch 2 · Work Book</th><th>Status</th><th>Geprüft</th><th>Richtig / Falsch</th><th>Datum</th><th>Foto</th><th /></tr></thead>
+          <tbody>
+            {liste.map(({ z, h }) => (
+              <tr key={z.kid.id + h.key}>
+                <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><b>{z.kid.name}</b></span></td>
+                <td><b>L{lektionNr(h.world, h.unit)}</b>{h.runde ? <small> · Wiederholung</small> : null}</td>
+                <td><small>Seite {h.buch1.seite} · Spalte {h.buch1.spalte} · Aufgaben {h.buch1.von}–{h.buch1.bis}</small></td>
+                <td><small>{h.buch2 ? `Seite ${h.buch2.von}${h.buch2.bis !== h.buch2.von ? `–${h.buch2.bis}` : ''} · alle${h.buch2.freiwillig ? ` (freiwillig ${h.buch2.freiwillig[0]}–${h.buch2.freiwillig[1]})` : ''}` : '–'}</small></td>
+                <td><span className={`adm-badge ha-${h.status}`}>{STATUS_TEXT[h.status]}</span></td>
+                <td>{h.geprueft ? `${h.geprueft} Aufg.${h.soroban !== undefined ? ' + Abakus' : ''}` : '–'}{h.versuche > 1 ? <small> · {h.versuche} Versuche</small> : null}</td>
+                <td>{h.geprueft ? <><b className="gut">{h.richtig}</b> / <b className="schlecht">{h.falsch}</b>{h.soroban === false ? <small> · Abakus falsch</small> : null}</> : '–'}</td>
+                <td><small>{datum(h.datum)}</small></td>
+                <td>{h.foto ? <button type="button" className="adm-foto" onClick={() => setFoto(h.foto ?? null)}><img src={h.foto} alt={`Foto von ${z.kid.name}`} /></button> : <small className="adm-muted">–</small>}</td>
+                <td className="adm-aktionen">
+                  {h.status !== 'lehrkraft' && <button type="button" className="adm-btn primary" onClick={() => entscheiden(z.kid.id, h.key, 'lehrkraft')}>Bestätigen</button>}
+                  {h.status !== 'wiederholen' && <button type="button" className="adm-btn" onClick={() => entscheiden(z.kid.id, h.key, 'wiederholen')}>Wiederholen</button>}
+                </td>
+              </tr>
+            ))}
+            {!liste.length && <tr><td colSpan={10} className="adm-muted">Noch keine Hausaufgaben.</td></tr>}
+          </tbody>
+        </table>
+      </section>
+      <WorkbookLoesungen />
+      {foto && (
+        <div className="adm-foto-gross" role="dialog" aria-label="Foto" onClick={() => setFoto(null)}>
+          <img src={foto} alt="Foto der Buchseite" />
+          <button type="button" className="adm-btn">Schließen</button>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** Lösungen fürs Work Book eintragen: nur diese Aufgaben kommen im Wissenscheck vor */
+function WorkbookLoesungen() {
+  const [, neu] = useState(0)
+  const [seite, setSeite] = useState('')
+  const [nr, setNr] = useState('')
+  const [antwort, setAntwort] = useState('')
+  const alle = workbookLoesungen()
+  const eintraege = Object.entries(alle).flatMap(([s, a]) => Object.entries(a).map(([n, w]) => ({ s: Number(s), n: Number(n), w }))).sort((a, b) => a.s - b.s || a.n - b.n)
+  const hinzufuegen = (e: FormEvent) => {
+    e.preventDefault()
+    if (!seite || !nr || antwort === '') return
+    setWorkbookLoesung(Number(seite), Number(nr), Number(antwort)); setNr(''); setAntwort(''); neu((x) => x + 1)
+  }
+  return (
+    <section className="adm-card">
+      <div className="adm-card-head"><h2>Lösungen Work Book (Buch 2)</h2><span className="adm-muted">{eintraege.length} Aufgaben</span></div>
+      <p className="adm-muted">Die Lösungen fürs Basics Book (Buch 1) sind schon hinterlegt. Fürs Work Book fehlen sie noch: Tragen Sie hier geprüfte Lösungen ein, dann fragt der Wissenscheck auch Aufgaben aus Buch 2.</p>
+      <form className="adm-form-zeile" onSubmit={hinzufuegen}>
+        <label>Seite<input type="number" min={1} value={seite} onChange={(e) => setSeite(e.target.value)} /></label>
+        <label>Aufgabe<input type="number" min={1} value={nr} onChange={(e) => setNr(e.target.value)} /></label>
+        <label>Lösung<input type="number" value={antwort} onChange={(e) => setAntwort(e.target.value)} /></label>
+        <button type="submit" className="adm-btn primary">Hinzufügen</button>
+      </form>
+      {!!eintraege.length && (
+        <ul className="adm-loesungen">
+          {eintraege.map(({ s, n, w }) => (
+            <li key={`${s}-${n}`}>Seite {s} · Aufgabe {n} = <b>{w}</b>
+              <button type="button" className="adm-btn" onClick={() => { setWorkbookLoesung(s, n, null); neu((x) => x + 1) }}>Entfernen</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }

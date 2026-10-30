@@ -14,6 +14,7 @@ import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { BuchStation } from './screens/stations/BuchStation'
 import { buchAuftrag, workbookAuftrag } from './data/buch'
+import { alleHausaufgaben, hausaufgabeKey } from './lib/hausaufgaben'
 import { UEBUNGEN, uebungsArt, type UebungsPlatz } from './data/uebungen'
 import { FlashKartenStation, KettenStation, MemoryStation, MerkenStation, SchnellStation, VergleichStation } from './screens/stations/NeueUebungen'
 import { KursStation } from './screens/stations/KursStation'
@@ -118,9 +119,12 @@ export default function App() {
       if (content && id === 'entdecken') return <EntdeckenStation kidId={kid.id} content={content} />
       // Arbeitsbuch: Seite und Spalte je Lektion; bei jeder Wiederholung die nächste Spalte
       if (id === 'buch') {
-        const runde = progress.stationStars[`${progress.world}-${progress.unit}`]?.[index] ? 1 : 0
+        // Nächste Runde erst, wenn der Wissenscheck der ersten geschafft ist (selbst bestätigt reicht nicht);
+        // ältere Stände ohne Hausaufgaben-Eintrag zählen wie bisher über die Sterne
+        const erste = alleHausaufgaben(kid.id)[hausaufgabeKey(progress.world, progress.unit, 0)]
+        const runde = erste ? (erste.status === 'bestanden' || erste.status === 'lehrkraft' ? 1 : 0) : progress.stationStars[`${progress.world}-${progress.unit}`]?.[index] ? 1 : 0
         const auftrag = buchAuftrag(progress.world, progress.unit, klasseVon(kid.id).aufgaben, runde)
-        if (auftrag) return <BuchStation kidId={kid.id} auftrag={auftrag} workbook={workbookAuftrag(progress.world, progress.unit, runde)} />
+        if (auftrag) return <BuchStation key={runde} kidId={kid.id} world={progress.world} unit={progress.unit} runde={runde} auftrag={auftrag} workbook={workbookAuftrag(progress.world, progress.unit, runde)} />
       }
       // Üben: Aufgaben aus dem Abakus-Kurs, sonst zufällige Aufgaben
       const kurs = klasseVon(kid.id).aufgaben <= 6 ? null : kursAufgaben(progress.world, progress.unit)
