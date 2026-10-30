@@ -84,6 +84,7 @@ p{margin:0}
 .stripe{display:grid;gap:10px;border-radius:16px;padding:16px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line)}
 .stripe .arten{display:flex;gap:8px;flex-wrap:wrap}
 .stripe .arten span{font-size:13px;font-weight:900;padding:6px 10px;border-radius:10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.stripe-kurz{margin:0 0 6px;font-weight:700;line-height:1.45;color:var(--muted)}
 .stripe-info{margin:0;font-weight:700;line-height:1.45}
 .stripe .arten span.on{box-shadow:inset 0 0 0 2px var(--violet);color:var(--violet)}
 .sicher{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:var(--muted)}
@@ -905,11 +906,7 @@ body::before{background:#100A30}
           </div>
         </div>
         <div class="abschnitt"><h3><b id="k-zahl-nr">3</b>Bezahlen</h3>
-          <div class="stripe">
-            <div class="arten"><span class="on">Karte</span><span>Apple Pay</span><span>Google Pay</span><span>SEPA-Lastschrift</span><span>EPS</span></div>
-            <p class="stripe-info">Nach dem Klick geht es zur sicheren Bezahlseite von <b>Stripe</b>. Dort wählen Sie Karte, Apple Pay, Google Pay, SEPA oder EPS. Danach kommen Sie automatisch hierher zurück.</p>
-            <span class="sicher">🔒 Ihre Zahlungsdaten geben Sie nur bei Stripe ein – sie werden nie auf unserer Seite eingegeben oder gespeichert.</span>
-          </div>
+          <p class="stripe-kurz">🔒 Sie bezahlen sicher auf der Seite von <b>Stripe</b> (Karte, Apple Pay, Google Pay, SEPA, EPS).</p>
           <label class="check"><input id="k-agb" type="checkbox" checked>Ich akzeptiere die AGB und die Datenschutzerklärung.</label>
           <label class="check"><input id="k-wid" type="checkbox" checked>Die App wird sofort freigeschaltet; damit erlischt mein Widerrufsrecht für die App (für Bücher und Abakus gilt es 14 Tage).</label>
           <label class="check"><input id="k-lauf" type="checkbox" checked>Mindestlaufzeit 12 Monate, danach monatlich kündbar.</label>
