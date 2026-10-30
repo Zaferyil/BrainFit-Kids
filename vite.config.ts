@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // Ein Projekt, eine Adresse: die Website (Ordner site/, statisches HTML) liegt unter „/“,
 // die Lernplattform (diese Vite-App) unter „/app/“.
-const TYPEN: Record<string, string> = { '.html': 'text/html', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.mp4': 'video/mp4', '.svg': 'image/svg+xml' }
+const TYPEN: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.mp4': 'video/mp4', '.svg': 'image/svg+xml' }
 function website(): Plugin {
   const ordner = resolve(__dirname, 'site')
   return {

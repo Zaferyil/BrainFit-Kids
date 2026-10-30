@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>BrainFit Kids</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;700;800;900&display=swap">
@@ -456,6 +457,13 @@ body::before{background:#100A30}
 .np .paket:nth-child(2){box-shadow:inset 0 0 0 2px #FF8FC8,0 20px 50px rgba(255,79,163,.25)}
 .np .paket .unter,.np .paket .vertrag,.np .paket .preis span,.np .paket .preis s{color:#CFC7F5}
 .np .paket h3,.np .paket .preis b{color:#fff}
+.abrechnung{display:flex;justify-content:center;gap:6px;width:max-content;max-width:100%;margin:0 auto 8px;padding:5px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.abrechnung button{border:0;border-radius:999px;padding:10px 20px;background:none;color:#CFC7F5;font:inherit;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.abrechnung button small{font-size:11px;color:#7CF0A8;font-weight:800}
+.abrechnung button[aria-pressed="true"]{background:#fff;color:#1B1446}
+.abrechnung button[aria-pressed="true"] small{color:#14B86A}
+.abrechnung-info{margin:0 0 18px;text-align:center;color:#CFC7F5;font-weight:700;font-size:14px}
+.np .paket .preis-info{margin:-4px 0 6px;color:#CFC7F5;font-size:13px;font-weight:700}
 .np .paket.im-korb{box-shadow:inset 0 0 0 3px #5FE08A}
 .dk-faq{display:grid;gap:10px;max-width:820px;width:100%;justify-self:center}
 .dk-faq details{border-radius:20px;padding:18px 22px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
@@ -753,36 +761,38 @@ body::before{background:#100A30}
   <!-- Pakete -->
   <section class="dk-block" id="preise">
     <div class="dk-kopf"><span class="dk-eyebrow">Pakete</span><h2>Wählen Sie Ihr Paket</h2><div class="np-aktion">★ Gründer-Aktion: Basic für 49 € statt 79 € – nur für die ersten 50 Familien · noch 37 Plätze</div></div>
+    <div class="abrechnung" role="group" aria-label="Zahlweise"><button type="button" data-takt="monat" aria-pressed="true">Monatlich zahlen</button><button type="button" data-takt="jahr" aria-pressed="false">Jährlich zahlen <small>2 Monate geschenkt</small></button></div>
+    <p class="abrechnung-info" id="takt-info">12 Monate Vertragslaufzeit · monatliche Zahlung</p>
     <div class="pakete" id="pakete">
       <article class="paket" data-p="1">
         
-        <h3>Basic</h3><p class="unter">Die ganze Lernwelt in der App</p>
-        <div class="preis"><b>49 €</b><s>79 €</s><span>/ Monat</span></div>
+        <h3>Basic</h3><p class="unter">Selbstständig lernen – die ganze Lernwelt in der App</p>
+        <div class="preis" data-monat="49" data-jahr="490" data-alt-monat="79" data-alt-jahr="790"><b>49 €</b><s>79 €</s><span>/ Monat</span></div><p class="preis-info">Monatlich abgerechnet</p>
         <p class="vertrag">Mindestlaufzeit 12 Monate · Aktionspreis für die ersten 50</p>
         <div class="bilder"><img src="lena.webp" alt="" style="border-radius:50%;height:64px"></div>
-        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>24 Lernvideos und 120 Hör-Aufgaben</li><li>Alle 3 Welten</li><li>Übungen, Denkspiele, Abschlusstests</li><li>Eltern-Dashboard mit Lernstand</li></ul>
+        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>24 Lernvideos und 120 Hör-Aufgaben</li><li>Alle 3 Welten</li><li>Übungen, Denkspiele, Abschlusstests</li><li>Eltern-Dashboard mit Lernstand</li><li class="plus">Strukturierter Lernpfad mit Fortschrittsanzeige</li></ul>
       <button class="btn in-korb" type="button">In den Warenkorb</button></article>
       <article class="paket" data-p="2">
         
         <span class="tag">Beliebt</span>
-        <h3>Plus</h3><p class="unter">Mit Büchern und echtem Abakus nach Hause</p>
-        <div class="preis"><b>79 €</b><span>/ Monat</span></div>
+        <h3>Plus</h3><p class="unter">Digital + echte Materialien: Bücher und Abakus nach Hause</p>
+        <div class="preis" data-monat="79" data-jahr="790"><b>79 €</b><span>/ Monat</span></div><p class="preis-info">Monatlich abgerechnet</p>
         <p class="vertrag">Mindestlaufzeit 12 Monate</p>
         <div class="bilder"><img src="buch-cover.webp" alt=""><img src="workbook-cover.webp" alt=""><svg class="soroban" viewBox="0 0 150 96" role="img" aria-label="Soroban-Abakus"><rect x="1" y="1" width="148" height="94" rx="7" fill="#7A4518"/><rect x="7" y="7" width="136" height="82" rx="3" fill="#F6E7C8"/><line x1="16.7" y1="7" x2="16.7" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="36.1" y1="7" x2="36.1" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="55.6" y1="7" x2="55.6" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="75.0" y1="7" x2="75.0" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="94.4" y1="7" x2="94.4" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="113.9" y1="7" x2="113.9" y2="89" stroke="#B8875A" stroke-width="1.6"/><line x1="133.3" y1="7" x2="133.3" y2="89" stroke="#B8875A" stroke-width="1.6"/><rect x="7" y="28" width="136" height="3.5" fill="#5A3818"/><ellipse cx="16.7" cy="12" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="16.7" cy="36" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="16.7" cy="45" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="16.7" cy="54" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="16.7" cy="85" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="36.1" cy="12" rx="7.5" ry="4.2" fill="#FFB300" stroke="rgba(0,0,0,.25)"/><ellipse cx="36.1" cy="58" rx="7.5" ry="4.2" fill="#FFB300" stroke="rgba(0,0,0,.25)"/><ellipse cx="36.1" cy="67" rx="7.5" ry="4.2" fill="#FFB300" stroke="rgba(0,0,0,.25)"/><ellipse cx="36.1" cy="76" rx="7.5" ry="4.2" fill="#FFB300" stroke="rgba(0,0,0,.25)"/><ellipse cx="36.1" cy="85" rx="7.5" ry="4.2" fill="#FFB300" stroke="rgba(0,0,0,.25)"/><ellipse cx="55.6" cy="23" rx="7.5" ry="4.2" fill="#3DBE5B" stroke="rgba(0,0,0,.25)"/><ellipse cx="55.6" cy="36" rx="7.5" ry="4.2" fill="#3DBE5B" stroke="rgba(0,0,0,.25)"/><ellipse cx="55.6" cy="45" rx="7.5" ry="4.2" fill="#3DBE5B" stroke="rgba(0,0,0,.25)"/><ellipse cx="55.6" cy="76" rx="7.5" ry="4.2" fill="#3DBE5B" stroke="rgba(0,0,0,.25)"/><ellipse cx="55.6" cy="85" rx="7.5" ry="4.2" fill="#3DBE5B" stroke="rgba(0,0,0,.25)"/><ellipse cx="75.0" cy="23" rx="7.5" ry="4.2" fill="#3BA7FF" stroke="rgba(0,0,0,.25)"/><ellipse cx="75.0" cy="58" rx="7.5" ry="4.2" fill="#3BA7FF" stroke="rgba(0,0,0,.25)"/><ellipse cx="75.0" cy="67" rx="7.5" ry="4.2" fill="#3BA7FF" stroke="rgba(0,0,0,.25)"/><ellipse cx="75.0" cy="76" rx="7.5" ry="4.2" fill="#3BA7FF" stroke="rgba(0,0,0,.25)"/><ellipse cx="75.0" cy="85" rx="7.5" ry="4.2" fill="#3BA7FF" stroke="rgba(0,0,0,.25)"/><ellipse cx="94.4" cy="12" rx="7.5" ry="4.2" fill="#A06BFF" stroke="rgba(0,0,0,.25)"/><ellipse cx="94.4" cy="36" rx="7.5" ry="4.2" fill="#A06BFF" stroke="rgba(0,0,0,.25)"/><ellipse cx="94.4" cy="45" rx="7.5" ry="4.2" fill="#A06BFF" stroke="rgba(0,0,0,.25)"/><ellipse cx="94.4" cy="76" rx="7.5" ry="4.2" fill="#A06BFF" stroke="rgba(0,0,0,.25)"/><ellipse cx="94.4" cy="85" rx="7.5" ry="4.2" fill="#A06BFF" stroke="rgba(0,0,0,.25)"/><ellipse cx="113.9" cy="23" rx="7.5" ry="4.2" fill="#FF8A1F" stroke="rgba(0,0,0,.25)"/><ellipse cx="113.9" cy="36" rx="7.5" ry="4.2" fill="#FF8A1F" stroke="rgba(0,0,0,.25)"/><ellipse cx="113.9" cy="45" rx="7.5" ry="4.2" fill="#FF8A1F" stroke="rgba(0,0,0,.25)"/><ellipse cx="113.9" cy="54" rx="7.5" ry="4.2" fill="#FF8A1F" stroke="rgba(0,0,0,.25)"/><ellipse cx="113.9" cy="63" rx="7.5" ry="4.2" fill="#FF8A1F" stroke="rgba(0,0,0,.25)"/><ellipse cx="133.3" cy="12" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="133.3" cy="36" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="133.3" cy="67" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="133.3" cy="76" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/><ellipse cx="133.3" cy="85" rx="7.5" ry="4.2" fill="#FF4D6D" stroke="rgba(0,0,0,.25)"/></svg></div>
-        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>Alles aus „Basic“</li><li class="plus">2 Bücher: Basics Book und Work Book</li><li class="plus">Abakus für zu Hause</li><li>Versand nach Österreich und Deutschland</li></ul>
+        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>Alles aus „Basic“</li><li class="plus">2 Bücher: Basics Book und Work Book</li><li class="plus">Abakus für zu Hause</li><li class="plus">Intelligenter Hausaufgaben-Check: die App prüft, was im Buch gerechnet wurde</li><li class="plus">Buchfortschritt passend zu jeder Lektion</li><li>Versand nach Österreich und Deutschland</li></ul>
       <button class="btn in-korb" type="button">In den Warenkorb</button></article>
       <article class="paket" data-p="3">
         
-        <h3>Premium</h3><p class="unter">Mit Lehrerin, Gruppe und Hilfe</p>
-        <div class="preis"><b>99 €</b><span>/ Monat</span></div>
+        <h3>Premium</h3><p class="unter">Lernen mit Lehrerin: persönliche Begleitung</p>
+        <div class="preis" data-monat="99" data-jahr="990"><b>99 €</b><span>/ Monat</span></div><p class="preis-info">Monatlich abgerechnet</p>
         <p class="vertrag">Mindestlaufzeit 12 Monate</p>
         <div class="bilder"><img src="buch-cover.webp" alt=""><img src="workbook-cover.webp" alt=""><span class="live">LIVE</span><span class="wa"><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.2 1.3z"/></svg></span></div>
-        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>Alles aus „Plus“</li><li class="plus">12 Live-Stunden im Jahr</li><li class="plus">Einmal im Monat Live-Unterricht</li><li class="plus">WhatsApp-Gruppe für Eltern</li><li class="plus">Persönlicher Support</li></ul>
+        <ul><li class="umfang"><b>24</b> Lektionen · <b>72</b> Übungsrunden · <b>24</b> Tests</li><li>Alles aus „Plus“</li><li class="plus">12 Live-Gruppenstunden im Jahr (1 × im Monat, 45 Minuten, kleine Gruppen bis 8 Kinder)</li><li class="plus">Eltern-Community in der WhatsApp-Gruppe</li><li class="plus">Persönlicher Support – Antwort innerhalb von 24 Stunden an Werktagen</li></ul>
       <button class="btn in-korb" type="button">In den Warenkorb</button></article>
     </div>
       
     
-    <p class="dk-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar</p>
+    <p class="dk-klein" id="takt-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar. „Monatlich zahlen“ heißt: 12 Monatsraten, nicht monatlich kündbar.</p>
   </section>
 
   <!-- Fragen -->
@@ -938,7 +948,18 @@ body::before{background:#100A30}
 <script>
 const PAKETE={1:{name:'Basic',preis:49,alt:79,lieferung:false},2:{name:'Plus',preis:79,lieferung:true},3:{name:'Premium',preis:99,lieferung:true}};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let korb=null, angemeldet=false, kinder=[];
+let korb=null, angemeldet=false, kinder=[], takt='monat';
+// Zahlweise: monatlich (12 Raten) oder jährlich (einmal für 12 Monate, 2 Monate geschenkt)
+const betrag=p=>takt==='jahr'?p.preis*10:p.preis, einheit=()=>takt==='jahr'?'Jahr':'Monat';
+const euro=n=>n.toLocaleString('de-AT',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+function taktSetzen(t){takt=t;
+  $$('.abrechnung button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.takt===t));
+  $('#takt-info').textContent=t==='jahr'?'12 Monate Vertragslaufzeit · einmalige Zahlung für das ganze Jahr':'12 Monate Vertragslaufzeit · monatliche Zahlung';
+  $$('.paket .preis').forEach(pr=>{const w=+pr.dataset[t],a=pr.dataset[t==='jahr'?'altJahr':'altMonat'];
+    pr.querySelector('b').textContent=euro(w)+' €';const s=pr.querySelector('s');if(s)s.textContent=euro(+a)+' €';pr.querySelector('span').textContent='/ '+einheit();
+    pr.nextElementSibling.textContent=t==='jahr'?`Jährlich abgerechnet · entspricht ${euro(Math.round(w/12*100)/100)} € im Monat`:'Monatlich abgerechnet'});
+  if(korb)korbZeichnen()}
+$$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
 function ansicht(v){for(const id of ['start','kasse','kind','mein']) $('#v-'+id).hidden = id!==v; window.scrollTo({top:0})}
 function zuStart(){ansicht(angemeldet&&kinder.length?'mein':'start'); if(angemeldet) zeigeMein()}
 function korbZeichnen(){
@@ -946,12 +967,12 @@ function korbZeichnen(){
   $$('.paket').forEach((p,i)=>{const on=korb===i+1;p.classList.toggle('im-korb',on);p.querySelector('.in-korb').textContent=on?'✓ Im Warenkorb':'In den Warenkorb'});
   if(!korb){$('#korb-inhalt').innerHTML='<p class="leer">Ihr Warenkorb ist leer.</p>';$('#korb-fuss').innerHTML='<button class="btn zweit" type="button" data-ziel="preise">Pakete ansehen</button>';return}
   const p=PAKETE[korb];
-  $('#korb-inhalt').innerHTML=`<div class="korb-pos"><span class="ico">${p.name[0]}</span><div><b>BrainFit Kids ${p.name}</b><small>${p.preis} € / Monat · 12 Monate${p.lieferung?' · inkl. 2 Bücher und Abakus':''}</small></div><button class="entf" type="button" id="entf">Entfernen</button></div>`;
+  $('#korb-inhalt').innerHTML=`<div class="korb-pos"><span class="ico">${p.name[0]}</span><div><b>BrainFit Kids ${p.name}</b><small>${euro(betrag(p))} € / ${einheit()} · 12 Monate${p.lieferung?' · inkl. 2 Bücher und Abakus':''}</small></div><button class="entf" type="button" id="entf">Entfernen</button></div>`;
   $('#korb-fuss').innerHTML=zusammen()+'<button class="btn gross" type="button" id="zur-kasse">Zur Kasse</button>';
   $('#entf').onclick=()=>{korb=null;korbZeichnen()};
   $('#zur-kasse').onclick=()=>{lade(false);kasse()};
 }
-function zusammen(){const p=PAKETE[korb];return `<div class="zus"><div class="zeile"><span>${p.name}</span><b>${p.preis} € / Monat</b></div>${p.alt?`<div class="zeile klein"><span>Gründer-Aktion (statt ${p.alt} €)</span><span>−${p.alt-p.preis} €</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${p.preis},00 €</span></div><p class="klein">Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.</p></div>`}
+function zusammen(){const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=p.alt?(j?p.alt*10:p.alt):0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Gründer-Aktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
 function lade(auf){$('#lade').hidden=!auf;$('#schleier').hidden=!auf&&$('#login').hidden}
 function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-liefer').hidden=!p.lieferung; $('#k-zahl-nr').textContent=p.lieferung?4:3; $('#k-zus').innerHTML='<h3>Ihre Bestellung</h3>'+zusammen().replace('<div class="zus">','<div>'); ansicht('kasse')}
 function zeigeMein(){
@@ -959,7 +980,7 @@ function zeigeMein(){
   $('#m-kinder').innerHTML=kinder.map(k=>`<button type="button"><span class="ava" style="background:${k.farbe}">${k.zeichen}</span>${k.name}</button>`).join('');
   $$('#m-kinder button').forEach(b=>b.onclick=()=>(location.href='/app/#anmelden'));
   $('#login-knopf').lastChild.textContent='Abmelden';
-  if(korb) $('#m-abo').textContent=`${PAKETE[korb].name} · ${PAKETE[korb].preis} € / Monat · Mindestlaufzeit 12 Monate`;
+  if(korb) $('#m-abo').textContent=`${PAKETE[korb].name} · ${euro(betrag(PAKETE[korb]))} € / ${einheit()} · ${takt==='jahr'?'jährlich bezahlt':'Mindestlaufzeit 12 Monate'}`;
 }
 function alert2(t){const p=document.createElement('div');p.className='login-box';p.innerHTML=`<p>${t}</p><button class="btn" type="button">OK</button>`;document.body.append(p);p.querySelector('button').onclick=()=>p.remove()}
 document.addEventListener('click',e=>{const z=e.target.closest('[data-ziel]');if(z){e.preventDefault();lade(false);if($('#v-start').hidden)ansicht('start');document.getElementById(z.dataset.ziel)?.scrollIntoView({behavior:'smooth',block:'start'})}
