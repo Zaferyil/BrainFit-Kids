@@ -2317,3 +2317,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-belohnungen { display: grid; gap: 8px; }
 .adm-belohnungen label { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; font-weight: 700; }
 .adm-form-zeile.klein { margin: 0; } .adm-form-zeile.klein input { width: 70px; } .adm-form-zeile.klein input[type="text"] { width: 120px; }
+/* SeZa freigestellt: kein Kasten, nur Schatten */
+.seza { overflow: visible; background: none; box-shadow: none; border-radius: 0; }
+.seza-kostuem { filter: drop-shadow(0 8px 10px rgba(30,20,80,.3)); }
+.seza.hg-regenbogen, .seza.hg-weltall { border-radius: 24px; overflow: hidden; }
