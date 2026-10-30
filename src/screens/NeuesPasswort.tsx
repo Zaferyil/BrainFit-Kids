@@ -12,8 +12,15 @@ export function NeuesPasswort({ onFertig }: { onFertig: () => void }) {
     e.preventDefault()
     if (pw.length < 8) return setMeldung('Bitte mindestens 8 Zeichen.')
     if (pw !== pw2) return setMeldung('Die beiden Passwörter sind nicht gleich.')
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) return setMeldung('Der Link ist abgelaufen oder wurde schon benutzt. Bitte fordern Sie einen neuen Link an.')
     const { error } = await supabase.auth.updateUser({ password: pw })
-    if (error) return setMeldung('Das hat nicht geklappt. Bitte fordern Sie einen neuen Link an.')
+    if (error) {
+      const t = /different from the old/i.test(error.message) ? 'Das neue Passwort muss anders sein als das alte.'
+        : /weak|characters/i.test(error.message) ? 'Das Passwort ist zu schwach. Bitte länger oder mit Zahlen.'
+        : `Das hat nicht geklappt (${error.message}). Bitte fordern Sie einen neuen Link an.`
+      return setMeldung(t)
+    }
     setOk(true)
   }
   return (
