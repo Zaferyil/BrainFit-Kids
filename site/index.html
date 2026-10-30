@@ -84,6 +84,8 @@ p{margin:0}
 .stripe{display:grid;gap:10px;border-radius:16px;padding:16px;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line)}
 .stripe .arten{display:flex;gap:8px;flex-wrap:wrap}
 .stripe .arten span{font-size:13px;font-weight:900;padding:6px 10px;border-radius:10px;background:var(--card);box-shadow:inset 0 0 0 1.5px var(--line)}
+.stripe-dialog{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:rgba(10,6,40,.65)}
+.stripe-dialog-karte{width:min(380px,100%);display:grid;gap:12px;padding:22px;border-radius:22px;background:var(--card);text-align:center}
 .stripe-kurz{margin:0 0 6px;font-weight:700;line-height:1.45;color:var(--muted)}
 .stripe-info{margin:0;font-weight:700;line-height:1.45}
 .stripe .arten span.on{box-shadow:inset 0 0 0 2px var(--violet);color:var(--violet)}
@@ -1075,8 +1077,16 @@ $('#bestellen').onclick=()=>{
   // ohne Bezahllink keine Bestellung: Zugangsdaten gibt es nur nach erfolgreicher Zahlung
   if(!link){try{localStorage.removeItem(KASSE_KEY)}catch{};alert2('Die Online-Zahlung ist noch nicht freigeschaltet. Bitte versuchen Sie es bald wieder.');return}
   const u=new URL(link);u.searchParams.set('prefilled_email',$('#k-mail').value);u.searchParams.set('client_reference_id',PAKETE[korb].name+'-'+takt);
-  location.href=u.toString();
+  // In eingebetteten Vorschauen ist Weiterleiten blockiert: dann in neuem Tab öffnen, sonst Link anzeigen
+  try{ if(window.top===window.self){location.href=u.toString();return} }catch{}
+  const w=window.open(u.toString(),'_blank','noopener');
+  if(!w)zeigeStripeLink(u.toString());
 };
+function zeigeStripeLink(url){
+  const d=document.createElement('div');d.className='stripe-dialog';
+  d.innerHTML=`<div class="stripe-dialog-karte"><h3>Weiter zu Stripe</h3><p>Tippen Sie hier, um die sichere Bezahlseite zu öffnen:</p><a class="btn gross" href="${url}" target="_blank" rel="noopener">Bezahlseite öffnen 🔒</a><button class="btn zweit" type="button">Abbrechen</button></div>`;
+  d.querySelector('button').onclick=()=>d.remove();document.body.append(d);
+}
 // Rückkehr von Stripe (?bezahlt=…): Angaben wiederherstellen und Zugang anzeigen
 function nachZahlung(){
   let d;try{d=JSON.parse(localStorage.getItem(KASSE_KEY)||'null')}catch{d=null}
