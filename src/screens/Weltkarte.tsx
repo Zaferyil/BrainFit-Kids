@@ -122,7 +122,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const stopsY = karte.plaetze.slice(0, anzahl).filter((_, i) => plaetze[start + i] && plaetze[start + i].kind !== 'burg').map(([, y]) => y)
             const oben = stopsY.length ? Math.min(...stopsY) : karte.h
             // genau so viel Platz lassen, dass die Burg (78 % breit, Seitenverhältnis 600:429) ganz hineinpasst
-            const platz = oben + karte.h * 0.02 - karte.w * 0.6
+            // Burg: 58 % breit (600:429), ihre Treppe endet kurz über der letzten Station, wo der Weg im Bild hinführt
+            const burgUnten = oben - karte.w * 0.055
+            const platz = burgUnten - karte.w * 0.44
             // reicht das Bild nach oben nicht, bekommt die Insel oben Wasser dazu (negativer Schnitt)
             const schnitt = letzte ? (schlussBurg ? platz : Math.max(0, platz)) : 0
             const hoehe = karte.h - schnitt
@@ -150,7 +152,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 </div>
               )}
               {letzte && schlussBurg && (
-                <div className="insel-stop insel-burg-platz schluss" style={{ left: '58%', top: `${((oben - schnitt + karte.h * 0.02) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
+                <div className="insel-stop insel-burg-platz schluss" style={{ left: '71%', top: `${((burgUnten - schnitt) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
               )}
             </section>
             )

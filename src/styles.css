@@ -2157,3 +2157,6 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw); }
 /* Schluss-Burg deckt die kleine Burg im Inselbild ab; die letzte Station steht davor */
 .insel-burg-platz.schluss { z-index: 0; }
+.insel-burg-platz.schluss .erfolgsburg { width: 58cqw; }
+.inseln > .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw), linear-gradient(to top, transparent, #000 10cqw); mask-composite: intersect; }
+@media (min-width: 761px) { .inseln > .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw), linear-gradient(to top, transparent, #000 10cqw), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-composite: intersect; } }
