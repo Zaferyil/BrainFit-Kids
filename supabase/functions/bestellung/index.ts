@@ -91,7 +91,8 @@ const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 
 async function zugangsMail(an: string, eltern: string, kind: string, benutzer: string, pw: string, paket: string) {
   const app = Deno.env.get('APP_URL') ?? 'https://brainfitkids.netlify.app'
-  const von = Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <hallo@mentalmath.at>'
+  const von = Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>'
+  const antwortAn = Deno.env.get('MAIL_REPLY_TO') ?? 'info@mentalmath.at'
   const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#231A4F">
     <h1 style="color:#5B47D6">Willkommen bei BrainFit Kids!</h1>
     <p>Hallo ${esc(eltern || 'liebe Eltern')},</p>
@@ -101,11 +102,12 @@ async function zugangsMail(an: string, eltern: string, kind: string, benutzer: s
     <p><a href="${app}/app/" style="display:inline-block;padding:12px 22px;background:#FFC531;color:#231A4F;border-radius:999px;text-decoration:none;font-weight:bold">Zur Lernplattform</a></p>
     <p>So geht’s: Lernplattform öffnen → Benutzername und Passwort eingeben → SeZa wählen – fertig!</p>
     <p>Den Lernstand sehen Sie im <a href="${app}/app/#eltern">Eltern-Bereich</a> mit Ihrer E-Mail-Adresse und Ihrem Passwort.</p>
+    <p>Fragen? Antworten Sie einfach auf diese E-Mail oder schreiben Sie an <a href="mailto:info@mentalmath.at">info@mentalmath.at</a>.</p>
     <p>Viel Spaß beim Lernen!<br>Ihr BrainFit-Kids-Team</p></div>`
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: von, to: [an], subject: `Willkommen bei BrainFit Kids – so startet ${kind}`, html }),
+    body: JSON.stringify({ from: von, reply_to: antwortAn, to: [an], subject: `Willkommen bei BrainFit Kids – so startet ${kind}`, html }),
   })
   if (!r.ok) throw new Error(await r.text())
 }
