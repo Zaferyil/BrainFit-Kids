@@ -979,7 +979,7 @@ body::before{background:#100A30}
     </div>
   </main>
 
-  <footer class="fuss"><span>© BrainFit Kids</span><span><a href="impressum.html">Impressum</a> · <a href="agb.html">AGB</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="widerruf.html">Widerruf</a> · <a href="cookies.html">Cookies</a> · <a href="kuendigen.html">Verträge hier kündigen</a> · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
+  <footer class="fuss"><span>© BrainFit Kids</span><span><a href="impressum.html">Impressum</a> · <a href="agb.html">AGB</a> · <a href="datenschutz.html">Datenschutz</a> · <a href="widerruf.html">Widerruf</a> · <a href="cookies.html">Cookies</a> · <a href="kuendigen.html">Verträge hier kündigen</a> · <a href="#" onclick="bfkCookies();return false">Cookie-Einstellungen</a> · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
   <p class="entwurf-hinweis">Die Zahlung läuft über Stripe. Zugangsdaten gibt es erst nach erfolgreicher Zahlung.</p>
 </div>
 
@@ -1220,3 +1220,4 @@ korbZeichnen(); ansicht('start');
 })();
 if(/^cs_(test|live)_/.test(new URLSearchParams(location.search).get('bezahlt')||'')){nachZahlung();history.replaceState(null,'',location.pathname+location.hash)}
 </script>
+<script src="/consent.js"></script>

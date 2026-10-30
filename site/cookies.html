@@ -20,13 +20,14 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:0 16px 30px}f
 <header><a href="/">← BrainFit Kids</a></header>
 <main><h1>Cookie-Richtlinie</h1><p class="stand">Stand: 30. Oktober 2026</p>
 
-<div class="box"><p><b>Kurz gesagt:</b> BrainFit Kids verwendet <b>keine</b> Werbe-, Tracking- oder Analyse-Cookies. Wir speichern nur, was technisch nötig ist, damit die App funktioniert. Deshalb zeigen wir auch kein Cookie-Banner.</p></div>
+<div class="box"><p><b>Kurz gesagt:</b> BrainFit Kids verwendet <b>keine</b> Werbe-, Tracking- oder Analyse-Cookies. Wir speichern nur, was technisch nötig ist, damit die App funktioniert. Beim ersten Besuch fragen wir Sie trotzdem, welche Kategorien Sie erlauben – Ihre Wahl können Sie jederzeit ändern.</p><p><button class="btn" type="button" onclick="bfkCookies()">Cookie-Einstellungen ändern</button></p></div>
 <h2>Was wir im Browser speichern</h2>
 <table>
 <tr><th>Speicher</th><th>Zweck</th><th>Dauer</th></tr>
 <tr><td>Local Storage „bfk.*“</td><td>Lernstand, Einstellungen, gewählter SeZa, Sterne und Diamanten des Kindes</td><td>bis zur Abmeldung bzw. bis Sie die Browserdaten löschen</td></tr>
 <tr><td>Local Storage „sb-…-auth-token“</td><td>Anmeldung (Kind, Eltern, Admin) über Supabase</td><td>bis zur Abmeldung</td></tr>
 <tr><td>Session Storage „bfk.kasse-pw“</td><td>vorübergehende Übergabe des gewählten Eltern-Passworts während der Bezahlung</td><td>bis zum Schließen des Tabs</td></tr>
+<tr><td>Local Storage „bfk.consent“</td><td>Ihre Cookie-Auswahl</td><td>bis Sie die Browserdaten löschen</td></tr>
 <tr><td>Service Worker / Cache</td><td>App offline und schnell laden, App installieren</td><td>bis zur nächsten Aktualisierung</td></tr>
 </table>
 <p>Diese Speicherungen sind für den vom Nutzer ausdrücklich gewünschten Dienst unbedingt erforderlich und daher nach § 165 Abs. 3 TKG 2021 bzw. § 25 Abs. 2 TDDDG ohne Einwilligung erlaubt.</p>
@@ -37,5 +38,6 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:0 16px 30px}f
 <p>Mehr dazu in der <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
 
 </main>
-<footer><a href="impressum.html">Impressum</a>·<a href="agb.html">AGB</a>·<a href="datenschutz.html">Datenschutz</a>·<a href="widerruf.html">Widerruf</a>·<a href="cookies.html">Cookies</a>·<a href="kuendigen.html">Verträge hier kündigen</a></footer>
+<footer><a href="impressum.html">Impressum</a>·<a href="agb.html">AGB</a>·<a href="datenschutz.html">Datenschutz</a>·<a href="widerruf.html">Widerruf</a>·<a href="cookies.html">Cookies</a>·<a href="kuendigen.html">Verträge hier kündigen</a>·<a href="#" onclick="bfkCookies();return false">Cookie-Einstellungen</a></footer>
+<script src="/consent.js"></script>
 </body></html>
