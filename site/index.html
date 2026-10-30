@@ -904,7 +904,7 @@ body::before{background:#100A30}
     </div>
   </main>
 
-  <footer class="fuss"><span>© BrainFit Kids</span><span>Impressum · AGB · Datenschutz · Verträge hier kündigen · <a class="admin-link" href="/app/#admin" target="_blank" rel="noopener">Admin / Lehrkräfte</a></span></footer>
+  <footer class="fuss"><span>© BrainFit Kids</span><span>Impressum · AGB · Datenschutz · Verträge hier kündigen · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
   <p class="entwurf-hinweis">Entwurf zum Ansehen – keine echte Zahlung. Später läuft die Zahlung über Stripe.</p>
 </div>
 
@@ -922,7 +922,7 @@ body::before{background:#100A30}
     <div class="lk" style="text-align:center;justify-items:center">
       <img src="erfolgsburg.webp" alt="" style="width:200px">
       <p>Melde dich auf der Lernplattform mit deinem <b>Benutzernamen</b> und <b>Passwort</b> an.</p>
-      <a class="btn" href="/app/#anmelden" target="_blank" rel="noopener">Zur Lernplattform</a>
+      <a class="btn" href="/app/#anmelden">Zur Lernplattform</a>
       <p class="klein">Die Zugangsdaten stehen in der E-Mail nach dem Kauf. Zum Ausprobieren: lena · abakus</p>
     </div>
   </div>
@@ -957,7 +957,7 @@ function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-liefer').hidden=!p
 function zeigeMein(){
   $('#m-eltern').textContent=$('#k-vn').value||'Anna';
   $('#m-kinder').innerHTML=kinder.map(k=>`<button type="button"><span class="ava" style="background:${k.farbe}">${k.zeichen}</span>${k.name}</button>`).join('');
-  $$('#m-kinder button').forEach(b=>b.onclick=()=>window.open('/app/#anmelden','_blank','noopener'));
+  $$('#m-kinder button').forEach(b=>b.onclick=()=>(location.href='/app/#anmelden'));
   $('#login-knopf').lastChild.textContent='Abmelden';
   if(korb) $('#m-abo').textContent=`${PAKETE[korb].name} · ${PAKETE[korb].preis} € / Monat · Mindestlaufzeit 12 Monate`;
 }
@@ -998,7 +998,7 @@ function bestaetigung(){
   ansicht('kind');
 }
 $('#kind-fertig').onclick=()=>{ansicht('mein'); zeigeMein()};
-$('#d-login').onclick=()=>window.open('/app/#anmelden','_blank','noopener');
+$('#d-login').onclick=()=>(location.href='/app/#anmelden');
 $('#m-noch').onclick=()=>alert2('Hier legen Sie ein weiteres Kind an; die Zugangsdaten kommen wieder per E-Mail.');
 $('#login-knopf').onclick=()=>{if(angemeldet){angemeldet=false;$('#login-knopf').lastChild.textContent='Login';ansicht('start');return} $('#login').hidden=false;$('#schleier').hidden=false};
 $('#login-zu').onclick=()=>{$('#login').hidden=true;$('#schleier').hidden=true};
