@@ -1,0 +1,13 @@
+# Netlify: Website unter /, Lernplattform unter /app/
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# /app ohne Schrägstrich → /app/
+[[redirects]]
+  from = "/app"
+  to = "/app/"
+  status = 301
