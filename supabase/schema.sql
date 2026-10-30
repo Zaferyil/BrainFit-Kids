@@ -207,7 +207,7 @@ create or replace function public.belohnen(p_art text, p_id text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare w record; bid text := p_art || ':' || p_id;
 begin
-  if public.meine_rolle() <> 'kind' then raise exception 'nur für Kinder'; end if;
+  if coalesce(public.meine_rolle(), '') <> 'kind' then raise exception 'nur für Kinder'; end if;
   select * into w from belohnungen where art = p_art;
   if not found or (w.sterne = 0 and w.diamanten = 0) then return null; end if;
   insert into konten (kind) values (auth.uid()) on conflict do nothing;
@@ -222,7 +222,7 @@ create or replace function public.kaufen(p_artikel text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare a record; k record;
 begin
-  if public.meine_rolle() <> 'kind' then raise exception 'nur für Kinder'; end if;
+  if coalesce(public.meine_rolle(), '') <> 'kind' then raise exception 'nur für Kinder'; end if;
   select * into a from shop_artikel where id = p_artikel and aktiv;
   if not found then return jsonb_build_object('ok', false, 'grund', 'unbekannt'); end if;
   insert into konten (kind) values (auth.uid()) on conflict do nothing;
@@ -248,7 +248,7 @@ create or replace function public.anziehen(p_ausstattung jsonb) returns boolean
 language plpgsql security definer set search_path = public as $$
 declare v text;
 begin
-  if public.meine_rolle() <> 'kind' then raise exception 'nur für Kinder'; end if;
+  if coalesce(public.meine_rolle(), '') <> 'kind' then raise exception 'nur für Kinder'; end if;
   for v in select value from jsonb_each_text(p_ausstattung) loop
     if not exists (select 1 from besitz where kind = auth.uid() and artikel = v)
        and not exists (select 1 from shop_artikel where id = v and start) then return false; end if;
@@ -263,7 +263,7 @@ create or replace function public.korrigieren(p_kind uuid, p_sterne int, p_diama
 language plpgsql security definer set search_path = public as $$
 declare k record;
 begin
-  if public.meine_rolle() not in ('admin', 'lehrkraft') or not public.darf_kind_sehen(p_kind) then raise exception 'keine Berechtigung'; end if;
+  if coalesce(public.meine_rolle(), '') not in ('admin', 'lehrkraft') or not public.darf_kind_sehen(p_kind) then raise exception 'keine Berechtigung'; end if;
   if coalesce(trim(p_grund), '') = '' then raise exception 'Grund fehlt'; end if;
   insert into konten (kind) values (p_kind) on conflict do nothing;
   select * into k from konten where kind = p_kind for update;
@@ -278,7 +278,7 @@ create or replace function public.anmelde_adresse(p_benutzer text) returns text
 language sql immutable as $$ select lower(trim(p_benutzer)) || '@kinder.brainfit-kids.at' $$;
 
 grant execute on function public.belohnen, public.kaufen, public.anziehen, public.korrigieren, public.anmelde_adresse to authenticated;
-revoke execute on function public.belohnen, public.kaufen, public.anziehen, public.korrigieren from anon;
+revoke execute on function public.belohnen, public.kaufen, public.anziehen, public.korrigieren from public, anon;
 
 -- ───────────── Startwerte ─────────────
 insert into public.belohnungen (art, sterne, diamanten) values
