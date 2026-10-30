@@ -143,7 +143,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const [bx, by] = karte.plaetze[anzahl - 1] ?? [karte.w / 2, oben]
             const burgX = Math.min(59, Math.max(41, (bx / karte.w) * 100))
             const burgUnten = by - karte.w * 0.045
-            const platz = frei ? freiT - karte.w * 0.1 : burgUnten - hoch - karte.w * 0.015
+            // oben etwas Luft, damit Turmspitzen und Fahnen ganz zu sehen sind und die nächste Insel erst darüber beginnt
+            const platz = frei ? freiT - karte.w * 0.1 : burgUnten - hoch - karte.w * (letzte ? 0.015 : 0.12)
             // Mit Burg bekommt die Insel oben so viel Wasser dazu, wie die Burg braucht (negativer Schnitt);
             // die oberste Insel ohne Burg endet kurz über der letzten Station
             const schnitt = burg ? Math.min(0, platz) : letzte ? Math.max(0, oben - karte.h * 0.21) : 0
@@ -154,7 +155,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
+            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: burg && !letzte ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte ? { marginTop: '-22cqw' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
