@@ -398,6 +398,25 @@ body::before{background:#100A30}
 .np{gap:90px}
 .dk-eyebrow{font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#FFD65C}
 .dk-kopf{display:grid;gap:12px;justify-items:center;text-align:center}
+.st-zahlen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:6px 0 10px}
+.st-zahlen div{padding:18px 16px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);text-align:center}
+.st-zahlen b{display:block;font-family:var(--display);font-size:clamp(28px,4vw,40px);line-height:1;background:linear-gradient(90deg,#FFD65C,#FF8FC8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.st-zahlen span{display:block;margin-top:6px;color:#CFC7F5;font-weight:700;font-size:14px}
+.st-hinweis{margin:0 0 14px;text-align:center;color:#9D93D6;font-size:13px;font-weight:700}
+.st-wolken{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 18px;align-items:start}
+.st-wolke{position:relative;margin:0 0 18px;padding:20px 20px 18px;border-radius:26px;background:#fff;color:#231A4F;box-shadow:0 10px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.25);animation:st-schweben 6s ease-in-out infinite}
+.st-wolke:nth-child(2n){animation-delay:-2s;transform:rotate(1deg)}.st-wolke:nth-child(3n){animation-delay:-4s}
+.st-wolke::after{content:"";position:absolute;left:34px;bottom:-16px;width:30px;height:30px;background:#fff;border-radius:0 0 30px 0;transform:skewX(-25deg);box-shadow:6px 6px 0 rgba(0,0,0,.08)}
+.st-wolke .sterne{color:#FFB300;letter-spacing:2px;font-size:16px}
+.st-wolke p{margin:8px 0 14px;font-weight:700;line-height:1.45}
+.st-wer{display:flex;align-items:center;gap:10px}
+.st-wer i{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;font-style:normal;font-weight:900;color:#fff}
+.st-wer b{display:block;font-size:14px}.st-wer small{color:#7A70B8;font-weight:700}
+@keyframes st-schweben{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@media (prefers-reduced-motion:reduce){.st-wolke{animation:none}}
+@media (max-width:900px){.st-zahlen{grid-template-columns:repeat(2,minmax(0,1fr))}.st-wolken{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.st-wolken{grid-template-columns:1fr}}
+
 .angebot{position:relative;overflow:hidden;justify-self:center;display:grid;justify-items:center;gap:10px;margin-top:6px;padding:16px 26px 14px;border-radius:26px;color:#3A2400;background:linear-gradient(120deg,#FFE07A,#FFB300 55%,#FF8A1F);box-shadow:0 8px 0 #C26A00,0 18px 40px rgba(255,159,28,.45);animation:angebot-puls 2.4s ease-in-out infinite;max-width:100%}
 .angebot::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.65) 50%,transparent 65%);transform:translateX(-120%);animation:angebot-glanz 3.2s ease-in-out infinite;pointer-events:none}
 .angebot-kopf{font-weight:900;font-size:clamp(15px,2.2vw,19px)}
@@ -821,6 +840,19 @@ body::before{background:#100A30}
     <p class="dk-klein" id="takt-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar. „Monatlich zahlen“ heißt: 12 Monatsraten, nicht monatlich kündbar.</p>
   </section>
 
+  <!-- Elternstimmen: BEISPIELTEXTE – vor dem Start durch echte, freigegebene Stimmen ersetzen (STIMMEN unten im Skript) -->
+  <section class="dk-block" id="stimmen">
+    <div class="dk-kopf"><span class="dk-eyebrow">Eltern erzählen</span><h2>Was Familien sagen</h2></div>
+    <div class="st-zahlen">
+      <div><b>12</b><span>Jahre Erfahrung mit Mental-Arithmetik</span></div>
+      <div><b>1.000+</b><span>Kinder unterrichtet</span></div>
+      <div><b>Kiga–6.</b><span>Klasse – Tempo passt sich an</span></div>
+      <div><b>15</b><span>Minuten am Tag reichen</span></div>
+    </div>
+    <p class="st-hinweis">Beispiel-Stimmen zur Vorschau – vor dem Start ersetzen wir sie durch echte Rückmeldungen unserer Familien.</p>
+    <div class="st-wolken" id="st-wolken"></div>
+  </section>
+
   <!-- Fragen -->
   <section class="dk-block" id="faq">
     <div class="dk-kopf"><span class="dk-eyebrow">Fragen</span><h2>Häufige Fragen</h2></div>
@@ -986,6 +1018,16 @@ function taktSetzen(t){takt=t;
     pr.nextElementSibling.textContent=t==='jahr'?`Jährlich abgerechnet · entspricht ${euro(Math.round(w/12*100)/100)} € im Monat`:'Monatlich abgerechnet'});
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
+// Elternstimmen – BEISPIELTEXTE, vor dem Start durch echte, freigegebene Stimmen ersetzen
+const STIMMEN=[
+  ['Mama von Lena','8 Jahre · 2. Klasse','#FF4FA3','Lena fragt jeden Tag nach ihrer Lektion. Kopfrechnen ist plötzlich ihr Lieblingsfach.'],
+  ['Papa von Jonas','9 Jahre · 3. Klasse','#3BA7FF','Nach ein paar Wochen rechnet Jonas Plusaufgaben schneller im Kopf als ich mit dem Handy.'],
+  ['Mama von Elif','6 Jahre · Vorschule','#3DBE5B','Alles wird vorgelesen – Elif kann allein üben, obwohl sie noch nicht lesen kann.'],
+  ['Mama von Noah','10 Jahre · 4. Klasse','#FF8A1F','Die 15 Minuten am Tag passen gut in unseren Alltag. Seine Konzentration ist spürbar besser.'],
+  ['Papa von Mia','7 Jahre · 1. Klasse','#A06BFF','Der echte Abakus und die Bücher machen den Unterschied. Mia zeigt uns stolz jede Seite.'],
+  ['Mama von Can','8 Jahre · 2. Klasse','#00B3A4','Die Abenteuerkarte motiviert enorm. Can will immer zur nächsten Burg.'],
+];
+$('#st-wolken').innerHTML=STIMMEN.map(([wer,info,farbe,text])=>`<figure class="st-wolke"><div class="sterne" aria-label="5 von 5 Sternen">★★★★★</div><p>„${text}“</p><figcaption class="st-wer"><i style="background:${farbe}">${wer.split(' ').pop()[0]}</i><span><b>${wer}</b><small>${info}</small></span></figcaption></figure>`).join('');
 // Countdown der Gründer-Aktion (Ende: 30.11.2026, 23:59 Uhr)
 const AKTION_ENDE=new Date('2026-11-30T23:59:59+01:00').getTime();
 function uhr(){const r=Math.max(0,AKTION_ENDE-Date.now()),w={d:Math.floor(r/864e5),h:Math.floor(r/36e5)%24,m:Math.floor(r/6e4)%60,s:Math.floor(r/1e3)%60};
