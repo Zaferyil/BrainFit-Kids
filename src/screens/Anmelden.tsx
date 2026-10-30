@@ -1,4 +1,5 @@
 import { SeZa } from '../components/SeZa'
+import { cloudLogin } from '../lib/cloud'
 import { START_KOSTUEME } from '../data/seza'
 import { startGewaehlt, startWaehlen } from '../lib/wirtschaft'
 import { useState, type FormEvent } from 'react'
@@ -102,9 +103,12 @@ function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
   const [passwort, setPasswort] = useState('')
   const [error, setError] = useState(false)
 
-  const submit = (e: FormEvent) => {
+  const [laedt, setLaedt] = useState(false)
+  const submit = async (e: FormEvent) => {
     e.preventDefault()
-    const t = findeLogin(benutzer, passwort)
+    // erst die Konten auf diesem Gerät (Demo), dann die Datenbank
+    const t = findeLogin(benutzer, passwort) ?? (setLaedt(true), await cloudLogin(benutzer, passwort).catch(() => null))
+    setLaedt(false)
     if (t) onLogin(t.klasse, t.kid)
     else {
       setError(true)
@@ -127,7 +131,7 @@ function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
         <input id="login-pw" type="password" className={error ? 'error' : ''} value={passwort} onChange={(e) => { setPasswort(e.target.value); setError(false) }}
           placeholder="Passwort" autoComplete="current-password" maxLength={24} />
         {error && <p className="nk-wrong" role="alert">Das hat nicht geklappt. Schau nochmal nach.</p>}
-        <button type="submit" className="nk-btn yellow big" disabled={!benutzer.trim() || !passwort.trim()}>
+        <button type="submit" className="nk-btn yellow big" disabled={laedt || !benutzer.trim() || !passwort.trim()}>
           Los
           <Icon name="right" size={26} color="#2B2257" strokeWidth={3} />
         </button>
