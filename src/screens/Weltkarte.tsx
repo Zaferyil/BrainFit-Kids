@@ -46,7 +46,13 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
     if (welt) burg(welt)
     return out
   }, [stops, progress.world])
-  const teile = useMemo(() => etappen(plaetze.length), [plaetze.length])
+  // Liegt nur noch die Schluss-Burg auf einer neuen Insel, kommt sie stattdessen oben auf die vorige Insel
+  const teile = useMemo(() => {
+    const t = etappen(plaetze.length)
+    const z = t[t.length - 1]
+    return t.length > 1 && plaetze.slice(z.start).every((p) => p.kind === 'burg') ? t.slice(0, -1) : t
+  }, [plaetze])
+  const schlussBurg = plaetze[plaetze.length - 1]?.kind === 'burg' ? plaetze[plaetze.length - 1] as Burg : null
   // Laufende Nummer nur für Lektionen und Spiele (Burgen zählen nicht mit)
   const nummer = useMemo(() => { const m = new Map<string, number>(); let n = 0; for (const p of plaetze) if (p.kind !== 'burg') m.set(p.id, ++n); return m }, [plaetze])
 
@@ -112,15 +118,22 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           {[...teile].reverse().map(({ karte, start, anzahl }, k) => {
             // Oberste Insel endet kurz über der Burg – der Rest des Bildes gehört zur nächsten, noch gesperrten Welt
             const letzte = k === 0
-            const schnitt = letzte ? Math.max(0, Math.min(...karte.plaetze.slice(0, anzahl).map(([, y]) => y)) - karte.h * 0.21) : 0
+            // Burg-Platz nicht mitzählen: die Burg sitzt mittig über der letzten Station
+            const stopsY = karte.plaetze.slice(0, anzahl).filter((_, i) => plaetze[start + i] && plaetze[start + i].kind !== 'burg').map(([, y]) => y)
+            const oben = stopsY.length ? Math.min(...stopsY) : karte.h
+            // genau so viel Platz lassen, dass die Burg (78 % breit, Seitenverhältnis 600:429) ganz hineinpasst
+            const platz = oben - karte.h * 0.035 - karte.w * 0.6
+            // reicht das Bild nach oben nicht, bekommt die Insel oben Wasser dazu (negativer Schnitt)
+            const schnitt = letzte ? (schlussBurg ? platz : Math.max(0, platz)) : 0
             const hoehe = karte.h - schnitt
             return (
-            <section key={start} className={letzte && schnitt > 0 ? 'insel ende' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
+            <section key={start} className={letzte && schnitt > 0 ? 'insel ende' : letzte && schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map(([x, y], i) => {
                 const s = plaetze[start + i]
                 const pos = { left: `${(x / karte.w) * 100}%`, top: `${((y - schnitt) / hoehe) * 100}%` }
                 if (!s) return null
+                if (s.kind === 'burg' && letzte && s === schlussBurg) return null
                 if (s.kind === 'burg') return (
                   <div key={s.id} className="insel-stop insel-burg-platz" style={pos}><ErfolgsBurg burg={s} /></div>
                 )
@@ -135,6 +148,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   <div className="map-bubble" role="status">{say}</div>
                   <Perli mood="happy" size={96} />
                 </div>
+              )}
+              {letzte && schlussBurg && (
+                <div className="insel-stop insel-burg-platz" style={{ left: '50%', top: `${((oben - schnitt - karte.h * 0.035) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
               )}
             </section>
             )
@@ -222,7 +238,6 @@ function ErfolgsBurg({ burg }: { burg: Burg }) {
   return (
     <div className={burg.geschafft ? 'erfolgsburg geschafft' : 'erfolgsburg'} role="img" aria-label={`Tor zu Welt ${burg.welt + 1}${burg.geschafft ? ' (geöffnet)' : ''}`}>
       <img src={burg.welt === 1 ? burgWelt2 : burgBild} alt="" draggable={false} />
-      <span className="erfolgsburg-schild">Willkommen Welt {burg.welt + 1}</span>
     </div>
   )
 }

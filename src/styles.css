@@ -2150,3 +2150,8 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .pw-fehler { color: #E0245E; } .pw-ok { color: #1E9E4A; }
 .pw-knoepfe { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .pw-abbrechen { border: 0; background: none; color: #6B5FA8; font-weight: 900; cursor: pointer; }
+
+/* Erfolgsburg ohne Schild: mittig über der letzten Station, ganz sichtbar */
+.erfolgsburg { width: min(78cqw, 420px); translate: -50% -100%; }
+.erfolgsburg img { border-radius: 26px; mask-image: radial-gradient(ellipse 72% 70% at 50% 52%, #000 58%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 52%, #000 58%, transparent 100%); }
+.insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw); }
