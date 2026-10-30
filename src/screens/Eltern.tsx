@@ -39,6 +39,7 @@ function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
   const [mail, setMail] = useState('')
   const [pw, setPw] = useState('')
   const [fehler, setFehler] = useState('')
+  const [info, setInfo] = useState('')
   const [laeuft, setLaeuft] = useState(false)
   const anmelden = async (e: FormEvent) => {
     e.preventDefault(); setLaeuft(true); setFehler('')
@@ -51,7 +52,7 @@ function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
   const vergessen = async () => {
     if (!mail.trim()) { setFehler('Bitte zuerst Ihre E-Mail-Adresse eintragen.'); return }
     await elternPasswortVergessen(mail)
-    setFehler('Wenn es ein Konto mit dieser Adresse gibt, schicken wir Ihnen eine E-Mail zum Zurücksetzen.')
+    setFehler(''); setInfo('Wenn es ein Konto mit dieser Adresse gibt, schicken wir Ihnen gleich eine E-Mail zum Zurücksetzen.')
   }
   return (
     <div className="adm adm-login">
@@ -62,6 +63,7 @@ function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
         <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} placeholder="E-Mail" aria-label="E-Mail" autoComplete="username" />
         <input type="password" value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} placeholder="Passwort" aria-label="Passwort" autoComplete="current-password" />
         {fehler && <div className="adm-fehler">{fehler}</div>}
+        {info && <div className="adm-info">{info}</div>}
         <button type="submit" className="adm-btn primary" disabled={laeuft || !mail || !pw}>{laeuft ? 'Anmelden …' : 'Anmelden'}</button>
         <button type="button" className="adm-link" onClick={() => void vergessen()}>Passwort vergessen?</button>
         <a href="../index.html" className="adm-link">Zurück zur Website</a>

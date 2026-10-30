@@ -2371,3 +2371,4 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .install-zu { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F2F0FF; color: #4B2FC2; font-weight: 900; cursor: pointer; }
 .install-schritte { margin: 0; padding-left: 22px; text-align: left; font-weight: 700; display: grid; gap: 4px; }
 .install-spaeter { border: 0; background: none; color: #7A70B8; font-weight: 800; text-decoration: underline; cursor: pointer; }
+.adm-info { padding: 8px 12px; border-radius: 10px; background: #DFF7E7; color: #1E7A3E; font-weight: 700; }
