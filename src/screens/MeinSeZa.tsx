@@ -10,9 +10,9 @@ import { alleArtikel, anziehen, artikel, ausziehen, kaufen, konto, type Ausstatt
 
 // Mein SeZa: Figur ansehen, anprobieren, mit Sternen und Diamanten freischalten, anziehen.
 
-type Reiter = 'kostueme' | 'accessoires' | 'spezial'
-const REITER: { id: Reiter; titel: string }[] = [{ id: 'kostueme', titel: 'Kostüme' }, { id: 'accessoires', titel: 'Accessoires' }, { id: 'spezial', titel: 'Spezial' }]
-const reiterVon = (a: Artikel): Reiter => a.slot === 'outfit' ? 'kostueme' : a.waehrung === 'diamanten' || a.slot === 'effekt' || a.slot === 'hintergrund' ? 'spezial' : 'accessoires'
+type Reiter = 'kostueme' | 'accessoires'
+const REITER: { id: Reiter; titel: string }[] = [{ id: 'kostueme', titel: 'Kostüme' }, { id: 'accessoires', titel: 'Accessoires' }]
+const reiterVon = (a: Artikel): Reiter => a.slot === 'outfit' ? 'kostueme' : 'accessoires'
 const BG = 'linear-gradient(180deg, #3B6DF0 0%, #6C4BFF 45%, #FF9AC8 100%)'
 
 export function MeinSeZa({ kid }: { kid: Kid }) {
@@ -80,7 +80,7 @@ export function MeinSeZa({ kid }: { kid: Kid }) {
             const genug = a.waehrung === 'sterne' ? k.sterne >= a.preis : p.gems >= a.preis
             return (
               <article key={a.id} className={`sz-karte ${traegt ? 'an' : ''}`}>
-                <div className={`sz-bild ${a.css ? `fx-${a.css}` : ''}`}>{a.bild ? <img src={a.bild} alt="" /> : <span>{a.slot === 'effekt' ? '✨' : '🌈'}</span>}</div>
+                <div className={`sz-bild ${a.css ? `fx-${a.css}` : ''}`}>{a.bild ? <img src={a.bild} alt="" /> : <span>✨</span>}</div>
                 <b>{a.name}</b>
                 <small>{SLOT_NAME[a.slot]}</small>
                 <div className="sz-preis">{a.preis === 0 ? 'Kostenlos' : <>{a.waehrung === 'sterne' ? '⭐' : '💎'} {a.preis}</>}</div>

@@ -1,4 +1,4 @@
-import { START_KOSTUEM, STANDARD_ARTIKEL, passt, type Artikel, type Slot } from '../data/seza'
+import { START_KOSTUEM, START_KOSTUEME, STANDARD_ARTIKEL, passt, type Artikel, type Slot } from '../data/seza'
 import { getProgress, saveProgress } from './progress'
 import { load, save } from './storage'
 
@@ -39,8 +39,21 @@ export const artikel = (id?: string) => (id ? [...STANDARD_ARTIKEL, ...shopEinst
 export const belohnungsWert = (art: BelohnungsArt) => ({ ...STANDARD_BELOHNUNG[art], ...(shopEinstellungen().belohnungen[art] ?? {}) })
 
 const key = (kidId: string) => `bfk.konto.${kidId}`
-const leer = (): Konto => ({ sterne: 0, besitz: [START_KOSTUEM], an: { outfit: START_KOSTUEM }, buchungen: [] })
-export const konto = (kidId: string): Konto => ({ ...leer(), ...load<Partial<Konto>>(key(kidId), {}) })
+const leer = (): Konto => ({ sterne: 0, besitz: START_KOSTUEME.map((a) => a.id), an: { outfit: START_KOSTUEM }, buchungen: [] })
+export function konto(kidId: string): Konto {
+  const k = { ...leer(), ...load<Partial<Konto>>(key(kidId), {}) }
+  // die drei Start-Kostüme gehören jedem Kind; nicht mehr vorhandene Artikel fallen weg
+  const besitz = [...new Set([...START_KOSTUEME.map((a) => a.id), ...k.besitz])].filter((id) => artikel(id))
+  const an = Object.fromEntries(Object.entries(k.an).filter(([, id]) => artikel(id))) as Ausstattung
+  return { ...k, besitz, an: an.outfit ? an : { ...an, outfit: START_KOSTUEM } }
+}
+/** Erster Login: hat das Kind sein Start-Kostüm schon gewählt? */
+export const startGewaehlt = (kidId: string) => load<boolean>(`bfk.seza-start.${kidId}`, false)
+export function startWaehlen(kidId: string, id: string) {
+  const k = konto(kidId)
+  if (START_KOSTUEME.some((a) => a.id === id)) speichere(kidId, { ...k, an: { ...k.an, outfit: id } })
+  save(`bfk.seza-start.${kidId}`, true)
+}
 const speichere = (kidId: string, k: Konto) => save(key(kidId), k)
 
 export const diamanten = (kidId: string) => getProgress(kidId).gems

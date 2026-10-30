@@ -1,4 +1,6 @@
 import { SeZa } from '../components/SeZa'
+import { START_KOSTUEME } from '../data/seza'
+import { startGewaehlt, startWaehlen } from '../lib/wirtschaft'
 import { useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { getProgress } from '../lib/progress'
@@ -12,7 +14,7 @@ import { hatStimme, speak } from '../lib/speak'
 import { load, save } from '../lib/storage'
 
 
-const STEPS = ['Anmelden', 'Schulstufe']
+const STEPS = ['Anmelden', 'Wähle deinen SeZa', 'Schulstufe']
 
 // Neue Namen haben keine Aufnahme: dann nur die Frage sprechen, nie mit der Telefonstimme
 const klasseFrage = (name: string) => (hatStimme(`Hallo ${name}!`) ? [`Hallo ${name}!`, 'In welche Klasse gehst du?'] : ['In welche Klasse gehst du?'])
@@ -29,14 +31,16 @@ export function Anmelden() {
   const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(null)
   const [kid, setKid] = useState<Kid | null>(null)
   const [stufe, setStufe] = useState<number | null>(null)
+  const [, neu] = useState(0)
 
-  const step = !schoolClass || !kid ? 0 : stufe === null ? 1 : 2
+  const step = !schoolClass || !kid ? 0 : !startGewaehlt(kid.id) ? 1 : stufe === null ? 2 : 3
   const instruction = [
     'Gib deinen Benutzernamen und dein Passwort ein.',
+    'Wähle deinen SeZa! Tippe auf dein Lieblingsbild.',
     `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
     '',
   ][step]
-  const instructionSay = step === 1 ? klasseFrage(kid?.name ?? '') : instruction
+  const instructionSay = step === 2 ? klasseFrage(kid?.name ?? '') : instruction
 
   return (
     <Stage className="nk" background="var(--nk-sky)">
@@ -53,7 +57,14 @@ export function Anmelden() {
         </div>
 
         {schoolClass && kid ? (
-          stufe === null ? (
+          !startGewaehlt(kid.id) ? (
+            <SeZaWahl key="seza" kid={kid} onPick={(id) => {
+              startWaehlen(kid.id, id); neu((x) => x + 1)
+              const bekannt = getStufe(kid.id)
+              if (bekannt !== null) { saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(bekannt); return }
+              setStufe(null); void speak(klasseFrage(kid.name))
+            }} />
+          ) : stufe === null ? (
             <StufePicker key="stufe" kid={kid} onBack={() => { setKid(null); setSchoolClass(null) }} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
             <section className="nk-step popin"><LosPopup kid={kid} /></section>
@@ -62,10 +73,10 @@ export function Anmelden() {
           <LoginForm onLogin={(c, k) => {
             setSchoolClass(c); setKid(k)
             // Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
-            const bekannt = getStufe(k.id)
+            const bekannt = startGewaehlt(k.id) ? getStufe(k.id) : null
             if (bekannt !== null) { saveSession({ classCode: c.code, kidId: k.id }); setStufe(bekannt); return }
             setStufe(null)
-            void speak(klasseFrage(k.name))
+            void speak(startGewaehlt(k.id) ? klasseFrage(k.name) : 'Wähle deinen SeZa! Tippe auf dein Lieblingsbild.')
           }} />
         )}
       </div>
@@ -173,3 +184,24 @@ function LosPopup({ kid }: { kid: Kid }) {
   )
 }
 
+
+/** Erster Login: einer von drei Start-SeZas; weitere Kostüme gibt es mit Sternen */
+function SeZaWahl({ kid, onPick }: { kid: Kid; onPick: (id: string) => void }) {
+  return (
+    <section className="nk-step popin" aria-labelledby="nk-seza">
+      <header className="nk-title">
+        <h1 id="nk-seza">Hallo {kid.name}!</h1>
+        <p>Wähle deinen SeZa! Tippe auf dein Lieblingsbild.</p>
+      </header>
+      <div className="nk-seza-wahl">
+        {START_KOSTUEME.map((a) => (
+          <button key={a.id} type="button" onClick={() => onPick(a.id)} aria-label={a.name}>
+            <SeZa an={{ outfit: a.id }} groesse="100%" />
+            <span>{a.name}</span>
+          </button>
+        ))}
+      </div>
+      <p className="nk-seza-tipp">Weitere Kostüme schaltest du später mit deinen Sternen frei ⭐</p>
+    </section>
+  )
+}

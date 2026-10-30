@@ -1,37 +1,35 @@
 import original from '../assets/seza/original.webp'
+import sportler from '../assets/seza/sportler.webp'
+import entdecker from '../assets/seza/entdecker.webp'
 import astronaut from '../assets/seza/astronaut.webp'
 import superheld from '../assets/seza/superheld.webp'
 import zauberer from '../assets/seza/zauberer.webp'
-import sportler from '../assets/seza/sportler.webp'
 import wissenschaftler from '../assets/seza/wissenschaftler.webp'
-import entdecker from '../assets/seza/entdecker.webp'
 import winterheld from '../assets/seza/winterheld.webp'
 import genie from '../assets/seza/genie.webp'
+import ninja from '../assets/seza/ninja.webp'
+import pirat from '../assets/seza/pirat.webp'
+import ritter from '../assets/seza/ritter.webp'
+import feuerwehr from '../assets/seza/feuerwehr.webp'
 import brille from '../assets/seza/a-brille.webp'
-import rucksack from '../assets/seza/a-rucksack.webp'
-import umhang from '../assets/seza/a-umhang.webp'
-import krone from '../assets/seza/a-krone.webp'
-import schuhe from '../assets/seza/a-schuhe.webp'
-import roboter from '../assets/seza/a-roboter.webp'
+import hund from '../assets/seza/a-hund.webp'
 import goldAbakus from '../assets/seza/a-abakus.webp'
 
-// SeZa: die Figur des Kindes. Ein Kostüm ist ein ganzes Bild von SeZa (aus der SeZa-Vorlage geschnitten);
-// Accessoires liegen als eigene Ebenen darüber. Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds) sagen,
-// wo Augen, Kopf, Hand, Rücken, Füße und der Begleiter sitzen.
+// SeZa: die Figur des Kindes. Ein Kostüm ist ein ganzes, freigestelltes Bild von SeZa;
+// Accessoires liegen als eigene Ebenen darüber. Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds)
+// sagen, wo Augen, die Hand mit dem Abakus und der Begleiter sitzen.
 
-export type Slot = 'outfit' | 'kopf' | 'brille' | 'hand' | 'ruecken' | 'fuesse' | 'begleiter' | 'effekt' | 'hintergrund'
+export type Slot = 'outfit' | 'brille' | 'hand' | 'begleiter'
 export type Waehrung = 'sterne' | 'diamanten'
 
 /** Ebenen von hinten nach vorn */
-export const EBENEN: Slot[] = ['hintergrund', 'outfit', 'ruecken', 'fuesse', 'brille', 'kopf', 'hand', 'begleiter', 'effekt']
+export const EBENEN: Slot[] = ['outfit', 'brille', 'hand', 'begleiter']
 
-export const SLOT_NAME: Record<Slot, string> = {
-  outfit: 'Kostüm', kopf: 'Kopf', brille: 'Brille', hand: 'In der Hand', ruecken: 'Rücken', fuesse: 'Füße', begleiter: 'Begleiter', effekt: 'Effekt', hintergrund: 'Hintergrund',
-}
+export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', brille: 'Brille', hand: 'Abakus', begleiter: 'Begleiter' }
 
-type Punkt = { x: number; y: number }
-/** Anker eines Kostüms; fehlt ein Anker, passt das Accessoire nicht zu diesem Kostüm */
-export type Anker = { augen?: Punkt & { b: number }; kopf?: Punkt & { b: number }; hand: Punkt & { b: number; r?: number }; ruecken: Punkt; fuesse: Punkt; begleiter: Punkt }
+type Punkt = { x: number; y: number; b: number }
+/** Anker eines Kostüms; ohne „augen“ hat das Kostüm schon Brille, Maske oder Augenklappe */
+export type Anker = { augen?: Punkt; hand: Punkt & { r?: number }; begleiter: { x: number; y: number } }
 
 export type Artikel = {
   id: string
@@ -40,68 +38,52 @@ export type Artikel = {
   preis: number
   waehrung: Waehrung
   bild?: string
-  /** Kostüm: Bild und Anker */
   anker?: Anker
   /** Bildausschnitt fürs runde Kopfbild (CSS background-position) */
   kopfAusschnitt?: string
-  /** Effekte und Hintergründe werden mit CSS gezeichnet */
+  /** Start-Kostüm: beim ersten Login wählbar, gratis */
+  start?: boolean
   css?: string
   aktiv?: boolean
   /** von der Lehrkraft angelegt */
   eigen?: boolean
 }
 
+const k = (id: string, name: string, preis: number, bild: string, anker: Anker, kopf: string, start = false): Artikel =>
+  ({ id, name, slot: 'outfit', preis, waehrung: 'sterne', bild, anker, kopfAusschnitt: kopf, start })
+
 const KOSTUEME: Artikel[] = [
-  { id: 'original', name: 'SeZa Original', slot: 'outfit', preis: 0, waehrung: 'sterne', bild: original, kopfAusschnitt: '58% 18%',
-    anker: { augen: { x: .53, y: .41, b: .5 }, hand: { x: .9, y: .53, b: .3, r: 14 }, ruecken: { x: .14, y: .6 }, fuesse: { x: .5, y: .93 }, begleiter: { x: .86, y: .86 } } },
-  { id: 'astronaut', name: 'Astronaut', slot: 'outfit', preis: 450, waehrung: 'sterne', bild: astronaut,
-    anker: { augen: { x: .52, y: .57, b: .33 }, hand: { x: .87, y: .74, b: .26, r: 10 }, ruecken: { x: .16, y: .66 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .14, y: .86 } } },
-  { id: 'superheld', name: 'Superheld', slot: 'outfit', preis: 400, waehrung: 'sterne', bild: superheld,
-    anker: { kopf: { x: .58, y: .02, b: .36 }, hand: { x: .9, y: .55, b: .25, r: 20 }, ruecken: { x: .14, y: .56 }, fuesse: { x: .5, y: .95 }, begleiter: { x: .14, y: .86 } } },
-  { id: 'zauberer', name: 'Zauberer', slot: 'outfit', preis: 400, waehrung: 'sterne', bild: zauberer,
-    anker: { augen: { x: .48, y: .62, b: .38 }, hand: { x: .82, y: .45, b: .24, r: 18 }, ruecken: { x: .14, y: .78 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .86, y: .88 } } },
-  { id: 'sportler', name: 'Sportler', slot: 'outfit', preis: 300, waehrung: 'sterne', bild: sportler,
-    anker: { augen: { x: .5, y: .5, b: .34 }, hand: { x: .82, y: .6, b: .24, r: 18 }, ruecken: { x: .2, y: .72 }, fuesse: { x: .5, y: .94 }, begleiter: { x: .12, y: .86 } } },
-  { id: 'wissenschaftler', name: 'Wissenschaftler', slot: 'outfit', preis: 350, waehrung: 'sterne', bild: wissenschaftler,
-    anker: { kopf: { x: .5, y: .04, b: .34 }, hand: { x: .12, y: .65, b: .25, r: -14 }, ruecken: { x: .86, y: .62 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .88, y: .86 } } },
-  { id: 'entdecker', name: 'Entdecker', slot: 'outfit', preis: 300, waehrung: 'sterne', bild: entdecker,
-    anker: { augen: { x: .52, y: .5, b: .34 }, hand: { x: .9, y: .62, b: .24, r: 18 }, ruecken: { x: .14, y: .72 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .14, y: .88 } } },
-  { id: 'winterheld', name: 'Winterheld', slot: 'outfit', preis: 350, waehrung: 'sterne', bild: winterheld,
-    anker: { augen: { x: .53, y: .53, b: .34 }, hand: { x: .17, y: .62, b: .26, r: -16 }, ruecken: { x: .86, y: .62 }, fuesse: { x: .5, y: .94 }, begleiter: { x: .88, y: .88 } } },
-  { id: 'genie', name: 'Genie', slot: 'outfit', preis: 450, waehrung: 'sterne', bild: genie,
-    anker: { hand: { x: .82, y: .63, b: .24, r: 14 }, ruecken: { x: .14, y: .7 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .12, y: .88 } } },
+  k('original', 'SeZa Original', 0, original, { augen: { x: .53, y: .4, b: .42 }, hand: { x: .83, y: .55, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '50% 22%', true),
+  k('sportler', 'Sportler', 0, sportler, { augen: { x: .5, y: .38, b: .46 }, hand: { x: .76, y: .5, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '45% 22%', true),
+  k('entdecker', 'Entdecker', 0, entdecker, { augen: { x: .65, y: .37, b: .44 }, hand: { x: .84, y: .38, b: .24, r: 15 }, begleiter: { x: .14, y: .88 } }, '62% 22%', true),
+  k('astronaut', 'Astronaut', 450, astronaut, { augen: { x: .55, y: .32, b: .44 }, hand: { x: .93, y: .55, b: .2, r: 15 }, begleiter: { x: .12, y: .9 } }, '55% 14%'),
+  k('superheld', 'Superheld', 400, superheld, { hand: { x: .82, y: .64, b: .28, r: 15 }, begleiter: { x: .14, y: .9 } }, '58% 22%'),
+  k('zauberer', 'Zauberer', 400, zauberer, { augen: { x: .57, y: .45, b: .4 }, hand: { x: .84, y: .44, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '57% 35%'),
+  k('wissenschaftler', 'Wissenschaftler', 350, wissenschaftler, { hand: { x: .17, y: .47, b: .25, r: -15 }, begleiter: { x: .88, y: .9 } }, '55% 16%'),
+  k('winterheld', 'Winterheld', 350, winterheld, { augen: { x: .45, y: .43, b: .44 }, hand: { x: .17, y: .6, b: .28, r: -15 }, begleiter: { x: .88, y: .9 } }, '45% 32%'),
+  k('genie', 'Genie', 450, genie, { hand: { x: .8, y: .52, b: .25, r: 15 }, begleiter: { x: .12, y: .9 } }, '50% 30%'),
+  k('ninja', 'Ninja', 400, ninja, { augen: { x: .52, y: .32, b: .4 }, hand: { x: .84, y: .28, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '52% 18%'),
+  k('pirat', 'Pirat', 400, pirat, { hand: { x: .75, y: .47, b: .25, r: 15 }, begleiter: { x: .12, y: .9 } }, '48% 30%'),
+  k('ritter', 'Ritter', 450, ritter, { augen: { x: .48, y: .43, b: .4 }, hand: { x: .81, y: .47, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '48% 32%'),
+  k('feuerwehr', 'Feuerwehr', 350, feuerwehr, { augen: { x: .53, y: .39, b: .42 }, hand: { x: .83, y: .44, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '53% 26%'),
 ]
 
 const ACCESSOIRES: Artikel[] = [
   { id: 'gold-abakus', name: 'Goldener Abakus', slot: 'hand', preis: 500, waehrung: 'sterne', bild: goldAbakus },
   { id: 'brille', name: 'Brille', slot: 'brille', preis: 150, waehrung: 'sterne', bild: brille },
-  { id: 'rucksack', name: 'Rucksack', slot: 'ruecken', preis: 200, waehrung: 'sterne', bild: rucksack },
-  { id: 'umhang', name: 'Umhang', slot: 'ruecken', preis: 150, waehrung: 'sterne', bild: umhang },
-  { id: 'krone', name: 'Sternenkrone', slot: 'kopf', preis: 250, waehrung: 'sterne', bild: krone },
-  { id: 'raketenschuhe', name: 'Raketenschuhe', slot: 'fuesse', preis: 300, waehrung: 'sterne', bild: schuhe },
-  { id: 'roboter', name: 'Roboter-Begleiter', slot: 'begleiter', preis: 400, waehrung: 'sterne', bild: roboter },
+  { id: 'hund', name: 'Hunde-Begleiter', slot: 'begleiter', preis: 400, waehrung: 'sterne', bild: hund },
 ]
 
-const SPEZIAL: Artikel[] = [
-  { id: 'glitzer', name: 'Glitzersterne', slot: 'effekt', preis: 3, waehrung: 'diamanten', css: 'glitzer' },
-  { id: 'goldschein', name: 'Goldener Schein', slot: 'effekt', preis: 4, waehrung: 'diamanten', css: 'goldschein' },
-  { id: 'regenbogen', name: 'Regenbogen-Hintergrund', slot: 'hintergrund', preis: 5, waehrung: 'diamanten', css: 'regenbogen' },
-  { id: 'weltall', name: 'Weltall-Hintergrund', slot: 'hintergrund', preis: 5, waehrung: 'diamanten', css: 'weltall' },
-]
-
-export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...ACCESSOIRES, ...SPEZIAL]
+export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...ACCESSOIRES]
 export const START_KOSTUEM = 'original'
+export const START_KOSTUEME = KOSTUEME.filter((a) => a.start)
 
-/** Passt ein Accessoire zum Kostüm? (Kostüme mit Hut haben keinen Platz für die Krone, Brillen-Kostüme keinen für die Brille) */
+/** Passt ein Accessoire zum Kostüm? Brille nur, wenn die Augen frei sind */
 export function passt(kostuem: Artikel | undefined, a: Artikel) {
-  const k = kostuem?.anker
-  if (!k) return a.slot !== 'kopf' && a.slot !== 'brille'
-  if (a.slot === 'kopf') return !!k.kopf
-  if (a.slot === 'brille') return !!k.augen
+  if (a.slot === 'brille') return !!kostuem?.anker?.augen
   return true
 }
 
 export const WARUM_NICHT: Partial<Record<Slot, string>> = {
-  kopf: 'Passt nicht zu diesem Kostüm – es hat schon eine Kopfbedeckung.',
-  brille: 'Passt nicht zu diesem Kostüm – es hat schon eine Brille oder Maske.',
+  brille: 'Passt nicht zu diesem Kostüm – es hat schon eine Brille, Maske oder Augenklappe.',
 }
