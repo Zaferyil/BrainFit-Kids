@@ -11,3 +11,21 @@
   from = "/app"
   to = "/app/"
   status = 301
+
+# Seiten nie aus dem Browser-Cache: neue Versionen sofort sichtbar (Bilder/Skripte mit Hash dürfen lange gecacht werden)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/app/"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/app/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
