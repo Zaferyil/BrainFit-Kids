@@ -11,6 +11,11 @@ import { etappen } from '../data/karten'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
 import burgWelt2 from '../assets/karte/erfolgsburg-welt2.webp'
+import burgWelt3 from '../assets/karte/erfolgsburg-welt3.webp'
+
+/** Burgbild je abgeschlossener Welt, mit Seitenverhältnis (Höhe / Breite) */
+const BURGEN: Record<number, { bild: string; hoch: number }> = { 1: { bild: burgWelt2, hoch: 429 / 600 }, 2: { bild: burgWelt3, hoch: 430 / 700 } }
+const burgVon = (welt: number) => BURGEN[welt] ?? { bild: burgBild, hoch: 429 / 600 }
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
@@ -46,13 +51,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
     if (welt) burg(welt)
     return out
   }, [stops, progress.world])
-  // Liegt nur noch die Schluss-Burg auf einer neuen Insel, kommt sie stattdessen oben auf die vorige Insel
-  const teile = useMemo(() => {
-    const t = etappen(plaetze.length)
-    const z = t[t.length - 1]
-    return t.length > 1 && plaetze.slice(z.start).every((p) => p.kind === 'burg') ? t.slice(0, -1) : t
+  // Burgen belegen keinen Platz auf der Karte: sie stehen über der letzten Station ihrer Welt
+  const nurStops = useMemo(() => plaetze.filter((p): p is Stop => p.kind !== 'burg'), [plaetze])
+  const burgNach = useMemo(() => {
+    const m = new Map<number, Burg>(); let i = -1
+    for (const p of plaetze) { if (p.kind === 'burg') m.set(i, p); else i++ }
+    return m
   }, [plaetze])
-  const schlussBurg = plaetze[plaetze.length - 1]?.kind === 'burg' ? plaetze[plaetze.length - 1] as Burg : null
+  const teile = useMemo(() => etappen(nurStops.length), [nurStops.length])
   // Laufende Nummer nur für Lektionen und Spiele (Burgen zählen nicht mit)
   const nummer = useMemo(() => { const m = new Map<string, number>(); let n = 0; for (const p of plaetze) if (p.kind !== 'burg') m.set(p.id, ++n); return m }, [plaetze])
 
@@ -116,29 +122,26 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
       <div className="path-screen">
         <div className="inseln" ref={scroller}>
           {[...teile].reverse().map(({ karte, start, anzahl }, k) => {
-            // Oberste Insel endet kurz über der Burg – der Rest des Bildes gehört zur nächsten, noch gesperrten Welt
             const letzte = k === 0
-            // Burg-Platz nicht mitzählen: die Burg sitzt mittig über der letzten Station
-            const stopsY = karte.plaetze.slice(0, anzahl).filter((_, i) => plaetze[start + i] && plaetze[start + i].kind !== 'burg').map(([, y]) => y)
-            const oben = stopsY.length ? Math.min(...stopsY) : karte.h
-            // genau so viel Platz lassen, dass die Burg (78 % breit, Seitenverhältnis 600:429) ganz hineinpasst
-            // Burg: 82 % breit (600:429), ihre Treppe endet kurz über der letzten Station, wo der Weg im Bild hinführt
-            const burgUnten = oben - karte.w * 0.045
-            const platz = burgUnten - karte.w * 0.6
-            // reicht das Bild nach oben nicht, bekommt die Insel oben Wasser dazu (negativer Schnitt)
-            const schnitt = letzte ? (schlussBurg ? platz : Math.max(0, platz)) : 0
+            const ys = karte.plaetze.slice(0, anzahl).map(([, y]) => y)
+            const oben = ys.length ? Math.min(...ys) : karte.h
+            // Burg nach der letzten Station dieser Insel: Treppe endet kurz über der Station, Burg 82 % breit und ganz im Bild
+            const burg = burgNach.get(start + anzahl - 1) ?? null
+            const [bx, by] = karte.plaetze[anzahl - 1] ?? [karte.w / 2, oben]
+            const burgX = Math.min(59, Math.max(41, (bx / karte.w) * 100))
+            const burgUnten = by - karte.w * 0.045
+            const platz = burgUnten - karte.w * (0.82 * (burg ? burgVon(burg.welt).hoch : 0.715) + 0.015)
+            // Mit Burg bekommt die Insel oben so viel Wasser dazu, wie die Burg braucht (negativer Schnitt);
+            // die oberste Insel ohne Burg endet kurz über der letzten Station
+            const schnitt = burg ? Math.min(0, platz) : letzte ? Math.max(0, oben - karte.h * 0.21) : 0
             const hoehe = karte.h - schnitt
             return (
-            <section key={start} className={letzte && schnitt > 0 ? 'insel ende' : letzte && schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
+            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map(([x, y], i) => {
-                const s = plaetze[start + i]
+                const s = nurStops[start + i]
                 const pos = { left: `${(x / karte.w) * 100}%`, top: `${((y - schnitt) / hoehe) * 100}%` }
                 if (!s) return null
-                if (s.kind === 'burg' && letzte && s === schlussBurg) return null
-                if (s.kind === 'burg') return (
-                  <div key={s.id} className="insel-stop insel-burg-platz" style={pos}><ErfolgsBurg burg={s} /></div>
-                )
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
                     <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} onLocked={(text) => setSay(text)} />
@@ -151,8 +154,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   <Perli mood="happy" size={96} />
                 </div>
               )}
-              {letzte && schlussBurg && (
-                <div className="insel-stop insel-burg-platz schluss" style={{ left: '58%', top: `${((burgUnten - schnitt) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
+              {burg && (
+                <div className="insel-stop insel-burg-platz schluss" style={{ left: `${burgX}%`, top: `${((burgUnten - schnitt) / hoehe) * 100}%` }}><ErfolgsBurg burg={burg} /></div>
               )}
             </section>
             )
@@ -239,7 +242,7 @@ function Star3D({ on }: { on: boolean }) {
 function ErfolgsBurg({ burg }: { burg: Burg }) {
   return (
     <div className={burg.geschafft ? 'erfolgsburg geschafft' : 'erfolgsburg'} role="img" aria-label={`Tor zu Welt ${burg.welt + 1}${burg.geschafft ? ' (geöffnet)' : ''}`}>
-      <img src={burg.welt === 1 ? burgWelt2 : burgBild} alt="" draggable={false} />
+      <img src={burgVon(burg.welt).bild} alt="" draggable={false} />
     </div>
   )
 }
