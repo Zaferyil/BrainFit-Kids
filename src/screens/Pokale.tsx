@@ -3,7 +3,8 @@ import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
-import type { Kid } from '../data/demo'
+import { useState } from 'react'
+import { passwortVon, setzePasswort, type Kid } from '../data/demo'
 import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { load } from '../lib/storage'
@@ -79,9 +80,46 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
           <div><span>PERLEN</span><b className="gelb">{progress.perlen}</b></div>
           <div><span>WELT</span><b className="gruen">{world.n} · {world.name}</b></div>
         </div>
+        <PasswortAendern kid={kid} />
         <button type="button" className="nk-btn yellow" onClick={onLogout}><Icon name="logout" color="#2B2257" size={22} />Abmelden</button>
       </div>
       <NavBar active="garderobe" />
     </Stage>
+  )
+}
+
+function PasswortAendern({ kid }: { kid: Kid }) {
+  const [offen, setOffen] = useState(false)
+  const [alt, setAlt] = useState('')
+  const [neu, setNeu] = useState('')
+  const [nochmal, setNochmal] = useState('')
+  const [meldung, setMeldung] = useState<{ ok: boolean; text: string } | null>(null)
+  if (!offen) return (
+    <>
+    {meldung?.ok && <p className="pw-ok pw-hell">{meldung.text}</p>}
+    <button type="button" className="nk-btn green" onClick={() => { setOffen(true); setMeldung(null) }}>
+      <Icon name="settings" color="#FFFFFF" size={22} />Passwort ändern
+    </button>
+    </>
+  )
+  const speichern = () => {
+    if (alt.trim() !== passwortVon(kid)) return setMeldung({ ok: false, text: 'Das alte Passwort stimmt nicht.' })
+    if (neu.trim().length < 4) return setMeldung({ ok: false, text: 'Das neue Passwort braucht mindestens 4 Zeichen.' })
+    if (neu.trim() !== nochmal.trim()) return setMeldung({ ok: false, text: 'Die beiden neuen Passwörter sind nicht gleich.' })
+    setzePasswort(kid.id, neu)
+    setAlt(''); setNeu(''); setNochmal(''); setOffen(false)
+    setMeldung({ ok: true, text: 'Super! Dein neues Passwort ist gespeichert.' })
+  }
+  return (
+    <form className="pw-form" onSubmit={(e) => { e.preventDefault(); speichern() }}>
+      <label>Altes Passwort<input type="password" value={alt} onChange={(e) => setAlt(e.target.value)} autoComplete="current-password" /></label>
+      <label>Neues Passwort<input type="password" value={neu} onChange={(e) => setNeu(e.target.value)} autoComplete="new-password" /></label>
+      <label>Nochmal neues Passwort<input type="password" value={nochmal} onChange={(e) => setNochmal(e.target.value)} autoComplete="new-password" /></label>
+      {meldung && <p className={meldung.ok ? 'pw-ok' : 'pw-fehler'}>{meldung.text}</p>}
+      <div className="pw-knoepfe">
+        <button type="button" className="pw-abbrechen" onClick={() => setOffen(false)}>Abbrechen</button>
+        <button type="submit" className="nk-btn green">Speichern</button>
+      </div>
+    </form>
   )
 }

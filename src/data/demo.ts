@@ -87,7 +87,14 @@ export function speichereSchule(sch: Schule) {
 /** Benutzername eines Kindes (Beispielkinder: Vorname klein) */
 export const benutzerVon = (k: Kid) => (k.benutzer ?? k.id).toLowerCase()
 /** Passwort (Beispielkinder: „abakus“) */
-export const passwortVon = (k: Kid) => k.passwort ?? 'abakus'
+export const passwortVon = (k: Kid) => {
+  try { const eigen = localStorage.getItem(`bfk.pw.${k.id}`); if (eigen) return eigen } catch { /* ohne Speicher */ }
+  return k.passwort ?? 'abakus'
+}
+/** Das Kind setzt selbst ein neues Passwort */
+export function setzePasswort(kidId: string, pw: string) {
+  try { localStorage.setItem(`bfk.pw.${kidId}`, pw.trim()) } catch { /* ohne Speicher geht es nicht */ }
+}
 
 /** Kind per Benutzername und Passwort finden (nur aktive Kinder) */
 export function findeLogin(benutzer: string, passwort: string) {
