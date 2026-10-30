@@ -398,6 +398,26 @@ body::before{background:#100A30}
 .np{gap:90px}
 .dk-eyebrow{font-size:13px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#FFD65C}
 .dk-kopf{display:grid;gap:12px;justify-items:center;text-align:center}
+.angebot{position:relative;overflow:hidden;justify-self:center;display:grid;justify-items:center;gap:10px;margin-top:6px;padding:16px 26px 14px;border-radius:26px;color:#3A2400;background:linear-gradient(120deg,#FFE07A,#FFB300 55%,#FF8A1F);box-shadow:0 8px 0 #C26A00,0 18px 40px rgba(255,159,28,.45);animation:angebot-puls 2.4s ease-in-out infinite;max-width:100%}
+.angebot::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.65) 50%,transparent 65%);transform:translateX(-120%);animation:angebot-glanz 3.2s ease-in-out infinite;pointer-events:none}
+.angebot-kopf{font-weight:900;font-size:clamp(15px,2.2vw,19px)}
+.angebot-kopf b{color:#B3261E}
+.angebot-blitz{display:inline-block;animation:angebot-wackel 1.2s ease-in-out infinite}
+.angebot-uhr{display:flex;align-items:flex-start;gap:6px}
+.angebot-uhr div{display:grid;justify-items:center;min-width:58px;padding:6px 6px 4px;border-radius:14px;background:#1B1446;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35)}
+.angebot-uhr b{font-family:var(--display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.angebot-uhr small{font-size:11px;font-weight:800;color:#FFD65C;text-transform:uppercase;letter-spacing:.05em}
+.angebot-uhr i{font-style:normal;font-family:var(--display);font-size:28px;font-weight:800;color:#1B1446;padding-top:4px}
+.angebot-uhr b.tick{animation:angebot-tick .35s ease-out}
+.angebot-fuss{display:grid;justify-items:center;gap:6px;font-weight:800;font-size:13px}
+.angebot-balken{width:min(260px,70vw);height:8px;border-radius:99px;background:rgba(58,36,0,.2);overflow:hidden}
+.angebot-balken span{display:block;height:100%;border-radius:inherit;background:#B3261E}
+@keyframes angebot-puls{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes angebot-glanz{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@keyframes angebot-wackel{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+@keyframes angebot-tick{from{transform:translateY(-6px);opacity:.3}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.angebot,.angebot::after,.angebot-blitz,.angebot-uhr b.tick{animation:none}}
+@media (max-width:420px){.angebot{padding:14px 14px 12px}.angebot-uhr div{min-width:48px}.angebot-uhr b{font-size:24px}}
 .dk-kopf h2,.dk-block h2,.dk-eltern h2{font-family:var(--display);font-size:clamp(30px,4.6vw,54px);line-height:1.05;color:#fff;max-width:22ch}
 .dk-block{display:grid;gap:30px}
 .dk-klein{font-size:14px;color:#B9B0E8;text-align:center}
@@ -760,7 +780,13 @@ body::before{background:#100A30}
 
   <!-- Pakete -->
   <section class="dk-block" id="preise">
-    <div class="dk-kopf"><span class="dk-eyebrow">Pakete</span><h2>Wählen Sie Ihr Paket</h2><div class="np-aktion">★ Gründer-Aktion: Basic für 49 € statt 79 € – nur für die ersten 50 Familien · noch 37 Plätze</div></div>
+    <div class="dk-kopf"><span class="dk-eyebrow">Pakete</span><h2>Wählen Sie Ihr Paket</h2><div class="angebot" role="status" aria-live="off">
+      <div class="angebot-kopf"><span class="angebot-blitz">⚡</span> Gründer-Aktion: <b>30 € Rabatt</b> pro Monat auf jedes Paket</div>
+      <div class="angebot-uhr" id="countdown" aria-label="Aktion endet bald">
+        <div><b data-t="d">00</b><small>Tage</small></div><i>:</i><div><b data-t="h">00</b><small>Std</small></div><i>:</i><div><b data-t="m">00</b><small>Min</small></div><i>:</i><div><b data-t="s">00</b><small>Sek</small></div>
+      </div>
+      <div class="angebot-fuss"><span>Nur für die ersten 50 Familien · <b>noch 37 Plätze</b></span><span class="angebot-balken"><span style="width:26%"></span></span></div>
+    </div></div>
     <div class="abrechnung" role="group" aria-label="Zahlweise"><button type="button" data-takt="monat" aria-pressed="true">Monatlich zahlen</button><button type="button" data-takt="jahr" aria-pressed="false">Jährlich zahlen <small>2 Monate geschenkt</small></button></div>
     <p class="abrechnung-info" id="takt-info">12 Monate Vertragslaufzeit · monatliche Zahlung</p>
     <div class="pakete" id="pakete">
@@ -960,6 +986,11 @@ function taktSetzen(t){takt=t;
     pr.nextElementSibling.textContent=t==='jahr'?`Jährlich abgerechnet · entspricht ${euro(Math.round(w/12*100)/100)} € im Monat`:'Monatlich abgerechnet'});
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
+// Countdown der Gründer-Aktion (Ende: 30.11.2026, 23:59 Uhr)
+const AKTION_ENDE=new Date('2026-11-30T23:59:59+01:00').getTime();
+function uhr(){const r=Math.max(0,AKTION_ENDE-Date.now()),w={d:Math.floor(r/864e5),h:Math.floor(r/36e5)%24,m:Math.floor(r/6e4)%60,s:Math.floor(r/1e3)%60};
+  $$('#countdown b').forEach(b=>{const v=String(w[b.dataset.t]).padStart(2,'0');if(b.textContent!==v){b.textContent=v;b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick')}})}
+uhr();setInterval(uhr,1000);
 function ansicht(v){for(const id of ['start','kasse','kind','mein']) $('#v-'+id).hidden = id!==v; window.scrollTo({top:0})}
 function zuStart(){ansicht(angemeldet&&kinder.length?'mein':'start'); if(angemeldet) zeigeMein()}
 function korbZeichnen(){
