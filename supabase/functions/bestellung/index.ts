@@ -78,8 +78,34 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Zugangsdaten per E-Mail an die Eltern (Resend). Ohne RESEND_API_KEY wird nichts verschickt.
+    if (mail && Deno.env.get('RESEND_API_KEY')) await zugangsMail(mail, String(eltern_name).trim(), name, benutzer, pw, paketName).catch((e) => console.error('Mail:', e))
+
     return antwort({ benutzer, passwort: pw })
   } catch (e) {
     return antwort({ fehler: String((e as Error).message ?? e) }, 500)
   }
 })
+
+const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
+
+async function zugangsMail(an: string, eltern: string, kind: string, benutzer: string, pw: string, paket: string) {
+  const app = Deno.env.get('APP_URL') ?? 'https://brainfitkids.netlify.app'
+  const von = Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <hallo@mentalmath.at>'
+  const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#231A4F">
+    <h1 style="color:#5B47D6">Willkommen bei BrainFit Kids!</h1>
+    <p>Hallo ${esc(eltern || 'liebe Eltern')},</p>
+    <p>danke für Ihre Bestellung (${esc(paket)}). Hier sind die Zugangsdaten für <b>${esc(kind)}</b>:</p>
+    <table style="border-collapse:collapse;margin:16px 0"><tr><td style="padding:8px 16px;background:#F2F0FF;border-radius:8px">Benutzername</td><td style="padding:8px 16px"><b style="font-size:20px">${esc(benutzer)}</b></td></tr>
+    <tr><td style="padding:8px 16px;background:#F2F0FF;border-radius:8px">Passwort</td><td style="padding:8px 16px"><b style="font-size:20px">${esc(pw)}</b></td></tr></table>
+    <p><a href="${app}/app/" style="display:inline-block;padding:12px 22px;background:#FFC531;color:#231A4F;border-radius:999px;text-decoration:none;font-weight:bold">Zur Lernplattform</a></p>
+    <p>So geht’s: Lernplattform öffnen → Benutzername und Passwort eingeben → SeZa wählen – fertig!</p>
+    <p>Den Lernstand sehen Sie im <a href="${app}/app/#eltern">Eltern-Bereich</a> mit Ihrer E-Mail-Adresse und Ihrem Passwort.</p>
+    <p>Viel Spaß beim Lernen!<br>Ihr BrainFit-Kids-Team</p></div>`
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: von, to: [an], subject: `Willkommen bei BrainFit Kids – so startet ${kind}`, html }),
+  })
+  if (!r.ok) throw new Error(await r.text())
+}
