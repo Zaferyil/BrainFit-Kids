@@ -136,13 +136,13 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             // Burgbild mit eigenem Weg (z. B. Welt 3): es schließt unten an „weg“ der Insel an, das Bild
             // füllt fast die ganze Breite und die letzten Stationen liegen auf seinen Wegmünzen
             const frei = !!(bv?.ausgang && karte.weg)
-            const breite = karte.w * (frei ? 0.96 : 0.82)
+            const breite = karte.w * (frei ? 0.96 : karte.burg?.breite ?? 0.82)
             const hoch = breite * (bv?.hoch ?? 0.715)
             const freiL = frei ? karte.weg![0] - bv!.ausgang! * breite : 0
             const freiT = frei ? karte.weg![1] + karte.w * 0.03 - hoch : 0
             const [bx, by] = karte.plaetze[anzahl - 1] ?? [karte.w / 2, oben]
-            const burgX = Math.min(59, Math.max(41, (bx / karte.w) * 100))
-            const burgUnten = by - karte.w * 0.045
+            const burgX = karte.burg ? (karte.burg.x / karte.w) * 100 : Math.min(59, Math.max(41, (bx / karte.w) * 100))
+            const burgUnten = karte.burg ? karte.burg.unten : by - karte.w * 0.045
             // oben etwas Luft, damit Turmspitzen und Fahnen ganz zu sehen sind und die nächste Insel erst darüber beginnt
             const platz = frei ? freiT - karte.w * 0.1 : burgUnten - hoch - karte.w * (letzte ? 0.015 : 0.12)
             // Mit Burg bekommt die Insel oben so viel Wasser dazu, wie die Burg braucht (negativer Schnitt);
@@ -180,7 +180,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 </div>
               )}
               {burg && !frei && (
-                <div className="insel-stop insel-burg-platz schluss" style={{ left: `${burgX}%`, top: `${((burgUnten - schnitt) / hoehe) * 100}%` }}><ErfolgsBurg burg={burg} /></div>
+                <div className="insel-stop insel-burg-platz schluss" style={{ ['--burg-breite' as string]: `${(breite / karte.w) * 100}cqw`, left: `${burgX}%`, top: `${((burgUnten - schnitt) / hoehe) * 100}%` }}><ErfolgsBurg burg={burg} /></div>
               )}
             </section>
             )

@@ -9,7 +9,8 @@ import insel5 from '../assets/karte/insel-5.webp'
 // beginnen die Bilder wieder von vorn.
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number] }
+/** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number } }
 
 export const KARTEN: Karte[] = [
   {
@@ -27,7 +28,8 @@ export const KARTEN: Karte[] = [
   },
   {
     bild: insel4, w: 941, h: 1397,
-    plaetze: [[366, 1240], [498, 1100], [595, 915], [263, 805], [478, 634], [664, 592], [357, 433], [260, 291], [546, 235], [732, 338], [770, 172]],
+    plaetze: [[366, 1240], [498, 1100], [595, 915], [263, 805], [478, 634], [664, 592], [357, 433], [255, 291], [465, 252], [610, 290], [748, 350], [738, 250]],
+    burg: { x: 785, unten: 222, breite: 0.42 },
   },
   {
     // Ziel-Insel; 13 Plätze: in der Vorlage fehlt die 49, ihr Platz liegt auf der Brücke
