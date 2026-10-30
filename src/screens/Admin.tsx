@@ -169,7 +169,7 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
               <Fragment key={z.kid.id}>
                 <tr>
                   <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
-                  <td><small className="adm-login">{benutzerVon(z.kid)}<br />{passwortVon(z.kid)}</small></td>
+                  <td><small className="adm-login">{benutzerVon(z.kid)}<br />{istCloudKind(z.kid.id) ? <i title="Passwort ist verschlüsselt gespeichert">••••••</i> : passwortVon(z.kid)}</small></td>
                   <td><span className="adm-badge">{z.klassenCode}</span></td>
                   <td>{z.stufeName}</td>
                   <td><b>L{z.lektion}</b> <small>{z.lektionName}</small></td>
