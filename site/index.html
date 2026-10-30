@@ -277,7 +277,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .entf{border:0;background:none;color:var(--pink);font-weight:900;cursor:pointer;font:inherit;font-size:13px}
 .leer{color:var(--muted);text-align:center;padding:30px 0}
 .lade-fuss{margin-top:auto;display:grid;gap:10px}
-.kasse{display:grid;gap:18px}
+.kasse{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+.kasse .karte,.kasse .abschnitt,.kasse .feld{min-width:0}.kasse .abschnitt{grid-template-columns:minmax(0,1fr)}.kasse .karte h3,.kasse .zus h3,.kasse .zus b,.kasse .zus strong,.kasse .zus .zeile,.kasse .zus .zeile *{color:#231A4F}.kasse .abschnitt>*,.kasse .check>*{min-width:0;overflow-wrap:anywhere}.kasse input:not([type=checkbox]),.kasse select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+@media (max-width:520px){.kasse .karte{padding:16px;border-radius:20px}.kasse .check{font-size:14px}.kasse .btn.gross{width:100%;white-space:normal}}
 .kasse h1{font-size:clamp(26px,4vw,36px)}
 .abschnitt{display:grid;gap:12px}
 .abschnitt h3{font-size:18px;display:flex;align-items:center;gap:8px}
@@ -920,9 +922,9 @@ body::before{background:#100A30}
         </div>
         <div class="abschnitt"><h3><b id="k-zahl-nr">3</b>Bezahlen</h3>
           <p class="stripe-kurz">🔒 Sie bezahlen sicher auf der Seite von <b>Stripe</b> (Karte, Apple Pay, Google Pay, SEPA, EPS).</p>
-          <label class="check"><input id="k-agb" type="checkbox">Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a> und habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen.</label>
-          <label class="check"><input id="k-wid" type="checkbox">Ich verlange ausdrücklich, dass die App sofort freigeschaltet wird, und weiß, dass ich damit mein <a href="widerruf.html" target="_blank">Widerrufsrecht</a> für die App verliere (für Bücher und Abakus gilt es 14 Tage).</label>
-          <label class="check"><input id="k-lauf" type="checkbox">Mindestlaufzeit 12 Monate, danach monatlich kündbar.</label>
+          <label class="check"><input id="k-agb" type="checkbox"><span>Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a> und habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen.</span></label>
+          <label class="check"><input id="k-wid" type="checkbox"><span>Ich verlange ausdrücklich, dass die App sofort freigeschaltet wird, und weiß, dass ich damit mein <a href="widerruf.html" target="_blank">Widerrufsrecht</a> für die App verliere (für Bücher und Abakus gilt es 14 Tage).</span></label>
+          <label class="check"><input id="k-lauf" type="checkbox"><span>Mindestlaufzeit 12 Monate, danach monatlich kündbar.</span></label>
         </div>
         <button class="btn gross" type="button" id="bestellen">Weiter zur Zahlung mit Stripe 🔒</button>
       </div>
