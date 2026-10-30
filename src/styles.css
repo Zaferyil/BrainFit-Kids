@@ -2163,5 +2163,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .insel-burg-platz.schluss .erfolgsburg { width: 82cqw; }
 .inseln > .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw), linear-gradient(to top, transparent, #000 10cqw); mask-composite: intersect; }
 @media (min-width: 761px) { .inseln > .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw), linear-gradient(to top, transparent, #000 10cqw), linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-composite: intersect; } }
-.insel-weg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: visible; }
 .insel-burg-platz.schluss { z-index: 2; }
+.erfolgsburg.frei { position: absolute; translate: none; z-index: 1; }
+.erfolgsburg.frei img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 14%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 14%, #000 88%, transparent); }

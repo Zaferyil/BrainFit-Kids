@@ -8,9 +8,8 @@ import insel5 from '../assets/karte/insel-5.webp'
 // mit ihren Plätzen auf dem Weg, von unten (Start) nach oben. Gibt es mehr Etappen als Bilder,
 // beginnen die Bilder wieder von vorn.
 
-/** oben: hier endet das Bild, wenn die Burg darauf folgt (darüber liegt eine kleine Burg im Bild);
- *  weg: dort verlässt der Weg das Bild – von da führt ein gezeichneter Weg zur Burgtreppe */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; oben?: number; weg?: [number, number] }
+/** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number] }
 
 export const KARTEN: Karte[] = [
   {
@@ -23,8 +22,8 @@ export const KARTEN: Karte[] = [
   },
   {
     bild: insel3, w: 941, h: 1397,
-    plaetze: [[366, 1220], [558, 1060], [297, 817], [535, 682], [701, 912], [663, 542], [331, 422], [292, 305], [430, 262], [575, 330], [748, 228], [0, 0]],
-    oben: 225, weg: [752, 262],
+    plaetze: [[366, 1220], [558, 1060], [297, 817], [535, 682], [701, 912], [663, 542], [331, 422], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]],
+    weg: [331, 300],
   },
   {
     bild: insel4, w: 941, h: 1397,
