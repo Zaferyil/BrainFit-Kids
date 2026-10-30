@@ -2167,3 +2167,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .erfolgsburg.frei { position: absolute; translate: none; z-index: 1; }
 .erfolgsburg.frei img { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 14%, #000 88%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 14%, #000 88%, transparent); }
+/* Insel mit Burg liegt über der nächsten Insel: nur ihre Stationen fangen Klicks, sonst kommt man an die Stationen dahinter */
+.insel .insel-stop { pointer-events: auto; }
