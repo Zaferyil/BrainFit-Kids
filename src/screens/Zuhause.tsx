@@ -48,11 +48,10 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <span className="zh-op plus">+</span><span className="zh-op minus">−</span>
           <span className="zh-op mal">×</span><span className="zh-op geteilt">÷</span>
           <span className="zh-ring" />
-          <span className="zh-perli"><SeZa kidId={kid.id} groesse={170} /></span>
+          <a href="#/seza" className="zh-perli" aria-label="Mein SeZa – anziehen"><SeZa kidId={kid.id} groesse={170} /><span className="zh-anziehen">✏️ Anziehen</span></a>
           <span className="zh-podest" />
         </div>
 
-        <a href="#/seza" className="nk-seza-knopf"><SeZa kidId={kid.id} groesse={44} /> Mein SeZa</a>
         <a href="#/inseln" className="zh-los" aria-label="Los geht’s – zur Karte">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
           <span>Los geht’s</span>
