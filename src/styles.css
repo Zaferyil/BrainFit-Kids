@@ -1722,7 +1722,7 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .rl-ich { display: flex; flex-direction: column; gap: 8px; }
 .rl-zeile { display: flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 20px; background: rgba(255,255,255,.22); color: #fff; font-weight: 900; }
 .rl-zeile.ich { background: #fff; color: #2B2257; box-shadow: 0 0 0 3px #FFC531; }
-.rl-zeile span:not(.rl-init) { flex: 1; } .rl-zeile em { font-style: normal; }
+.rl-zeile span:not(.rl-init):not(.seza-kopf) { flex: 1; } .rl-zeile em { font-style: normal; }
 .rl-motiv { margin: 0; text-align: center; color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 18px; }
 .rl-balken { display: flex; align-items: center; gap: 10px; margin: 8px 0; } .rl-balken span { width: 128px; font-weight: 900; font-size: 14px; } .rl-balken .pk-track { flex: 1; } .rl-balken b { width: 30px; text-align: right; }
 .rl-hinweis { display: flex; gap: 6px; align-items: center; margin: 10px 0 0; font-size: 13px; font-weight: 800; color: #8A5A00; }
@@ -2321,3 +2321,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .seza { overflow: visible; background: none; box-shadow: none; border-radius: 0; }
 .seza-kostuem { filter: drop-shadow(0 8px 10px rgba(30,20,80,.3)); }
 .seza.hg-regenbogen, .seza.hg-weltall { border-radius: 24px; overflow: hidden; }
+.seza-kopf { display: block; flex-shrink: 0; border-radius: 50%; overflow: hidden; background-color: #8FB8FF; background-repeat: no-repeat; background-size: 190% auto; }
+.seza-kopf { flex: 0 0 auto !important; aspect-ratio: 1; }

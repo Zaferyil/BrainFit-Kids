@@ -37,3 +37,12 @@ export function SeZa({ kidId, an, groesse = 220, jubel, className = '' }: Props)
     </div>
   )
 }
+
+/** Runder Kopf-Ausschnitt von SeZa im aktuellen Kostüm (für Avatar, Rangliste, Admin) */
+export function SeZaKopf({ kidId, size, ring }: { kidId: string; size: number; ring?: string }) {
+  const k = artikel(konto(kidId).an.outfit) ?? artikel('original')!
+  return (
+    <span className="seza-kopf" role="img" aria-label="SeZa"
+      style={{ width: size, height: size, minWidth: size, backgroundImage: `url(${k.bild})`, backgroundPosition: k.kopfAusschnitt ?? '55% 22%', boxShadow: ring ? `0 0 0 ${Math.max(2, size / 20)}px ${ring}` : undefined }} />
+  )
+}

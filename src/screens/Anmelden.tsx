@@ -1,10 +1,8 @@
+import { SeZa } from '../components/SeZa'
 import { useState, type FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { getProgress } from '../lib/progress'
 import { nextStop } from '../lib/mapPath'
-import { FIGUREN, figurVon, kidPhoto, setFigur } from '../data/kinderBilder'
-import { klassenNeuAufbauen } from '../data/demo'
-import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
@@ -14,7 +12,7 @@ import { hatStimme, speak } from '../lib/speak'
 import { load, save } from '../lib/storage'
 
 
-const STEPS = ['Anmelden', 'Wähle deine Figur', 'Schulstufe']
+const STEPS = ['Anmelden', 'Schulstufe']
 
 // Neue Namen haben keine Aufnahme: dann nur die Frage sprechen, nie mit der Telefonstimme
 const klasseFrage = (name: string) => (hatStimme(`Hallo ${name}!`) ? [`Hallo ${name}!`, 'In welche Klasse gehst du?'] : ['In welche Klasse gehst du?'])
@@ -31,16 +29,14 @@ export function Anmelden() {
   const [schoolClass, setSchoolClass] = useState<SchoolClass | null>(null)
   const [kid, setKid] = useState<Kid | null>(null)
   const [stufe, setStufe] = useState<number | null>(null)
-  const [, neu] = useState(0)
 
-  const step = !schoolClass || !kid ? 0 : !figurVon(kid.id) ? 1 : stufe === null ? 2 : 3
+  const step = !schoolClass || !kid ? 0 : stufe === null ? 1 : 2
   const instruction = [
     'Gib deinen Benutzernamen und dein Passwort ein.',
-    'Wähle deine Figur! Tippe auf dein Bild.',
     `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
-    'Tippe deine vier Bilder.',
+    '',
   ][step]
-  const instructionSay = step === 2 ? klasseFrage(kid?.name ?? '') : instruction
+  const instructionSay = step === 1 ? klasseFrage(kid?.name ?? '') : instruction
 
   return (
     <Stage className="nk" background="var(--nk-sky)">
@@ -57,15 +53,7 @@ export function Anmelden() {
         </div>
 
         {schoolClass && kid ? (
-          !figurVon(kid.id) ? (
-            <FigurPicker key="figur" kid={kid} onPick={(f) => {
-              setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1)
-              // Schulstufe schon beim Kauf angegeben? Dann nicht nochmal fragen
-              const bekannt = getStufe(kid.id)
-              if (bekannt !== null) { saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(bekannt); return }
-              void speak(klasseFrage(kid.name))
-            }} />
-          ) : stufe === null ? (
+          stufe === null ? (
             <StufePicker key="stufe" kid={kid} onBack={() => { setKid(null); setSchoolClass(null) }} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
             <section className="nk-step popin"><LosPopup kid={kid} /></section>
@@ -73,11 +61,11 @@ export function Anmelden() {
         ) : (
           <LoginForm onLogin={(c, k) => {
             setSchoolClass(c); setKid(k)
-            // Figur und Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
-            const bekannt = figurVon(k.id) ? getStufe(k.id) : null
+            // Schulstufe schon gewählt? Dann direkt los – nichts nochmal fragen
+            const bekannt = getStufe(k.id)
             if (bekannt !== null) { saveSession({ classCode: c.code, kidId: k.id }); setStufe(bekannt); return }
             setStufe(null)
-            void speak(figurVon(k.id) ? klasseFrage(k.name) : 'Wähle deine Figur! Tippe auf dein Bild.')
+            void speak(klasseFrage(k.name))
           }} />
         )}
       </div>
@@ -146,7 +134,7 @@ function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) =>
   return (
     <section className="nk-step popin" aria-labelledby="nk-stufe">
       <header className="nk-title">
-        <Avatar size={84} {...kid.avatar} photo={(() => { const f = figurVon(kid.id); return f ? kidPhoto(f) : kid.avatar.photo })()} />
+        <SeZa kidId={kid.id} groesse={110} />
         <p>Hallo {kid.name}!</p>
         <h1 id="nk-stufe">In welche Klasse gehst du?</h1>
       </header>
@@ -185,21 +173,3 @@ function LosPopup({ kid }: { kid: Kid }) {
   )
 }
 
-/** Erster Login: Das Kind sucht sich seine Figur aus */
-function FigurPicker({ kid, onPick }: { kid: Kid; onPick: (f: string) => void }) {
-  return (
-    <section className="nk-step popin" aria-labelledby="nk-figur">
-      <header className="nk-title">
-        <h1 id="nk-figur">Hallo {kid.name}!</h1>
-        <p>Wähle deine Figur! Tippe auf dein Bild.</p>
-      </header>
-      <div className="nk-kids">
-        {FIGUREN.map((f, i) => (
-          <button key={f} type="button" className="nk-kid" style={{ rotate: `${NEIGUNG[i % NEIGUNG.length]}deg` }} onClick={() => onPick(f)} aria-label={`Figur ${i + 1}`}>
-            <img src={kidPhoto(f)} alt="" />
-          </button>
-        ))}
-      </div>
-    </section>
-  )
-}

@@ -1,5 +1,4 @@
 import type { Hat } from '../components/Avatar'
-import { figurVon, kidPhoto } from './kinderBilder'
 import type { IconName } from '../components/Icon'
 
 // Beispieldaten, bis Supabase angebunden ist.
@@ -26,7 +25,7 @@ export type Kid = {
   /** Login für Kinder: Benutzername und Passwort (vom System vergeben) */
   benutzer?: string
   passwort?: string
-  avatar: { hat: Hat; hatColor: string; shirt: string; hair: string; skin: string; glasses?: boolean; photo?: string }
+  avatar: { seza?: string; hat: Hat; hatColor: string; shirt: string; hair: string; skin: string; glasses?: boolean; photo?: string }
 }
 
 export type SchoolClass = { code: string; kids: Kid[] }
@@ -36,14 +35,14 @@ const BASIS: SchoolClass[] = [
   {
     code: 'LINZ-7K',
     kids: [
-      { id: 'lena', name: 'Lena', birthYear: 2018, password: ['stern', 'herz', 'blitz', 'krone'], avatar: { photo: kidPhoto('lena'), hat: 'cap', hatColor: '#FF4D6D', shirt: '#3BA7FF', hair: '#6B3E1F', skin: '#F6C9A6' } },
-      { id: 'jonas', name: 'Jonas', birthYear: 2017, password: ['pfote', 'pfote', 'stern', 'buch'], avatar: { photo: kidPhoto('jonas'), hat: 'phones', hatColor: '#3DBE5B', shirt: '#FF8A1F', hair: '#E9B949', skin: '#F6C9A6' } },
-      { id: 'elif', name: 'Elif', birthYear: 2019, password: ['herz', 'geschenk', 'herz', 'diamant'], avatar: { photo: kidPhoto('elif'), hat: 'band', hatColor: '#A06BFF', shirt: '#3DBE5B', hair: '#231A4F', skin: '#E0A47A' } },
-      { id: 'noah', name: 'Noah', birthYear: 2016, password: ['feuer', 'blitz', 'feuer', 'blitz'], avatar: { photo: kidPhoto('noah'), hat: 'none', hatColor: '#FF4D6D', shirt: '#A06BFF', hair: '#231A4F', skin: '#7A4A2E' } },
-      { id: 'mia', name: 'Mia', birthYear: 2020, password: ['krone', 'krone', 'herz', 'stern'], avatar: { photo: kidPhoto('mia'), hat: 'crown', hatColor: '#FFC531', shirt: '#FF4D6D', hair: '#C2410C', skin: '#F6C9A6' } },
-      { id: 'ben', name: 'Ben', birthYear: 2015, password: ['buch', 'diamant', 'stern', 'pfote'], avatar: { photo: kidPhoto('ben'), hat: 'none', hatColor: '#FF4D6D', shirt: '#3BA7FF', hair: '#6B3E1F', skin: '#B9774E', glasses: true } },
-      { id: 'emma', name: 'Emma', birthYear: 2017, password: ['geschenk', 'stern', 'geschenk', 'stern'], avatar: { photo: kidPhoto('emma'), hat: 'wizard', hatColor: '#5B47D6', shirt: '#FFC531', hair: '#E9B949', skin: '#F6C9A6' } },
-      { id: 'can', name: 'Can', birthYear: 2018, password: ['blitz', 'diamant', 'feuer', 'krone'], avatar: { photo: kidPhoto('can'), hat: 'cap', hatColor: '#3BA7FF', shirt: '#3DBE5B', hair: '#231A4F', skin: '#E0A47A' } },
+      { id: 'lena', name: 'Lena', birthYear: 2018, password: ['stern', 'herz', 'blitz', 'krone'], avatar: { hat: 'cap', hatColor: '#FF4D6D', shirt: '#3BA7FF', hair: '#6B3E1F', skin: '#F6C9A6' } },
+      { id: 'jonas', name: 'Jonas', birthYear: 2017, password: ['pfote', 'pfote', 'stern', 'buch'], avatar: { hat: 'phones', hatColor: '#3DBE5B', shirt: '#FF8A1F', hair: '#E9B949', skin: '#F6C9A6' } },
+      { id: 'elif', name: 'Elif', birthYear: 2019, password: ['herz', 'geschenk', 'herz', 'diamant'], avatar: { hat: 'band', hatColor: '#A06BFF', shirt: '#3DBE5B', hair: '#231A4F', skin: '#E0A47A' } },
+      { id: 'noah', name: 'Noah', birthYear: 2016, password: ['feuer', 'blitz', 'feuer', 'blitz'], avatar: { hat: 'none', hatColor: '#FF4D6D', shirt: '#A06BFF', hair: '#231A4F', skin: '#7A4A2E' } },
+      { id: 'mia', name: 'Mia', birthYear: 2020, password: ['krone', 'krone', 'herz', 'stern'], avatar: { hat: 'crown', hatColor: '#FFC531', shirt: '#FF4D6D', hair: '#C2410C', skin: '#F6C9A6' } },
+      { id: 'ben', name: 'Ben', birthYear: 2015, password: ['buch', 'diamant', 'stern', 'pfote'], avatar: { hat: 'none', hatColor: '#FF4D6D', shirt: '#3BA7FF', hair: '#6B3E1F', skin: '#B9774E', glasses: true } },
+      { id: 'emma', name: 'Emma', birthYear: 2017, password: ['geschenk', 'stern', 'geschenk', 'stern'], avatar: { hat: 'wizard', hatColor: '#5B47D6', shirt: '#FFC531', hair: '#E9B949', skin: '#F6C9A6' } },
+      { id: 'can', name: 'Can', birthYear: 2018, password: ['blitz', 'diamant', 'feuer', 'krone'], avatar: { hat: 'cap', hatColor: '#3BA7FF', shirt: '#3DBE5B', hair: '#231A4F', skin: '#E0A47A' } },
     ],
   },
 ]
@@ -66,7 +65,7 @@ export function ladeSchule(): Schule {
 export function alleKinder(sch = ladeSchule()) {
   const basis = BASIS.flatMap((c) => c.kids.map((kid) => ({ kid, klasse: c.code })))
   return [...basis, ...sch.kinder.map(({ klasse, ...kid }) => ({ kid: kid as Kid, klasse }))]
-    .map(({ kid, klasse }) => { const f = figurVon(kid.id); return { kid: f ? { ...kid, avatar: { ...kid.avatar, photo: kidPhoto(f) } } : kid, klasse: sch.wechsel[kid.id] ?? klasse, archiviert: sch.archiv.includes(kid.id) } })
+    .map(({ kid, klasse }) => ({ kid: { ...kid, avatar: { ...kid.avatar, photo: undefined, seza: kid.id } }, klasse: sch.wechsel[kid.id] ?? klasse, archiviert: sch.archiv.includes(kid.id) }))
 }
 
 /** Aktive Klassen mit ihren Kindern (archivierte Kinder fehlen); wird nach jeder Änderung neu gefüllt */

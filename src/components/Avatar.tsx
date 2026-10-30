@@ -1,3 +1,5 @@
+import { SeZaKopf } from './SeZa'
+
 export type Hat = 'none' | 'cap' | 'crown' | 'wizard' | 'phones' | 'band'
 
 type Props = {
@@ -12,12 +14,15 @@ type Props = {
   bg?: string
   /** Bild des Kindes; ersetzt die gezeichnete Figur */
   photo?: string
+  /** Kind-ID: zeigt den SeZa des Kindes (mit Kostüm) – Standard für alle Kinder */
+  seza?: string
 }
 
 export function Avatar({
   size = 160, skin = '#F6C9A6', hair = '#6B3E1F', shirt = '#3BA7FF', hat = 'none',
-  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6', photo,
+  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6', photo, seza,
 }: Props) {
+  if (seza) return <SeZaKopf kidId={seza} size={size} ring={belt} />
   if (photo) {
     return (
       <img

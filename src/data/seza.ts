@@ -42,6 +42,8 @@ export type Artikel = {
   bild?: string
   /** Kostüm: Bild und Anker */
   anker?: Anker
+  /** Bildausschnitt fürs runde Kopfbild (CSS background-position) */
+  kopfAusschnitt?: string
   /** Effekte und Hintergründe werden mit CSS gezeichnet */
   css?: string
   aktiv?: boolean
@@ -50,7 +52,7 @@ export type Artikel = {
 }
 
 const KOSTUEME: Artikel[] = [
-  { id: 'original', name: 'SeZa Original', slot: 'outfit', preis: 0, waehrung: 'sterne', bild: original,
+  { id: 'original', name: 'SeZa Original', slot: 'outfit', preis: 0, waehrung: 'sterne', bild: original, kopfAusschnitt: '58% 18%',
     anker: { augen: { x: .53, y: .41, b: .5 }, hand: { x: .9, y: .53, b: .3, r: 14 }, ruecken: { x: .14, y: .6 }, fuesse: { x: .5, y: .93 }, begleiter: { x: .86, y: .86 } } },
   { id: 'astronaut', name: 'Astronaut', slot: 'outfit', preis: 450, waehrung: 'sterne', bild: astronaut,
     anker: { augen: { x: .52, y: .57, b: .33 }, hand: { x: .87, y: .74, b: .26, r: 10 }, ruecken: { x: .16, y: .66 }, fuesse: { x: .5, y: .96 }, begleiter: { x: .14, y: .86 } } },
