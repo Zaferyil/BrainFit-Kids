@@ -3,7 +3,7 @@ import { Icon } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { SeZa } from '../components/SeZa'
 import { Stage } from '../components/Stage'
-import { passt, SLOT_NAME, WARUM_NICHT, type Artikel, type Slot } from '../data/seza'
+import { passt, WARUM_NICHT, type Artikel, type Slot } from '../data/seza'
 import type { Kid } from '../data/demo'
 import { getProgress } from '../lib/progress'
 import { alleArtikel, anziehen, artikel, ausziehen, kaufen, konto, type Ausstattung } from '../lib/wirtschaft'
@@ -79,22 +79,22 @@ export function MeinSeZa({ kid }: { kid: Kid }) {
             const ok = a.slot === 'outfit' || passt(kostuem, a)
             const genug = a.waehrung === 'sterne' ? k.sterne >= a.preis : p.gems >= a.preis
             return (
-              <article key={a.id} className={`sz-karte ${traegt ? 'an' : ''}`}>
-                <div className={`sz-bild ${a.css ? `fx-${a.css}` : ''}`}>{a.bild ? <img src={a.bild} alt="" /> : <span>✨</span>}</div>
-                <b>{a.name}</b>
-                <small>{SLOT_NAME[a.slot]}</small>
-                <div className="sz-preis">{a.preis === 0 ? 'Kostenlos' : <>{a.waehrung === 'sterne' ? '⭐' : '💎'} {a.preis}</>}</div>
+              <article key={a.id} className={`sz-karte ${traegt ? 'an' : ''} ${hat ? 'hat' : ''}`}>
+                <button type="button" className="sz-bild" onClick={() => anprobieren(a)} aria-label={`${a.name} anprobieren`}>
+                  {a.bild ? <img src={a.bild} alt="" loading="lazy" /> : <span>✨</span>}
+                  {traegt && <i className="sz-haken" aria-label="angezogen">✓</i>}
+                  {!hat && <i className="sz-schloss" aria-hidden="true">🔒</i>}
+                </button>
+                <b title={a.name}>{a.name}</b>
                 {hat ? (
                   traegt ? (a.slot === 'outfit' ? <span className="sz-status">Angezogen</span>
                     : <button type="button" className="sz-btn" onClick={() => { ausziehen(kid.id, a.slot); neu((x) => x + 1) }}>Ausziehen</button>)
                     : <button type="button" className="sz-btn gruen" disabled={!ok} onClick={() => { if (anziehen(kid.id, a.id)) { setProbe(null); freuen('Super, so gefalle ich mir!') } neu((x) => x + 1) }}>{ok ? 'Anziehen' : 'Passt nicht'}</button>
                 ) : (
-                  <>
-                    <button type="button" className="sz-btn" onClick={() => anprobieren(a)}>Anprobieren</button>
-                    <button type="button" className="sz-btn gelb" disabled={!genug} onClick={() => setFrage(a)}>{genug ? 'Freischalten' : a.waehrung === 'sterne' ? 'Nicht genug Sterne' : 'Nicht genug Diamanten'}</button>
-                  </>
+                  <button type="button" className="sz-btn gelb" disabled={!genug} onClick={() => setFrage(a)} title={genug ? 'Freischalten' : a.waehrung === 'sterne' ? 'Nicht genug Sterne' : 'Nicht genug Diamanten'}>
+                    {a.waehrung === 'sterne' ? '⭐' : '💎'} {a.preis}
+                  </button>
                 )}
-                {hat && !traegt && <small className="sz-hat">Bereits freigeschaltet</small>}
               </article>
             )
           })}

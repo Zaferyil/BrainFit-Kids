@@ -1,4 +1,3 @@
-import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
@@ -75,7 +74,6 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
     <Stage background={BG}>
       <Funkeln />
       <div className="dp ich">
-        <div className="ich-bild"><Avatar size={130} {...kid.avatar} /></div>
         <a href="#/seza" className="ich-seza"><SeZa kidId={kid.id} groesse={120} /><span><b>Mein SeZa</b><small>⭐ {konto(kid.id).sterne} · 💎 {progress.gems}</small><em>Kostüme &amp; Accessoires →</em></span></a>
         <h1>{kid.name}</h1>
         <p>{stufe !== null ? STUFE[stufe] : 'Klasse nicht gewählt'} · Level {progress.level}</p>

@@ -2329,3 +2329,22 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .nk-seza-wahl .seza { max-height: 220px; }
 .nk-seza-wahl .seza-kostuem { max-height: 220px; width: auto; max-width: 100%; margin: 0 auto; }
 .nk-seza-tipp { margin: 6px 0 0; color: #fff; font-weight: 800; text-align: center; }
+
+/* Mein SeZa: kompakter Shop, viele Artikel nebeneinander */
+.sz { width: min(100%, 1100px); }
+.sz-buehne .seza { width: min(240px, 58vw) !important; }
+.sz-raster { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.sz-karte { gap: 6px; padding: 8px 8px 10px; border-radius: 18px; box-shadow: 0 4px 0 rgba(30,20,80,.2); transition: transform .15s; }
+.sz-karte:hover { transform: translateY(-3px); }
+.sz-karte.an { outline: 3px solid #3DBE5B; }
+.sz-bild { position: relative; width: 100%; aspect-ratio: 1; padding: 6px; border: 0; border-radius: 14px; background: radial-gradient(circle at 50% 40%, #FFFFFF, #ECE8FF); cursor: pointer; display: grid; place-items: center; overflow: hidden; }
+.sz-bild img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.sz-karte:not(.hat) .sz-bild img { filter: saturate(.85); }
+.sz-haken, .sz-schloss { position: absolute; right: 5px; top: 5px; font-style: normal; font-size: 12px; line-height: 1; }
+.sz-haken { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 50%; background: #3DBE5B; color: #fff; font-weight: 900; }
+.sz-karte b { width: 100%; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sz-btn { padding: 7px 6px; font-size: 13px; }
+.sz-status { padding: 6px 0; font-size: 13px; }
+@media (max-width: 520px) { .sz-raster { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; } .sz-karte { padding: 5px 5px 7px; border-radius: 14px; } .sz-karte b { font-size: 10.5px; } .sz-btn { font-size: 11px; padding: 6px 2px; } .sz-status { font-size: 11px; } }
+.sz-raster { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); } @media (min-width: 521px) { .sz-raster { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 521px) { .sz-raster { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); max-width: 960px; margin: 0 auto; width: 100%; } } @media (min-width: 521px) and (max-width: 700px) { .sz-raster { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
