@@ -47,7 +47,7 @@ export function Anmelden() {
       <Funkeln />
       <div className="nk-login">
         <div className="nk-top">
-          <a href="#/" className="nk-round ghost" aria-label="Zurück"><Icon name="left" color="#FFFFFF" size={22} strokeWidth={3} /></a>
+          <a href="../index.html" className="nk-round ghost" aria-label="Zurück zur Website"><Icon name="left" color="#FFFFFF" size={22} strokeWidth={3} /></a>
           <ol className="nk-dots" aria-label={`Schritt ${step + 1} von ${STEPS.length}: ${STEPS[step]}`}>
             {STEPS.map((label, i) => <li key={label} className={i < step ? 'done' : i === step ? 'current' : ''} />)}
           </ol>

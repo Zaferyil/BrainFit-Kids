@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Start } from './screens/Start'
 import { AbakusTest } from './screens/AbakusTest'
 import { Studio } from './studio/Studio'
 import { Placeholder } from './screens/Placeholder'
@@ -63,14 +62,16 @@ function useRoute() {
 }
 
 export default function App() {
-  const route = useRoute()
+  const roh = useRoute()
+  // Keine eigene Startseite mehr: die Website führt hierher. Angemeldet → Karte, sonst Anmelden
+  const s = roh === '' ? getSession() : null
+  const route = roh === '' ? (s && findKid(s.classCode, s.kidId) ? 'inseln' : 'anmelden') : roh
   // Link von der Website: #lernen-KLASSENCODE → direkt „Wähle deine Figur“
   if (route.startsWith('lernen-')) {
     try { localStorage.setItem('bfk.classCode', JSON.stringify(route.slice(7).toUpperCase())) } catch { /* egal */ }
     window.location.replace('#/anmelden')
     return null
   }
-  if (route === '') return <Start />
   if (route === 'anmelden') return <Anmelden />
   if (route === 'abakus-test') return <AbakusTest />
   if (route === 'admin') return <Admin />
