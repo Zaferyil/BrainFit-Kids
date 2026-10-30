@@ -14,7 +14,7 @@ import burgWelt2 from '../assets/karte/erfolgsburg-welt2.webp'
 import burgWelt3 from '../assets/karte/erfolgsburg-welt3.webp'
 
 /** Burgbild je abgeschlossener Welt, mit Seitenverhältnis (Höhe / Breite) */
-const BURGEN: Record<number, { bild: string; hoch: number }> = { 1: { bild: burgWelt2, hoch: 429 / 600 }, 2: { bild: burgWelt3, hoch: 430 / 700 } }
+const BURGEN: Record<number, { bild: string; hoch: number }> = { 1: { bild: burgWelt2, hoch: 429 / 600 }, 2: { bild: burgWelt3, hoch: 564 / 760 } }
 const burgVon = (welt: number) => BURGEN[welt] ?? { bild: burgBild, hoch: 429 / 600 }
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
@@ -127,18 +127,44 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const oben = ys.length ? Math.min(...ys) : karte.h
             // Burg nach der letzten Station dieser Insel: Treppe endet kurz über der Station, Burg 82 % breit und ganz im Bild
             const burg = burgNach.get(start + anzahl - 1) ?? null
+            const hoch = karte.w * 0.82 * (burg ? burgVon(burg.welt).hoch : 0.715)
+            // Mit „oben“ und „weg“: das Bild endet bei „oben“, ein gezeichneter Weg führt über das Wasser zur Burg,
+            // die letzte Station liegt auf diesem Weg. Sonst steht die Burg direkt über der letzten Station.
+            const mitWeg = !!(burg && karte.oben !== undefined && karte.weg)
+            const cut = mitWeg ? karte.oben! : 0
             const [bx, by] = karte.plaetze[anzahl - 1] ?? [karte.w / 2, oben]
-            const burgX = Math.min(59, Math.max(41, (bx / karte.w) * 100))
-            const burgUnten = by - karte.w * 0.045
-            const platz = burgUnten - karte.w * (0.82 * (burg ? burgVon(burg.welt).hoch : 0.715) + 0.015)
+            const burgX = mitWeg ? 52 : Math.min(59, Math.max(41, (bx / karte.w) * 100))
+            const burgUnten = mitWeg ? cut - karte.w * 0.2 : by - karte.w * 0.045
+            const platz = burgUnten - hoch - karte.w * 0.015
             // Mit Burg bekommt die Insel oben so viel Wasser dazu, wie die Burg braucht (negativer Schnitt);
             // die oberste Insel ohne Burg endet kurz über der letzten Station
             const schnitt = burg ? Math.min(0, platz) : letzte ? Math.max(0, oben - karte.h * 0.21) : 0
             const hoehe = karte.h - schnitt
+            // Weg: vom Bildrand über die letzte Station bis unter die Treppe
+            const treppe: [number, number] = mitWeg ? [(burgX / 100) * karte.w - karte.w * 0.02, burgUnten - karte.w * 0.08] : [(burgX / 100) * karte.w, burgUnten]
+            const wegStation: [number, number] | null = mitWeg ? [karte.weg![0] * 0.4 + treppe[0] * 0.6 + karte.w * 0.07, karte.weg![1] * 0.4 + treppe[1] * 0.6] : null
+            const platzVon = (i: number): [number, number] => (wegStation && i === anzahl - 1 ? wegStation : karte.plaetze[i])
+            const bildMaske = cut ? `linear-gradient(to bottom, transparent ${(cut / karte.w) * 100}cqw, #000 ${(cut / karte.w) * 100 + 6}cqw)${letzte ? '' : ', linear-gradient(to top, transparent, #000 10cqw)'}` : undefined
             return (
             <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: teile.length - k, aspectRatio: `${karte.w} / ${hoehe}` }}>
-              <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
-              {karte.plaetze.map(([x, y], i) => {
+              <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw`, ...(bildMaske ? { maskImage: bildMaske, WebkitMaskImage: bildMaske, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' } : {}) }} />
+              {mitWeg && wegStation && (
+                <svg className="insel-weg" viewBox={`0 ${schnitt} ${karte.w} ${hoehe}`} preserveAspectRatio="none" aria-hidden="true">
+                  {(() => {
+                    const [x0, y0] = karte.weg!, [x1, y1] = wegStation, [x2, y2] = treppe
+                    const d = `M${x0},${y0 + 40} C${x0 + 30},${y0 - 60} ${x1 + 60},${y1 + 70} ${x1},${y1} S${x2},${y2 + 90} ${x2},${y2}`
+                    return (<>
+                      <path d={d} fill="none" stroke="#3E9A3A" strokeWidth={150} strokeLinecap="round" opacity={0.35} />
+                      <path d={d} fill="none" stroke="#6CC04A" strokeWidth={132} strokeLinecap="round" />
+                      <path d={d} fill="none" stroke="#D9AE5C" strokeWidth={96} strokeLinecap="round" />
+                      <path d={d} fill="none" stroke="#F6D88E" strokeWidth={84} strokeLinecap="round" />
+                      <path d={d} fill="none" stroke="#FFFFFF" strokeWidth={6} strokeDasharray="26 22" strokeLinecap="round" opacity={0.85} />
+                    </>)
+                  })()}
+                </svg>
+              )}
+              {karte.plaetze.map((_, i) => {
+                const [x, y] = platzVon(i)
                 const s = nurStops[start + i]
                 const pos = { left: `${(x / karte.w) * 100}%`, top: `${((y - schnitt) / hoehe) * 100}%` }
                 if (!s) return null
