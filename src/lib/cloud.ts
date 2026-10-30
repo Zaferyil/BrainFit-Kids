@@ -1,12 +1,26 @@
 import { supabase } from './supabase'
 import { CLASSES, ladeSchule, speichereSchule, type Kid } from '../data/demo'
-import { save } from './storage'
+import { beimSpeichern, load, save } from './storage'
+import { istCloudKind } from './serverRpc'
 
-// Anmeldung über Supabase: Kinder haben die interne Adresse <benutzer>@kinder.brainfit-kids.at.
-// Das angemeldete Kind wird zusätzlich auf diesem Gerät angelegt, damit die App wie bisher läuft;
-// das Speichern von Fortschritt und Guthaben in der Datenbank folgt im nächsten Schritt.
+// Anmeldung über Supabase und Abgleich der Lerndaten.
+// • Lerndaten (Fortschritt, Tagesziel, Hausaufgaben, Stufe, Einstellungen …) liegen als JSON in „fortschritt“.
+//   Jede Änderung wird nach kurzer Pause hochgeladen; bei der Anmeldung wird der Stand vom Server geladen.
+// • Sterne, Diamanten, Besitz und Ausstattung gehören dem Server (Tabellen konten/besitz/buchungen);
+//   die App zeigt eine Kopie, die bei der Anmeldung und nach Käufen neu geladen wird.
 
 const KLASSE = 'ONLINE'
+const KONTO = (id: string) => `bfk.konto.${id}`
+
+/** alle Schlüssel dieses Kindes außer dem Konto (das gehört dem Server) */
+function lernSchluessel(kidId: string) {
+  const out: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)!
+    if (k.startsWith('bfk.') && k.endsWith(`.${kidId}`) && k !== KONTO(kidId)) out.push(k)
+  }
+  return out
+}
 
 export async function cloudLogin(benutzer: string, passwort: string) {
   const email = `${benutzer.trim().toLowerCase()}@kinder.brainfit-kids.at`
@@ -23,10 +37,66 @@ export async function cloudLogin(benutzer: string, passwort: string) {
     }
     speichereSchule({ ...sch, klassen: sch.klassen.includes(KLASSE) ? sch.klassen : [...sch.klassen, KLASSE], kinder: [...sch.kinder, kid] })
   }
-  if (k.stufe !== null && k.stufe !== undefined) save(`bfk.stufe.${k.id}`, k.stufe)
+  await herunterladen(k.id)
+  if (k.stufe !== null && k.stufe !== undefined && load(`bfk.stufe.${k.id}`, null) === null) save(`bfk.stufe.${k.id}`, k.stufe)
   const klasse = CLASSES.find((c) => c.code === KLASSE)
   const kid = klasse?.kids.find((x) => x.id === k.id)
   return klasse && kid ? { klasse, kid } : null
 }
+
+let laeuft = false
+/** Stand vom Server holen: Lerndaten und Konto */
+export async function herunterladen(kidId: string) {
+  laeuft = true
+  try {
+    const { data: f } = await supabase.from('fortschritt').select('daten').eq('kind', kidId).maybeSingle()
+    for (const [k, v] of Object.entries((f?.daten ?? {}) as Record<string, unknown>)) save(k, v)
+    await kontoLaden(kidId)
+  } finally { laeuft = false }
+}
+
+/** Konto (Sterne, Diamanten, Besitz, Ausstattung, Buchungen) vom Server in die lokale Kopie */
+export async function kontoLaden(kidId: string) {
+  const [{ data: kt }, { data: bs }, { data: bu }] = await Promise.all([
+    supabase.from('konten').select('sterne, diamanten, ausstattung, start_gewaehlt').eq('kind', kidId).maybeSingle(),
+    supabase.from('besitz').select('artikel').eq('kind', kidId),
+    supabase.from('buchungen').select('id, art, grund, sterne, diamanten, artikel, zeit').eq('kind', kidId).order('zeit'),
+  ])
+  const vorher = load<Record<string, unknown>>(KONTO(kidId), {})
+  save(KONTO(kidId), {
+    ...vorher,
+    sterne: kt?.sterne ?? 0,
+    besitz: (bs ?? []).map((b) => b.artikel),
+    an: kt?.ausstattung ?? { outfit: 'original' },
+    buchungen: (bu ?? []).map((b) => ({ ...b, zeit: b.zeit })),
+  })
+  if (kt?.start_gewaehlt) save(`bfk.seza-start.${kidId}`, true)
+  const pk = `bfk.progress.${kidId}`
+  const p = load<Record<string, unknown>>(pk, {})
+  save(pk, { ...p, gems: kt?.diamanten ?? 0 })
+}
+
+// Hochladen: nach jeder Änderung an Lerndaten eines Datenbank-Kindes, gesammelt nach 2 Sekunden
+const offen = new Set<string>()
+let timer: number | undefined
+beimSpeichern((key) => {
+  if (laeuft) return
+  const m = key.match(/\.([0-9a-f]{8}-[0-9a-f-]{27})$/)
+  if (!m || !istCloudKind(m[1]) || key === KONTO(m[1])) return
+  offen.add(m[1])
+  window.clearTimeout(timer)
+  timer = window.setTimeout(hochladen, 2000)
+})
+
+async function hochladen() {
+  const ids = [...offen]; offen.clear()
+  for (const id of ids) {
+    const daten = Object.fromEntries(lernSchluessel(id).map((k) => [k, load(k, null)]))
+    const { error } = await supabase.from('fortschritt').upsert({ kind: id, daten, geaendert: new Date().toISOString() })
+    if (error) console.warn('Fortschritt nicht gespeichert:', error.message)
+  }
+}
+// beim Schließen der Seite noch schnell speichern
+window.addEventListener('pagehide', () => { if (offen.size) void hochladen() })
 
 export const cloudLogout = () => supabase.auth.signOut()

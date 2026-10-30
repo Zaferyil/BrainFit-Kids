@@ -8,6 +8,10 @@ export function load<T>(key: string, fallback: T): T {
   }
 }
 
+/** Wer bei jeder Änderung Bescheid bekommt (Abgleich mit der Datenbank) */
+let beobachter: ((key: string) => void) | null = null
+export const beimSpeichern = (f: (key: string) => void) => { beobachter = f }
+
 export function save(key: string, value: unknown) {
   try {
     if (value === null) localStorage.removeItem(key)
@@ -15,4 +19,5 @@ export function save(key: string, value: unknown) {
   } catch {
     // ohne Speicher geht es trotzdem weiter
   }
+  beobachter?.(key)
 }

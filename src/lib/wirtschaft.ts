@@ -1,6 +1,7 @@
 import { START_KOSTUEM, START_KOSTUEME, STANDARD_ARTIKEL, passt, type Artikel, type Slot } from '../data/seza'
 import { getProgress, saveProgress } from './progress'
 import { load, save } from './storage'
+import { istCloudKind, rpc } from './serverRpc'
 
 // Belohnungs-Wirtschaft für SeZa: XP (Level, nicht ausgebbar), Sterne (Shop-Währung), Diamanten (selten).
 // Diamanten sind das bestehende „gems“-Guthaben im Fortschritt, XP bleibt wie bisher. Sterne sind neu.
@@ -57,10 +58,13 @@ export function konto(kidId: string): Konto {
 export const startGewaehlt = (kidId: string) => load<boolean>(`bfk.seza-start.${kidId}`, false)
 export function startWaehlen(kidId: string, id: string) {
   const k = konto(kidId)
-  if (START_KOSTUEME.some((a) => a.id === id)) speichere(kidId, { ...k, an: { ...k.an, outfit: id } })
+  if (START_KOSTUEME.some((a) => a.id === id)) { speichere(kidId, { ...k, an: { ...k.an, outfit: id } }); ausstattungSenden(kidId, { ...k.an, outfit: id }) }
   save(`bfk.seza-start.${kidId}`, true)
 }
 const speichere = (kidId: string, k: Konto) => save(key(kidId), k)
+// Datenbank-Kinder: der Server führt das Konto; nach einer Änderung dort neu laden
+const nachladen = (kidId: string) => void import('./cloud').then((c) => c.kontoLaden(kidId))
+const ausstattungSenden = (kidId: string, an: Ausstattung) => { if (istCloudKind(kidId)) void rpc('anziehen', { p_ausstattung: an }) }
 
 export const diamanten = (kidId: string) => getProgress(kidId).gems
 
@@ -81,6 +85,8 @@ export function belohnen(kidId: string, art: BelohnungsArt, id: string, text?: s
   const b: Buchung = { id: bid, zeit: new Date().toISOString(), art: 'belohnung', grund: BELOHNUNG_NAME[art], sterne, diamanten: dia }
   speichere(kidId, { ...k, sterne: k.sterne + sterne, buchungen: [...k.buchungen, b] })
   if (dia) { const p = getProgress(kidId); saveProgress(kidId, { ...p, gems: p.gems + dia }) }
+  // Datenbank-Kind: der Server bucht dieselbe Belohnung (dort ebenfalls nur einmal je id) und ist maßgeblich
+  if (istCloudKind(kidId)) void rpc('belohnen', { p_art: art, p_id: id }).then(() => nachladen(kidId))
   const e = { sterne, diamanten: dia, text: text ?? (sterne ? `Super gemacht! Du hast ${sterne} Sterne verdient!` : `Wow! Du hast ${dia} ${dia === 1 ? 'Diamant' : 'Diamanten'} bekommen!`) }
   melden(e)
   return e
@@ -105,6 +111,8 @@ export function kaufen(kidId: string, id: string): KaufErgebnis {
   const b: Buchung = { id: `kauf:${id}`, zeit: new Date().toISOString(), art: 'kauf', grund: a.name, artikel: id,
     sterne: a.waehrung === 'sterne' ? -preis : 0, diamanten: a.waehrung === 'diamanten' ? -preis : 0 }
   speichere(kidId, { ...k, sterne: a.waehrung === 'sterne' ? k.sterne - preis : k.sterne, besitz: [...k.besitz, id], buchungen: [...k.buchungen, b] })
+  // Datenbank-Kind: der Server prüft und bucht noch einmal (atomar); danach gilt sein Stand
+  if (istCloudKind(kidId)) void rpc('kaufen', { p_artikel: id }).then(() => nachladen(kidId))
   return { ok: true }
 }
 
@@ -118,6 +126,7 @@ export function anziehen(kidId: string, id: string): boolean {
   if (a.slot === 'outfit') for (const s of Object.keys(an) as Slot[]) { const x = artikel(an[s]); if (s !== 'outfit' && x && !passt(a, x)) delete an[s] }
   else if (!passt(artikel(k.an.outfit), a)) return false
   speichere(kidId, { ...k, an })
+  ausstattungSenden(kidId, an)
   return true
 }
 export function ausziehen(kidId: string, slot: Slot) {
@@ -126,6 +135,7 @@ export function ausziehen(kidId: string, slot: Slot) {
   const an = { ...k.an }
   delete an[slot]
   speichere(kidId, { ...k, an })
+  ausstattungSenden(kidId, an)
 }
 
 /** Lehrkraft: Guthaben nachvollziehbar korrigieren (mit Grund, wird gebucht) */
