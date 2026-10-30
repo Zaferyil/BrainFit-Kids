@@ -1,10 +1,12 @@
-import { Fragment, useMemo, useState, type FormEvent } from 'react'
+import { Fragment, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
-import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
-import { benutzerVon, passwortVon, type Kid } from '../data/demo'
+import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
+import { benutzerVon, passwortVon } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
+import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, stufeCloud } from '../lib/adminCloud'
+import { istCloudKind } from '../lib/serverRpc'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
 import { fotoVerkleinern } from '../lib/hausaufgaben'
@@ -14,8 +16,6 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 // Admin-Bereich für Lehrkraft und Schule: Kinder, Lektionen, Einstellungen.
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
 
-const PIN = '1234'
-const PIN_KEY = 'bfk.admin'
 
 type Tab = 'uebersicht' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
@@ -27,37 +27,49 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
 ]
 
-const angemeldet = () => { try { return sessionStorage.getItem(PIN_KEY) === '1' } catch { return false } }
-
+// Anmeldung mit E-Mail und Passwort (Supabase); nur Konten mit der Rolle Admin oder Lehrkraft
 export function Admin() {
-  const [ok, setOk] = useState(angemeldet)
-  if (!ok) return <PinLogin onOk={() => setOk(true)} />
-  return <Dashboard onLogout={() => { try { sessionStorage.removeItem(PIN_KEY) } catch { /* egal */ } setOk(false) }} />
+  const [status, setStatus] = useState<'pruefen' | 'aus' | 'laden' | 'an'>('pruefen')
+  const [fehler, setFehler] = useState('')
+  const laden = async () => {
+    setStatus('laden')
+    try { await alleKinderLaden(); setStatus('an') } catch (e) { setFehler(String((e as Error).message)); setStatus('an') }
+  }
+  useEffect(() => { void adminSitzung().then((r) => (r ? laden() : setStatus('aus'))) }, [])
+  if (status === 'pruefen' || status === 'laden') return <div className="adm adm-login"><div className="adm-card adm-login-card"><p>{status === 'laden' ? 'Daten werden geladen …' : 'Einen Moment …'}</p></div></div>
+  if (status === 'aus') return <AdminLogin onOk={() => void laden()} />
+  return <Dashboard hinweis={fehler} onLogout={() => { void adminAbmelden().then(() => setStatus('aus')) }} />
 }
 
-function PinLogin({ onOk }: { onOk: () => void }) {
-  const [pin, setPin] = useState('')
-  const [fehler, setFehler] = useState(false)
-  const pruefen = (e: FormEvent) => {
-    e.preventDefault()
-    if (pin === PIN) { try { sessionStorage.setItem(PIN_KEY, '1') } catch { /* egal */ } onOk() } else { setFehler(true); setPin('') }
+function AdminLogin({ onOk }: { onOk: () => void }) {
+  const [mail, setMail] = useState('')
+  const [pw, setPw] = useState('')
+  const [fehler, setFehler] = useState('')
+  const [laeuft, setLaeuft] = useState(false)
+  const pruefen = async (e: FormEvent) => {
+    e.preventDefault(); setLaeuft(true)
+    const r = await adminAnmelden(mail, pw).catch(() => 'falsch' as const)
+    setLaeuft(false)
+    if (r === 'admin' || r === 'lehrkraft') onOk()
+    else setFehler(r === 'keine-rolle' ? 'Dieses Konto hat keinen Zugang zum Admin-Bereich.' : 'E-Mail oder Passwort ist falsch.')
   }
   return (
     <div className="adm adm-login">
-      <form className="adm-card adm-login-card" onSubmit={pruefen}>
+      <form className="adm-card adm-login-card" onSubmit={(e) => void pruefen(e)}>
         <div className="adm-logo"><Icon name="lock" size={30} color="#5B47D6" /></div>
         <h1>Lehrkraft &amp; Admin</h1>
-        <p>Bitte gib die PIN ein.</p>
-        <input type="password" inputMode="numeric" autoFocus value={pin} onChange={(e) => { setPin(e.target.value); setFehler(false) }} aria-label="PIN" placeholder="PIN" />
-        {fehler && <div className="adm-fehler">PIN ist falsch.</div>}
-        <button type="submit" className="adm-btn primary">Anmelden</button>
-        <a href="#/" className="adm-link">Zurück zur App</a>
+        <p>Mit E-Mail und Passwort anmelden.</p>
+        <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} aria-label="E-Mail" placeholder="E-Mail" autoComplete="username" />
+        <input type="password" value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} aria-label="Passwort" placeholder="Passwort" autoComplete="current-password" />
+        {fehler && <div className="adm-fehler">{fehler}</div>}
+        <button type="submit" className="adm-btn primary" disabled={laeuft || !mail || !pw}>{laeuft ? 'Anmelden …' : 'Anmelden'}</button>
+        <a href="../index.html" className="adm-link">Zurück zur Website</a>
       </form>
     </div>
   )
 }
 
-function Dashboard({ onLogout }: { onLogout: () => void }) {
+function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: string }) {
   const [tab, setTab] = useState<Tab>('uebersicht')
   const [version, setVersion] = useState(0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +94,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         </div>
       </header>
       <main className="adm-main">
-        <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> Daten von diesem Gerät. Für alle Geräte der Klasse braucht es den Server (Supabase).</div>
+        <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank. Beispielkinder (Lena, Jonas …) gibt es nur auf diesem Gerät.'}</div>
         {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
@@ -182,7 +194,7 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
             {archiv.map(({ kid, klasse }) => (
               <div key={kid.id} className="adm-archiv-zeile">
                 <span className="adm-kind"><Avatar size={28} {...kid.avatar} /><span><b>{kid.name}</b><small>{klasse}</small></span></span>
-                <button type="button" className="adm-btn" onClick={() => { wiederherstellen(kid.id); onChange() }}>Wiederherstellen</button>
+                <button type="button" className="adm-btn" onClick={() => { wiederherstellen(kid.id); void archivCloud(kid.id, false); onChange() }}>Wiederherstellen</button>
               </div>
             ))}
           </div>
@@ -195,13 +207,17 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
 function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void }) {
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState(codes[0] ?? '')
-  const [neu, setNeu] = useState<Kid | null>(null)
+  const [neu, setNeu] = useState<{ name: string; benutzer: string; passwort: string } | null>(null)
   const [code, setCode] = useState('')
   const [meldung, setMeldung] = useState('')
-  const hinzu = (e: FormEvent) => {
-    e.preventDefault()
-    const kid = kindHinzufuegen(name, klasse)
-    if (kid) { setNeu(kid); setName(''); onChange() }
+  const [laeuft, setLaeuft] = useState(false)
+  const hinzu = async (e: FormEvent) => {
+    e.preventDefault(); setLaeuft(true); setMeldung('')
+    try {
+      const k = await kindAnlegenCloud(name.trim(), klasse)
+      setNeu({ name: name.trim(), benutzer: k.benutzer, passwort: k.passwort }); setName(''); onChange()
+    } catch (x) { setMeldung(`Kind konnte nicht angelegt werden: ${(x as Error).message}`) }
+    setLaeuft(false)
   }
   const klasseNeu = (e: FormEvent) => {
     e.preventDefault()
@@ -211,19 +227,18 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
   }
   return (
     <section className="adm-card adm-neu">
-      <form className="adm-neu-form" onSubmit={hinzu}>
+      <form className="adm-neu-form" onSubmit={(e) => void hinzu(e)}>
         <h2>Kind hinzufügen</h2>
         <p className="adm-muted">Nur den Vornamen. Benutzername und Passwort vergibt das System (z. B. „lena2“ · „stern47“).</p>
         <div className="adm-neu-reihe">
           <label>Vorname<input id="adm-vorname" value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Sara" autoComplete="off" maxLength={24} /></label>
           <label>Klasse<select id="adm-neu-klasse" value={klasse} onChange={(e) => setKlasse(e.target.value)}>{codes.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
-          <button type="submit" className="adm-btn primary" disabled={!name.trim()}>Hinzufügen</button>
+          <button type="submit" className="adm-btn primary" disabled={laeuft || !name.trim()}>{laeuft ? 'Wird angelegt …' : 'Hinzufügen'}</button>
         </div>
         {neu && (
           <div className="adm-erfolg">
-            <Avatar size={40} {...neu.avatar} />
-            <div><b>{neu.name}</b> ist in der Klasse {klasse}.
-              <span className="adm-zugang">Benutzername: <b>{benutzerVon(neu)}</b> · Passwort: <b>{passwortVon(neu)}</b></span>
+            <div><b>{neu.name}</b> ist angelegt. Bitte die Zugangsdaten notieren – das Passwort wird nur jetzt angezeigt.
+              <span className="adm-zugang">Benutzername: <b>{neu.benutzer}</b> · Passwort: <b>{neu.passwort}</b></span>
             </div>
           </div>
         )}
@@ -247,12 +262,12 @@ function KindBearbeiten({ z, codes, onChange, onWeg }: { z: KidZeile; codes: str
   return (
     <div className="adm-edit-box">
       <label>Schulstufe
-        <select value={z.stufe ?? 2} onChange={(e) => { setStufe(z.kid.id, Number(e.target.value)); onChange() }}>
+        <select value={z.stufe ?? 2} onChange={(e) => { setStufe(z.kid.id, Number(e.target.value)); void stufeCloud(z.kid.id, Number(e.target.value)); onChange() }}>
           {KLASSEN.map((k, i) => <option key={k.name} value={i}>{k.name}</option>)}
         </select>
       </label>
       <label>Klasse
-        <select value={z.klassenCode} onChange={(e) => { klasseWechseln(z.kid.id, e.target.value); onChange() }}>
+        <select value={z.klassenCode} onChange={(e) => { klasseWechseln(z.kid.id, e.target.value); void klasseCloud(z.kid.id, e.target.value); onChange() }}>
           {codes.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </label>
@@ -265,7 +280,7 @@ function KindBearbeiten({ z, codes, onChange, onWeg }: { z: KidZeile; codes: str
       <button type="button" className="adm-btn danger" onClick={() => { if (window.confirm(`Fortschritt von ${z.kid.name} wirklich zurücksetzen? Klasse und Einstufung bleiben.`)) { resetKid(z.kid.id); onChange() } }}>Fortschritt zurücksetzen</button>
       {frage ? (
         <span className="adm-frage">{z.kid.name} archivieren?
-          <button type="button" className="adm-btn danger" onClick={() => { archivieren(z.kid.id); onWeg() }}>Ja, archivieren</button>
+          <button type="button" className="adm-btn danger" onClick={() => { archivieren(z.kid.id); void archivCloud(z.kid.id, true); onWeg() }}>Ja, archivieren</button>
           <button type="button" className="adm-btn" onClick={() => setFrage(false)}>Abbrechen</button>
         </span>
       ) : <button type="button" className="adm-btn" onClick={() => setFrage(true)}><Icon name="archive" size={16} color="currentColor" /> Archivieren</button>}
@@ -313,8 +328,8 @@ function Einstellungen() {
       </div>
       <div className="adm-setting">
         <div>
-          <b>Admin-PIN</b>
-          <p>Die PIN ist fest eingestellt (1234). Mit dem Server bekommt jede Lehrkraft ein eigenes Konto.</p>
+          <b>Anmeldung</b>
+          <p>Admins und Lehrkräfte melden sich mit E-Mail und Passwort an. Neue Konten legen Sie in Supabase unter Authentication → Users an und geben ihnen dort die Rolle.</p>
         </div>
       </div>
     </section>
@@ -483,7 +498,7 @@ function GuthabenZeile({ z, onNeu }: { z: KidZeile; onNeu: () => void }) {
   return (
     <tr>
       <td><b>{z.kid.name}</b></td><td>{k.sterne}</td><td>{getProgress(z.kid.id).gems}</td><td><small>{k.besitz.length} Artikel</small></td>
-      <td><form className="adm-form-zeile klein" onSubmit={(e) => { e.preventDefault(); if (!grund.trim() || (!Number(st) && !Number(di))) return; korrigieren(z.kid.id, Number(st) || 0, Number(di) || 0, grund.trim()); setSt(''); setDi(''); setGrund(''); onNeu() }}>
+      <td><form className="adm-form-zeile klein" onSubmit={(e) => { e.preventDefault(); if (!grund.trim() || (!Number(st) && !Number(di))) return; const ks = Number(st) || 0, kd = Number(di) || 0, g = grund.trim(); if (istCloudKind(z.kid.id)) void korrigierenCloud(z.kid.id, ks, kd, g).then(onNeu); else korrigieren(z.kid.id, ks, kd, g); setSt(''); setDi(''); setGrund(''); onNeu() }}>
         <input type="number" placeholder="± ⭐" value={st} onChange={(e) => setSt(e.target.value)} aria-label="Sterne ändern" />
         <input type="number" placeholder="± 💎" value={di} onChange={(e) => setDi(e.target.value)} aria-label="Diamanten ändern" />
         <input type="text" placeholder="Grund" value={grund} onChange={(e) => setGrund(e.target.value)} aria-label="Grund" />

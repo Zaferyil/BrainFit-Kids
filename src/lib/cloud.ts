@@ -29,19 +29,30 @@ export async function cloudLogin(benutzer: string, passwort: string) {
   const { data: k } = await supabase.from('kinder').select('id, benutzer, vorname, stufe').eq('id', data.user.id).maybeSingle()
   if (!k) return null
 
-  const sch = ladeSchule()
-  if (!sch.kinder.some((x) => x.id === k.id)) {
-    const kid: Kid & { klasse: string } = {
-      id: k.id, name: k.vorname, benutzer: k.benutzer, birthYear: new Date().getFullYear() - 8, klasse: KLASSE,
-      password: ['stern', 'herz', 'blitz', 'krone'], avatar: { hat: 'none', hatColor: '#3BA7FF', shirt: '#3BA7FF', hair: '#231A4F', skin: '#F6C9A6' },
-    }
-    speichereSchule({ ...sch, klassen: sch.klassen.includes(KLASSE) ? sch.klassen : [...sch.klassen, KLASSE], kinder: [...sch.kinder, kid] })
-  }
+  kindLokal({ ...k, klasse: KLASSE, archiviert: false })
   await herunterladen(k.id)
   if (k.stufe !== null && k.stufe !== undefined && load(`bfk.stufe.${k.id}`, null) === null) save(`bfk.stufe.${k.id}`, k.stufe)
   const klasse = CLASSES.find((c) => c.code === KLASSE)
   const kid = klasse?.kids.find((x) => x.id === k.id)
   return klasse && kid ? { klasse, kid } : null
+}
+
+type CloudKind = { id: string; benutzer: string; vorname: string; stufe?: number | null; klasse?: string | null; archiviert?: boolean }
+/** Kind aus der Datenbank auf diesem Gerät anlegen bzw. aktualisieren (Klasse, Archiv) */
+export function kindLokal(k: CloudKind) {
+  const sch = ladeSchule()
+  const klasse = k.klasse || KLASSE
+  const kid: Kid & { klasse: string } = {
+    id: k.id, name: k.vorname, benutzer: k.benutzer, birthYear: new Date().getFullYear() - 8, klasse,
+    password: ['stern', 'herz', 'blitz', 'krone'], avatar: { hat: 'none', hatColor: '#3BA7FF', shirt: '#3BA7FF', hair: '#231A4F', skin: '#F6C9A6' },
+  }
+  speichereSchule({
+    ...sch,
+    klassen: sch.klassen.includes(klasse) ? sch.klassen : [...sch.klassen, klasse],
+    kinder: [...sch.kinder.filter((x) => x.id !== k.id), kid],
+    archiv: k.archiviert ? [...new Set([...sch.archiv, k.id])] : sch.archiv.filter((x) => x !== k.id),
+    wechsel: Object.fromEntries(Object.entries(sch.wechsel).filter(([id]) => id !== k.id)),
+  })
 }
 
 let laeuft = false
