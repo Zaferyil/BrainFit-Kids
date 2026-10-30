@@ -53,9 +53,9 @@ const k = (id: string, name: string, preis: number, bild: string, anker: Anker, 
   ({ id, name, slot: 'outfit', preis, waehrung: 'sterne', bild, anker, kopfAusschnitt: kopf, start })
 
 const KOSTUEME: Artikel[] = [
-  k('original', 'SeZa Original', 0, original, { augen: { x: .53, y: .4, b: .42 }, hand: { x: .83, y: .55, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '50% 22%', true),
-  k('sportler', 'Sportler', 0, sportler, { augen: { x: .5, y: .38, b: .46 }, hand: { x: .76, y: .5, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '45% 22%', true),
-  k('entdecker', 'Entdecker', 0, entdecker, { augen: { x: .65, y: .37, b: .44 }, hand: { x: .84, y: .38, b: .24, r: 15 }, begleiter: { x: .14, y: .88 } }, '62% 22%', true),
+  k('original', 'SeZa Original', 0, original, { augen: { x: .53, y: .41, b: .5 }, hand: { x: .83, y: .56, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '52% 22%', true),
+  k('sportler', 'Sportler', 0, sportler, { augen: { x: .49, y: .39, b: .5 }, hand: { x: .8, y: .5, b: .36, r: 25 }, begleiter: { x: .14, y: .9 } }, '48% 20%', true),
+  k('entdecker', 'Entdecker', 0, entdecker, { augen: { x: .52, y: .36, b: .42 }, hand: { x: .82, y: .41, b: .32, r: 20 }, begleiter: { x: .14, y: .9 } }, '52% 18%', true),
   k('astronaut', 'Astronaut', 450, astronaut, { augen: { x: .55, y: .32, b: .44 }, hand: { x: .93, y: .55, b: .2, r: 15 }, begleiter: { x: .12, y: .9 } }, '55% 14%'),
   k('superheld', 'Superheld', 400, superheld, { hand: { x: .82, y: .64, b: .28, r: 15 }, begleiter: { x: .14, y: .9 } }, '58% 22%'),
   k('zauberer', 'Zauberer', 400, zauberer, { augen: { x: .57, y: .45, b: .4 }, hand: { x: .84, y: .44, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '57% 35%'),
