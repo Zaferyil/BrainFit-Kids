@@ -970,7 +970,7 @@ body::before{background:#100A30}
   </main>
 
   <footer class="fuss"><span>© BrainFit Kids</span><span>Impressum · AGB · Datenschutz · Verträge hier kündigen · <a class="admin-link" href="/app/#admin">Admin / Lehrkräfte</a></span></footer>
-  <p class="entwurf-hinweis">Vorschau – die Zahlung läuft über Stripe, sobald die Bezahllinks eingetragen sind.</p>
+  <p class="entwurf-hinweis">Die Zahlung läuft über Stripe. Zugangsdaten gibt es erst nach erfolgreicher Zahlung.</p>
 </div>
 
 <div class="schleier" id="schleier" hidden></div>
@@ -1075,7 +1075,8 @@ $('#bestellen').onclick=()=>{
   const daten={korb,takt,felder:Object.fromEntries(FELDER.map(id=>[id,$('#'+id)?.value??'']))};
   try{localStorage.setItem(KASSE_KEY,JSON.stringify(daten))}catch{}
   const link=STRIPE_LINKS[korb]?.[takt];
-  if(!link){alert2('Vorschau: Der Stripe-Bezahllink ist noch nicht eingetragen. Wir zeigen den Ablauf so, als wäre die Zahlung erfolgreich.');nachZahlung();return}
+  // ohne Bezahllink keine Bestellung: Zugangsdaten gibt es nur nach erfolgreicher Zahlung
+  if(!link){try{localStorage.removeItem(KASSE_KEY)}catch{};alert2('Die Online-Zahlung ist noch nicht freigeschaltet. Bitte versuchen Sie es bald wieder.');return}
   const u=new URL(link);u.searchParams.set('prefilled_email',$('#k-mail').value);u.searchParams.set('client_reference_id',PAKETE[korb].name+'-'+takt);
   location.href=u.toString();
 };
@@ -1174,5 +1175,5 @@ $$('[data-login]').forEach(b=>b.onclick=oeffneLogin);
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause()}
   b.onclick=()=>{v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play().catch(()=>{})}b.textContent=v.muted?'🔇 Ton an':'🔊 Ton aus';b.setAttribute('aria-label',v.muted?'Ton einschalten':'Ton ausschalten')}})();
 korbZeichnen(); ansicht('start');
-if(new URLSearchParams(location.search).has('bezahlt')){nachZahlung();history.replaceState(null,'',location.pathname+location.hash)}
+if(/^cs_(test|live)_/.test(new URLSearchParams(location.search).get('bezahlt')||'')){nachZahlung();history.replaceState(null,'',location.pathname+location.hash)}
 </script>
