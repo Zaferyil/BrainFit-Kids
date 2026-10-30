@@ -12,6 +12,7 @@ import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
+import { InstallHinweis } from './components/InstallHinweis'
 import { MeinSeZa } from './screens/MeinSeZa'
 import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
 import { einstellungenAnwenden, kindEinstellungen } from './lib/wirtschaft'
@@ -70,7 +71,7 @@ export default function App() {
   const s = getSession()
   const kidId = s && findKid(s.classCode, s.kidId) ? s.kidId : null
   useEffect(() => { if (kidId) einstellungenAnwenden(kindEinstellungen(kidId)) }, [kidId])
-  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /></>
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><InstallHinweis /></>
 }
 
 function Inhalt({ roh }: { roh: string }) {

@@ -2361,3 +2361,13 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .seza-teil { z-index: 2; }
 .seza-teil.ruecken { z-index: 0; }
 .seza-teil.kopf { z-index: 3; translate: -50% -55%; }
+
+/* Hinweis: als App installieren */
+.install { position: fixed; inset: auto 0 0 0; z-index: 90; display: flex; justify-content: center; padding: 12px 12px calc(12px + env(safe-area-inset-bottom)); pointer-events: none; }
+.install-karte { pointer-events: auto; position: relative; width: min(420px, 100%); display: grid; justify-items: center; gap: 8px; padding: 20px 18px 14px; border-radius: 26px; background: #fff; color: #231A4F; text-align: center; box-shadow: 0 -4px 30px rgba(20,10,60,.35); }
+.install-karte h2 { margin: 0; font-family: var(--font-display); font-size: 22px; }
+.install-karte p { margin: 0; font-weight: 700; color: #4A3F8C; line-height: 1.4; }
+.install-karte img { border-radius: 14px; }
+.install-zu { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F2F0FF; color: #4B2FC2; font-weight: 900; cursor: pointer; }
+.install-schritte { margin: 0; padding-left: 22px; text-align: left; font-weight: 700; display: grid; gap: 4px; }
+.install-spaeter { border: 0; background: none; color: #7A70B8; font-weight: 800; text-decoration: underline; cursor: pointer; }
