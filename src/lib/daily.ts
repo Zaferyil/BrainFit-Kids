@@ -20,4 +20,6 @@ export function addDaily(kidId: string, add: Partial<Omit<Daily, 'date'>>) {
     stations: d.stations + (add.stations ?? 0),
     minutes: d.minutes + (add.minutes ?? 0),
   })
+  // Tagesziel: 20 Aufgaben am Tag
+  if (d.tasks < 20 && d.tasks + (add.tasks ?? 0) >= 20) void import('./wirtschaft').then((w) => w.tageszielBelohnung(kidId))
 }

@@ -62,6 +62,8 @@ function browserSpeak(text: string, id: number) {
  *  Das Promise endet, wenn fertig gesprochen (oder unterbrochen) wurde. */
 export async function speak(say: string | string[]) {
   stopSpeaking()
+  // Ton in den Einstellungen des Kindes aus
+  if (typeof document !== 'undefined' && document.documentElement.classList.contains('ohne-ton')) return
   const id = run
   const parts = (Array.isArray(say) ? say : [say]).map((p) => p.trim()).filter(Boolean)
   const urls = parts.map(clipUrl)

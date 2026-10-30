@@ -1,3 +1,5 @@
+import { SeZa } from '../../components/SeZa'
+import { getSession } from '../../lib/session'
 import { useEffect, type ReactNode } from 'react'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
@@ -105,7 +107,7 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
             <Icon key={k} name="star" size={k === 1 ? 96 : 74} color={k < stars ? '#E0A100' : 'rgba(255,255,255,.5)'} fill={k < stars ? '#FFC531' : 'rgba(255,255,255,.18)'} strokeWidth={1.4} />
           ))}
         </div>
-        <Perli mood="cheer" size={130} />
+        {(() => { const se = getSession(); return se ? <SeZa kidId={se.kidId} groesse={150} jubel /> : <Perli mood="cheer" size={130} /> })()}
         <h2>{title}</h2>
         <p>{text}</p>
         <div className="erfolg-chips">

@@ -74,7 +74,7 @@ export function Anzan({ kid }: { kid: Kid }) {
       if (nr + 1 < RUNDE) { setNr(nr + 1); naechste() }
       else {
         const r = richtig + (ok ? 1 : 0)
-        rewardGame(kid.id, r * 2)
+        rewardGame(kid.id, r * 2, r >= 4 ? `anzan-${stand.level}` : undefined)
         if (r >= 4 && stand.level === stand.frei && stand.frei < LEVELS.length) setStand((s) => ({ ...s, frei: s.frei + 1 }))
         setPhase('fertig')
       }

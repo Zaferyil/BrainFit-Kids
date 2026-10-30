@@ -5,6 +5,10 @@ import { KLASSEN } from '../lib/klasse'
 import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kindHinzufuegen, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
 import { benutzerVon, passwortVon, type Kid } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
+import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
+import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
+import { fotoVerkleinern } from '../lib/hausaufgaben'
+import { getProgress } from '../lib/progress'
 import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT, workbookLoesungen, type Hausaufgabe } from '../lib/hausaufgaben'
 
 // Admin-Bereich für Lehrkraft und Schule: Kinder, Lektionen, Einstellungen.
@@ -13,11 +17,12 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 const PIN = '1234'
 const PIN_KEY = 'bfk.admin'
 
-type Tab = 'uebersicht' | 'kinder' | 'hausaufgaben' | 'lektionen' | 'einstellungen'
+type Tab = 'uebersicht' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
   { id: 'hausaufgaben', titel: 'Hausaufgaben', icon: 'check' },
+  { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
   { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
   { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
 ]
@@ -81,6 +86,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
+        {tab === 'shop' && <Shop zeilen={zeilen} />}
         {tab === 'lektionen' && <Lektionen zeilen={zeilen} />}
         {tab === 'einstellungen' && <Einstellungen />}
       </main>
@@ -407,5 +413,108 @@ function WorkbookLoesungen() {
         </ul>
       )}
     </section>
+  )
+}
+
+/** SeZa-Shop: Preise, Artikel an/aus, eigene Artikel, Belohnungen, Käufe und Guthaben */
+function Shop({ zeilen }: { zeilen: KidZeile[] }) {
+  const [, neu] = useState(0)
+  const e = shopEinstellungen()
+  const setzeArtikel = (id: string, w: { preis?: number; aktiv?: boolean }) => { speichereShopEinstellungen({ ...e, artikel: { ...e.artikel, [id]: { ...e.artikel[id], ...w } } }); neu((x) => x + 1) }
+  const setzeBelohnung = (art: BelohnungsArt, w: { sterne: number; diamanten: number }) => { speichereShopEinstellungen({ ...e, belohnungen: { ...e.belohnungen, [art]: w } }); neu((x) => x + 1) }
+  const kaeufe = zeilen.flatMap((z) => konto(z.kid.id).buchungen.filter((b) => b.art !== 'belohnung').map((b) => ({ z, b }))).sort((a, b) => b.b.zeit.localeCompare(a.b.zeit))
+  return (
+    <>
+      <section className="adm-card adm-tabelle-wrap">
+        <div className="adm-card-head"><h2>Artikel</h2><span className="adm-muted">{alleArtikel(true).length} Artikel</span></div>
+        <table className="adm-tabelle">
+          <thead><tr><th>Artikel</th><th>Bereich</th><th>Preis</th><th>Währung</th><th>Aktiv</th></tr></thead>
+          <tbody>
+            {alleArtikel(true).map((a) => (
+              <tr key={a.id}>
+                <td><span className="adm-kind">{a.bild ? <img src={a.bild} alt="" className="adm-artikel-bild" /> : <span className="adm-artikel-bild">✨</span>}<b>{a.name}</b>{a.eigen ? <small> · eigener Artikel</small> : null}</span></td>
+                <td>{SLOT_NAME[a.slot]}</td>
+                <td><input className="adm-zahl" type="number" min={0} defaultValue={a.preis} disabled={a.id === 'original'} onBlur={(x) => setzeArtikel(a.id, { preis: Math.max(0, Number(x.target.value) || 0) })} /></td>
+                <td>{a.waehrung === 'sterne' ? '⭐ Sterne' : '💎 Diamanten'}</td>
+                <td><input type="checkbox" checked={a.aktiv !== false} disabled={a.id === 'original'} onChange={(x) => setzeArtikel(a.id, { aktiv: x.target.checked })} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <NeuerArtikel onNeu={() => neu((x) => x + 1)} />
+      </section>
+      <section className="adm-card">
+        <div className="adm-card-head"><h2>Belohnungen</h2></div>
+        <p className="adm-muted">Jede Belohnung gibt es je Aufgabe nur einmal (Übung je Lektion und Station, Lektion und Test je Lektion, Spiel 1 × am Tag).</p>
+        <div className="adm-belohnungen">
+          {(Object.keys(BELOHNUNG_NAME) as BelohnungsArt[]).map((art) => { const w = belohnungsWert(art); return (
+            <label key={art}><span>{BELOHNUNG_NAME[art]}</span>
+              <span>⭐ <input className="adm-zahl" type="number" min={0} defaultValue={w.sterne} onBlur={(x) => setzeBelohnung(art, { ...w, sterne: Math.max(0, Number(x.target.value) || 0) })} /></span>
+              <span>💎 <input className="adm-zahl" type="number" min={0} defaultValue={w.diamanten} onBlur={(x) => setzeBelohnung(art, { ...w, diamanten: Math.max(0, Number(x.target.value) || 0) })} /></span>
+            </label>) })}
+        </div>
+      </section>
+      <section className="adm-card adm-tabelle-wrap">
+        <div className="adm-card-head"><h2>Guthaben der Kinder</h2></div>
+        <table className="adm-tabelle">
+          <thead><tr><th>Kind</th><th>Sterne</th><th>Diamanten</th><th>Besitz</th><th>Korrektur (mit Grund)</th></tr></thead>
+          <tbody>{zeilen.map((z) => <GuthabenZeile key={z.kid.id} z={z} onNeu={() => neu((x) => x + 1)} />)}</tbody>
+        </table>
+      </section>
+      <section className="adm-card adm-tabelle-wrap">
+        <div className="adm-card-head"><h2>Käufe und Korrekturen</h2><span className="adm-muted">{kaeufe.length}</span></div>
+        <table className="adm-tabelle">
+          <thead><tr><th>Datum</th><th>Kind</th><th>Was</th><th>Sterne</th><th>Diamanten</th></tr></thead>
+          <tbody>
+            {kaeufe.map(({ z, b }) => <tr key={z.kid.id + b.id}><td><small>{datum(b.zeit)}</small></td><td>{z.kid.name}</td><td>{b.art === 'kauf' ? `Kauf: ${b.grund}` : `Korrektur: ${b.grund}`}</td><td>{b.sterne || '–'}</td><td>{b.diamanten || '–'}</td></tr>)}
+            {!kaeufe.length && <tr><td colSpan={5} className="adm-muted">Noch keine Käufe.</td></tr>}
+          </tbody>
+        </table>
+      </section>
+    </>
+  )
+}
+
+function GuthabenZeile({ z, onNeu }: { z: KidZeile; onNeu: () => void }) {
+  const [st, setSt] = useState('')
+  const [di, setDi] = useState('')
+  const [grund, setGrund] = useState('')
+  const k = konto(z.kid.id)
+  return (
+    <tr>
+      <td><b>{z.kid.name}</b></td><td>{k.sterne}</td><td>{getProgress(z.kid.id).gems}</td><td><small>{k.besitz.length} Artikel</small></td>
+      <td><form className="adm-form-zeile klein" onSubmit={(e) => { e.preventDefault(); if (!grund.trim() || (!Number(st) && !Number(di))) return; korrigieren(z.kid.id, Number(st) || 0, Number(di) || 0, grund.trim()); setSt(''); setDi(''); setGrund(''); onNeu() }}>
+        <input type="number" placeholder="± ⭐" value={st} onChange={(e) => setSt(e.target.value)} aria-label="Sterne ändern" />
+        <input type="number" placeholder="± 💎" value={di} onChange={(e) => setDi(e.target.value)} aria-label="Diamanten ändern" />
+        <input type="text" placeholder="Grund" value={grund} onChange={(e) => setGrund(e.target.value)} aria-label="Grund" />
+        <button type="submit" className="adm-btn">Buchen</button>
+      </form></td>
+    </tr>
+  )
+}
+
+/** Eigener Artikel: Bild hochladen (transparentes PNG empfohlen), Bereich, Preis */
+function NeuerArtikel({ onNeu }: { onNeu: () => void }) {
+  const [name, setName] = useState('')
+  const [slot, setSlot] = useState<Slot>('begleiter')
+  const [preis, setPreis] = useState('100')
+  const [waehrung, setWaehrung] = useState<Waehrung>('sterne')
+  const [bild, setBild] = useState<string | null>(null)
+  const anlegen = (e: FormEvent) => {
+    e.preventDefault()
+    if (!name.trim() || !bild) return
+    const cfg = shopEinstellungen()
+    speichereShopEinstellungen({ ...cfg, eigene: [...cfg.eigene, { id: `eigen-${Date.now().toString(36)}`, name: name.trim(), slot, preis: Number(preis) || 0, waehrung, bild, eigen: true }] })
+    setName(''); setBild(null); onNeu()
+  }
+  return (
+    <form className="adm-form-zeile" onSubmit={anlegen}>
+      <label>Neuer Artikel<input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" style={{ width: 160 }} /></label>
+      <label>Bereich<select value={slot} onChange={(e) => setSlot(e.target.value as Slot)}>{(['kopf', 'brille', 'hand', 'ruecken', 'fuesse', 'begleiter'] as Slot[]).map((s) => <option key={s} value={s}>{SLOT_NAME[s]}</option>)}</select></label>
+      <label>Preis<input type="number" min={0} value={preis} onChange={(e) => setPreis(e.target.value)} /></label>
+      <label>Währung<select value={waehrung} onChange={(e) => setWaehrung(e.target.value as Waehrung)}><option value="sterne">Sterne</option><option value="diamanten">Diamanten</option></select></label>
+      <label>Bild<input type="file" accept="image/png,image/webp" onChange={async (e) => { const f = e.target.files?.[0]; if (f) setBild(await fotoVerkleinern(f)) }} /></label>
+      <button type="submit" className="adm-btn primary" disabled={!name.trim() || !bild}>Anlegen</button>
+    </form>
   )
 }

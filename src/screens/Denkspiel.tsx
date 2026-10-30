@@ -50,7 +50,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
   const finish = (score: number, summary: string) => {
     const adj = adjustLevel(kid.id, game.id, tier, score)
     const perlen = perlenFor(score)
-    rewardGame(kid.id, perlen)
+    rewardGame(kid.id, perlen, game.id)
     finishActiveStop(kid.id)
     setResult({ score, summary, perlen, adj })
     speak(score >= 0.9 ? 'Super gemacht!' : score >= 0.6 ? 'Gut gemacht!' : 'Weiter so, du schaffst das!')

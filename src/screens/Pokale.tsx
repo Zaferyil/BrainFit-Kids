@@ -4,6 +4,8 @@ import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import { useState } from 'react'
+import { SeZa } from '../components/SeZa'
+import { konto, kindEinstellungen, speichereKindEinstellungen } from '../lib/wirtschaft'
 import { passwortVon, setzePasswort, type Kid } from '../data/demo'
 import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
@@ -74,12 +76,14 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
       <Funkeln />
       <div className="dp ich">
         <div className="ich-bild"><Avatar size={130} {...kid.avatar} /></div>
+        <a href="#/seza" className="ich-seza"><SeZa kidId={kid.id} groesse={120} /><span><b>Mein SeZa</b><small>⭐ {konto(kid.id).sterne} · 💎 {progress.gems}</small><em>Kostüme &amp; Accessoires →</em></span></a>
         <h1>{kid.name}</h1>
         <p>{stufe !== null ? STUFE[stufe] : 'Klasse nicht gewählt'} · Level {progress.level}</p>
         <div className="erfolg-chips ich-chips">
           <div><span>PERLEN</span><b className="gelb">{progress.perlen}</b></div>
           <div><span>WELT</span><b className="gruen">{world.n} · {world.name}</b></div>
         </div>
+        <Einstellungen kidId={kid.id} />
         <PasswortAendern kid={kid} />
         <button type="button" className="nk-btn yellow" onClick={onLogout}><Icon name="logout" color="#2B2257" size={22} />Abmelden</button>
       </div>
@@ -121,5 +125,17 @@ function PasswortAendern({ kid }: { kid: Kid }) {
         <button type="submit" className="nk-btn green">Speichern</button>
       </div>
     </form>
+  )
+}
+
+/** Ton und Animationen an/aus */
+function Einstellungen({ kidId }: { kidId: string }) {
+  const [e, setE] = useState(() => kindEinstellungen(kidId))
+  const setze = (neu: typeof e) => { setE(neu); speichereKindEinstellungen(kidId, neu) }
+  return (
+    <div className="ich-schalter">
+      <label><input type="checkbox" checked={e.ton} onChange={(x) => setze({ ...e, ton: x.target.checked })} /> Ton und Vorlesen</label>
+      <label><input type="checkbox" checked={e.animation} onChange={(x) => setze({ ...e, animation: x.target.checked })} /> Animationen</label>
+    </div>
   )
 }

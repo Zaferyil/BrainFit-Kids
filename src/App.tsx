@@ -12,6 +12,9 @@ import { VideoStation } from './screens/stations/VideoStation'
 import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
+import { MeinSeZa } from './screens/MeinSeZa'
+import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
+import { einstellungenAnwenden, kindEinstellungen } from './lib/wirtschaft'
 import { BuchStation } from './screens/stations/BuchStation'
 import { buchAuftrag, workbookAuftrag } from './data/buch'
 import { alleHausaufgaben, hausaufgabeKey } from './lib/hausaufgaben'
@@ -49,7 +52,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', 'seza', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -63,7 +66,14 @@ function useRoute() {
 }
 
 export default function App() {
-  const roh = useRoute()
+  const route = useRoute()
+  const s = getSession()
+  const kidId = s && findKid(s.classCode, s.kidId) ? s.kidId : null
+  useEffect(() => { if (kidId) einstellungenAnwenden(kindEinstellungen(kidId)) }, [kidId])
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /></>
+}
+
+function Inhalt({ roh }: { roh: string }) {
   // Keine eigene Startseite mehr: die Website führt hierher. Angemeldet → Karte, sonst Anmelden
   const s = roh === '' ? getSession() : null
   const route = roh === '' ? (s && findKid(s.classCode, s.kidId) ? 'inseln' : 'anmelden') : roh
@@ -89,6 +99,7 @@ export default function App() {
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
     if (route === 'rangliste') return <Rangliste kid={kid} />
+    if (route === 'seza') return <MeinSeZa kid={kid} />
     if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
     if (route === 'anzan') return <Anzan kid={kid} />

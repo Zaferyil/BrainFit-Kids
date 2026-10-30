@@ -2230,3 +2230,90 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .ha-frage .ha-pruefen:disabled { background: #ECE8FF; color: #9C93D6; box-shadow: 0 5px 0 #D6CFFF; opacity: 1; }
 .adm-badge[class*="ha-"] { white-space: nowrap; }
 .btn-primary.ha-start { font-size: 26px; white-space: nowrap; padding-inline: 28px; }
+
+/* SeZa: Figur mit Ebenen */
+.seza { position: relative; display: inline-block; flex-shrink: 0; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 0 rgba(30,20,80,.25), 0 14px 30px rgba(0,0,0,.2); background: #fff; }
+.seza-kostuem { display: block; width: 100%; height: auto; user-select: none; }
+.seza-teil { position: absolute; translate: -50% -50%; height: auto; pointer-events: none; filter: drop-shadow(0 3px 4px rgba(0,0,0,.25)); }
+.seza-teil.kopf { translate: -50% -30%; }
+.seza-teil.hand.gold { aspect-ratio: 1 / 1.05; display: flex; }
+.seza-teil.hand.gold > * { flex: 1; }
+.seza-teil.hand.gold .abakus, .seza-teil.hand.gold img { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1.12); }
+.seza-effekt { position: absolute; inset: 0; pointer-events: none; }
+.seza-effekt.goldschein { box-shadow: inset 0 0 40px 10px rgba(255,200,60,.75); animation: sz-schein 2.2s ease-in-out infinite; }
+.seza-effekt.glitzer i { position: absolute; width: 14px; height: 14px; background: radial-gradient(circle, #fff 0 30%, #FFE066 31% 60%, transparent 61%); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: sz-funkel 1.8s ease-in-out infinite; }
+.seza-effekt.glitzer i:nth-child(1) { left: 12%; top: 14%; } .seza-effekt.glitzer i:nth-child(2) { left: 80%; top: 10%; animation-delay: .4s; }
+.seza-effekt.glitzer i:nth-child(3) { left: 86%; top: 58%; animation-delay: .8s; } .seza-effekt.glitzer i:nth-child(4) { left: 8%; top: 66%; animation-delay: 1.1s; }
+.seza-effekt.glitzer i:nth-child(5) { left: 48%; top: 4%; animation-delay: 1.4s; }
+.seza.hg-regenbogen { padding: 7%; background: linear-gradient(135deg, #FF5C8A, #FFB300, #3DBE5B, #3BA7FF, #A06BFF); }
+.seza.hg-weltall { padding: 7%; background: radial-gradient(circle at 20% 20%, #fff 0 1px, transparent 2px) 0 0 / 22px 22px, radial-gradient(circle at 70% 60%, #FFE066 0 1.5px, transparent 2px) 0 0 / 31px 31px, linear-gradient(160deg, #0B0A3A, #3A1FA8); }
+.seza.hg-regenbogen .seza-kostuem, .seza.hg-weltall .seza-kostuem { border-radius: 16px; }
+.seza.jubel { animation: sz-jubel .7s ease-out 2; }
+@keyframes sz-jubel { 0%, 100% { transform: translateY(0) rotate(0) } 30% { transform: translateY(-12px) rotate(-3deg) } 60% { transform: translateY(0) rotate(3deg) } }
+@keyframes sz-funkel { 0%, 100% { transform: scale(.4); opacity: .3 } 50% { transform: scale(1.2); opacity: 1 } }
+@keyframes sz-schein { 0%, 100% { opacity: .6 } 50% { opacity: 1 } }
+.ohne-animation *, .ohne-animation *::before, .ohne-animation *::after { animation: none !important; transition: none !important; }
+
+/* Mein SeZa */
+.sz { width: min(100%, 980px); margin: 0 auto; padding: 16px 16px 130px; display: flex; flex-direction: column; gap: 16px; color: #fff; }
+.sz-kopf { display: flex; align-items: center; gap: 12px; }
+.sz-titel { flex: 1; } .sz-titel small { font-weight: 800; opacity: .85; } .sz-titel h1 { margin: 0; font-family: var(--font-display); font-size: 32px; line-height: 1; }
+.sz-konto { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.sz-konto span { padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.95); color: #231A4F; font-weight: 900; font-size: 15px; box-shadow: 0 4px 0 rgba(30,20,80,.25); }
+.sz-konto .lvl { background: #231A4F; color: #FFD65C; }
+.sz-buehne { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.sz-blase { position: relative; max-width: 420px; padding: 10px 16px; border-radius: 18px; background: #fff; color: #231A4F; font-weight: 800; text-align: center; box-shadow: 0 5px 0 rgba(30,20,80,.2); }
+.sz-blase::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 18px; height: 18px; background: #fff; transform: translateX(-50%) rotate(45deg); }
+.sz-probe { display: flex; align-items: center; gap: 10px; } .sz-probe span { padding: 4px 10px; border-radius: 999px; background: #FFD65C; color: #231A4F; font-weight: 900; font-size: 13px; }
+.sz-probe button, .sz-an button { border: 0; border-radius: 999px; padding: 8px 14px; background: rgba(255,255,255,.22); color: #fff; font-weight: 800; cursor: pointer; }
+.sz-an { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.sz-reiter { display: flex; gap: 6px; justify-content: center; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.18); align-self: center; }
+.sz-reiter button { border: 0; border-radius: 999px; padding: 10px 18px; background: none; color: #fff; font-weight: 900; font-size: 16px; cursor: pointer; }
+.sz-reiter button[aria-pressed="true"] { background: #fff; color: #4B2FC2; }
+.sz-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.sz-karte { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 10px; border-radius: 22px; background: #fff; color: #231A4F; text-align: center; box-shadow: 0 6px 0 rgba(30,20,80,.22); }
+.sz-karte.an { outline: 4px solid #3DBE5B; }
+.sz-bild { width: 100%; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; border-radius: 16px; background: #F2F0FF; font-size: 44px; }
+.sz-bild img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.sz-bild.fx-regenbogen { background: linear-gradient(135deg, #FF5C8A, #FFB300, #3DBE5B, #3BA7FF, #A06BFF); }
+.sz-bild.fx-weltall { background: linear-gradient(160deg, #0B0A3A, #3A1FA8); }
+.sz-bild.fx-goldschein { box-shadow: inset 0 0 30px rgba(255,200,60,.9); }
+.sz-karte b { font-size: 15px; line-height: 1.15; } .sz-karte small { color: #7A70B8; font-weight: 800; font-size: 12px; }
+.sz-preis { font-weight: 900; font-size: 16px; }
+.sz-btn { width: 100%; border: 0; border-radius: 999px; padding: 9px 10px; background: #ECE8FF; color: #4B2FC2; font-weight: 900; font-size: 14px; cursor: pointer; }
+.sz-btn.gelb { background: linear-gradient(#FFD54A, #FFB300); color: #231A4F; box-shadow: 0 4px 0 #C98A00; }
+.sz-btn.gruen { background: linear-gradient(#5FCB6F, #2F9A43); color: #fff; box-shadow: 0 4px 0 #1F7A31; }
+.sz-btn:disabled { background: #EEE; color: #9A97AE; box-shadow: none; cursor: default; }
+.sz-status { padding: 8px; color: #1E9E4A; font-weight: 900; } .sz-hat { color: #1E9E4A !important; }
+.sz-verlauf { padding: 14px 16px; border-radius: 20px; background: rgba(255,255,255,.15); }
+.sz-verlauf h2 { margin: 0 0 6px; font-size: 18px; } .sz-verlauf ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.sz-verlauf li { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; } .sz-verlauf b.minus { color: #FFD0DA; }
+.sz-tipp { text-align: center; font-weight: 800; }
+.sz-dialog { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px; background: rgba(20,14,60,.6); }
+.sz-dialog-karte { width: min(360px, 100%); padding: 22px; border-radius: 26px; background: #fff; color: #231A4F; text-align: center; }
+.sz-dialog-karte h2 { margin: 0 0 6px; font-family: var(--font-display); } .sz-dialog-karte div { display: flex; gap: 10px; margin-top: 14px; }
+@media (max-width: 520px) { .sz-kopf { flex-wrap: wrap; } .sz-konto { width: 100%; justify-content: flex-start; } .sz-raster { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Belohnungs-Anzeige */
+.belohnung { position: fixed; left: 50%; top: 14px; z-index: 80; translate: -50% 0; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 24px); padding: 8px 16px 8px 8px; border-radius: 24px; background: #fff; color: #231A4F; box-shadow: 0 10px 30px rgba(0,0,0,.3); animation: bl-rein .4s ease-out, bl-raus .4s ease-in 2.8s forwards; }
+.belohnung .seza { border-radius: 16px; box-shadow: none; }
+.belohnung-text b { display: block; font-size: 15px; line-height: 1.2; } .belohnung-text span { font-weight: 900; color: #E08A00; }
+.belohnung-flug i { position: absolute; left: 40px; top: 30px; font-style: normal; font-size: 22px; animation: bl-flug 1.2s ease-out forwards; }
+.belohnung-flug i:nth-child(2) { --x: 60px; --y: -40px; animation-delay: .1s } .belohnung-flug i:nth-child(3) { --x: -50px; --y: -30px; animation-delay: .2s }
+.belohnung-flug i:nth-child(4) { --x: 90px; --y: 20px; animation-delay: .15s } .belohnung-flug i:nth-child(5) { --x: -30px; --y: 40px; animation-delay: .25s } .belohnung-flug i:nth-child(6) { --x: 20px; --y: -60px; animation-delay: .3s }
+@keyframes bl-flug { from { transform: translate(0, 0) scale(.4); opacity: 1 } to { transform: translate(var(--x, 40px), var(--y, -50px)) scale(1.2); opacity: 0 } }
+@keyframes bl-rein { from { translate: -50% -30px; opacity: 0 } }
+@keyframes bl-raus { to { translate: -50% -30px; opacity: 0 } }
+.ich-seza { display: flex; align-items: center; gap: 14px; padding: 10px 18px 10px 10px; border-radius: 26px; background: rgba(255,255,255,.95); color: #231A4F; text-decoration: none; box-shadow: 0 6px 0 rgba(75,47,194,.35); }
+.ich-seza .seza { box-shadow: none; border-radius: 18px; }
+.ich-seza span { display: grid; gap: 2px; text-align: left; } .ich-seza b { font-family: var(--font-display); font-size: 22px; } .ich-seza small { font-weight: 900; } .ich-seza em { font-style: normal; color: #5B47D6; font-weight: 900; font-size: 14px; }
+.ich-schalter { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.ich-schalter label { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.22); color: #fff; font-weight: 900; cursor: pointer; }
+.ich-schalter input { width: 20px; height: 20px; accent-color: #3DBE5B; }
+.nk-seza-knopf { display: inline-flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; border-radius: 999px; background: #fff; color: #4B2FC2; font-weight: 900; text-decoration: none; box-shadow: 0 5px 0 rgba(75,47,194,.35); }
+.nk-seza-knopf .seza { border-radius: 50%; box-shadow: none; }
+.adm-artikel-bild { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: #F2F0FF; display: inline-grid; place-items: center; }
+.adm-zahl { width: 80px; padding: 6px 8px; border: 1px solid #D9D2FF; border-radius: 8px; font: inherit; }
+.adm-belohnungen { display: grid; gap: 8px; }
+.adm-belohnungen label { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; font-weight: 700; }
+.adm-form-zeile.klein { margin: 0; } .adm-form-zeile.klein input { width: 70px; } .adm-form-zeile.klein input[type="text"] { width: 120px; }

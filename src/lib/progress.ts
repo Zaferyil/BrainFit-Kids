@@ -4,6 +4,7 @@ import { addDaily } from './daily'
 import { unitVideos } from '../data/videos'
 import { ALLES_OFFEN } from './testmodus'
 import { buchAuftrag } from '../data/buch'
+import { belohnen as sterneGeben, levelAufstieg, spielBelohnung } from './wirtschaft'
 
 // Fortschritt eines Kindes, bis Supabase angebunden ist: nur auf diesem Gerät.
 export type Progress = {
@@ -93,6 +94,9 @@ export function finishStation(kidId: string, station: StationId, stars: number, 
   while (xp >= 100) { xp -= 100; level += 1 }
   saveProgress(kidId, { ...p, stationStars: { ...p.stationStars, [k]: all }, perlen: p.perlen + perlen, xp, level })
   addDaily(kidId, { stations: 1, tasks: correct, minutes: 3 })
+  // Sterne für eine geschaffte Übung (mind. 2 Sterne), je Lektion und Station nur einmal
+  if (stars >= 2 && station !== 'buch' && station !== 'boss') sterneGeben(kidId, 'uebung', `${k}:${station}`)
+  if (level > p.level) levelAufstieg(level)
   return perlen
 }
 
@@ -106,6 +110,12 @@ export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: num
   const p = getProgress(kidId)
   const stars = stationStars(p).filter((_, k) => !stationSkipped(p, k))
   const avg = Math.round(stars.reduce((a, b) => a + b, 0) / stars.length)
+  // Lektion und Abschlusstest geschafft: Sterne; Test mit 3 Sternen: ein Diamant (je Lektion nur einmal)
+  const lektion = `${p.world}-${p.unit}`
+  sterneGeben(kidId, 'lektion', lektion)
+  sterneGeben(kidId, 'test', lektion, 'Super gemacht! Test bestanden!')
+  if ((stationStars(p)[STATIONS.findIndex((s) => s.id === 'boss')] ?? 0) >= 3) sterneGeben(kidId, 'testPerfekt', lektion)
+  if (p.unit >= unitsInWorld) sterneGeben(kidId, 'welt', String(p.world), `Wow! Welt ${p.world} geschafft!`)
   if (p.unit < unitsInWorld) {
     saveProgress(kidId, { ...p, unit: p.unit + 1 })
     return { worldDone: false }
@@ -116,13 +126,15 @@ export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: num
 }
 
 /** Perlen und XP aus einem Denkspiel gutschreiben. */
-export function rewardGame(kidId: string, perlen: number) {
+export function rewardGame(kidId: string, perlen: number, spiel?: string) {
   const p = getProgress(kidId)
   let xp = p.xp + 10
   let level = p.level
   while (xp >= 100) { xp -= 100; level += 1 }
   saveProgress(kidId, { ...p, perlen: p.perlen + perlen, xp, level })
   addDaily(kidId, { games: 1, minutes: 2 })
+  if (spiel && perlen > 0) spielBelohnung(kidId, spiel)
+  if (level > p.level) levelAufstieg(level)
 }
 
 /** „Ich habe kein Buch“: Buch-Station für dieses Kind dauerhaft überspringen (umkehrbar) */

@@ -1,8 +1,9 @@
+import { konto } from '../lib/wirtschaft'
+import { SeZa } from '../components/SeZa'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
-import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
 import { setReplay, type Progress } from '../lib/progress'
@@ -93,7 +94,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           <strong>Hallo {kid.name}!</strong>
           <span>Welt {progress.world} · {WORLDS[progress.world - 1]?.name.replace(/-/g, ' ')}</span>
         </div>
-        <span className="nk-chip"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{progress.perlen}</span>
+        <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
         <div className="path-tools">
           <button type="button" className={questsOpen ? 'quest-chip open' : 'quest-chip'} onClick={() => setQuestsOpen(!questsOpen)} aria-expanded={questsOpen}>
             <Icon name="target" color="#231A4F" size={20} strokeWidth={2.6} />
@@ -171,7 +172,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               {start === 0 && (
                 <div className="insel-perli">
                   <div className="map-bubble" role="status">{say}</div>
-                  <Perli mood="happy" size={96} />
+                  <a href="#/seza" aria-label="Mein SeZa"><SeZa kidId={kid.id} groesse={88} /></a>
                 </div>
               )}
               {burg && frei && (

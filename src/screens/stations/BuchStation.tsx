@@ -6,6 +6,7 @@ import type { BuchAuftrag, WorkbookAuftrag } from '../../data/buch'
 import { SAY, STATION_INTRO } from '../../data/sprache'
 import { checkErgebnis, fotoVerkleinern, hausaufgabe, PRUEF_ANZAHL, pruefbareAufgaben, pruefFragen, speichereHausaufgabe, STATUS_TEXT, type Hausaufgabe, type PruefFrage } from '../../lib/hausaufgaben'
 import { finishStation, setOhneBuch } from '../../lib/progress'
+import { belohnen } from '../../lib/wirtschaft'
 import { speak } from '../../lib/speak'
 import { Keypad, StationDone, StationShell } from './StationShell'
 import cover from '../../assets/buch-cover.webp'
@@ -55,6 +56,7 @@ export function BuchStation({ kidId, world, unit, runde, auftrag, workbook }: Pr
     if (neu.status !== 'bestanden' && neu.status !== 'lehrkraft') { setPhase('nochmal'); void speak(SAY.checkNochmal); return }
     // Belohnung nur einmal je Hausaufgabe
     const perlen = finishStation(kidId, 'buch', 3, richtig, !h.belohnt)
+    belohnen(kidId, 'buch', h.key, 'Super gemacht! Du hast deinen Wissenscheck geschafft!')
     const belohnt = { ...neu, belohnt: true }
     speichereHausaufgabe(belohnt); setH(belohnt)
     setDone({ stars: 3, perlen, text: 'Super gemacht! Du hast deinen Wissenscheck geschafft! 🌟', say: [SAY.superGemacht, SAY.checkGeschafft] })
