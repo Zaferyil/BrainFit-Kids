@@ -10,11 +10,14 @@ import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import { findeLogin, type Kid, type SchoolClass } from '../data/demo'
 import { saveSession } from '../lib/session'
-import { speak } from '../lib/speak'
+import { hatStimme, speak } from '../lib/speak'
 import { load, save } from '../lib/storage'
 
 
 const STEPS = ['Anmelden', 'Wähle deine Figur', 'Schulstufe']
+
+// Neue Namen haben keine Aufnahme: dann nur die Frage sprechen, nie mit der Telefonstimme
+const klasseFrage = (name: string) => (hatStimme(`Hallo ${name}!`) ? [`Hallo ${name}!`, 'In welche Klasse gehst du?'] : ['In welche Klasse gehst du?'])
 
 // Schulstufe des Kindes (Kindergarten bis 6. Klasse), pro Kind auf dem Gerät gemerkt
 const STUFEN = [
@@ -37,7 +40,7 @@ export function Anmelden() {
     `Hallo ${kid?.name ?? ''}! In welche Klasse gehst du?`,
     'Tippe deine vier Bilder.',
   ][step]
-  const instructionSay = step === 2 ? [`Hallo ${kid?.name ?? ''}!`, 'In welche Klasse gehst du?'] : instruction
+  const instructionSay = step === 2 ? klasseFrage(kid?.name ?? '') : instruction
 
   return (
     <Stage className="nk" background="var(--nk-sky)">
@@ -55,7 +58,7 @@ export function Anmelden() {
 
         {schoolClass && kid ? (
           !figurVon(kid.id) ? (
-            <FigurPicker key="figur" kid={kid} onPick={(f) => { setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1); void speak([`Hallo ${kid.name}!`, 'In welche Klasse gehst du?']) }} />
+            <FigurPicker key="figur" kid={kid} onPick={(f) => { setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1); void speak(klasseFrage(kid.name)) }} />
           ) : stufe === null ? (
             <StufePicker key="stufe" kid={kid} onBack={() => { setKid(null); setSchoolClass(null) }} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (
@@ -68,7 +71,7 @@ export function Anmelden() {
             const bekannt = figurVon(k.id) ? getStufe(k.id) : null
             if (bekannt !== null) { saveSession({ classCode: c.code, kidId: k.id }); setStufe(bekannt); return }
             setStufe(null)
-            void speak(figurVon(k.id) ? [`Hallo ${k.name}!`, 'In welche Klasse gehst du?'] : 'Wähle deine Figur! Tippe auf dein Bild.')
+            void speak(figurVon(k.id) ? klasseFrage(k.name) : 'Wähle deine Figur! Tippe auf dein Bild.')
           }} />
         )}
       </div>
@@ -137,7 +140,7 @@ function StufePicker({ kid, onPick, onBack }: { kid: Kid; onPick: (n: number) =>
   return (
     <section className="nk-step popin" aria-labelledby="nk-stufe">
       <header className="nk-title">
-        <Avatar size={84} {...kid.avatar} />
+        <Avatar size={84} {...kid.avatar} photo={(() => { const f = figurVon(kid.id); return f ? kidPhoto(f) : kid.avatar.photo })()} />
         <p>Hallo {kid.name}!</p>
         <h1 id="nk-stufe">In welche Klasse gehst du?</h1>
       </header>

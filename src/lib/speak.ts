@@ -16,6 +16,9 @@ const clipUrl = (text: string) => {
 let audio: HTMLAudioElement | null = null
 let run = 0
 
+/** Gibt es für diesen Satz eine Aufnahme mit unserer Stimme? */
+export const hatStimme = (text: string) => text in CLIPS
+
 export function stopSpeaking() {
   run++
   audio?.pause()
