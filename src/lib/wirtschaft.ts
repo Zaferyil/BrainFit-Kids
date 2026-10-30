@@ -42,6 +42,13 @@ const key = (kidId: string) => `bfk.konto.${kidId}`
 const leer = (): Konto => ({ sterne: 0, besitz: START_KOSTUEME.map((a) => a.id), an: { outfit: START_KOSTUEM }, buchungen: [] })
 export function konto(kidId: string): Konto {
   const k = { ...leer(), ...load<Partial<Konto>>(key(kidId), {}) }
+  // Demo-Konto „lena“: einmalig Startguthaben zum Ausprobieren des Shops
+  if (kidId === 'lena' && !k.buchungen.some((b) => b.id === 'demo:start')) {
+    k.sterne += 6000
+    k.buchungen = [...k.buchungen, { id: 'demo:start', zeit: new Date().toISOString(), art: 'korrektur', grund: 'Demo-Guthaben', sterne: 6000, diamanten: 20, von: 'Demo' }]
+    speichere(kidId, k)
+    const p = getProgress(kidId); saveProgress(kidId, { ...p, gems: p.gems + 20 })
+  }
   // die drei Start-Kostüme gehören jedem Kind; nicht mehr vorhandene Artikel fallen weg
   const besitz = [...new Set([...START_KOSTUEME.map((a) => a.id), ...k.besitz])].filter((id) => artikel(id))
   const an = Object.fromEntries(Object.entries(k.an).filter(([, id]) => artikel(id))) as Ausstattung
