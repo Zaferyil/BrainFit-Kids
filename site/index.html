@@ -896,24 +896,24 @@ body::before{background:#100A30}
         <div class="abschnitt"><h3><b>1</b>Eltern-Konto anlegen</h3>
           <p class="klein">Damit melden Sie sich später an und verwalten das Abo. Von Ihrem Kind brauchen wir nur den Vornamen.</p>
           <div class="felder">
-            <label class="feld">Vorname<input id="k-vn" autocomplete="given-name" value="Anna"></label>
-            <label class="feld">Nachname<input id="k-nn" autocomplete="family-name" value="Berger"></label>
-            <label class="feld ganz">E-Mail<input id="k-mail" type="email" autocomplete="email" value="anna.berger@beispiel.at"></label>
-            <label class="feld ganz">Passwort<input id="k-pw" type="password" autocomplete="new-password" value="geheim123"></label>
+            <label class="feld">Vorname<input id="k-vn" autocomplete="given-name" value="" placeholder="Vorname"></label>
+            <label class="feld">Nachname<input id="k-nn" autocomplete="family-name" value="" placeholder="Nachname"></label>
+            <label class="feld ganz">E-Mail<input id="k-mail" type="email" autocomplete="email" value="" placeholder="name@beispiel.at"></label>
+            <label class="feld ganz">Passwort<input id="k-pw" type="password" minlength="8" autocomplete="new-password" value="" placeholder="mind. 8 Zeichen"></label>
           </div>
         </div>
         <div class="abschnitt"><h3><b>2</b>Ihr Kind</h3>
           <p class="klein">Nur der Vorname. Benutzername und Passwort für Ihr Kind schicken wir nach dem Kauf an Ihre E-Mail.</p>
           <div class="felder">
-            <label class="feld">Vorname des Kindes<input id="f-kind" autocomplete="off" value="Lena"></label>
+            <label class="feld">Vorname des Kindes<input id="f-kind" autocomplete="off" value="" placeholder="z. B. Lena"></label>
             <label class="feld">Schulstufe<select id="f-stufe"><option>Kindergarten</option><option>1. Klasse</option><option selected>2. Klasse</option><option>3. Klasse</option><option>4. Klasse</option><option>5. Klasse</option><option>6. Klasse</option></select></label>
           </div>
         </div>
         <div class="abschnitt" id="k-liefer"><h3><b>3</b>Lieferadresse für Bücher und Abakus</h3>
           <div class="felder">
-            <label class="feld ganz">Straße und Hausnummer<input id="k-str" autocomplete="street-address" value="Hauptplatz 12"></label>
-            <label class="feld">PLZ<input id="k-plz" autocomplete="postal-code" value="4020"></label>
-            <label class="feld">Ort<input id="k-ort" autocomplete="address-level2" value="Linz"></label>
+            <label class="feld ganz">Straße und Hausnummer<input id="k-str" autocomplete="street-address" value="" placeholder="Straße 1"></label>
+            <label class="feld">PLZ<input id="k-plz" autocomplete="postal-code" value="" placeholder="PLZ"></label>
+            <label class="feld">Ort<input id="k-ort" autocomplete="address-level2" value="" placeholder="Ort"></label>
             <label class="feld ganz">Land<select id="k-land"><option>Österreich</option><option>Deutschland</option></select></label>
           </div>
         </div>
@@ -1002,10 +1002,9 @@ body::before{background:#100A30}
   </div>
 
   <div id="l-eltern" hidden>
-    <label class="feld">E-Mail<input id="l-mail" type="email" autocomplete="email" value="anna.berger@beispiel.at"></label>
-    <label class="feld">Passwort<input id="l-pw" type="password" autocomplete="current-password" value="geheim123"></label>
-    <button class="btn" type="button" id="l-los">Login</button>
-    <p class="klein">Passwort vergessen? · Noch kein Konto? Wählen Sie ein Paket.</p>
+    <p>Hier sehen Sie den Lernstand Ihres Kindes. Melden Sie sich mit der E-Mail-Adresse und dem Passwort an, die Sie beim Kauf gewählt haben.</p>
+    <a class="btn" href="/app/#eltern">Zur Eltern-Übersicht</a>
+    <p class="klein">Noch kein Konto? Wählen Sie ein Paket.</p>
   </div>
 </div>
 
@@ -1080,6 +1079,8 @@ const FELDER=['k-vn','k-nn','k-mail','f-kind','f-stufe','k-str','k-plz','k-ort',
 $('#bestellen').onclick=()=>{
   if(!$('#k-agb').checked||!$('#k-lauf').checked){alert2('Bitte bestätigen Sie AGB und Mindestlaufzeit.');return}
   if(!$('#k-mail').value||!$('#f-kind').value){alert2('Bitte E-Mail-Adresse und Vorname Ihres Kindes eintragen.');return}
+  if(($('#k-pw').value||'').length<8){alert2('Bitte ein Passwort mit mindestens 8 Zeichen für Ihr Eltern-Konto wählen.');return}
+  try{sessionStorage.setItem('bfk.kasse-pw',$('#k-pw').value)}catch{}
   // Angaben merken, damit nach der Rückkehr von Stripe das Kind angelegt werden kann
   const daten={korb,takt,felder:Object.fromEntries(FELDER.map(id=>[id,$('#'+id)?.value??'']))};
   try{localStorage.setItem(KASSE_KEY,JSON.stringify(daten))}catch{}
@@ -1107,11 +1108,11 @@ function nachZahlung(){
   const sid=new URLSearchParams(location.search).get('bezahlt');
   alert2('Ihre Zahlung wird geprüft …');
   fetch(SUPA+'/functions/v1/bestellung',{method:'POST',headers:{'Content-Type':'application/json',apikey:ANON,Authorization:'Bearer '+ANON},
-    body:JSON.stringify({session_id:sid,vorname:$('#f-kind').value,stufe:$('#f-stufe').selectedIndex})})
+    body:JSON.stringify({session_id:sid,vorname:$('#f-kind').value,stufe:$('#f-stufe').selectedIndex,eltern_passwort:(()=>{try{return sessionStorage.getItem('bfk.kasse-pw')||''}catch{return ''}})(),eltern_name:($('#k-vn').value+' '+$('#k-nn').value).trim()})})
     .then(r=>r.json()).then(z=>{
       document.querySelectorAll('.login-box').forEach(x=>x.remove());
       if(!z.benutzer){alert2('Die Zahlung konnte nicht bestätigt werden ('+(z.fehler||'Fehler')+'). Bitte kontaktieren Sie uns.');return}
-      try{localStorage.removeItem(KASSE_KEY)}catch{}
+      try{localStorage.removeItem(KASSE_KEY);sessionStorage.removeItem('bfk.kasse-pw')}catch{}
       angemeldet=true;bestaetigung(z.benutzer,z.passwort);
     }).catch(()=>{document.querySelectorAll('.login-box').forEach(x=>x.remove());alert2('Keine Verbindung. Bitte laden Sie die Seite neu.')});
 }
@@ -1145,12 +1146,12 @@ function bestaetigung(code,pwt){
   $$('.m-eltern').forEach(x=>x.textContent=$('#k-vn').value||''); $$('.m-paket').forEach(x=>x.textContent=PAKETE[korb].name);
   ansicht('kind');
 }
-$('#kind-fertig').onclick=()=>{ansicht('mein'); zeigeMein()};
+$('#kind-fertig').onclick=()=>{location.href='/app/#eltern'};
 $('#d-login').onclick=()=>(location.href='/app/#anmelden');
 $('#m-noch').onclick=()=>alert2('Hier legen Sie ein weiteres Kind an; die Zugangsdaten kommen wieder per E-Mail.');
 $('#login-knopf').onclick=()=>{if(angemeldet){angemeldet=false;$('#login-knopf').lastChild.textContent='Login';ansicht('start');return} $('#login').hidden=false;$('#schleier').hidden=false};
 $('#login-zu').onclick=()=>{$('#login').hidden=true;$('#schleier').hidden=true};
-$('#l-los').onclick=()=>{angemeldet=true;if(!kinder.length)kinder=[{name:'Lena',farbe:'#FF4D6D',zeichen:'★'}];$('#login').hidden=true;$('#schleier').hidden=true;ansicht('mein');zeigeMein()};
+
 
 
 function oeffneLogin(){$('#login').hidden=false;$('#schleier').hidden=false;reiter('kind')}

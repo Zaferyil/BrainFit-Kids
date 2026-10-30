@@ -66,3 +66,19 @@ export async function korrigierenCloud(kidId: string, sterne: number, diamanten:
   await rpc('korrigieren', { p_kind: kidId, p_sterne: sterne, p_diamanten: diamanten, p_grund: grund })
   await kontoLaden(kidId)
 }
+
+/** Eltern: anmelden und die eigenen Kinder laden (nur Kinder, die mit diesem Konto verknüpft sind) */
+export async function elternAnmelden(email: string, passwort: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: passwort })
+  if (error || !data.user) return null
+  return elternKinder()
+}
+export async function elternKinder() {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data } = await supabase.from('kinder').select('id, benutzer, vorname, stufe, klasse, archiviert').eq('eltern', user.id).order('erstellt')
+  for (const k of data ?? []) { kindLokal(k); await herunterladen(k.id) }
+  return (data ?? []).map((k) => ({ id: k.id, name: k.vorname }))
+}
+export const elternPasswortVergessen = (email: string) =>
+  supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/app/#eltern` })

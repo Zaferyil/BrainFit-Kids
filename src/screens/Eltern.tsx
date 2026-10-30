@@ -1,7 +1,9 @@
-import { useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
-import { findClass, type Kid } from '../data/demo'
+import { alleKinder, type Kid } from '../data/demo'
+import { SeZaKopf } from '../components/SeZa'
+import { adminAbmelden, elternAnmelden, elternKinder, elternPasswortVergessen } from '../lib/adminCloud'
 import { WORLDS } from '../data/curriculum'
 import { STATIONS } from '../data/units'
 import { buchAuftrag, workbookAuftrag } from '../data/buch'
@@ -12,59 +14,77 @@ import { lektionNr, ALLE_LEKTIONEN } from '../lib/admin'
 import { BEREICHE, echteWerte } from '../lib/rangliste'
 
 // Eltern-Bereich: Lernstand des eigenen Kindes, Hausaufgabe im Buch, Tipps für zu Hause.
-// Anmeldung mit Klassen-Code und Kind (bis Supabase ein eigenes Eltern-Konto bringt).
+// Anmeldung mit der E-Mail und dem Passwort aus dem Kauf (Supabase); es erscheinen nur die eigenen Kinder.
 
 const KEY = 'bfk.eltern'
 const TAGESZIEL = 15
 
-type Auswahl = { code: string; kidId: string }
-const gespeichert = (): Auswahl | null => { try { return JSON.parse(sessionStorage.getItem(KEY) ?? 'null') } catch { return null } }
+type KindKurz = { id: string; name: string }
 
 export function Eltern() {
-  const [auswahl, setAuswahl] = useState<Auswahl | null>(gespeichert)
-  const kid = auswahl ? findClass(auswahl.code)?.kids.find((k) => k.id === auswahl.kidId) : undefined
-  const abmelden = () => { try { sessionStorage.removeItem(KEY) } catch { /* egal */ } setAuswahl(null) }
-  if (!auswahl || !kid) return <Login onOk={(a) => { try { sessionStorage.setItem(KEY, JSON.stringify(a)) } catch { /* egal */ } setAuswahl(a) }} />
-  return <Dashboard kid={kid} onLogout={abmelden} />
+  const [kinder, setKinder] = useState<KindKurz[] | null>(null)
+  const [kidId, setKidId] = useState<string | null>(() => { try { return sessionStorage.getItem(KEY) } catch { return null } })
+  const [pruefen, setPruefen] = useState(true)
+  useEffect(() => { void elternKinder().then((k) => { setKinder(k); setPruefen(false) }) }, [])
+  const waehlen = (id: string | null) => { try { if (id) sessionStorage.setItem(KEY, id); else sessionStorage.removeItem(KEY) } catch { /* egal */ } setKidId(id) }
+  const abmelden = () => { waehlen(null); setKinder(null); void adminAbmelden() }
+  if (pruefen) return <div className="adm adm-login"><div className="adm-card adm-login-card"><p>Einen Moment …</p></div></div>
+  if (!kinder) return <Login onOk={(k) => { setKinder(k); if (k.length === 1) waehlen(k[0].id) }} />
+  const kid = alleKinder().find((x) => x.kid.id === kidId && kinder.some((k) => k.id === kidId))?.kid
+  if (!kid) return <Auswahl kinder={kinder} onWahl={waehlen} onLogout={abmelden} />
+  return <Dashboard kid={kid} onLogout={abmelden} onWechseln={kinder.length > 1 ? () => waehlen(null) : undefined} />
 }
 
-function Login({ onOk }: { onOk: (a: Auswahl) => void }) {
-  const [code, setCode] = useState('')
-  const [fehler, setFehler] = useState(false)
-  const klasse = findClass(code)
-  const pruefen = (e: FormEvent) => { e.preventDefault(); if (!klasse) setFehler(true) }
+function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
+  const [mail, setMail] = useState('')
+  const [pw, setPw] = useState('')
+  const [fehler, setFehler] = useState('')
+  const [laeuft, setLaeuft] = useState(false)
+  const anmelden = async (e: FormEvent) => {
+    e.preventDefault(); setLaeuft(true); setFehler('')
+    const k = await elternAnmelden(mail, pw).catch(() => null)
+    setLaeuft(false)
+    if (!k) setFehler('E-Mail oder Passwort ist falsch.')
+    else if (!k.length) setFehler('Mit diesem Konto ist noch kein Kind verknüpft.')
+    else onOk(k)
+  }
+  const vergessen = async () => {
+    if (!mail.trim()) { setFehler('Bitte zuerst Ihre E-Mail-Adresse eintragen.'); return }
+    await elternPasswortVergessen(mail)
+    setFehler('Wenn es ein Konto mit dieser Adresse gibt, schicken wir Ihnen eine E-Mail zum Zurücksetzen.')
+  }
+  return (
+    <div className="adm adm-login">
+      <form className="adm-card adm-login-card eltern-login" onSubmit={(e) => void anmelden(e)}>
+        <div className="adm-logo"><Icon name="users" size={30} color="#5B47D6" /></div>
+        <h1>Eltern-Bereich</h1>
+        <p>Mit der E-Mail-Adresse und dem Passwort anmelden, die Sie beim Kauf gewählt haben.</p>
+        <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} placeholder="E-Mail" aria-label="E-Mail" autoComplete="username" />
+        <input type="password" value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} placeholder="Passwort" aria-label="Passwort" autoComplete="current-password" />
+        {fehler && <div className="adm-fehler">{fehler}</div>}
+        <button type="submit" className="adm-btn primary" disabled={laeuft || !mail || !pw}>{laeuft ? 'Anmelden …' : 'Anmelden'}</button>
+        <button type="button" className="adm-link" onClick={() => void vergessen()}>Passwort vergessen?</button>
+        <a href="../index.html" className="adm-link">Zurück zur Website</a>
+      </form>
+    </div>
+  )
+}
+
+function Auswahl({ kinder, onWahl, onLogout }: { kinder: KindKurz[]; onWahl: (id: string) => void; onLogout: () => void }) {
   return (
     <div className="adm adm-login">
       <div className="adm-card adm-login-card eltern-login">
-        <div className="adm-logo"><Icon name="users" size={30} color="#5B47D6" /></div>
-        <h1>Eltern-Bereich</h1>
-        {!klasse ? (
-          <form onSubmit={pruefen} className="eltern-form">
-            <p>Geben Sie den Klassen-Code Ihres Kindes ein. Sie finden ihn im Brief der Lehrkraft.</p>
-            <input value={code} onChange={(e) => { setCode(e.target.value); setFehler(false) }} placeholder="z. B. LINZ-7K" aria-label="Klassen-Code" autoFocus />
-            {fehler && <div className="adm-fehler">Diesen Code gibt es nicht.</div>}
-            <button type="submit" className="adm-btn primary">Weiter</button>
-          </form>
-        ) : (
-          <>
-            <p>Wählen Sie Ihr Kind aus.</p>
-            <div className="eltern-kinder">
-              {klasse.kids.map((k) => (
-                <button key={k.id} type="button" onClick={() => onOk({ code: klasse.code, kidId: k.id })}>
-                  <Avatar size={52} {...k.avatar} /><span>{k.name}</span>
-                </button>
-              ))}
-            </div>
-            <button type="button" className="adm-link" onClick={() => setCode('')}>Anderer Code</button>
-          </>
-        )}
-        <a href="#/" className="adm-link">Zurück zur App</a>
+        <h1>Ihre Kinder</h1>
+        <div className="eltern-kinder">
+          {kinder.map((k) => <button key={k.id} type="button" onClick={() => onWahl(k.id)}><SeZaKopf kidId={k.id} size={52} /><span>{k.name}</span></button>)}
+        </div>
+        <button type="button" className="adm-link" onClick={onLogout}>Abmelden</button>
       </div>
     </div>
   )
 }
 
-function Dashboard({ kid, onLogout }: { kid: Kid; onLogout: () => void }) {
+function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => void; onWechseln?: () => void }) {
   const p = getProgress(kid.id)
   const daily = getDaily(kid.id)
   const welt = WORLDS[p.world - 1]
@@ -85,7 +105,7 @@ function Dashboard({ kid, onLogout }: { kid: Kid; onLogout: () => void }) {
         <div className="adm-brand"><Avatar size={36} {...kid.avatar} /><b>{kid.name}</b><span>Eltern</span></div>
         <div className="adm-tabs" />
         <div className="adm-head-r">
-          <a href="#/" className="adm-btn">Zur App</a>
+          {onWechseln && <button type="button" className="adm-btn" onClick={onWechseln}>Anderes Kind</button>}
           <button type="button" className="adm-btn" onClick={onLogout}><Icon name="logout" size={16} color="currentColor" /> Abmelden</button>
         </div>
       </header>

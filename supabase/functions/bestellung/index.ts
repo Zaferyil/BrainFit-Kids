@@ -13,7 +13,7 @@ const basis = (n: string) => n.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   try {
-    const { session_id, vorname, stufe = null } = await req.json()
+    const { session_id, vorname, stufe = null, eltern_passwort = '', eltern_name = '' } = await req.json()
     if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(session_id ?? '')) return antwort({ fehler: 'ungültige Zahlung' }, 400)
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!)
 
@@ -57,6 +57,26 @@ Deno.serve(async (req) => {
     const { data: start } = await admin.from('shop_artikel').select('id').eq('start', true)
     if (start?.length) await admin.from('besitz').insert(start.map((a: { id: string }) => ({ kind: id, artikel: a.id })))
     await admin.from('bestellungen').update({ kind: id }).eq('stripe_session', session_id)
+
+    // Eltern-Konto: E-Mail aus Stripe, Passwort aus der Kasse; gibt es das Konto schon, wird nur das Kind verknüpft
+    if (mail) {
+      let elternId: string | null = null
+      if (String(eltern_passwort).length >= 8) {
+        const { data: e } = await admin.auth.admin.createUser({ email: mail, password: eltern_passwort, email_confirm: true })
+        elternId = e?.user?.id ?? null
+      }
+      if (!elternId) {
+        for (let seite = 1; seite <= 20 && !elternId; seite++) {
+          const { data: l } = await admin.auth.admin.listUsers({ page: seite, perPage: 200 })
+          elternId = l?.users.find((u: { email?: string }) => u.email?.toLowerCase() === mail.toLowerCase())?.id ?? null
+          if (!l || l.users.length < 200) break
+        }
+      }
+      if (elternId) {
+        await admin.from('personen').upsert({ id: elternId, rolle: 'eltern', name: String(eltern_name).trim() }, { onConflict: 'id', ignoreDuplicates: true })
+        await admin.from('kinder').update({ eltern: elternId }).eq('id', id)
+      }
+    }
 
     return antwort({ benutzer, passwort: pw })
   } catch (e) {
