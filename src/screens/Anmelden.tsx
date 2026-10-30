@@ -58,7 +58,13 @@ export function Anmelden() {
 
         {schoolClass && kid ? (
           !figurVon(kid.id) ? (
-            <FigurPicker key="figur" kid={kid} onPick={(f) => { setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1); void speak(klasseFrage(kid.name)) }} />
+            <FigurPicker key="figur" kid={kid} onPick={(f) => {
+              setFigur(kid.id, f); klassenNeuAufbauen(); neu((x) => x + 1)
+              // Schulstufe schon beim Kauf angegeben? Dann nicht nochmal fragen
+              const bekannt = getStufe(kid.id)
+              if (bekannt !== null) { saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(bekannt); return }
+              void speak(klasseFrage(kid.name))
+            }} />
           ) : stufe === null ? (
             <StufePicker key="stufe" kid={kid} onBack={() => { setKid(null); setSchoolClass(null) }} onPick={(n) => { save(stufeKey(kid.id), n); saveSession({ classCode: schoolClass.code, kidId: kid.id }); setStufe(n) }} />
           ) : (

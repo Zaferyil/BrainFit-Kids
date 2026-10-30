@@ -30,3 +30,13 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+## Website und Lernplattform
+
+Ein Projekt, eine Adresse:
+
+- `/` – Website (Ordner `site/`, statisches HTML: Infos, Pakete, Warenkorb, Kasse)
+- `/app/` – Lernplattform (diese Vite-App), Admin unter `/app/#admin`
+
+`npm run dev` zeigt beides; `npm run build` legt die App in `dist/app` und kopiert die Website nach `dist`.
+Zum Veröffentlichen (z. B. Netlify oder Vercel) den Ordner `dist` ausliefern.
