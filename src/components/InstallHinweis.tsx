@@ -17,9 +17,10 @@ export function InstallHinweis() {
   const [zeigen, setZeigen] = useState(false)
 
   useEffect(() => {
-    if (istInstalliert() || !istMobil() || load(KEY, false)) return
-    const t = window.setTimeout(() => setZeigen(true), 2500)
-    const fang = (e: Event) => { e.preventDefault(); setEreignis(e as InstallEvent) }
+    if (istInstalliert() || load(KEY, false)) return
+    // Handy/Tablet: immer (mit Anleitung); Computer: nur wenn der Browser installieren kann (Chrome, Edge)
+    const t = istMobil() ? window.setTimeout(() => setZeigen(true), 2500) : undefined
+    const fang = (e: Event) => { e.preventDefault(); setEreignis(e as InstallEvent); if (!istMobil()) window.setTimeout(() => setZeigen(true), 2500) }
     const fertig = () => { save(KEY, true); setZeigen(false) }
     window.addEventListener('beforeinstallprompt', fang)
     window.addEventListener('appinstalled', fertig)
@@ -41,7 +42,7 @@ export function InstallHinweis() {
         <button type="button" className="install-zu" aria-label="Schließen" onClick={schliessen}>✕</button>
         <img src={`${import.meta.env.BASE_URL}icon-192.png`} alt="" width={64} height={64} />
         <h2>BrainFit Kids als App</h2>
-        <p>Installiere die App auf deinem Startbildschirm – dann geht’s mit einem Tipp los, ganz ohne Browser.</p>
+        <p>{istMobil() ? 'Installiere die App auf deinem Startbildschirm – dann geht’s mit einem Tipp los, ganz ohne Browser.' : 'Installiere die App auf deinem Computer – sie öffnet sich dann in einem eigenen Fenster.'}</p>
         {ereignis ? (
           <button type="button" className="nk-btn yellow" onClick={() => void installieren()}>Installieren</button>
         ) : istIos() ? (

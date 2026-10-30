@@ -1208,9 +1208,12 @@ korbZeichnen(); ansicht('start');
   const K='bfk.install-hinweis';let zu=false;try{zu=localStorage.getItem(K)==='true'}catch{}
   const inst=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   const mobil=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  if(zu||inst||!mobil)return;
+  if(zu||inst)return;
+  // Computer: nur Chrome/Edge (können Apps installieren)
+  const pcOk=!mobil&&/Chrome|Edg\//.test(navigator.userAgent)&&!/Firefox|OPR/.test(navigator.userAgent)&&!(/Safari/.test(navigator.userAgent)&&!/Chrome/.test(navigator.userAgent));
+  if(!mobil&&!pcOk)return;
   setTimeout(()=>{const d=document.createElement('div');d.className='install-web';
-    d.innerHTML='<div class="install-web-karte"><button class="x" type="button" aria-label="Schließen">✕</button><img src="/icon-192.png" alt="" width="52" height="52"><div><b>BrainFit Kids als App</b><span>Öffnen Sie die Lernplattform und installieren Sie sie auf dem Startbildschirm.</span></div><a class="btn" href="/app/">Zur App</a></div>';
+    d.innerHTML='<div class="install-web-karte"><button class="x" type="button" aria-label="Schließen">✕</button><img src="/icon-192.png" alt="" width="52" height="52"><div><b>BrainFit Kids als App</b><span>'+(mobil?'Öffnen Sie die Lernplattform und installieren Sie sie auf dem Startbildschirm.':'Öffnen Sie die Lernplattform und installieren Sie sie auf Ihrem Computer.')+'</span></div><a class="btn" href="/app/">Zur App</a></div>';
     const weg=()=>{try{localStorage.setItem(K,'true')}catch{};d.remove()};d.querySelector('.x').onclick=weg;document.body.append(d)},3000);
 })();
 if(/^cs_(test|live)_/.test(new URLSearchParams(location.search).get('bezahlt')||'')){nachZahlung();history.replaceState(null,'',location.pathname+location.hash)}
