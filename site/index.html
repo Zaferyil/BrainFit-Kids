@@ -1092,9 +1092,21 @@ function nachZahlung(){
   let d;try{d=JSON.parse(localStorage.getItem(KASSE_KEY)||'null')}catch{d=null}
   if(!d)return;
   korb=d.korb;taktSetzen(d.takt||'monat');for(const [id,v] of Object.entries(d.felder))if($('#'+id))$('#'+id).value=v;
-  try{localStorage.removeItem(KASSE_KEY)}catch{}
-  angemeldet=true;korbZeichnen();bestaetigung();
+  korbZeichnen();
+  // Zahlung beim Server prüfen lassen (fragt Stripe) – erst dann gibt es Zugangsdaten
+  const sid=new URLSearchParams(location.search).get('bezahlt');
+  alert2('Ihre Zahlung wird geprüft …');
+  fetch(SUPA+'/functions/v1/bestellung',{method:'POST',headers:{'Content-Type':'application/json',apikey:ANON,Authorization:'Bearer '+ANON},
+    body:JSON.stringify({session_id:sid,vorname:$('#f-kind').value,stufe:$('#f-stufe').selectedIndex})})
+    .then(r=>r.json()).then(z=>{
+      document.querySelectorAll('.login-box').forEach(x=>x.remove());
+      if(!z.benutzer){alert2('Die Zahlung konnte nicht bestätigt werden ('+(z.fehler||'Fehler')+'). Bitte kontaktieren Sie uns.');return}
+      try{localStorage.removeItem(KASSE_KEY)}catch{}
+      angemeldet=true;bestaetigung(z.benutzer,z.passwort);
+    }).catch(()=>{document.querySelectorAll('.login-box').forEach(x=>x.remove());alert2('Keine Verbindung. Bitte laden Sie die Seite neu.')});
 }
+const SUPA='https://zqskietwmexfrwisgrft.supabase.co';
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxc2tpZXR3bWV4ZnJ3aXNncmZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzODQxMzYsImV4cCI6MjEwODk2MDEzNn0.uLR_tvZLJw01G8Bpg_dxajikFQ5rlsidegMOOZGXrbI';
 const FARBEN=['#FF4D6D','#3BA7FF','#3DBE5B','#FFC531','#A06BFF','#FF8A1F'], ZEICHEN='★♥⚡♛◆✿';
 let wahl=Math.floor(Math.random()*FARBEN.length); // Bild wird automatisch vergeben
 const BILDER=[['★','Stern','#FFC531'],['♥','Herz','#FF5C8A'],['⚡','Blitz','#9B8BFF'],['♛','Krone','#FFD24A'],['◆','Diamant','#5BB8FF'],['✿','Blume','#5FCB6F'],['🐾','Pfote','#E8B48A'],['🔥','Feuer','#FF8A1F']];
@@ -1113,11 +1125,10 @@ function kindAnlegen(name,pw,stufe){
   try{localStorage.setItem('bfk.schule',JSON.stringify(sch));localStorage.setItem('bfk.stufe.'+id,JSON.stringify(stufe))}catch{}
   return b;
 }
-function bestaetigung(){
-  let n=($('#f-kind').value||'Kind').trim(); if(kinder.some(k=>k.name===n)) n+=' 2';
+// Zugangsdaten kommen vom Server (Funktion „bestellung“), nachdem Stripe die Zahlung bestätigt hat
+function bestaetigung(code,pwt){
+  const n=($('#f-kind').value||'Kind').trim();
   kinder.push({name:n,farbe:FARBEN[wahl],zeichen:ZEICHEN[wahl]});
-  const pwt=['perle','stern','sonne','blitz','krone','tiger'][Math.floor(Math.random()*6)]+(10+Math.floor(Math.random()*90));
-  const code=kindAnlegen(n,pwt,$('#f-stufe').selectedIndex);
   const mail=$('#k-mail').value||'ihre@email.at';
   $('#d-mail').textContent=mail; $('#d-name').textContent=n; $('#d-kind').textContent=n; $('#d-code').textContent=code; $('#d-pw').textContent=pwt; $$('.m-pw').forEach(x=>x.textContent=pwt);
   $$('.m-an').forEach(x=>x.textContent=mail); $$('.m-kind').forEach(x=>x.textContent=n); $$('.m-code').forEach(x=>x.textContent=code);
