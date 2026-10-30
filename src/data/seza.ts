@@ -14,18 +14,22 @@ import feuerwehr from '../assets/seza/feuerwehr.webp'
 import brille from '../assets/seza/a-brille.webp'
 import hund from '../assets/seza/a-hund.webp'
 import goldAbakus from '../assets/seza/a-abakus.webp'
+import umhang from '../assets/seza/a-umhang.webp'
+import krone from '../assets/seza/a-krone.webp'
+import zauberstab from '../assets/seza/a-zauberstab.webp'
+import raketenrucksack from '../assets/seza/a-raketenrucksack.webp'
 
 // SeZa: die Figur des Kindes. Ein Kostüm ist ein ganzes, freigestelltes Bild von SeZa;
 // Accessoires liegen als eigene Ebenen darüber. Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds)
 // sagen, wo Augen, die Hand mit dem Abakus und der Begleiter sitzen.
 
-export type Slot = 'outfit' | 'brille' | 'hand' | 'begleiter'
+export type Slot = 'outfit' | 'ruecken' | 'kopf' | 'brille' | 'hand' | 'stab' | 'begleiter'
 export type Waehrung = 'sterne' | 'diamanten'
 
 /** Ebenen von hinten nach vorn */
-export const EBENEN: Slot[] = ['outfit', 'brille', 'hand', 'begleiter']
+export const EBENEN: Slot[] = ['ruecken', 'outfit', 'kopf', 'brille', 'hand', 'stab', 'begleiter']
 
-export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', brille: 'Brille', hand: 'Abakus', begleiter: 'Begleiter' }
+export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', ruecken: 'Rücken', kopf: 'Kopf', brille: 'Brille', hand: 'Abakus', stab: 'Zauberstab', begleiter: 'Begleiter' }
 
 type Punkt = { x: number; y: number; b: number }
 /** Anker eines Kostüms; ohne „augen“ hat das Kostüm schon Brille, Maske oder Augenklappe */
@@ -71,6 +75,10 @@ const KOSTUEME: Artikel[] = [
 const ACCESSOIRES: Artikel[] = [
   { id: 'gold-abakus', name: 'Goldener Abakus', slot: 'hand', preis: 500, waehrung: 'sterne', bild: goldAbakus },
   { id: 'brille', name: 'Brille', slot: 'brille', preis: 150, waehrung: 'sterne', bild: brille },
+  { id: 'krone', name: 'Krone', slot: 'kopf', preis: 300, waehrung: 'sterne', bild: krone },
+  { id: 'umhang', name: 'Umhang', slot: 'ruecken', preis: 200, waehrung: 'sterne', bild: umhang },
+  { id: 'raketenrucksack', name: 'Raketen-Rucksack', slot: 'ruecken', preis: 350, waehrung: 'sterne', bild: raketenrucksack },
+  { id: 'zauberstab', name: 'Zauberstab', slot: 'stab', preis: 250, waehrung: 'sterne', bild: zauberstab },
   { id: 'hund', name: 'Hunde-Begleiter', slot: 'begleiter', preis: 400, waehrung: 'sterne', bild: hund },
 ]
 

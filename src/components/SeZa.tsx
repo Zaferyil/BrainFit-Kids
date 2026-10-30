@@ -25,7 +25,12 @@ export function SeZa({ kidId, an, groesse = 220, jubel, className = '' }: Props)
             <Fit><Abakus value={123} cols={3} colw={60} /></Fit>
           </div>
         )
-        const ort = slot === 'brille' ? k.augen && pos(k.augen.x, k.augen.y, k.augen.b) : pos(k.begleiter.x, k.begleiter.y, .34)
+        // Rücken: hinter SeZa, schaut seitlich hervor; Krone über dem Kopf; Zauberstab vorn auf der freien Seite
+        const ort = slot === 'brille' ? k.augen && pos(k.augen.x, k.augen.y, k.augen.b)
+          : slot === 'ruecken' ? (a.id === 'umhang' ? pos(.5, .62, .95) : pos(k.hand.x > .5 ? .2 : .8, .52, .48))
+          : slot === 'kopf' ? pos(.52, .04, .42)
+          : slot === 'stab' ? { ...pos(k.hand.x > .5 ? .16 : .84, .5, .26), rotate: k.hand.x > .5 ? '-20deg' : '20deg' }
+          : pos(k.begleiter.x, k.begleiter.y, .34)
         return ort ? <img key={slot} className={`seza-teil ${slot}`} style={ort} src={a.bild} alt="" draggable={false} /> : null
       })}
     </div>

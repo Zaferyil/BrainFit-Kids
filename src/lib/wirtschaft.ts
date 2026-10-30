@@ -47,7 +47,6 @@ export function konto(kidId: string): Konto {
     k.sterne += 6000
     k.buchungen = [...k.buchungen, { id: 'demo:start', zeit: new Date().toISOString(), art: 'korrektur', grund: 'Demo-Guthaben', sterne: 6000, diamanten: 20, von: 'Demo' }]
     speichere(kidId, k)
-    const p = getProgress(kidId); saveProgress(kidId, { ...p, gems: p.gems + 20 })
   }
   // die drei Start-Kostüme gehören jedem Kind; nicht mehr vorhandene Artikel fallen weg
   const besitz = [...new Set([...START_KOSTUEME.map((a) => a.id), ...k.besitz])].filter((id) => artikel(id))

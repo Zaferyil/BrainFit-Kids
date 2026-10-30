@@ -2356,3 +2356,8 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .nk-home { justify-content: flex-start; gap: 10px; }
 .zh-buehne { flex: 0 1 300px; }
 .zh-los { margin-top: 8px; }
+
+.seza-kostuem { position: relative; z-index: 1; }
+.seza-teil { z-index: 2; }
+.seza-teil.ruecken { z-index: 0; }
+.seza-teil.kopf { z-index: 3; translate: -50% -55%; }

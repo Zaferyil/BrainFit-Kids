@@ -29,7 +29,12 @@ const fresh = (): Progress => ({ world: 1, unit: 1, worldStars: {}, stationStars
 
 const key = (kidId: string) => `bfk.progress.${kidId}`
 
-export const getProgress = (kidId: string): Progress => ({ ...fresh(), ...load<Partial<Progress>>(key(kidId), {}) })
+export function getProgress(kidId: string): Progress {
+  const p = { ...fresh(), ...load<Partial<Progress>>(key(kidId), {}) }
+  // Demo-Konto „lena“: einmalig 20 Diamanten zum Ausprobieren des Shops
+  if (kidId === 'lena' && !load<boolean>('bfk.demo-dia.lena', false)) { p.gems += 20; save(key(kidId), p); save('bfk.demo-dia.lena', true) }
+  return p
+}
 export const saveProgress = (kidId: string, p: Progress) => save(key(kidId), p)
 
 export const unitKey = (p: Progress) => `${p.world}-${p.unit}`
