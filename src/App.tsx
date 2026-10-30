@@ -13,6 +13,8 @@ import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { InstallHinweis } from './components/InstallHinweis'
+import { NeuesPasswort } from './screens/NeuesPasswort'
+import { supabase } from './lib/supabase'
 import { MeinSeZa } from './screens/MeinSeZa'
 import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
 import { einstellungenAnwenden, kindEinstellungen } from './lib/wirtschaft'
@@ -66,11 +68,17 @@ function useRoute() {
   return route
 }
 
+// Link „Passwort zurücksetzen“: Supabase hängt #access_token=…&type=recovery an
+const ausMail = typeof location !== 'undefined' && /type=recovery/.test(location.hash)
+
 export default function App() {
   const route = useRoute()
+  const [neuesPw, setNeuesPw] = useState(ausMail)
+  useEffect(() => supabase.auth.onAuthStateChange((e) => { if (e === 'PASSWORD_RECOVERY') setNeuesPw(true) }).data.subscription.unsubscribe, [])
   const s = getSession()
   const kidId = s && findKid(s.classCode, s.kidId) ? s.kidId : null
   useEffect(() => { if (kidId) einstellungenAnwenden(kindEinstellungen(kidId)) }, [kidId])
+  if (neuesPw) return <NeuesPasswort onFertig={() => { setNeuesPw(false); location.hash = '#eltern' }} />
   return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><InstallHinweis /></>
 }
 

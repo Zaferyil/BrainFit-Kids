@@ -81,4 +81,4 @@ export async function elternKinder() {
   return (data ?? []).map((k) => ({ id: k.id, name: k.vorname }))
 }
 export const elternPasswortVergessen = (email: string) =>
-  supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/app/#eltern` })
+  supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/app/` })
