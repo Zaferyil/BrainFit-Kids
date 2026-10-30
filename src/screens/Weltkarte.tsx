@@ -122,7 +122,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const stopsY = karte.plaetze.slice(0, anzahl).filter((_, i) => plaetze[start + i] && plaetze[start + i].kind !== 'burg').map(([, y]) => y)
             const oben = stopsY.length ? Math.min(...stopsY) : karte.h
             // genau so viel Platz lassen, dass die Burg (78 % breit, Seitenverhältnis 600:429) ganz hineinpasst
-            const platz = oben - karte.h * 0.035 - karte.w * 0.6
+            const platz = oben + karte.h * 0.02 - karte.w * 0.6
             // reicht das Bild nach oben nicht, bekommt die Insel oben Wasser dazu (negativer Schnitt)
             const schnitt = letzte ? (schlussBurg ? platz : Math.max(0, platz)) : 0
             const hoehe = karte.h - schnitt
@@ -150,7 +150,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 </div>
               )}
               {letzte && schlussBurg && (
-                <div className="insel-stop insel-burg-platz" style={{ left: '50%', top: `${((oben - schnitt - karte.h * 0.035) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
+                <div className="insel-stop insel-burg-platz schluss" style={{ left: '58%', top: `${((oben - schnitt + karte.h * 0.02) / hoehe) * 100}%` }}><ErfolgsBurg burg={schlussBurg} /></div>
               )}
             </section>
             )

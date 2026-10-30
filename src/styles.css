@@ -2155,3 +2155,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .erfolgsburg { width: min(78cqw, 420px); translate: -50% -100%; }
 .erfolgsburg img { border-radius: 26px; mask-image: radial-gradient(ellipse 72% 70% at 50% 52%, #000 58%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 52%, #000 58%, transparent 100%); }
 .insel.ende-wasser .insel-bg { mask-image: linear-gradient(to bottom, transparent, #000 14cqw); }
+/* Schluss-Burg deckt die kleine Burg im Inselbild ab; die letzte Station steht davor */
+.insel-burg-platz.schluss { z-index: 0; }
