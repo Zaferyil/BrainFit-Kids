@@ -155,7 +155,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: burg && !letzte ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: burg && !letzte && !frei ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
