@@ -4,7 +4,7 @@ create or replace function public.vergleich(p_kind uuid) returns jsonb
 language plpgsql stable security definer set search_path = public as $$
 declare st smallint; n int; erg jsonb;
 begin
-  if not public.darf_kind_sehen(p_kind) then raise exception 'keine Berechtigung'; end if;
+  if not coalesce(public.darf_kind_sehen(p_kind), false) then raise exception 'keine Berechtigung'; end if;
   select stufe into st from kinder where id = p_kind;
   with w as (
     select f.daten -> ('bfk.werte.' || f.kind::text) as v
@@ -24,4 +24,5 @@ begin
   into erg from b;
   return erg;
 end $$;
+revoke execute on function public.vergleich(uuid) from public, anon;
 grant execute on function public.vergleich(uuid) to authenticated;
