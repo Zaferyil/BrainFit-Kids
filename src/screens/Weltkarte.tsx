@@ -221,7 +221,7 @@ function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onL
   return (
     <div className="path-stop">
       {current && <div className="path-start">Du bist da</div>}
-      {current && stop.kind === 'unit' && <div className="path-me"><Avatar size={40} {...kid.avatar} /></div>}
+
       {stop.state === 'locked' ? (
         <button type="button" className={cls} aria-label={`${label} (gesperrt)`} onClick={() => onLocked(stop.kind === 'game' ? 'Dieses Denkspiel kommt nach der Einheit davor.' : 'Das kommt später – Schritt für Schritt!')}>
           {inner}
