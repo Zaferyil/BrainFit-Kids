@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
 const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 
 async function zugangsMail(an: string, eltern: string, kind: string, benutzer: string, pw: string, paket: string) {
-  const app = Deno.env.get('APP_URL') ?? 'https://brainfitkids.netlify.app'
+  const app = Deno.env.get('APP_URL') ?? 'https://brainfitkids.mentalmath.at'
   const von = Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>'
   const antwortAn = Deno.env.get('MAIL_REPLY_TO') ?? 'info@mentalmath.at'
   const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#231A4F">

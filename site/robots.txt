@@ -3,4 +3,4 @@ Allow: /
 Disallow: /app/
 Disallow: /kuendigen.html
 
-Sitemap: https://brainfitkids.netlify.app/sitemap.xml
+Sitemap: https://brainfitkids.mentalmath.at/sitemap.xml
