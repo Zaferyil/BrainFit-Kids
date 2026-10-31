@@ -2402,11 +2402,12 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-web-kopf{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .adm-web-kopf h2{margin:0}
 .adm-schalter{display:inline-flex;align-items:center;gap:8px;font-weight:800}
-.adm-schalter input{width:20px;height:20px}
+.adm-schalter input,.adm-beispiele input{width:20px;height:20px;accent-color:#5B47D6;color-scheme:light}
 .adm-web-felder{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 8px}
 .adm-web-felder label{display:grid;gap:4px;font-weight:700;font-size:14px}
 .adm-web-felder .breit{grid-column:1/-1}
-.adm-web-felder input,.adm-web-felder textarea{font:inherit;padding:9px 11px;border-radius:10px;border:1.5px solid #DDD6FF;width:100%;box-sizing:border-box}
+.adm-web{color-scheme:light}
+.adm-web-felder input,.adm-web-felder textarea{background:#fff;color:#231A4F;font:inherit;padding:9px 11px;border-radius:10px;border:1.5px solid #DDD6FF;width:100%;box-sizing:border-box}
 @media (max-width:640px){.adm-web-felder{grid-template-columns:1fr}}
 .adm-web-vorschau{margin-top:12px;padding:16px;border-radius:16px;background:linear-gradient(135deg,#5B47D6,#FF6FB5);color:#fff;display:grid;gap:6px;max-width:420px}
 .adm-web-vorschau p{margin:0}.adm-web-vorschau span{background:rgba(255,255,255,.2);padding:4px 10px;border-radius:999px;width:fit-content}
