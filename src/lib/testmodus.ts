@@ -1,13 +1,13 @@
 // Testmodus: alle Lektionen, Stationen und Denkspiele auf der Karte sind offen.
-// Umschalten im Admin-Bereich (Einstellungen); ohne Einstellung ist er an, solange die App getestet wird.
+// Umschalten im Admin-Bereich (Einstellungen); ohne Einstellung ist er aus (Kinder lernen der Reihe nach).
 export const TESTMODUS_KEY = 'bfk.testmodus'
 
 export const ALLES_OFFEN = (() => {
   try {
     const v = localStorage.getItem(TESTMODUS_KEY)
-    return v === null ? true : v === '1'
+    return v === '1'
   } catch {
-    return true
+    return false
   }
 })()
 
