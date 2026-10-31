@@ -2396,3 +2396,4 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 /* Logo auf Login-Seiten */
 .app-logo{display:block;width:min(300px,85%);height:auto;margin:0 auto 6px;filter:drop-shadow(0 4px 10px rgba(35,26,79,.25))}
 .app-logo.gross{width:min(380px,92%)}
+.adm-beispiele{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px;cursor:pointer}

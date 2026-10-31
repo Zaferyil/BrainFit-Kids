@@ -73,7 +73,10 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
   const [tab, setTab] = useState<Tab>('uebersicht')
   const [version, setVersion] = useState(0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const zeilen = useMemo(() => kidZeilen(), [version])
+  const alle = useMemo(() => kidZeilen(), [version])
+  // Beispielkinder (nur auf diesem Gerät) standardmäßig ausblenden
+  const [beispiele, setBeispiele] = useState(false)
+  const zeilen = beispiele ? alle : alle.filter((z) => istCloudKind(z.kid.id))
   const neu = () => setVersion((v) => v + 1)
 
   return (
@@ -94,7 +97,8 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
         </div>
       </header>
       <main className="adm-main">
-        <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank. Beispielkinder (Lena, Jonas …) gibt es nur auf diesem Gerät.'}</div>
+        <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
+          <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
         {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
