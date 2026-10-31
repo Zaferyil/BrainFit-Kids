@@ -2026,10 +2026,9 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-stop .path-node::before { opacity: .55; }
 .insel-stop .path-node.game { background: linear-gradient(180deg, #A57CFF, #6A3DE8); }
 .insel-stop .path-node.start { background: linear-gradient(180deg, #FFC04D, #FF8A1F); }
-.insel-stop .path-node.locked { background: linear-gradient(180deg, #7FB8F5, #5A8FD6); box-shadow: 0 0 0 3px rgba(255,255,255,.9), 0 4px 10px rgba(10,40,100,.25); filter: saturate(.75); }
-.insel-stop .path-node.locked.game { background: linear-gradient(180deg, #B9A0F5, #8D6FE0); }
-.insel-stop .path-node.locked::before { opacity: .35; }
-.insel-stop .path-node.locked .path-num { color: #FFFFFF; opacity: .9; }
+.insel-stop .path-node.locked { background: rgba(255,255,255,.82); box-shadow: 0 0 0 3px rgba(255,255,255,.95), 0 4px 10px rgba(10,40,100,.25); backdrop-filter: blur(2px); }
+.insel-stop .path-node.locked::before { display: none; }
+.insel-stop .path-node.locked .path-num { color: #8A93A8; text-shadow: none; -webkit-text-stroke: 0; }
 .insel-stop .path-num, .insel-stop .path-node.current .path-num { -webkit-text-stroke: 0; text-shadow: 0 2px 3px rgba(0,30,100,.35); }
 .insel-stop .path-node.current { box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 9px rgba(255,197,49,.9), 0 10px 22px rgba(10,40,100,.4); }
 .path-stars { margin-top: -3.4cqw; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
