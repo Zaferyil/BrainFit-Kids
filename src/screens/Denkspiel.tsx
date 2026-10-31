@@ -13,6 +13,7 @@ import { PerlenJagd } from '../games/PerlenJagd'
 import { FarbWort } from '../games/FarbWort'
 import { ZahlenMerken } from '../games/ZahlenMerken'
 import { ZahlenVergleichen } from '../games/ZahlenVergleichen'
+import { BilderMerken } from '../games/BilderMerken'
 import { AbakusRechnen } from '../games/AbakusRechnen'
 import { SorobanKarten } from '../games/SorobanKarten'
 import { SchnellZaehlen } from '../games/SchnellZaehlen'
@@ -35,6 +36,7 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   schnellzaehlen: SchnellZaehlen,
   sorobankarten: SorobanKarten,
   abakusrechnen: AbakusRechnen,
+  bildermerken: BilderMerken,
 }
 
 

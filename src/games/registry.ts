@@ -17,6 +17,7 @@ export type GameMeta = { id: string; name: string; area: Area; minTier: Tier; te
 export const GAMES: GameMeta[] = [
   { id: 'memory', name: 'Perlen-Memory', area: 'gedaechtnis', minTier: 'A', text: 'Finde die Paare', ready: true },
   { id: 'kette', name: 'Perlen-Kette', area: 'gedaechtnis', minTier: 'A', text: 'Merk dir die Reihenfolge', ready: true },
+  { id: 'bildermerken', name: 'Bilder merken', area: 'gedaechtnis', minTier: 'A', text: 'Welche Karte hast du gesehen?', ready: true },
   { id: 'zahlenmerken', name: 'Zahlen merken', area: 'gedaechtnis', minTier: 'A', text: 'Merk dir die Ziffern', ready: true },
   { id: 'blitzabakus', name: 'Blitz-Abakus', area: 'gedaechtnis', minTier: 'B', text: 'Welche Zahl hat geblitzt?', ready: false },
   { id: 'jagd', name: 'Perlen-Jagd', area: 'konzentration', minTier: 'A', text: 'Finde alle Zielperlen', ready: true },

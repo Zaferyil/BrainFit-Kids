@@ -2563,3 +2563,12 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .ar-karte { flex: 0 1 150px; display: grid; place-items: center; padding: 14px 10px; border-radius: 24px; background: #fff; box-shadow: 0 12px 26px rgba(30,15,90,.3); }
 .ar-zeichen { font-family: var(--font-display); font-size: 64px; color: #FFE066; text-shadow: 0 4px 0 rgba(0,0,0,.2); }
 .ar-loesung { font-family: var(--font-display); font-size: 28px; color: #fff; }
+
+/* Bilder merken */
+.bm-karte { width: min(70vw, 280px); aspect-ratio: 3 / 4; display: grid; place-items: center; border-radius: 26px; background: #FDE3C0; box-shadow: 0 0 0 14px #E85D04, 0 18px 30px rgba(0,0,0,.25); margin: 14px 0; animation: bm-rein .25s ease-out; }
+.bm-karte span { font-size: min(36vw, 150px); line-height: 1; }
+@keyframes bm-rein { from { transform: scale(.8) rotateY(60deg); opacity: 0 } to { transform: none; opacity: 1 } }
+.bm-raster { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: min(100%, 400px); }
+.bm-option { aspect-ratio: 3 / 4; display: grid; place-items: center; font-size: min(18vw, 80px); border: 0; border-radius: 20px; background: #FDE3C0; box-shadow: 0 0 0 8px #E85D04; cursor: pointer; }
+.bm-option.right { box-shadow: 0 0 0 8px #3DBE5B; } .bm-option.wrong { box-shadow: 0 0 0 8px #FF3B3B; } .bm-option.dim { opacity: .45; }
+@media (prefers-reduced-motion: reduce) { .bm-karte { animation: none; } }
