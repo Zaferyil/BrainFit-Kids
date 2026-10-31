@@ -15,6 +15,7 @@ import schattenninja from '../assets/seza/schattenninja.webp'
 import kapitaen from '../assets/seza/kapitaen.webp'
 import dino from '../assets/seza/dino.webp'
 import rennfahrer from '../assets/seza/rennfahrer.webp'
+import taucher from '../assets/seza/taucher.webp'
 import wueste from '../assets/seza/wueste.webp'
 import kristall from '../assets/seza/d-kristall.webp'
 import roboter from '../assets/seza/d-roboter.webp'
@@ -74,6 +75,7 @@ const KOSTUEME: Artikel[] = [
   k('rennfahrer', 'Rennfahrer', rennfahrer, { art: 'serie', wert: 14 }, '52% 32%'),
   k('wueste', 'Wüsten-Reisender', wueste, { art: 'lektionen', wert: 14 }, '52% 30%'),
   k('kapitaen', 'Kapitän', kapitaen, { art: 'level', wert: 15 }, '52% 35%'),
+  k('taucher', 'Taucher', taucher, { art: 'serie', wert: 21 }, '52% 32%'),
   k('schattenninja', 'Schatten-Ninja', schattenninja, { art: 'lektionen', wert: 18 }, '55% 32%'),
 ]
 

@@ -4,5 +4,6 @@ insert into public.shop_artikel (id, name, slot, preis, waehrung, start) values
   ('rennfahrer', 'Rennfahrer', 'outfit', 0, 'sterne', true),
   ('wueste', 'Wüsten-Reisender', 'outfit', 0, 'sterne', true),
   ('kapitaen', 'Kapitän', 'outfit', 0, 'sterne', true),
-  ('schattenninja', 'Schatten-Ninja', 'outfit', 0, 'sterne', true)
+  ('schattenninja', 'Schatten-Ninja', 'outfit', 0, 'sterne', true),
+  ('taucher', 'Taucher', 'outfit', 0, 'sterne', true)
 on conflict (id) do update set name = excluded.name, start = true, aktiv = true;
