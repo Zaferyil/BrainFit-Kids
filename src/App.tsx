@@ -42,6 +42,11 @@ import { tierFor, tierRank } from './games/engine'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
 import { currentStation, getProgress, viewProgress } from './lib/progress'
+import { Bericht } from './screens/Bericht'
+import { berichtAktualisieren } from './lib/bericht'
+
+// Fähigkeiten einmal pro App-Start speichern (für Monatsverlauf und Vergleich)
+const berichtStand = new Set<string>()
 
 const TITLES: Record<string, string> = {
   einheit: 'Einheit',
@@ -107,7 +112,9 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'karte') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
+    if (!berichtStand.has(kid.id)) { berichtStand.add(kid.id); berichtAktualisieren(kid) }
     if (route === 'rangliste') return <Rangliste kid={kid} />
+    if (route === 'bericht') return <Bericht kid={kid} zurueck={{ href: '#/garderobe' }} />
     if (route === 'seza') return <MeinSeZa kid={kid} />
     if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />

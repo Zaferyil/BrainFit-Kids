@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
+import { Bericht } from './Bericht'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { alleKinder, type Kid } from '../data/demo'
@@ -87,6 +88,8 @@ function Auswahl({ kinder, onWahl, onLogout }: { kinder: KindKurz[]; onWahl: (id
 }
 
 function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => void; onWechseln?: () => void }) {
+  const [bericht, setBericht] = useState(false)
+  if (bericht) return <Bericht kid={kid} eltern zurueck={{ onClick: () => setBericht(false) }} />
   const p = getProgress(kid.id)
   const daily = getDaily(kid.id)
   const welt = WORLDS[p.world - 1]
@@ -112,6 +115,7 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
         </div>
       </header>
       <main className="adm-main">
+        <button type="button" className="adm-btn primary eltern-bericht-knopf" onClick={() => setBericht(true)}>📊 Lernbericht ansehen – Stärken, Entwicklung &amp; Vergleich</button>
         <div className="adm-kpis">
           <div className="adm-card adm-kpi"><span>Lektion</span><b>{nr} <small>von {ALLE_LEKTIONEN.length}</small></b><small>{welt?.units[p.unit - 1]}</small></div>
           <div className="adm-card adm-kpi"><span>Level</span><b>{p.level}</b><small>{p.perlen} Perlen gesammelt</small></div>

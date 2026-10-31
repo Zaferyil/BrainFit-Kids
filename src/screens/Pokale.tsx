@@ -75,6 +75,7 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
       <Funkeln />
       <div className="dp ich">
         <a href="#/seza" className="ich-seza"><SeZa kidId={kid.id} groesse={120} /><span><b>Mein SeZa</b><small>⭐ {konto(kid.id).sterne} · 💎 {progress.gems}</small><em>Kostüme &amp; Accessoires →</em></span></a>
+        <a href="#/bericht" className="ich-seza ich-bericht"><span className="ich-bericht-icon" aria-hidden="true">📊</span><span><b>Mein Lernbericht</b><small>Stärken, Fortschritt &amp; Vergleich</small><em>Ansehen →</em></span></a>
         <h1>{kid.name}</h1>
         <p>{stufe !== null ? STUFE[stufe] : 'Klasse nicht gewählt'} · Level {progress.level}</p>
         <div className="erfolg-chips ich-chips">
