@@ -3,6 +3,7 @@ import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import { useState } from 'react'
+import { rangVon } from '../data/seza'
 import { SeZa } from '../components/SeZa'
 import { konto, kindEinstellungen, speichereKindEinstellungen } from '../lib/wirtschaft'
 import { passwortVon, setzePasswort, type Kid } from '../data/demo'
@@ -67,7 +68,16 @@ export function Pokale({ kid, progress }: { kid: Kid; progress: Progress }) {
 
 const STUFE = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klasse', '5. Klasse', '6. Klasse']
 
+const ZAHLEN = [
+  { id: 'sterne', icon: '⭐', name: 'Sterne', farbe: '#FFC531', wert: (id: string) => konto(id).sterne, text: '⭐ Sterne bekommst du für Übungen, Lektionen und Tests. Damit kaufst du in „Mein SeZa“ Hintergründe, Rahmen und die Überraschungskiste.' },
+  { id: 'dia', icon: '💎', name: 'Diamanten', farbe: '#3BA7FF', wert: (_: string, p: Progress) => p.gems, text: '💎 Diamanten sind selten: für perfekte Tests (3 Sterne) und geschaffte Welten. Damit holst du dir die besonderen Diamant-Kostüme!' },
+  { id: 'perlen', icon: '🟡', name: 'Perlen', farbe: '#FF8FC8', wert: (_: string, p: Progress) => p.perlen, text: '🟡 Perlen sind deine Punkte für jede richtige Antwort. Sie werden nie weniger: Sie bestimmen deinen Rang und deinen Platz in der Rangliste.' },
+  { id: 'serie', icon: '🔥', name: 'Tage am Stück', farbe: '#5FE08A', wert: (_: string, p: Progress) => p.streak, text: '🔥 So viele Tage hintereinander hast du gelernt. Lange Serien schalten Kostüme wie Feuerwehr und Ninja frei!' },
+]
+
 export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress; onLogout: () => void }) {
+  const [info, setInfo] = useState<string | null>(null)
+  const rang = rangVon(progress.perlen)
   const stufe = load<number | null>(`bfk.stufe.${kid.id}`, null)
   const world = WORLDS[progress.world - 1] ?? WORLDS[0]
   return (
@@ -84,12 +94,21 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
           </div>
         </section>
 
-        {/* Kennzahlen */}
+        {/* Kennzahlen: antippen erklärt, wofür sie sind */}
         <div className="ich2-zahlen">
-          <div style={{ ['--c' as string]: '#FFC531' }}><span>⭐</span><b>{konto(kid.id).sterne}</b><small>Sterne</small></div>
-          <div style={{ ['--c' as string]: '#3BA7FF' }}><span>💎</span><b>{progress.gems}</b><small>Diamanten</small></div>
-          <div style={{ ['--c' as string]: '#FF8FC8' }}><span>🟡</span><b>{progress.perlen}</b><small>Perlen</small></div>
-          <div style={{ ['--c' as string]: '#5FE08A' }}><span>🔥</span><b>{progress.streak}</b><small>Tage am Stück</small></div>
+          {ZAHLEN.map((z) => (
+            <button key={z.id} type="button" className={info === z.id ? 'an' : ''} style={{ ['--c' as string]: z.farbe }} onClick={() => setInfo(info === z.id ? null : z.id)}>
+              <span>{z.icon}</span><b>{z.wert(kid.id, progress)}</b><small>{z.name}</small>
+            </button>
+          ))}
+        </div>
+        {info && <p className="ich2-info" role="status">{ZAHLEN.find((z) => z.id === info)!.text}</p>}
+        <div className="ich2-rang">
+          <span className="ich2-rang-icon">{rang.icon}</span>
+          <div><small>Mein Rang</small><b>{rang.name}</b>
+            {rang.naechster && <><i><em style={{ width: `${Math.min(100, (progress.perlen - rang.ab) / (rang.naechster.ab - rang.ab) * 100)}%` }} /></i>
+            <small>Noch {rang.naechster.ab - progress.perlen} Perlen bis {rang.naechster.icon} {rang.naechster.name}</small></>}
+          </div>
         </div>
         <div className="ich2-welt"><span>🗺️ Welt {world.n}</span><b>{world.name}</b></div>
 

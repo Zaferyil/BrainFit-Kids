@@ -130,7 +130,7 @@ export function bedingungStand(kidId: string, b?: Bedingung): { ok: boolean; ant
     : b.art === 'serie' ? `Noch ${rest} ${rest === 1 ? 'Tag' : 'Tage'} am Stück` : `Noch ${rest} ${rest === 1 ? 'Level' : 'Level'}`
   return { ok, anteil: Math.min(1, ist / b.wert), fehlt }
 }
-export const hatArtikel = (kidId: string, a: Artikel) => a.slot === 'outfit' ? bedingungStand(kidId, a.frei).ok : konto(kidId).besitz.includes(a.id)
+export const hatArtikel = (kidId: string, a: Artikel) => a.slot === 'outfit' && a.frei ? bedingungStand(kidId, a.frei).ok : konto(kidId).besitz.includes(a.id)
 
 /** Anziehen: Kostüm, wenn freigeschaltet; Hintergrund/Rahmen, wenn gekauft */
 export function anziehen(kidId: string, id: string): boolean {

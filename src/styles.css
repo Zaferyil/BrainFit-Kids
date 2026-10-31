@@ -2522,3 +2522,14 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 @keyframes kiste-wackel { 0%, 80%, 100% { transform: rotate(0) } 85% { transform: rotate(-12deg) } 90% { transform: rotate(12deg) } 95% { transform: rotate(-6deg) } }
 .sz-kiste-auf { text-align: center; } .sz-kiste-gross { font-size: 60px; } .sz-kiste-vorschau { display: grid; place-items: center; margin: 8px 0 14px; }
 @media (prefers-reduced-motion: reduce) { .sz-kiste-bild { animation: none; } }
+.sz-karte.diamant { background: linear-gradient(160deg, #E8F7FF, #fff 40%, #F3E9FF); box-shadow: 0 0 0 3px #6FD3FF, 0 6px 0 rgba(75,47,194,.35); }
+.sz-raster:not(.schmuck) .sz-karte.diamant.zu .sz-bild img { filter: saturate(1.1); opacity: 1; }
+.sz-karte.diamant .sz-btn.gelb { background: linear-gradient(180deg, #8EE4FF, #3BA7FF); color: #0B2E6B; }
+.ich2-zahlen button { display: grid; justify-items: center; gap: 2px; padding: 12px 4px; border: 0; border-radius: 20px; background: #fff; color: #231A4F; box-shadow: 0 5px 0 rgba(40,20,120,.3), inset 0 -4px 0 var(--c); cursor: pointer; font-family: inherit; }
+.ich2-zahlen button.an { outline: 3px solid var(--c); }
+.ich2-zahlen button span { font-size: 22px; } .ich2-zahlen button b { font-family: var(--font-display); font-size: 24px; line-height: 1; } .ich2-zahlen button small { font-weight: 800; font-size: 11px; color: #6B648F; }
+.ich2-info { margin: -4px 0 0; width: 100%; box-sizing: border-box; padding: 12px 16px; border-radius: 18px; background: #fff; color: #231A4F !important; font-weight: 700 !important; font-size: 15px !important; opacity: 1 !important; text-align: left; }
+.ich2-rang { width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 22px; background: linear-gradient(135deg, #FFC531, #FF8A1F); color: #3A2400; text-align: left; box-shadow: 0 6px 0 #C46A00; }
+.ich2-rang-icon { font-size: 42px; } .ich2-rang div { display: grid; gap: 3px; flex: 1; }
+.ich2-rang b { font-family: var(--font-display); font-size: 22px; } .ich2-rang small { font-weight: 800; }
+.ich2-rang i { height: 10px; border-radius: 9px; background: rgba(0,0,0,.18); overflow: hidden; } .ich2-rang em { display: block; height: 100%; background: #fff; border-radius: 9px; }

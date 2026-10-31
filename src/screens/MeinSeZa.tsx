@@ -91,11 +91,12 @@ export function MeinSeZa({ kid }: { kid: Kid }) {
             const hat = hatArtikel(kid.id, a)
             const traegt = k.an[a.slot] === a.id || (a.slot === 'outfit' && !k.an.outfit && a.id === 'original')
             const genug = a.waehrung === 'sterne' ? k.sterne >= a.preis : p.gems >= a.preis
-            const stand = a.slot === 'outfit' ? bedingungStand(kid.id, a.frei) : null
+            const fehlt = a.waehrung === 'diamanten' ? Math.max(0, a.preis - p.gems) : 0
+            const stand = a.slot === 'outfit' && a.frei ? bedingungStand(kid.id, a.frei) : null
             const vorschau = a.slot === 'outfit' ? <img src={a.bild} alt="" loading="lazy" />
               : <SeZa an={{ outfit: k.an.outfit, [a.slot]: a.id }} groesse="100%" />
             return (
-              <article key={a.id} className={`sz-karte ${traegt ? 'an' : ''} ${hat ? 'hat' : 'zu'}`}>
+              <article key={a.id} className={`sz-karte ${traegt ? 'an' : ''} ${hat ? 'hat' : 'zu'} ${a.waehrung === 'diamanten' ? 'diamant' : ''}`}>
                 <button type="button" className="sz-bild" onClick={() => anprobieren(a)} aria-label={`${a.name} anprobieren`}>
                   {vorschau}
                   {traegt && <i className="sz-haken" aria-label="angezogen">✓</i>}
@@ -109,7 +110,7 @@ export function MeinSeZa({ kid }: { kid: Kid }) {
                 ) : stand ? (
                   <div className="sz-ziel"><i><em style={{ width: `${stand.anteil * 100}%` }} /></i><small>{stand.fehlt}</small></div>
                 ) : (
-                  <button type="button" className="sz-btn gelb" disabled={!genug} onClick={() => setFrage(a)} title={genug ? 'Kaufen' : 'Nicht genug Sterne'}>
+                  <button type="button" className="sz-btn gelb" disabled={!genug} onClick={() => setFrage(a)} title={genug ? 'Kaufen' : a.waehrung === 'sterne' ? 'Nicht genug Sterne' : `Noch ${fehlt} Diamanten`}>
                     {a.waehrung === 'sterne' ? '⭐' : '💎'} {a.preis}
                   </button>
                 )}

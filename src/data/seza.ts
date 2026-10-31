@@ -11,6 +11,11 @@ import ninja from '../assets/seza/ninja.webp'
 import pirat from '../assets/seza/pirat.webp'
 import ritter from '../assets/seza/ritter.webp'
 import feuerwehr from '../assets/seza/feuerwehr.webp'
+import kristall from '../assets/seza/d-kristall.webp'
+import roboter from '../assets/seza/d-roboter.webp'
+import koenig from '../assets/seza/d-koenig.webp'
+import pixel from '../assets/seza/d-pixel.webp'
+import magier from '../assets/seza/d-magier.webp'
 
 // SeZa: die Figur des Kindes. Kostüme sind fertige Bilder von SeZa und werden durch Lernen freigeschaltet
 // (Lektionen, Welten, Serie, Level). Mit Sternen kauft das Kind Hintergründe und Rahmen oder öffnet eine Überraschungskiste.
@@ -62,6 +67,17 @@ const KOSTUEME: Artikel[] = [
   k('genie', 'Genie', genie, { art: 'welt', wert: 2 }, '50% 30%'),
 ]
 
+// Diamant-Kostüme: besondere SeZas, nur mit Diamanten (selten) zu bekommen
+const d = (id: string, name: string, bild: string, preis: number, kopf: string): Artikel =>
+  ({ id, name, slot: 'outfit', preis, waehrung: 'diamanten', bild, kopfAusschnitt: kopf })
+const DIAMANT: Artikel[] = [
+  d('d-pixel', 'Pixel-SeZa', pixel, 5, '52% 22%'),
+  d('d-roboter', 'Robo-SeZa', roboter, 6, '52% 25%'),
+  d('d-magier', 'Sternen-Magier', magier, 8, '55% 32%'),
+  d('d-koenig', 'König SeZa', koenig, 10, '52% 35%'),
+  d('d-kristall', 'Kristall-Held', kristall, 12, '52% 32%'),
+]
+
 const h = (id: string, name: string, preis: number): Artikel => ({ id, name, slot: 'hg', preis, waehrung: 'sterne', css: id })
 const r = (id: string, name: string, preis: number): Artikel => ({ id, name, slot: 'rahmen', preis, waehrung: 'sterne', css: id })
 
@@ -71,12 +87,26 @@ const SCHMUCK: Artikel[] = [
   r('r-gold', 'Goldrahmen', 200), r('r-regenbogen', 'Regenbogenrahmen', 250), r('r-flamme', 'Feuerrahmen', 300), r('r-diamant', 'Diamantrahmen', 400),
 ]
 
-export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...SCHMUCK]
+export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...DIAMANT, ...SCHMUCK]
 export const START_KOSTUEM = 'original'
 export const START_KOSTUEME = KOSTUEME.filter((a) => a.start)
 
 /** Überraschungskiste: zufälliger Hintergrund oder Rahmen, den das Kind noch nicht hat */
 export const KISTE_PREIS = 180
+
+/** Perlen: Punkte für den Rang (werden nicht ausgegeben) */
+export const RAENGE = [
+  { ab: 0, name: 'Perlen-Anfänger', icon: '🌱' },
+  { ab: 300, name: 'Abakus-Lehrling', icon: '🧮' },
+  { ab: 1000, name: 'Rechen-Entdecker', icon: '🔍' },
+  { ab: 2500, name: 'Rechen-Profi', icon: '🚀' },
+  { ab: 5000, name: 'Kopfrechen-Meister', icon: '🏅' },
+  { ab: 10000, name: 'Abakus-Legende', icon: '👑' },
+]
+export function rangVon(perlen: number) {
+  const i = RAENGE.findLastIndex((r) => perlen >= r.ab)
+  return { ...RAENGE[i], naechster: RAENGE[i + 1] }
+}
 
 export function bedingungText(b: Bedingung) {
   switch (b.art) {
