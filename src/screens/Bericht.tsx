@@ -4,6 +4,9 @@ import type { Kid } from '../data/demo'
 import { getProgress } from '../lib/progress'
 import { FAEHIGKEITEN, MIN_VERGLEICH, berichtAktualisieren, einschaetzung, perzentil, verlauf, vergleichLaden, type Vergleich, type Werte } from '../lib/bericht'
 import { stufeVon } from '../lib/rangliste'
+import { load } from '../lib/storage'
+import type { Aktivitaet } from '../lib/daily'
+import { AREAS } from '../games/registry'
 
 // Lernbericht für Kind und Eltern: Überblick, Fähigkeiten im Vergleich zur Schulstufe, Platzierung,
 // Entwicklung über die Monate und eine pädagogische Einschätzung. Karten zum Wischen wie in der App.
@@ -34,7 +37,23 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   const stufe = STUFE[stufeVon(kid)] ?? ''
   const gruppe = vgl?.richtwert ? `BrainFit-Richtwerte · ${stufe}` : `${vgl?.n ?? 0} Kindern · ${stufe}`
 
-  const karten = ['Überblick', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Mein Jahr', 'Einschätzung']
+  // Aktivität: wie viele Lektions-Stationen und Denkspiele in welchem Bereich
+  const akt = load<Aktivitaet>(`bfk.aktivitaet.${kid.id}`, { bereiche: {}, richtig: 0, gesamt: 0 })
+  const TEILE = [{ id: 'rechnen', name: 'Rechnen (Lektionen)', color: '#5B47D6' }, ...AREAS.map((a) => ({ id: a.id, name: a.name, color: a.color }))]
+  const teile = TEILE.map((t) => ({ ...t, n: akt.bereiche[t.id] ?? 0 })).filter((t) => t.n > 0)
+  const gesamtAkt = teile.reduce((a, t) => a + t.n, 0)
+  const quote = akt.gesamt ? Math.round((akt.richtig / akt.gesamt) * 100) : 0
+  let winkel = -Math.PI / 2
+  const stuecke = teile.map((t) => {
+    const w = (t.n / gesamtAkt) * Math.PI * 2, a0 = winkel, a1 = winkel + w; winkel = a1
+    const p = (a: number, r = 80) => `${100 + r * Math.cos(a)},${100 + r * Math.sin(a)}`
+    const mitte = (a0 + a1) / 2
+    const d = teile.length === 1 ? 'M100,20 A80,80 0 1 1 99.99,20 Z' : `M100,100 L${p(a0)} A80,80 0 ${w > Math.PI ? 1 : 0} 1 ${p(a1)} Z`
+    return { ...t, d, lx: 100 + 52 * Math.cos(mitte), ly: 100 + 52 * Math.sin(mitte), pz: Math.round((t.n / gesamtAkt) * 100) }
+  })
+  const meist = [...teile].sort((a, b) => b.n - a.n)[0]
+
+  const karten = ['Überblick', 'Aktivität', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Mein Jahr', 'Einschätzung']
   const zu = (i: number) => leiste.current?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
   const onScroll = () => { const el = leiste.current; if (el) setKarte(Math.round(el.scrollLeft / el.clientWidth)) }
 
@@ -83,7 +102,26 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
           </div>
         </section>
 
-        {/* 2 Fähigkeiten */}
+        {/* 2 Aktivität: Kreisdiagramm */}
+        <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#FF6B6B,#FF8FC8)' }}>
+          <h2>Aktivität</h2>
+          <div className="ber-weiss">
+            {gesamtAkt ? <>
+              <div className="ber-kreis">
+                <svg viewBox="0 0 200 200" role="img" aria-label="Aktivität nach Bereichen">
+                  {stuecke.map((t) => <path key={t.id} d={t.d} fill={t.color} stroke="#fff" strokeWidth="2" />)}
+                  {stuecke.filter((t) => t.pz >= 7).map((t) => <text key={t.id} x={t.lx} y={t.ly} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontWeight="900" fontSize="15">{t.pz}%</text>)}
+                </svg>
+                <ul>{TEILE.map((t) => <li key={t.id} className={akt.bereiche[t.id] ? '' : 'leer'}><i style={{ background: t.color }} />{t.name}</li>)}</ul>
+              </div>
+              <div className="ber-zeile"><span>Aktivitäten gesamt</span><b>{gesamtAkt}</b></div>
+              <div className="ber-zeile"><span>Richtig</span><b>{quote} %</b></div>
+              <p className="ber-zitat">„{teile.length >= 4 ? 'Schön abwechslungsreich – so trainierst du alle Fähigkeiten!' : `Am meisten: ${meist.name}. Probier auch andere Denkspiele aus!`}“</p>
+            </> : <p className="ber-leer">Nach den ersten Lektionen und Denkspielen siehst du hier, womit {du === 'Du' ? 'du dich' : `${kid.name} sich`} am meisten beschäftigt.</p>}
+          </div>
+        </section>
+
+        {/* 3 Fähigkeiten */}
         <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#FF9F43,#A8D86E)' }}>
           <h2>Fähigkeiten</h2>
           <div className="ber-weiss">

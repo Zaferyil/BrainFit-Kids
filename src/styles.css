@@ -2534,3 +2534,10 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .ich2-rang-icon { font-size: 42px; } .ich2-rang div { display: grid; gap: 3px; flex: 1; }
 .ich2-rang b { font-family: var(--font-display); font-size: 22px; } .ich2-rang small { font-weight: 800; }
 .ich2-rang i { height: 10px; border-radius: 9px; background: rgba(0,0,0,.18); overflow: hidden; } .ich2-rang em { display: block; height: 100%; background: #fff; border-radius: 9px; }
+.ber-kreis { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 12px; align-items: center; }
+.ber-kreis svg { width: 100%; height: auto; }
+.ber-kreis ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ber-kreis li { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 13px; color: #4A4370; }
+.ber-kreis li.leer { opacity: .4; }
+.ber-kreis li i { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+@media (max-width: 480px) { .ber-kreis { grid-template-columns: 1fr; } .ber-kreis svg { max-width: 230px; margin: 0 auto; } .ber-kreis ul { grid-template-columns: 1fr 1fr; } }

@@ -32,3 +32,11 @@ export function addDaily(kidId: string, add: Partial<Omit<Daily, 'date'>>) {
   // Tagesziel: 20 Aufgaben am Tag
   if (d.tasks < 20 && d.tasks + (add.tasks ?? 0) >= 20) void import('./wirtschaft').then((w) => w.tageszielBelohnung(kidId))
 }
+
+/** Aktivität je Bereich zählen (Kreisdiagramm im Lernbericht): Lektionen = „rechnen“, Denkspiele = ihr Bereich */
+export type Aktivitaet = { bereiche: Record<string, number>; richtig: number; gesamt: number }
+export function aktivitaet(kidId: string, bereich: string, richtig = 0, gesamt = 0) {
+  const k = `bfk.aktivitaet.${kidId}`
+  const a = load<Aktivitaet>(k, { bereiche: {}, richtig: 0, gesamt: 0 })
+  save(k, { bereiche: { ...a.bereiche, [bereich]: (a.bereiche[bereich] ?? 0) + 1 }, richtig: a.richtig + richtig, gesamt: a.gesamt + gesamt })
+}
