@@ -13,6 +13,7 @@ import { PerlenJagd } from '../games/PerlenJagd'
 import { FarbWort } from '../games/FarbWort'
 import { ZahlenMerken } from '../games/ZahlenMerken'
 import { ZahlenVergleichen } from '../games/ZahlenVergleichen'
+import { SorobanKarten } from '../games/SorobanKarten'
 import { SchnellZaehlen } from '../games/SchnellZaehlen'
 import { AREAS, type GameMeta } from '../games/registry'
 import type { GameProps } from '../games/types'
@@ -31,6 +32,7 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   zahlenmerken: ZahlenMerken,
   vergleich: ZahlenVergleichen,
   schnellzaehlen: SchnellZaehlen,
+  sorobankarten: SorobanKarten,
 }
 
 

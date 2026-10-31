@@ -32,6 +32,7 @@ export const GAMES: GameMeta[] = [
   { id: 'sortierer', name: 'Schnell-Sortierer', area: 'tempo', minTier: 'A', text: 'Sortiere blitzschnell', ready: false },
   { id: 'symbol', name: 'Symbol-Blitz', area: 'tempo', minTier: 'B', text: 'Finde das gleiche Zeichen', ready: false },
   { id: 'rennen', name: 'Zahlen-Rennen', area: 'tempo', minTier: 'B', text: 'Tippe der Reihe nach', ready: false },
+  { id: 'sorobankarten', name: 'Soroban-Blitzkarten', area: 'tempo', minTier: 'A', text: 'Lies den Soroban blitzschnell', ready: true },
   { id: 'schnellzaehlen', name: 'Schnell zählen', area: 'tempo', minTier: 'A', text: 'Zähle die Perlen im Blitz', ready: true },
   { id: 'regel', name: 'Regel-Wechsel', area: 'flex', minTier: 'B', text: 'Farbe oder Form?', ready: false },
   { id: 'farbwort', name: 'Farb-Wort', area: 'flex', minTier: 'B', text: 'Tippe die Farbe, nicht das Wort', ready: true },

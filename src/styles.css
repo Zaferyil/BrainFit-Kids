@@ -2541,3 +2541,15 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .ber-kreis li.leer { opacity: .4; }
 .ber-kreis li i { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
 @media (max-width: 480px) { .ber-kreis { grid-template-columns: 1fr; } .ber-kreis svg { max-width: 230px; margin: 0 auto; } .ber-kreis ul { grid-template-columns: 1fr 1fr; } }
+
+/* Soroban-Blitzkarten */
+.sk, .sk-wahl { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 100%; }
+.sk-wahl-reihe { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: min(100%, 460px); }
+.sk-wahl-knopf { display: grid; justify-items: center; gap: 2px; padding: 18px 6px; border: 0; border-radius: 22px; background: #fff; color: #5B47D6; cursor: pointer; box-shadow: 0 6px 0 rgba(40,20,120,.3); font-family: inherit; }
+.sk-wahl-knopf b { font-family: var(--font-display); font-size: 44px; line-height: 1; } .sk-wahl-knopf span { font-weight: 900; } .sk-wahl-knopf small { font-weight: 800; color: #8A84AD; }
+.sk-karte { width: min(78vw, 300px); min-height: min(90vw, 340px); display: grid; place-items: center; padding: 16px; border-radius: 28px; background: #fff; box-shadow: 0 0 0 10px rgba(255,255,255,.25), 0 14px 30px rgba(30,15,90,.3); }
+.sk-karte .sk-zahl { font-family: var(--font-display); font-size: 84px; color: #5B47D6; }
+.sk-karte.zu { background: linear-gradient(135deg, #A06BFF, #FF8FC8); } .sk-frage { font-family: var(--font-display); font-size: 90px; color: #fff; }
+.sk-optionen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: min(100%, 460px); }
+.sk-option { display: grid; place-items: center; min-height: 90px; padding: 8px; border: 3px solid transparent; border-radius: 20px; background: #fff; cursor: pointer; box-shadow: 0 5px 0 rgba(40,20,120,.25); font-family: var(--font-display); font-size: 36px; color: #3BA7FF; }
+.sk-option.right { border-color: #3DBE5B; background: #E7F8EE; } .sk-option.wrong { border-color: #FF5C5C; background: #FFECEC; } .sk-option.dim { opacity: .5; }
