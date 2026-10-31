@@ -1026,17 +1026,17 @@ body::before{background:#100A30}
 </div>
 
 <script>
-const PAKETE={1:{name:'Basic',preis:49,alt:79,lieferung:false},2:{name:'Plus',preis:79,alt:109,lieferung:true},3:{name:'Premium',preis:99,alt:129,lieferung:true}};
+const PAKETE={1:{name:'Basic',preis:49,alt:79,jahr:490,altJahr:790,lieferung:false},2:{name:'Plus',preis:79,alt:109,jahr:790,altJahr:1090,lieferung:true},3:{name:'Premium',preis:99,alt:129,jahr:990,altJahr:1290,lieferung:true}};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let korb=null, angemeldet=false, kinder=[], takt='monat';
 // Zahlweise: monatlich (12 Raten) oder jährlich (einmal für 12 Monate, 2 Monate geschenkt)
-const betrag=p=>takt==='jahr'?p.preis*10:p.preis, einheit=()=>takt==='jahr'?'Jahr':'Monat';
+const betrag=p=>takt==='jahr'?p.jahr:p.preis, einheit=()=>takt==='jahr'?'Jahr':'Monat';
 const euro=n=>n.toLocaleString('de-AT',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
 function taktSetzen(t){takt=t;
   $$('.abrechnung button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.takt===t));
   $('#takt-info').textContent=t==='jahr'?'12 Monate Vertragslaufzeit · einmalige Zahlung für das ganze Jahr':'12 Monate Vertragslaufzeit · monatliche Zahlung';
   $$('.paket .preis').forEach(pr=>{const w=+pr.dataset[t],a=pr.dataset[t==='jahr'?'altJahr':'altMonat'];
-    pr.querySelector('b').textContent=euro(w)+' €';const s=pr.querySelector('s');if(s)s.textContent=euro(+a)+' €';pr.querySelector('span').textContent='/ '+einheit();
+    pr.querySelector('b').textContent=euro(w)+' €';const s=pr.querySelector('s');if(s){s.textContent=euro(+a)+' €';s.hidden=!(+a>w)}pr.querySelector('span').textContent='/ '+einheit();
     pr.nextElementSibling.textContent=t==='jahr'?`Jährlich abgerechnet · entspricht ${euro(Math.round(w/12*100)/100)} € im Monat`:'Monatlich abgerechnet'});
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
@@ -1061,6 +1061,13 @@ setTimeout(async()=>{let w;try{const r=await fetch(SUPA+'/rest/v1/website?select
   const c=w.countdown;if(c){const a=$('#angebot');
     if(!c.an){a.hidden=true}else{if(c.ende){const t=new Date(c.ende).getTime();if(t)AKTION_ENDE=t}if(c.titel)$('#angebot-titel').textContent=c.titel;
       if(c.fuss){$('#angebot-fuss-text').textContent=c.fuss}else{$('#angebot-fuss').hidden=true}$('#angebot-balken').style.width=Math.max(0,Math.min(100,+c.balken||0))+'%';uhr()}}
+  // Paketpreise und Stripe-Links aus dem Admin-Bereich
+  const pr=w.preise;if(pr)$$('.paket').forEach((el,i)=>{const k=['basic','plus','premium'][i],e=pr[k];if(!e)return;const P=PAKETE[i+1];
+    const z=(v,alt)=>(+v>0?+v:alt);P.preis=z(e.monat,P.preis);P.jahr=z(e.jahr,P.jahr);P.alt=+e.altMonat||0;P.altJahr=+e.altJahr||0;
+    const d=el.querySelector('.preis').dataset;d.monat=P.preis;d.jahr=P.jahr;d.altMonat=P.alt;d.altJahr=P.altJahr;
+    if(e.hinweis!=null){const v=el.querySelector('.vertrag');if(v)v.textContent=e.hinweis||'Mindestlaufzeit 12 Monate'}
+    if(/^https:\/\/buy\.stripe\.com\//.test(e.linkMonat||''))STRIPE_LINKS[i+1].monat=e.linkMonat;if(/^https:\/\/buy\.stripe\.com\//.test(e.linkJahr||''))STRIPE_LINKS[i+1].jahr=e.linkJahr});
+  if(pr)taktSetzen(takt);
   const p=w.popup,jetzt=Date.now();if(!p||!p.an||!p.titel)return;if(p.ab&&new Date(p.ab).getTime()>jetzt)return;if(p.bis&&new Date(p.bis).getTime()<jetzt)return;
   const key='bfk.kampagne.'+(p.titel+'|'+p.ab).split('').reduce((h,ch)=>(h*31+ch.charCodeAt(0))|0,0);try{if(localStorage.getItem(key))return}catch{}
   const zeigen=()=>{if(document.getElementById('bfk-ck')){setTimeout(zeigen,1500);return}if($('#v-start').hidden){setTimeout(zeigen,3000);return}
@@ -1085,7 +1092,7 @@ function korbZeichnen(){
   $('#entf').onclick=()=>{korb=null;korbZeichnen()};
   $('#zur-kasse').onclick=()=>{lade(false);kasse()};
 }
-function zusammen(){const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=p.alt?(j?p.alt*10:p.alt):0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Gründer-Aktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
+function zusammen(){const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=(j?p.altJahr:p.alt)||0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Gründer-Aktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
 function lade(auf){$('#lade').hidden=!auf;$('#schleier').hidden=!auf&&$('#login').hidden}
 function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-liefer').hidden=!p.lieferung; $('#k-zahl-nr').textContent=p.lieferung?4:3; $('#k-zus').innerHTML='<h3>Ihre Bestellung</h3>'+zusammen().replace('<div class="zus">','<div>'); ansicht('kasse')}
 function alert2(t){const p=document.createElement('div');p.className='login-box';p.innerHTML=`<p>${t}</p><button class="btn" type="button">OK</button>`;document.body.append(p);p.querySelector('button').onclick=()=>p.remove()}

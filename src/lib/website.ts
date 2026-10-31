@@ -3,18 +3,27 @@ import { supabase } from './supabase'
 
 export type Countdown = { an: boolean; ende: string; titel: string; fuss: string; balken: number }
 export type Popup = { an: boolean; titel: string; text: string; knopf: string; code: string; ab: string; bis: string; sekunden: number; bildAn: boolean; bild: string; uhrAn: boolean; uhrEnde: string }
-export type WebsiteDaten = { countdown: Countdown; popup: Popup }
+export type Preis = { monat: number; jahr: number; altMonat: number; altJahr: number; hinweis: string; linkMonat: string; linkJahr: string }
+export type PaketKey = 'basic' | 'plus' | 'premium'
+export type WebsiteDaten = { countdown: Countdown; popup: Popup; preise: Record<PaketKey, Preis> }
 
 export const STANDARD: WebsiteDaten = {
   countdown: { an: true, ende: '2026-11-30T23:59', titel: 'Jetzt Gründerpreis sichern – nur noch kurze Zeit!', fuss: 'Nur für die ersten 50 Familien · noch 37 Plätze', balken: 26 },
   popup: { an: false, titel: '', text: '', knopf: 'Zu den Paketen', code: '', ab: '', bis: '', sekunden: 8, bildAn: false, bild: '', uhrAn: false, uhrEnde: '' },
+  preise: {
+    basic: { monat: 49, jahr: 490, altMonat: 79, altJahr: 790, hinweis: 'Mindestlaufzeit 12 Monate · Aktionspreis für die ersten 50', linkMonat: 'https://buy.stripe.com/00w7sMafb8SUa6Z9WX9oc00', linkJahr: 'https://buy.stripe.com/aFafZi873glm3IB1qr9oc01' },
+    plus: { monat: 79, jahr: 790, altMonat: 109, altJahr: 1090, hinweis: 'Mindestlaufzeit 12 Monate', linkMonat: 'https://buy.stripe.com/8x2dRa1IFfhienfgll9oc02', linkJahr: 'https://buy.stripe.com/dRmcN61IF3yAfrj0mn9oc03' },
+    premium: { monat: 99, jahr: 990, altMonat: 129, altJahr: 1290, hinweis: 'Mindestlaufzeit 12 Monate', linkMonat: 'https://buy.stripe.com/3cIbJ20EBglmfrj5GH9oc04', linkJahr: 'https://buy.stripe.com/fZufZi1IF1qs4MFfhh9oc05' },
+  },
 }
 
 export async function websiteLaden(): Promise<WebsiteDaten> {
   const { data, error } = await supabase.from('website').select('daten').eq('id', 1).maybeSingle()
   if (error) throw error
   const d = (data?.daten ?? {}) as Partial<WebsiteDaten>
-  return { countdown: { ...STANDARD.countdown, ...d.countdown }, popup: { ...STANDARD.popup, ...d.popup } }
+  const preise = { ...STANDARD.preise }
+  for (const k of ['basic', 'plus', 'premium'] as PaketKey[]) preise[k] = { ...STANDARD.preise[k], ...d.preise?.[k] }
+  return { countdown: { ...STANDARD.countdown, ...d.countdown }, popup: { ...STANDARD.popup, ...d.popup }, preise }
 }
 
 // Bild für das Popup hochladen (Supabase Storage „website“), liefert die öffentliche Adresse
@@ -38,11 +47,12 @@ export type Bestellung = {
   betrag: number; kindVorname: string; kindBenutzer: string; kindStufe: number | null; kindSeit: string | null; status: string; test: boolean
 }
 
-// Gründerpreise wie auf der Website (Stripe-Preise)
+// Preise wie auf der Website (aus den Website-Einstellungen, sonst Gründerpreise)
 const PREIS: Record<string, { monat: number; jahr: number }> = { basic: { monat: 49, jahr: 490 }, plus: { monat: 79, jahr: 790 }, premium: { monat: 99, jahr: 990 } }
 
 export async function bestellungenLaden(): Promise<Bestellung[]> {
   const { data: b, error } = await supabase.from('bestellungen').select('*').order('erstellt', { ascending: false })
+  try { const w = await websiteLaden(); for (const k of Object.keys(PREIS)) PREIS[k] = { monat: w.preise[k as PaketKey].monat, jahr: w.preise[k as PaketKey].jahr } } catch { /* Standardpreise */ }
   if (error) throw error
   const kindIds = (b ?? []).map((x) => x.kind).filter(Boolean)
   const { data: k } = kindIds.length ? await supabase.from('kinder').select('id, vorname, benutzer, stufe, eltern, erstellt').in('id', kindIds) : { data: [] }

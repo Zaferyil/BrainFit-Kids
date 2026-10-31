@@ -1,6 +1,6 @@
 // Admin-Bereich „Website“: Countdown und Kampagnen-Popup der Website ändern – gilt sofort, ohne neues Deploy
 import { useEffect, useState, type FormEvent } from 'react'
-import { STANDARD, bildHochladen, websiteLaden, websiteSpeichern, type WebsiteDaten } from '../lib/website'
+import { STANDARD, bildHochladen, websiteLaden, websiteSpeichern, type PaketKey, type Preis, type WebsiteDaten } from '../lib/website'
 
 export function AdminWebsite() {
   const [d, setD] = useState<WebsiteDaten>(STANDARD)
@@ -15,6 +15,9 @@ export function AdminWebsite() {
 
   const cd = <K extends keyof WebsiteDaten['countdown']>(k: K, v: WebsiteDaten['countdown'][K]) => setD((x) => ({ ...x, countdown: { ...x.countdown, [k]: v } }))
   const pp = <K extends keyof WebsiteDaten['popup']>(k: K, v: WebsiteDaten['popup'][K]) => setD((x) => ({ ...x, popup: { ...x.popup, [k]: v } }))
+
+  const pr = (p: PaketKey, k: keyof Preis, v: string | number) => setD((x) => ({ ...x, preise: { ...x.preise, [p]: { ...x.preise[p], [k]: v } } }))
+  const zahl = (v: string) => Math.max(0, Math.round((Number(v.replace(',', '.')) || 0) * 100) / 100)
 
   const hochladen = async (datei: File | undefined) => {
     if (!datei) return
@@ -89,6 +92,31 @@ export function AdminWebsite() {
             <b>{d.popup.titel}</b>{d.popup.uhrAn && <span>⏰ 02 Tg : 14 Std : 30 Min : 12 Sek</span>}{d.popup.text && <p>{d.popup.text}</p>}{d.popup.code && <span>Code: <b>{d.popup.code}</b></span>}<i>{d.popup.knopf}</i>
           </div>
         )}
+      </section>
+
+      <section className="adm-card">
+        <div className="adm-web-kopf"><h2>💶 Paketpreise</h2></div>
+        <p className="adm-muted">Durchgestrichener Preis: leer oder 0 = kein durchgestrichener Preis. <b>Wichtig:</b> Stripe bucht den Preis, der im Zahlungslink hinterlegt ist. Ändern Sie hier den Preis, legen Sie in Stripe einen neuen Zahlungslink mit genau diesem Preis an und tragen Sie ihn unten ein.</p>
+        <div className="adm-preise">
+          {(['basic', 'plus', 'premium'] as PaketKey[]).map((p) => {
+            const e = d.preise[p]
+            return (
+              <div key={p} className="adm-preis-karte">
+                <h3>{p.charAt(0).toUpperCase() + p.slice(1)}</h3>
+                <div className="adm-preis-reihe">
+                  <label>Preis / Monat (€)<input inputMode="decimal" value={e.monat} onChange={(x) => pr(p, 'monat', zahl(x.target.value))} /></label>
+                  <label>statt (durchgestrichen)<input inputMode="decimal" value={e.altMonat || ''} placeholder="–" onChange={(x) => pr(p, 'altMonat', zahl(x.target.value))} /></label>
+                  <label>Preis / Jahr (€)<input inputMode="decimal" value={e.jahr} onChange={(x) => pr(p, 'jahr', zahl(x.target.value))} /></label>
+                  <label>statt (durchgestrichen)<input inputMode="decimal" value={e.altJahr || ''} placeholder="–" onChange={(x) => pr(p, 'altJahr', zahl(x.target.value))} /></label>
+                </div>
+                <label>Hinweis unter dem Preis<input value={e.hinweis} maxLength={80} onChange={(x) => pr(p, 'hinweis', x.target.value)} /></label>
+                <label>Stripe-Link monatlich<input value={e.linkMonat} placeholder="https://buy.stripe.com/…" onChange={(x) => pr(p, 'linkMonat', x.target.value.trim())} /></label>
+                <label>Stripe-Link jährlich<input value={e.linkJahr} placeholder="https://buy.stripe.com/…" onChange={(x) => pr(p, 'linkJahr', x.target.value.trim())} /></label>
+                <div className="adm-preis-vorschau"><b>{e.monat} €</b>{e.altMonat > e.monat && <s>{e.altMonat} €</s>}<span>/ Monat</span>{e.altMonat > e.monat && <em>−{Math.round((1 - e.monat / e.altMonat) * 100)} %</em>}</div>
+              </div>
+            )
+          })}
+        </div>
       </section>
 
       <div className="adm-web-fuss">
