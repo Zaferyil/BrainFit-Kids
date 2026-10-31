@@ -14,11 +14,16 @@ export function SeZa({ kidId, an, groesse = 220, jubel, className = '' }: Props)
   const k = kostuem.anker!
   const teile = EBENEN.filter((s) => s !== 'outfit').map((s) => [s, artikel(aus[s])] as [Slot, Artikel | undefined])
     .filter(([, a]) => a && passt(kostuem, a)) as [Slot, Artikel][]
+  const gold = teile.some(([s]) => s === 'hand')
+  const rueck = teile.filter(([s]) => s === 'ruecken'), vorn = teile.filter(([s]) => s !== 'ruecken')
   const pos = (x: number, y: number, b: number) => ({ left: `${x * 100}%`, top: `${y * 100}%`, width: `${b * 100}%` })
   return (
     <div className={`seza ${jubel ? 'jubel' : ''} ${className}`} style={{ width: groesse }} role="img" aria-label={`SeZa als ${kostuem.name}`}>
+      {rueck.map(([slot, a]) => <img key={slot} className="seza-teil ruecken" style={a.id === 'umhang' ? pos(.5, .62, .95) : pos(k.hand.x > .5 ? .2 : .8, .52, .48)} src={a.bild} alt="" draggable={false} />)}
       <img className="seza-kostuem" src={kostuem.bild} alt="" draggable={false} />
-      {teile.map(([slot, a]) => {
+      {/* SeZa hält immer einen Abakus; mit dem Goldenen Abakus ist er golden */}
+      {!gold && <div className="seza-teil hand" style={{ ...pos(k.hand.x, k.hand.y, k.hand.b), rotate: `${k.hand.r ?? 0}deg` }}><Fit><Abakus value={123} cols={3} colw={60} /></Fit></div>}
+      {vorn.map(([slot, a]) => {
         // Goldener Abakus: der echte App-Abakus (1 Himmelsperle, 4 Erdperlen) golden, über dem Abakus in der Hand
         if (slot === 'hand') return (
           <div key={slot} className="seza-teil hand gold" style={{ ...pos(k.hand.x, k.hand.y, k.hand.b), rotate: `${k.hand.r ?? 0}deg` }}>
@@ -27,8 +32,7 @@ export function SeZa({ kidId, an, groesse = 220, jubel, className = '' }: Props)
         )
         // Rücken: hinter SeZa, schaut seitlich hervor; Krone über dem Kopf; Zauberstab vorn auf der freien Seite
         const ort = slot === 'brille' ? k.augen && pos(k.augen.x, k.augen.y, k.augen.b)
-          : slot === 'ruecken' ? (a.id === 'umhang' ? pos(.5, .62, .95) : pos(k.hand.x > .5 ? .2 : .8, .52, .48))
-          : slot === 'kopf' ? pos(.52, .04, .42)
+          : slot === 'kopf' ? pos(k.kopf?.x ?? .52, Math.max(0, (k.kopf?.y ?? .04) - .02), .42)
           : slot === 'stab' ? { ...pos(k.hand.x > .5 ? .16 : .84, .5, .26), rotate: k.hand.x > .5 ? '-20deg' : '20deg' }
           : pos(k.begleiter.x, k.begleiter.y, .34)
         return ort ? <img key={slot} className={`seza-teil ${slot}`} style={ort} src={a.bild} alt="" draggable={false} /> : null

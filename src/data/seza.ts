@@ -8,9 +8,9 @@ import wissenschaftler from '../assets/seza/wissenschaftler.webp'
 import winterheld from '../assets/seza/winterheld.webp'
 import genie from '../assets/seza/genie.webp'
 import ninja from '../assets/seza/ninja.webp'
-import pirat from '../assets/seza/pirat.webp'
 import ritter from '../assets/seza/ritter.webp'
 import feuerwehr from '../assets/seza/feuerwehr.webp'
+import ANKER from './seza-anker.json'
 import brille from '../assets/seza/a-brille.webp'
 import hund from '../assets/seza/a-hund.webp'
 import goldAbakus from '../assets/seza/a-abakus.webp'
@@ -19,9 +19,9 @@ import krone from '../assets/seza/a-krone.webp'
 import zauberstab from '../assets/seza/a-zauberstab.webp'
 import raketenrucksack from '../assets/seza/a-raketenrucksack.webp'
 
-// SeZa: die Figur des Kindes. Ein Kostüm ist ein ganzes, freigestelltes Bild von SeZa;
-// Accessoires liegen als eigene Ebenen darüber. Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds)
-// sagen, wo Augen, die Hand mit dem Abakus und der Begleiter sitzen.
+// SeZa: die Figur des Kindes. Jedes Kostüm wird aus SeZas Kopf und dem Kostüm (ohne Figur) zusammengesetzt
+// (scripts/seza-kostueme.py) – ein neues Kostüm ersetzt das alte also vollständig. Accessoires liegen als eigene
+// Ebenen darüber; die Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds) berechnet das Skript.
 
 export type Slot = 'outfit' | 'ruecken' | 'kopf' | 'brille' | 'hand' | 'stab' | 'begleiter'
 export type Waehrung = 'sterne' | 'diamanten'
@@ -33,7 +33,7 @@ export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', ruecken: 'R�
 
 type Punkt = { x: number; y: number; b: number }
 /** Anker eines Kostüms; ohne „augen“ hat das Kostüm schon Brille, Maske oder Augenklappe */
-export type Anker = { augen?: Punkt; hand: Punkt & { r?: number }; begleiter: { x: number; y: number } }
+export type Anker = { augen?: Punkt; hand: Punkt & { r?: number }; begleiter: { x: number; y: number }; kopf?: { x: number; y: number }; kopfFrei?: boolean }
 
 export type Artikel = {
   id: string
@@ -53,23 +53,24 @@ export type Artikel = {
   eigen?: boolean
 }
 
-const k = (id: string, name: string, preis: number, bild: string, anker: Anker, kopf: string, start = false): Artikel =>
-  ({ id, name, slot: 'outfit', preis, waehrung: 'sterne', bild, anker, kopfAusschnitt: kopf, start })
+type AnkerDatei = Record<string, Anker & { ausschnitt: string }>
+const A = ANKER as AnkerDatei
+const k = (id: string, name: string, preis: number, bild: string, start = false): Artikel =>
+  ({ id, name, slot: 'outfit', preis, waehrung: 'sterne', bild, anker: A[id], kopfAusschnitt: A[id].ausschnitt, start })
 
 const KOSTUEME: Artikel[] = [
-  k('original', 'SeZa Original', 0, original, { augen: { x: .53, y: .41, b: .5 }, hand: { x: .83, y: .56, b: .3, r: 15 }, begleiter: { x: .14, y: .88 } }, '52% 22%', true),
-  k('sportler', 'Sportler', 0, sportler, { augen: { x: .49, y: .39, b: .5 }, hand: { x: .8, y: .5, b: .36, r: 25 }, begleiter: { x: .14, y: .9 } }, '48% 20%', true),
-  k('entdecker', 'Entdecker', 0, entdecker, { augen: { x: .52, y: .36, b: .42 }, hand: { x: .82, y: .41, b: .32, r: 20 }, begleiter: { x: .14, y: .9 } }, '52% 18%', true),
-  k('astronaut', 'Astronaut', 450, astronaut, { augen: { x: .51, y: .35, b: .42 }, hand: { x: .8, y: .55, b: .26, r: 25 }, begleiter: { x: .12, y: .9 } }, '50% 22%'),
-  k('superheld', 'Superheld', 400, superheld, { hand: { x: .82, y: .62, b: .26, r: 25 }, begleiter: { x: .86, y: .9 } }, '58% 25%'),
-  k('zauberer', 'Zauberer', 400, zauberer, { augen: { x: .67, y: .47, b: .35 }, hand: { x: .86, y: .48, b: .2, r: 15 }, begleiter: { x: .14, y: .9 } }, '65% 35%'),
-  k('wissenschaftler', 'Wissenschaftler', 350, wissenschaftler, { hand: { x: .17, y: .42, b: .27, r: -12 }, begleiter: { x: .9, y: .9 } }, '58% 22%'),
-  k('winterheld', 'Winterheld', 350, winterheld, { augen: { x: .45, y: .43, b: .44 }, hand: { x: .17, y: .6, b: .28, r: -15 }, begleiter: { x: .88, y: .9 } }, '45% 32%'),
-  k('genie', 'Genie', 450, genie, { hand: { x: .8, y: .52, b: .25, r: 15 }, begleiter: { x: .12, y: .9 } }, '50% 30%'),
-  k('ninja', 'Ninja', 400, ninja, { augen: { x: .52, y: .32, b: .4 }, hand: { x: .84, y: .28, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '52% 18%'),
-  k('pirat', 'Pirat', 400, pirat, { hand: { x: .75, y: .47, b: .25, r: 15 }, begleiter: { x: .12, y: .9 } }, '48% 30%'),
-  k('ritter', 'Ritter', 450, ritter, { augen: { x: .48, y: .43, b: .4 }, hand: { x: .81, y: .47, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '48% 32%'),
-  k('feuerwehr', 'Feuerwehr', 350, feuerwehr, { augen: { x: .53, y: .39, b: .42 }, hand: { x: .83, y: .44, b: .25, r: 15 }, begleiter: { x: .14, y: .9 } }, '53% 26%'),
+  k('original', 'SeZa Original', 0, original, true),
+  k('sportler', 'Sportler', 0, sportler, true),
+  k('entdecker', 'Entdecker', 0, entdecker, true),
+  k('astronaut', 'Astronaut', 450, astronaut),
+  k('superheld', 'Superheld', 400, superheld),
+  k('zauberer', 'Zauberer', 400, zauberer),
+  k('wissenschaftler', 'Doktor', 350, wissenschaftler),
+  k('winterheld', 'Winterheld', 350, winterheld),
+  k('genie', 'Genie', 450, genie),
+  k('ninja', 'Ninja', 400, ninja),
+  k('ritter', 'Ritter', 450, ritter),
+  k('feuerwehr', 'Feuerwehr', 350, feuerwehr),
 ]
 
 const ACCESSOIRES: Artikel[] = [
@@ -89,9 +90,11 @@ export const START_KOSTUEME = KOSTUEME.filter((a) => a.start)
 /** Passt ein Accessoire zum Kostüm? Brille nur, wenn die Augen frei sind */
 export function passt(kostuem: Artikel | undefined, a: Artikel) {
   if (a.slot === 'brille') return !!kostuem?.anker?.augen
+  if (a.slot === 'kopf') return !!kostuem?.anker?.kopfFrei
   return true
 }
 
 export const WARUM_NICHT: Partial<Record<Slot, string>> = {
   brille: 'Passt nicht zu diesem Kostüm – es hat schon eine Brille, Maske oder Augenklappe.',
+  kopf: 'Passt nicht zu diesem Kostüm – es hat schon einen Hut oder Helm.',
 }
