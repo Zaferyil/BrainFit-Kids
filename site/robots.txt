@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /kuendigen.html
+
+Sitemap: https://brainfitkids.netlify.app/sitemap.xml
