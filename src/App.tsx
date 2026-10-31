@@ -60,7 +60,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', 'seza', ...STATIONS.map((s) => `station/${s.id}`)]
+const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', 'bericht', 'seza', ...STATIONS.map((s) => `station/${s.id}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
