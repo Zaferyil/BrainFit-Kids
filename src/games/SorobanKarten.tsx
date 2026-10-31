@@ -61,7 +61,7 @@ export function SorobanKarten({ level, onFinish, rounds = ROUNDS }: GameProps) {
     const ok = v === task.z
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
-    speak(ok ? 'Richtig!' : `Das war die ${task.z}.`)
+    speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       setPicked(null)
       if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} Karten richtig`)
