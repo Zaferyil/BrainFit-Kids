@@ -25,6 +25,7 @@ export const GAMES: GameMeta[] = [
   { id: 'muster', name: 'Muster-Meister', area: 'logik', minTier: 'A', text: 'Was kommt als Nächstes?', ready: true },
   { id: 'sudoku', name: 'Perlen-Sudoku', area: 'logik', minTier: 'B', text: 'Jede Perle einmal', ready: false },
   { id: 'waage', name: 'Waage-Rätsel', area: 'logik', minTier: 'C', text: 'Was ist schwerer?', ready: false },
+  { id: 'abakusrechnen', name: 'Abakus-Rechnen', area: 'logik', minTier: 'A', text: 'Plus und Minus mit dem Abakus', ready: true },
   { id: 'vergleich', name: 'Zahlen vergleichen', area: 'logik', minTier: 'A', text: 'Welcher Abakus zeigt mehr?', ready: true },
   { id: 'tangram', name: 'Perlen-Tangram', area: 'raum', minTier: 'A', text: 'Lege die Form', ready: false },
   { id: 'spiegel', name: 'Spiegel-Perlen', area: 'raum', minTier: 'B', text: 'Spiegle das Muster', ready: false },
