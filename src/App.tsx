@@ -97,7 +97,12 @@ function Inhalt({ roh }: { roh: string }) {
     window.location.replace('#/anmelden')
     return null
   }
-  if (route === 'anmelden') return <Anmelden />
+  // Schon angemeldet (z. B. über „Login für Kinder“ auf der Website): direkt zur Karte, angemeldet bleiben bis „Abmelden“
+  if (route === 'anmelden') {
+    const a = getSession()
+    if (a && findKid(a.classCode, a.kidId)) { window.location.replace('#/inseln'); return null }
+    return <Anmelden />
+  }
   if (route === 'abakus-test') return <AbakusTest />
   if (route === 'admin') return <Admin />
   if (route === 'eltern') return <Eltern />
