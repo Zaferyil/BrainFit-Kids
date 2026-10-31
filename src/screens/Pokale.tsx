@@ -73,18 +73,43 @@ export function Ich({ kid, progress, onLogout }: { kid: Kid; progress: Progress;
   return (
     <Stage background={BG}>
       <Funkeln />
-      <div className="dp ich">
-        <a href="#/seza" className="ich-seza"><SeZa kidId={kid.id} groesse={120} /><span><b>Mein SeZa</b><small>⭐ {konto(kid.id).sterne} · 💎 {progress.gems}</small><em>Kostüme &amp; Accessoires →</em></span></a>
-        <a href="#/bericht" className="ich-seza ich-bericht"><span className="ich-bericht-icon" aria-hidden="true">📊</span><span><b>Mein Lernbericht</b><small>Stärken, Fortschritt &amp; Vergleich</small><em>Ansehen →</em></span></a>
-        <h1>{kid.name}</h1>
-        <p>{stufe !== null ? STUFE[stufe] : 'Klasse nicht gewählt'} · Level {progress.level}</p>
-        <div className="erfolg-chips ich-chips">
-          <div><span>PERLEN</span><b className="gelb">{progress.perlen}</b></div>
-          <div><span>WELT</span><b className="gruen">{world.n} · {world.name}</b></div>
+      <div className="dp ich ich2">
+        {/* Profil: SeZa, Name, Stufe und Level */}
+        <section className="ich2-profil">
+          <a href="#/seza" className="ich2-seza" aria-label="Mein SeZa anziehen"><SeZa kidId={kid.id} groesse={150} /><span className="ich2-stift">✏️</span></a>
+          <div className="ich2-name">
+            <h1>{kid.name}</h1>
+            <p>{stufe !== null ? STUFE[stufe] : 'Klasse nicht gewählt'}</p>
+            <div className="ich2-level"><b>Level {progress.level}</b><i><em style={{ width: `${progress.xp}%` }} /></i><small>{100 - progress.xp} XP bis Level {progress.level + 1}</small></div>
+          </div>
+        </section>
+
+        {/* Kennzahlen */}
+        <div className="ich2-zahlen">
+          <div style={{ ['--c' as string]: '#FFC531' }}><span>⭐</span><b>{konto(kid.id).sterne}</b><small>Sterne</small></div>
+          <div style={{ ['--c' as string]: '#3BA7FF' }}><span>💎</span><b>{progress.gems}</b><small>Diamanten</small></div>
+          <div style={{ ['--c' as string]: '#FF8FC8' }}><span>🟡</span><b>{progress.perlen}</b><small>Perlen</small></div>
+          <div style={{ ['--c' as string]: '#5FE08A' }}><span>🔥</span><b>{progress.streak}</b><small>Tage am Stück</small></div>
         </div>
-        <Einstellungen kidId={kid.id} />
-        <PasswortAendern kid={kid} />
-        <button type="button" className="nk-btn yellow" onClick={onLogout}><Icon name="logout" color="#2B2257" size={22} />Abmelden</button>
+        <div className="ich2-welt"><span>🗺️ Welt {world.n}</span><b>{world.name}</b></div>
+
+        {/* Große Kacheln */}
+        <div className="ich2-kacheln">
+          <a href="#/seza" className="ich2-kachel" style={{ ['--a' as string]: '#FF8A1F', ['--b' as string]: '#FF4FA3' }}>
+            <span className="ich2-k-icon">👕</span><b>Mein SeZa</b><small>Kostüme &amp; Accessoires</small>
+          </a>
+          <a href="#/bericht" className="ich2-kachel" style={{ ['--a' as string]: '#14B86A', ['--b' as string]: '#1E9BFF' }}>
+            <span className="ich2-k-icon">📊</span><b>Lernbericht</b><small>Stärken &amp; Fortschritt</small>
+          </a>
+        </div>
+
+        {/* Einstellungen */}
+        <section className="ich2-box">
+          <h2>⚙️ Einstellungen</h2>
+          <Einstellungen kidId={kid.id} />
+          <PasswortAendern kid={kid} />
+        </section>
+        <button type="button" className="ich2-abmelden" onClick={onLogout}><Icon name="logout" color="currentColor" size={20} />Abmelden</button>
       </div>
       <NavBar active="garderobe" />
     </Stage>
