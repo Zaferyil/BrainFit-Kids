@@ -2494,3 +2494,31 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .ich2-box { width: 100%; display: grid; gap: 12px; justify-items: center; padding: 16px; border-radius: 24px; background: rgba(255,255,255,.14); }
 .ich2-box h2 { margin: 0; font-family: var(--font-display); font-size: 20px; justify-self: start; }
 .ich2-abmelden { display: inline-flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,.6); background: transparent; color: #fff; font: 900 16px var(--font-body, Nunito, sans-serif); padding: 12px 28px; border-radius: 999px; cursor: pointer; }
+
+/* ───────────── SeZa: Hintergründe, Rahmen, Kiste ───────────── */
+.seza[class*="hg-"] { padding: 6%; box-sizing: border-box; background-size: cover; background-position: center; }
+.seza.hg-bild { padding: 6%; }
+.seza.hg-wald { background: radial-gradient(circle at 20% 85%, #2E9E4F 0 18%, transparent 19%), radial-gradient(circle at 80% 90%, #1F7A3C 0 22%, transparent 23%), linear-gradient(180deg, #BFF0C8, #5CCB7A 70%, #2E9E4F); }
+.seza.hg-meer { background: radial-gradient(circle at 15% 30%, rgba(255,255,255,.7) 0 3%, transparent 4%), radial-gradient(circle at 80% 20%, rgba(255,255,255,.6) 0 2%, transparent 3%), radial-gradient(circle at 60% 50%, rgba(255,255,255,.5) 0 2.5%, transparent 3.5%), linear-gradient(180deg, #7FE3FF, #1E9BFF 60%, #0B4FA8); }
+.seza.hg-sonne { background: radial-gradient(circle at 78% 18%, #FFE066 0 12%, #FFB300 13%, transparent 14%), linear-gradient(180deg, #FFD3A1 0 55%, #FFE7B3 55% 70%, #F5C77E 70%); }
+.seza.hg-burg { background: linear-gradient(180deg, transparent 62%, #7A4518 62% 64%, transparent 64%), repeating-linear-gradient(90deg, #A06BFF 0 12%, #8A55F0 12% 24%), linear-gradient(180deg, #E8DDFF, #A06BFF); background-blend-mode: normal, soft-light, normal; }
+.seza.hg-regenbogen, .seza.hg-weltall, .seza.hg-wald, .seza.hg-meer, .seza.hg-sonne, .seza.hg-burg { border-radius: 24px; overflow: hidden; }
+.seza.r-gold { box-shadow: 0 0 0 6px #FFC531, 0 0 0 10px #D99A00, 0 10px 24px rgba(0,0,0,.3); }
+.seza.r-regenbogen { box-shadow: 0 0 0 4px #FF5C8A, 0 0 0 8px #FFB300, 0 0 0 12px #3DBE5B, 0 0 0 16px #3BA7FF, 0 10px 24px rgba(0,0,0,.3); }
+.seza.r-flamme { box-shadow: 0 0 0 5px #FF8A1F, 0 0 18px 8px #FF4D1F, 0 0 34px 14px rgba(255,180,0,.55); }
+.seza.r-diamant { box-shadow: 0 0 0 5px #DFF6FF, 0 0 0 9px #6FD3FF, 0 0 24px 10px rgba(111,211,255,.8); }
+.seza-kopf.r-gold { box-shadow: 0 0 0 3px #FFC531 !important; } .seza-kopf.r-regenbogen { box-shadow: 0 0 0 3px #FF5C8A, 0 0 0 6px #3BA7FF !important; }
+.seza-kopf.r-flamme { box-shadow: 0 0 0 3px #FF8A1F, 0 0 10px 3px #FF4D1F !important; } .seza-kopf.r-diamant { box-shadow: 0 0 0 3px #6FD3FF, 0 0 10px 3px #6FD3FF !important; }
+.sz-raster.schmuck .sz-bild .seza { box-shadow: none; }
+.sz-raster:not(.schmuck) .sz-karte.zu .sz-bild img { filter: grayscale(.85) brightness(.9); opacity: .7; }
+.sz-ziel { display: grid; gap: 4px; padding: 4px 6px 2px; }
+.sz-ziel i { height: 10px; border-radius: 9px; background: #EEEAFB; overflow: hidden; } .sz-ziel em { display: block; height: 100%; background: linear-gradient(90deg, #5FE08A, #14B86A); border-radius: 9px; }
+.sz-ziel small { font-weight: 800; font-size: 12px; color: #5B47D6; text-align: center; }
+.sz-kiste { display: flex; align-items: center; gap: 14px; width: 100%; max-width: 640px; margin: 0 auto 14px; padding: 14px 18px; border: 0; border-radius: 22px; cursor: pointer; text-align: left; color: #fff; background: linear-gradient(135deg, #FF4FA3, #FF8A1F); box-shadow: 0 7px 0 #B8346F; font-family: inherit; }
+.sz-kiste:disabled { filter: grayscale(.4); opacity: .8; cursor: not-allowed; }
+.sz-kiste-bild { font-size: 44px; animation: kiste-wackel 2s ease-in-out infinite; }
+.sz-kiste span:nth-child(2) { display: grid; flex: 1; } .sz-kiste b { font-family: var(--font-display); font-size: 22px; } .sz-kiste small { font-weight: 800; opacity: .9; }
+.sz-kiste em { font-style: normal; font-weight: 900; font-size: 18px; background: #fff; color: #231A4F; padding: 8px 14px; border-radius: 999px; }
+@keyframes kiste-wackel { 0%, 80%, 100% { transform: rotate(0) } 85% { transform: rotate(-12deg) } 90% { transform: rotate(12deg) } 95% { transform: rotate(-6deg) } }
+.sz-kiste-auf { text-align: center; } .sz-kiste-gross { font-size: 60px; } .sz-kiste-vorschau { display: grid; place-items: center; margin: 8px 0 14px; }
+@media (prefers-reduced-motion: reduce) { .sz-kiste-bild { animation: none; } }

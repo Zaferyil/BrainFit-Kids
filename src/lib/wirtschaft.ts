@@ -1,4 +1,5 @@
-import { START_KOSTUEM, START_KOSTUEME, STANDARD_ARTIKEL, passt, type Artikel, type Slot } from '../data/seza'
+import { KISTE_PREIS, START_KOSTUEM, START_KOSTUEME, STANDARD_ARTIKEL, type Artikel, type Bedingung, type Slot } from '../data/seza'
+import { WORLDS } from '../data/curriculum'
 import { getProgress, saveProgress } from './progress'
 import { load, save } from './storage'
 import { istCloudKind, rpc } from './serverRpc'
@@ -116,18 +117,43 @@ export function kaufen(kidId: string, id: string): KaufErgebnis {
   return { ok: true }
 }
 
-/** Anziehen (nur, was dem Kind gehört und zum Kostüm passt) oder ausziehen */
+/** Wie weit ist das Kind bei einer Bedingung? (für Kostüme: Fortschritt 0–1 und Text „noch …“) */
+export function bedingungStand(kidId: string, b?: Bedingung): { ok: boolean; anteil: number; fehlt: string } {
+  if (!b || b.art === 'start') return { ok: true, anteil: 1, fehlt: '' }
+  const p = getProgress(kidId)
+  const lektionen = WORLDS.slice(0, p.world - 1).reduce((n, w) => n + w.units.length, 0) + p.unit - 1
+  const ist = b.art === 'lektionen' ? lektionen : b.art === 'welt' ? (lektionen >= WORLDS.slice(0, b.wert).reduce((n, w) => n + w.units.length, 0) ? b.wert : p.world - 1)
+    : b.art === 'serie' ? p.streak : p.level
+  const ok = ist >= b.wert
+  const rest = Math.max(0, b.wert - ist)
+  const fehlt = ok ? '' : b.art === 'lektionen' ? `Noch ${rest} ${rest === 1 ? 'Lektion' : 'Lektionen'}` : b.art === 'welt' ? `Welt ${b.wert} schaffen`
+    : b.art === 'serie' ? `Noch ${rest} ${rest === 1 ? 'Tag' : 'Tage'} am Stück` : `Noch ${rest} ${rest === 1 ? 'Level' : 'Level'}`
+  return { ok, anteil: Math.min(1, ist / b.wert), fehlt }
+}
+export const hatArtikel = (kidId: string, a: Artikel) => a.slot === 'outfit' ? bedingungStand(kidId, a.frei).ok : konto(kidId).besitz.includes(a.id)
+
+/** Anziehen: Kostüm, wenn freigeschaltet; Hintergrund/Rahmen, wenn gekauft */
 export function anziehen(kidId: string, id: string): boolean {
   const k = konto(kidId)
   const a = artikel(id)
-  if (!a || !k.besitz.includes(id)) return false
-  let an: Ausstattung = { ...k.an, [a.slot]: id }
-  // neues Kostüm: unpassende Accessoires ablegen
-  if (a.slot === 'outfit') for (const s of Object.keys(an) as Slot[]) { const x = artikel(an[s]); if (s !== 'outfit' && x && !passt(a, x)) delete an[s] }
-  else if (!passt(artikel(k.an.outfit), a)) return false
+  if (!a || !hatArtikel(kidId, a)) return false
+  const an: Ausstattung = { ...k.an, [a.slot]: id }
   speichere(kidId, { ...k, an })
   ausstattungSenden(kidId, an)
   return true
+}
+
+/** Überraschungskiste: ein zufälliger Hintergrund oder Rahmen, den das Kind noch nicht hat */
+export function kisteOeffnen(kidId: string): { ok: true; artikel: Artikel } | { ok: false; grund: 'sterne' | 'alles'; fehlt?: number } {
+  const k = konto(kidId)
+  const offen = alleArtikel().filter((a) => a.slot !== 'outfit' && !k.besitz.includes(a.id))
+  if (!offen.length) return { ok: false, grund: 'alles' }
+  if (k.sterne < KISTE_PREIS) return { ok: false, grund: 'sterne', fehlt: KISTE_PREIS - k.sterne }
+  const a = offen[Math.floor(Math.random() * offen.length)]
+  const b: Buchung = { id: `kiste:${a.id}`, zeit: new Date().toISOString(), art: 'kauf', grund: `Überraschungskiste: ${a.name}`, artikel: a.id, sterne: -KISTE_PREIS, diamanten: 0 }
+  speichere(kidId, { ...k, sterne: k.sterne - KISTE_PREIS, besitz: [...k.besitz, a.id], buchungen: [...k.buchungen, b] })
+  if (istCloudKind(kidId)) void rpc('kiste_oeffnen', { p_artikel: a.id }).then(() => nachladen(kidId))
+  return { ok: true, artikel: a }
 }
 export function ausziehen(kidId: string, slot: Slot) {
   if (slot === 'outfit') return

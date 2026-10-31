@@ -521,7 +521,7 @@ function GuthabenZeile({ z, onNeu }: { z: KidZeile; onNeu: () => void }) {
 /** Eigener Artikel: Bild hochladen (transparentes PNG empfohlen), Bereich, Preis */
 function NeuerArtikel({ onNeu }: { onNeu: () => void }) {
   const [name, setName] = useState('')
-  const [slot, setSlot] = useState<Slot>('begleiter')
+  const [slot, setSlot] = useState<Slot>('hg')
   const [preis, setPreis] = useState('100')
   const [waehrung, setWaehrung] = useState<Waehrung>('sterne')
   const [bild, setBild] = useState<string | null>(null)
@@ -535,7 +535,7 @@ function NeuerArtikel({ onNeu }: { onNeu: () => void }) {
   return (
     <form className="adm-form-zeile" onSubmit={anlegen}>
       <label>Neuer Artikel<input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" style={{ width: 160 }} /></label>
-      <label>Bereich<select value={slot} onChange={(e) => setSlot(e.target.value as Slot)}>{(['kopf', 'brille', 'ruecken', 'stab', 'begleiter'] as Slot[]).map((s) => <option key={s} value={s}>{SLOT_NAME[s]}</option>)}</select></label>
+      <label>Bereich<select value={slot} onChange={(e) => setSlot(e.target.value as Slot)}>{(['hg'] as Slot[]).map((s) => <option key={s} value={s}>{SLOT_NAME[s]}</option>)}</select></label>
       <label>Preis<input type="number" min={0} value={preis} onChange={(e) => setPreis(e.target.value)} /></label>
       <label>Währung<select value={waehrung} onChange={(e) => setWaehrung(e.target.value as Waehrung)}><option value="sterne">Sterne</option><option value="diamanten">Diamanten</option></select></label>
       <label>Bild<input type="file" accept="image/png,image/webp" onChange={async (e) => { const f = e.target.files?.[0]; if (f) setBild(await fotoVerkleinern(f)) }} /></label>

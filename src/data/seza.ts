@@ -8,32 +8,20 @@ import wissenschaftler from '../assets/seza/wissenschaftler.webp'
 import winterheld from '../assets/seza/winterheld.webp'
 import genie from '../assets/seza/genie.webp'
 import ninja from '../assets/seza/ninja.webp'
+import pirat from '../assets/seza/pirat.webp'
 import ritter from '../assets/seza/ritter.webp'
 import feuerwehr from '../assets/seza/feuerwehr.webp'
-import ANKER from './seza-anker.json'
-import brille from '../assets/seza/a-brille.webp'
-import hund from '../assets/seza/a-hund.webp'
-import goldAbakus from '../assets/seza/a-abakus.webp'
-import umhang from '../assets/seza/a-umhang.webp'
-import krone from '../assets/seza/a-krone.webp'
-import zauberstab from '../assets/seza/a-zauberstab.webp'
-import raketenrucksack from '../assets/seza/a-raketenrucksack.webp'
 
-// SeZa: die Figur des Kindes. Jedes Kostüm wird aus SeZas Kopf und dem Kostüm (ohne Figur) zusammengesetzt
-// (scripts/seza-kostueme.py) – ein neues Kostüm ersetzt das alte also vollständig. Accessoires liegen als eigene
-// Ebenen darüber; die Ankerpunkte (Anteile von Breite/Höhe des Kostümbilds) berechnet das Skript.
+// SeZa: die Figur des Kindes. Kostüme sind fertige Bilder von SeZa und werden durch Lernen freigeschaltet
+// (Lektionen, Welten, Serie, Level). Mit Sternen kauft das Kind Hintergründe und Rahmen oder öffnet eine Überraschungskiste.
 
-export type Slot = 'outfit' | 'ruecken' | 'kopf' | 'brille' | 'hand' | 'stab' | 'begleiter'
+export type Slot = 'outfit' | 'hg' | 'rahmen'
 export type Waehrung = 'sterne' | 'diamanten'
 
-/** Ebenen von hinten nach vorn */
-export const EBENEN: Slot[] = ['ruecken', 'outfit', 'kopf', 'brille', 'hand', 'stab', 'begleiter']
+export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', hg: 'Hintergrund', rahmen: 'Rahmen' }
 
-export const SLOT_NAME: Record<Slot, string> = { outfit: 'Kostüm', ruecken: 'Rücken', kopf: 'Kopf', brille: 'Brille', hand: 'Abakus', stab: 'Zauberstab', begleiter: 'Begleiter' }
-
-type Punkt = { x: number; y: number; b: number }
-/** Anker eines Kostüms; ohne „augen“ hat das Kostüm schon Brille, Maske oder Augenklappe */
-export type Anker = { augen?: Punkt; hand: Punkt & { r?: number }; begleiter: { x: number; y: number }; kopf?: { x: number; y: number }; kopfFrei?: boolean }
+/** Wann ein Kostüm frei wird */
+export type Bedingung = { art: 'start' | 'lektionen' | 'welt' | 'serie' | 'level'; wert: number }
 
 export type Artikel = {
   id: string
@@ -42,59 +30,60 @@ export type Artikel = {
   preis: number
   waehrung: Waehrung
   bild?: string
-  anker?: Anker
+  /** CSS-Klasse für Hintergrund/Rahmen */
+  css?: string
+  /** Kostüm: Bedingung zum Freischalten */
+  frei?: Bedingung
   /** Bildausschnitt fürs runde Kopfbild (CSS background-position) */
   kopfAusschnitt?: string
-  /** Start-Kostüm: beim ersten Login wählbar, gratis */
+  /** Start-Kostüm: beim ersten Login wählbar */
   start?: boolean
-  css?: string
   aktiv?: boolean
   /** von der Lehrkraft angelegt */
   eigen?: boolean
 }
 
-type AnkerDatei = Record<string, Anker & { ausschnitt: string }>
-const A = ANKER as AnkerDatei
-const k = (id: string, name: string, preis: number, bild: string, start = false): Artikel =>
-  ({ id, name, slot: 'outfit', preis, waehrung: 'sterne', bild, anker: A[id], kopfAusschnitt: A[id].ausschnitt, start })
+const k = (id: string, name: string, bild: string, frei: Bedingung, kopf: string): Artikel =>
+  ({ id, name, slot: 'outfit', preis: 0, waehrung: 'sterne', bild, frei, kopfAusschnitt: kopf, start: frei.art === 'start' })
 
 const KOSTUEME: Artikel[] = [
-  k('original', 'SeZa Original', 0, original, true),
-  k('sportler', 'Sportler', 0, sportler, true),
-  k('entdecker', 'Entdecker', 0, entdecker, true),
-  k('astronaut', 'Astronaut', 450, astronaut),
-  k('superheld', 'Superheld', 400, superheld),
-  k('zauberer', 'Zauberer', 400, zauberer),
-  k('wissenschaftler', 'Doktor', 350, wissenschaftler),
-  k('winterheld', 'Winterheld', 350, winterheld),
-  k('genie', 'Genie', 450, genie),
-  k('ninja', 'Ninja', 400, ninja),
-  k('ritter', 'Ritter', 450, ritter),
-  k('feuerwehr', 'Feuerwehr', 350, feuerwehr),
+  k('original', 'SeZa Original', original, { art: 'start', wert: 0 }, '52% 22%'),
+  k('sportler', 'Sportler', sportler, { art: 'start', wert: 0 }, '48% 20%'),
+  k('entdecker', 'Entdecker', entdecker, { art: 'start', wert: 0 }, '52% 18%'),
+  k('winterheld', 'Winterheld', winterheld, { art: 'lektionen', wert: 2 }, '45% 32%'),
+  k('feuerwehr', 'Feuerwehr', feuerwehr, { art: 'serie', wert: 3 }, '53% 26%'),
+  k('wissenschaftler', 'Forscher', wissenschaftler, { art: 'lektionen', wert: 4 }, '58% 22%'),
+  k('pirat', 'Pirat', pirat, { art: 'level', wert: 5 }, '48% 30%'),
+  k('zauberer', 'Zauberer', zauberer, { art: 'lektionen', wert: 6 }, '65% 35%'),
+  k('ninja', 'Ninja', ninja, { art: 'serie', wert: 7 }, '52% 18%'),
+  k('superheld', 'Superheld', superheld, { art: 'lektionen', wert: 9 }, '58% 25%'),
+  k('astronaut', 'Astronaut', astronaut, { art: 'welt', wert: 1 }, '50% 22%'),
+  k('ritter', 'Ritter', ritter, { art: 'level', wert: 12 }, '48% 32%'),
+  k('genie', 'Genie', genie, { art: 'welt', wert: 2 }, '50% 30%'),
 ]
 
-const ACCESSOIRES: Artikel[] = [
-  { id: 'gold-abakus', name: 'Goldener Abakus', slot: 'hand', preis: 500, waehrung: 'sterne', bild: goldAbakus },
-  { id: 'brille', name: 'Brille', slot: 'brille', preis: 150, waehrung: 'sterne', bild: brille },
-  { id: 'krone', name: 'Krone', slot: 'kopf', preis: 300, waehrung: 'sterne', bild: krone },
-  { id: 'umhang', name: 'Umhang', slot: 'ruecken', preis: 200, waehrung: 'sterne', bild: umhang },
-  { id: 'raketenrucksack', name: 'Raketen-Rucksack', slot: 'ruecken', preis: 350, waehrung: 'sterne', bild: raketenrucksack },
-  { id: 'zauberstab', name: 'Zauberstab', slot: 'stab', preis: 250, waehrung: 'sterne', bild: zauberstab },
-  { id: 'hund', name: 'Hunde-Begleiter', slot: 'begleiter', preis: 400, waehrung: 'sterne', bild: hund },
+const h = (id: string, name: string, preis: number): Artikel => ({ id, name, slot: 'hg', preis, waehrung: 'sterne', css: id })
+const r = (id: string, name: string, preis: number): Artikel => ({ id, name, slot: 'rahmen', preis, waehrung: 'sterne', css: id })
+
+const SCHMUCK: Artikel[] = [
+  h('hg-regenbogen', 'Regenbogen', 150), h('hg-wald', 'Zauberwald', 150), h('hg-meer', 'Unterwasser', 200),
+  h('hg-sonne', 'Sonnenstrand', 200), h('hg-weltall', 'Weltall', 300), h('hg-burg', 'Abakus-Burg', 300),
+  r('r-gold', 'Goldrahmen', 200), r('r-regenbogen', 'Regenbogenrahmen', 250), r('r-flamme', 'Feuerrahmen', 300), r('r-diamant', 'Diamantrahmen', 400),
 ]
 
-export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...ACCESSOIRES]
+export const STANDARD_ARTIKEL: Artikel[] = [...KOSTUEME, ...SCHMUCK]
 export const START_KOSTUEM = 'original'
 export const START_KOSTUEME = KOSTUEME.filter((a) => a.start)
 
-/** Passt ein Accessoire zum Kostüm? Brille nur, wenn die Augen frei sind */
-export function passt(kostuem: Artikel | undefined, a: Artikel) {
-  if (a.slot === 'brille') return !!kostuem?.anker?.augen
-  if (a.slot === 'kopf') return !!kostuem?.anker?.kopfFrei
-  return true
-}
+/** Überraschungskiste: zufälliger Hintergrund oder Rahmen, den das Kind noch nicht hat */
+export const KISTE_PREIS = 180
 
-export const WARUM_NICHT: Partial<Record<Slot, string>> = {
-  brille: 'Passt nicht zu diesem Kostüm – es hat schon eine Brille, Maske oder Augenklappe.',
-  kopf: 'Passt nicht zu diesem Kostüm – es hat schon einen Hut oder Helm.',
+export function bedingungText(b: Bedingung) {
+  switch (b.art) {
+    case 'start': return 'Von Anfang an'
+    case 'lektionen': return `${b.wert} Lektionen schaffen`
+    case 'welt': return `Welt ${b.wert} schaffen`
+    case 'serie': return `${b.wert} Tage am Stück lernen`
+    case 'level': return `Level ${b.wert} erreichen`
+  }
 }
