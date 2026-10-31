@@ -11,6 +11,11 @@ import ninja from '../assets/seza/ninja.webp'
 import pirat from '../assets/seza/pirat.webp'
 import ritter from '../assets/seza/ritter.webp'
 import feuerwehr from '../assets/seza/feuerwehr.webp'
+import schattenninja from '../assets/seza/schattenninja.webp'
+import kapitaen from '../assets/seza/kapitaen.webp'
+import dino from '../assets/seza/dino.webp'
+import rennfahrer from '../assets/seza/rennfahrer.webp'
+import wueste from '../assets/seza/wueste.webp'
 import kristall from '../assets/seza/d-kristall.webp'
 import roboter from '../assets/seza/d-roboter.webp'
 import koenig from '../assets/seza/d-koenig.webp'
@@ -65,6 +70,11 @@ const KOSTUEME: Artikel[] = [
   k('astronaut', 'Astronaut', astronaut, { art: 'welt', wert: 1 }, '50% 22%'),
   k('ritter', 'Ritter', ritter, { art: 'level', wert: 12 }, '48% 32%'),
   k('genie', 'Genie', genie, { art: 'welt', wert: 2 }, '50% 30%'),
+  k('dino', 'Dino-SeZa', dino, { art: 'lektionen', wert: 11 }, '52% 38%'),
+  k('rennfahrer', 'Rennfahrer', rennfahrer, { art: 'serie', wert: 14 }, '52% 32%'),
+  k('wueste', 'Wüsten-Reisender', wueste, { art: 'lektionen', wert: 14 }, '52% 30%'),
+  k('kapitaen', 'Kapitän', kapitaen, { art: 'level', wert: 15 }, '52% 35%'),
+  k('schattenninja', 'Schatten-Ninja', schattenninja, { art: 'lektionen', wert: 18 }, '55% 32%'),
 ]
 
 // Diamant-Kostüme: besondere SeZas, nur mit Diamanten (selten) zu bekommen
