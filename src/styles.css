@@ -2413,3 +2413,4 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-web-vorschau p{margin:0}.adm-web-vorschau span{background:rgba(255,255,255,.2);padding:4px 10px;border-radius:999px;width:fit-content}
 .adm-web-vorschau i{font-style:normal;background:#FFC531;color:#231A4F;font-weight:800;padding:8px 14px;border-radius:999px;width:fit-content}
 .adm-web-fuss{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.adm-best-zahlen{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}.adm-best-zahlen .adm-card{display:grid;gap:4px}.adm-best-zahlen small{color:#6B648F;font-weight:700}.adm-best-zahlen b{font-size:26px;color:#231A4F}.adm-best-zahlen b.klein{font-size:15px}@media (max-width:760px){.adm-best-zahlen{grid-template-columns:repeat(2,minmax(0,1fr))}}

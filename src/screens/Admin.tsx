@@ -8,6 +8,7 @@ import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, stufeCloud } from '../lib/adminCloud'
 import { istCloudKind } from '../lib/serverRpc'
 import { AdminWebsite } from './AdminWebsite'
+import { AdminBestellungen } from './AdminBestellungen'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
 import { fotoVerkleinern } from '../lib/hausaufgaben'
@@ -18,9 +19,10 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
 
 
-type Tab = 'uebersicht' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'website' | 'einstellungen'
+type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'website' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
+  { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
   { id: 'hausaufgaben', titel: 'Hausaufgaben', icon: 'check' },
   { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
@@ -102,6 +104,7 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
         <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
         {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
+        {tab === 'bestellungen' && <AdminBestellungen />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
         {tab === 'shop' && <Shop zeilen={zeilen} />}
