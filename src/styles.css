@@ -1203,7 +1203,7 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .nk-title { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 .nk-title h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 8vw, 44px); line-height: 1.05; }
 .nk-title p { margin: 0; font-weight: 800; font-size: 17px; opacity: .92; }
-.nk-title svg, .nk-title img { border-radius: 50%; }
+.nk-title svg, .nk-title img:not(.app-logo) { border-radius: 50%; }
 .nk-foot { margin: auto 0 0; font-weight: 800; font-size: 15px; text-align: center; }
 .nk-foot.dim { margin: 0; opacity: .75; font-size: 14px; }
 .nk-foot button { border: 0; background: none; padding: 8px 4px; color: #FFFFFF; font-weight: 900; font-size: 15px; text-decoration: underline; cursor: pointer; }
