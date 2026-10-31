@@ -49,7 +49,8 @@ for datei, kid in KOSTUEME.items():
   # Loch im Helm/Kapuze? Dann ist links und rechts der Mitte auf Gesichtshöhe deckende Fläche
   links = [x for x in range(0, w // 2) if deckend(a, x, zeile)]
   rechts = [x for x in range(w // 2, w) if deckend(a, x, zeile)]
-  loch = oben > 0 and bool(links and rechts and max(links) > w * .12 and min(rechts) < w * .88)
+  # Helme/Kapuzen mit Gesichtsöffnung (alle anderen sind Hüte oder Kostüme ohne Kopfbedeckung)
+  loch = kid in ('astronaut', 'ninja', 'ritter')
   if loch:
     l = max(links); r = min(rechts); gesicht = (r - l) * 1.12; mx = (l + r) / 2
   else:
@@ -70,6 +71,22 @@ for datei, kid in KOSTUEME.items():
   # Leinwand groß genug für Kopf über dem Kostüm
   rand = max(0, -ky, -kx, kx + kopf.width - w)
   bild = Image.new('RGBA', (w + 2 * rand, h + rand), (0, 0, 0, 0))
+  # Kopf über dem Gesicht beschneiden: oberhalb der Gesichtsöffnung (Hut/Helm) und bei Helmen auch seitlich
+  # nur innerhalb der Kostüm-Umrisse, damit Haare nicht unter dem Hut hervorquellen
+  maske = Image.new('L', kopf.size, 255)
+  if oben > 0 and kid != 'superheld':
+    mp = maske.load()
+    for yy in range(kopf.height):
+      cy = yy + ky
+      if cy >= kragen: break
+      if cy < oben or loch:
+        xs = [x for x in range(w) if deckend(a, x, cy)] if 0 <= cy < h else []
+        l, r = (min(xs), max(xs)) if xs else (1, 0)
+        for xx in range(kopf.width):
+          cx = xx + kx
+          if not (l <= cx <= r): mp[xx, yy] = 0
+  from PIL import ImageChops, ImageFilter
+  kopf.putalpha(ImageChops.multiply(kopf.getchannel('A'), maske.filter(ImageFilter.GaussianBlur(1))))
   bild.alpha_composite(kopf, (kx + rand, ky + rand))
   bild.alpha_composite(k, (rand, rand))
   box = bild.getbbox(); bild = bild.crop(box); W, H = bild.size
