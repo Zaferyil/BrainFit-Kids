@@ -134,7 +134,6 @@ function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
           Los
           <Icon name="right" size={26} color="#2B2257" strokeWidth={3} />
         </button>
-        <p className="nk-foot dim">Zum Ausprobieren: lena · abakus</p>
       </form>
     </section>
   )
