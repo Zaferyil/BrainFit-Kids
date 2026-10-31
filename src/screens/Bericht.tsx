@@ -10,6 +10,7 @@ import { stufeVon } from '../lib/rangliste'
 
 const FARBE: Record<string, string> = { rechnen: '#5B47D6', tempo: '#FF8A1F', konzentration: '#14B86A', aufmerksamkeit: '#1E9BFF', gedaechtnis: '#FF4FA3' }
 const STUFE = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klasse', '5. Klasse', '6. Klasse']
+const TIPP: Record<string, string> = { rechnen: 'Mach die nächste Lektion auf der Karte!', tempo: 'Spiel „Schnell zählen“ im Denkpark!', konzentration: 'Spiel „Perlen-Jagd“ oder „Farb-Wort“ im Denkpark!', aufmerksamkeit: 'Spiel „Muster“ oder „Zahlen vergleichen“ im Denkpark!', gedaechtnis: 'Spiel „Memory“ oder „Zahlen merken“ im Denkpark!' }
 const MONAT = (m: string) => new Date(m + '-01').toLocaleDateString('de-AT', { month: 'short' })
 
 type Props = { kid: Kid; eltern?: boolean; zurueck?: { href?: string; onClick?: () => void } }
@@ -33,7 +34,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   const stufe = STUFE[stufeVon(kid)] ?? ''
   const gruppe = vgl?.richtwert ? `BrainFit-Richtwerte · ${stufe}` : `${vgl?.n ?? 0} Kindern · ${stufe}`
 
-  const karten = ['Überblick', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Einschätzung']
+  const karten = ['Überblick', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Mein Jahr', 'Einschätzung']
   const zu = (i: number) => leiste.current?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
   const onScroll = () => { const el = leiste.current; if (el) setKarte(Math.round(el.scrollLeft / el.clientWidth)) }
 
@@ -47,7 +48,15 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   const pz = mitVergleich ? perzentil(werte[f], vgl!.werte?.[f]) : 0
   const top = Math.max(1, 100 - pz)
   // Entwicklung: Linie der Monatswerte
-  const punkte = v.map(([m, x]) => ({ m, w: x.werte?.[f] ?? 0 }))
+  // Jahresansicht: immer die letzten 12 Monate (auch ohne Daten), damit Monat für Monat sichtbar ist
+  const vm = Object.fromEntries(v)
+  const jetzt = new Date()
+  const monate = Array.from({ length: 12 }, (_, i) => { const d = new Date(jetzt.getFullYear(), jetzt.getMonth() - 11 + i, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` })
+  const X = (i: number) => 30 + (i * 282) / 11
+  const punkte = monate.map((m, i) => ({ m, i, w: vm[m]?.werte?.[f] })).filter((q) => q.w !== undefined) as { m: string; i: number; w: number }[]
+  const jahr = monate.map((m) => vm[m] ?? { minuten: 0, aufgaben: 0, stationen: 0, spiele: 0, tage: [] })
+  const maxMin = Math.max(60, ...jahr.map((x) => x.minuten))
+  const summe = { minuten: jahr.reduce((a, x) => a + x.minuten, 0), tage: jahr.reduce((a, x) => a + x.tage.length, 0), aufgaben: jahr.reduce((a, x) => a + x.aufgaben, 0) }
 
   return (
     <div className="ber">
@@ -107,7 +116,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
               </div>
               {chips}
               <div className="ber-zeile"><span>Verglichen mit</span><b>{gruppe}</b></div>
-              <p className="ber-zitat">„{werte[f] === 0 ? `Noch keine Punkte bei ${FAEHIGKEITEN.find((x) => x.id === f)!.name} – leg los und klettere die Treppe hinauf!` : top > 50 ? `Noch ${Math.max(1, (vgl!.mittel as Werte)[f] - werte[f])} Punkte bis zum Durchschnitt – das schaffst ${du === 'Du' ? 'du' : kid.name}!` : <>{du === 'Du' ? 'Du bist' : `${kid.name} ist`} bei {FAEHIGKEITEN.find((x) => x.id === f)!.name} unter den <b>Top {top} %</b>!</>}“</p>
+              <p className="ber-zitat">„{werte[f] === 0 ? `Noch keine Punkte bei ${FAEHIGKEITEN.find((x) => x.id === f)!.name}. Tipp: ${TIPP[f]}` : top > 50 ? `Noch ${Math.max(1, (vgl!.mittel as Werte)[f] - werte[f])} Punkte bis zum Durchschnitt – das schaffst ${du === 'Du' ? 'du' : kid.name}!` : <>{du === 'Du' ? 'Du bist' : `${kid.name} ist`} bei {FAEHIGKEITEN.find((x) => x.id === f)!.name} unter den <b>Top {top} %</b>!</>}“</p>
             </> : <p className="ber-leer">Die Platzierung erscheint, sobald mindestens {MIN_VERGLEICH} Kinder derselben Schulstufe mitlernen. Namen anderer Kinder werden nie angezeigt.</p>}
           </div>
         </section>
@@ -119,17 +128,43 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
             <h3 style={{ color: FARBE[f] }}>{FAEHIGKEITEN.find((x) => x.id === f)!.name}</h3>
             <svg className="ber-linie" viewBox="0 0 320 180" role="img" aria-label="Entwicklung über die Monate">
               {[0, 25, 50, 75, 100].map((y) => <g key={y}><line x1="30" x2="312" y1={160 - y * 1.4} y2={160 - y * 1.4} /><text x="24" y={164 - y * 1.4}>{y}</text></g>)}
+              {monate.map((m, i) => <text key={m} className="m" x={X(i)} y="177">{MONAT(m).slice(0, 3)}</text>)}
               {punkte.length > 1 && <polyline fill="none" stroke={FARBE[f]} strokeWidth="4" strokeLinejoin="round" strokeLinecap="round"
-                points={punkte.map((q, i) => `${30 + (i * 282) / Math.max(1, punkte.length - 1)},${160 - q.w * 1.4}`).join(' ')} />}
-              {punkte.map((q, i) => <g key={q.m}><circle cx={30 + (i * 282) / Math.max(1, punkte.length - 1)} cy={160 - q.w * 1.4} r="5" fill={FARBE[f]} />
-                <text className="m" x={30 + (i * 282) / Math.max(1, punkte.length - 1)} y="177">{MONAT(q.m)}</text></g>)}
+                points={punkte.map((q) => `${X(q.i)},${160 - q.w * 1.4}`).join(' ')} />}
+              {punkte.map((q) => <circle key={q.m} cx={X(q.i)} cy={160 - q.w * 1.4} r="5" fill={FARBE[f]} />)}
             </svg>
             {chips}
             <p className="ber-zitat">„{punkte.length < 2 ? 'Ab dem nächsten Monat siehst du hier, wie du dich entwickelst.' : punkte[punkte.length - 1].w >= punkte[0].w ? 'Es geht aufwärts – weiter so!' : 'Dranbleiben lohnt sich – kleine Schritte jeden Tag.'}“</p>
           </div>
         </section>
 
-        {/* 5 Einschätzung */}
+        {/* 5 Jahr: Lernzeit Monat für Monat */}
+        <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#FF8FC8,#6C7BFF)' }}>
+          <h2>Mein Jahr</h2>
+          <div className="ber-weiss">
+            <h3>Lernzeit pro Monat</h3>
+            <svg className="ber-linie" viewBox="0 0 320 180" role="img" aria-label="Lernminuten der letzten 12 Monate">
+              <line x1="30" x2="312" y1="160" y2="160" />
+              {jahr.map((x, i) => {
+                const h = (x.minuten / maxMin) * 130
+                return <g key={monate[i]}>
+                  <rect x={X(i) - 9} y={160 - h} width="18" height={Math.max(h, x.minuten ? 3 : 0)} rx="5" fill={i === 11 ? '#FF8A1F' : '#8C7BFF'} />
+                  {x.minuten > 0 && <text className="m" x={X(i)} y={154 - h}>{x.minuten}</text>}
+                  <text className="m" x={X(i)} y="177">{MONAT(monate[i]).slice(0, 3)}</text>
+                </g>
+              })}
+            </svg>
+            <div className="ber-kacheln">
+              <div><b>{Math.round(summe.minuten / 60 * 10) / 10}</b><span>Stunden gelernt</span></div>
+              <div><b>{summe.tage}</b><span>Lerntage</span></div>
+              <div><b>{summe.aufgaben}</b><span>Aufgaben gelöst</span></div>
+              <div><b>{jahr.filter((x) => x.minuten > 0).length}</b><span>aktive Monate</span></div>
+            </div>
+            <p className="ber-zitat">„Die letzten 12 Monate auf einen Blick – jeder Balken ist ein Monat.“</p>
+          </div>
+        </section>
+
+        {/* 6 Einschätzung */}
         <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#6C7BFF,#B57CFF)' }}>
           <h2>{eltern ? 'Pädagogische Einschätzung' : 'Das kannst du schon'}</h2>
           <div className="ber-weiss ber-text">
