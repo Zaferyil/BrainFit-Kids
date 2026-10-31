@@ -2523,7 +2523,6 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .sz-kiste-auf { text-align: center; } .sz-kiste-gross { font-size: 60px; } .sz-kiste-vorschau { display: grid; place-items: center; margin: 8px 0 14px; }
 @media (prefers-reduced-motion: reduce) { .sz-kiste-bild { animation: none; } }
 .sz-karte.diamant { background: linear-gradient(160deg, #E8F7FF, #fff 40%, #F3E9FF); box-shadow: 0 0 0 3px #6FD3FF, 0 6px 0 rgba(75,47,194,.35); }
-.sz-raster:not(.schmuck) .sz-karte.diamant.zu .sz-bild img { filter: saturate(1.1); opacity: 1; }
 .sz-karte.diamant .sz-btn.gelb { background: linear-gradient(180deg, #8EE4FF, #3BA7FF); color: #0B2E6B; }
 .ich2-zahlen button { display: grid; justify-items: center; gap: 2px; padding: 12px 4px; border: 0; border-radius: 20px; background: #fff; color: #231A4F; box-shadow: 0 5px 0 rgba(40,20,120,.3), inset 0 -4px 0 var(--c); cursor: pointer; font-family: inherit; }
 .ich2-zahlen button.an { outline: 3px solid var(--c); }
