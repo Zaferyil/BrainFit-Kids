@@ -66,7 +66,7 @@ export function AdminBestellungen() {
             </tbody>
           </table>
         )}
-        <p className="adm-muted">Beträge nach Preisliste (Gründerpreise). Lieferadresse, Rechnung und Rückerstattungen finden Sie über den Stripe-Knopf.</p>
+        <p className="adm-muted">Beträge nach Preisliste (Einführungspreise). Lieferadresse, Rechnung und Rückerstattungen finden Sie über den Stripe-Knopf.</p>
       </section>
     </>
   )

@@ -859,7 +859,7 @@ body::before{background:#100A30}
   <!-- Pakete -->
   <section class="dk-block" id="preise">
     <div class="dk-kopf"><span class="dk-eyebrow">Pakete</span><h2>Wählen Sie Ihr Paket</h2><div class="angebot" id="angebot" role="status" aria-live="off">
-      <div class="angebot-kopf"><span class="angebot-blitz">⚡</span> <span id="angebot-titel">Jetzt Gründerpreis sichern – <b>nur noch kurze Zeit!</b></span></div>
+      <div class="angebot-kopf"><span class="angebot-blitz">⚡</span> <span id="angebot-titel">Jetzt Einführungspreis sichern – <b>nur noch kurze Zeit!</b></span></div>
       <div class="angebot-uhr" id="countdown" aria-label="Aktion endet bald">
         <div><b data-t="d">00</b><small>Tage</small></div><i>:</i><div><b data-t="h">00</b><small>Std</small></div><i>:</i><div><b data-t="m">00</b><small>Min</small></div><i>:</i><div><b data-t="s">00</b><small>Sek</small></div>
       </div>
@@ -1050,7 +1050,7 @@ const STIMMEN=[
   ['Mama von Can','8 Jahre · 2. Klasse','#00B3A4','Die Abenteuerkarte motiviert enorm. Can will immer zur nächsten Burg.'],
 ];
 $('#st-wolken').innerHTML=STIMMEN.map(([wer,info,farbe,text])=>`<figure class="st-wolke"><div class="sterne" aria-label="5 von 5 Sternen">★★★★★</div><p>„${text}“</p><figcaption class="st-wer"><i style="background:${farbe}">${wer.split(' ').pop()[0]}</i><span><b>${wer}</b><small>${info}</small></span></figcaption></figure>`).join('');
-// Countdown der Gründer-Aktion (Ende: 30.11.2026, 23:59 Uhr)
+// Countdown der Einführungsaktion (Ende: 30.11.2026, 23:59 Uhr)
 let AKTION_ENDE=new Date('2026-11-30T23:59:59+01:00').getTime();
 function uhr(){const r=Math.max(0,AKTION_ENDE-Date.now());if(!r){const a=$('#angebot');if(a)a.hidden=true;return}const w={d:Math.floor(r/864e5),h:Math.floor(r/36e5)%24,m:Math.floor(r/6e4)%60,s:Math.floor(r/1e3)%60};
   $$('#countdown b').forEach(b=>{const v=String(w[b.dataset.t]).padStart(2,'0');if(b.textContent!==v){b.textContent=v;b.classList.remove('tick');void b.offsetWidth;b.classList.add('tick')}})}
@@ -1092,7 +1092,7 @@ function korbZeichnen(){
   $('#entf').onclick=()=>{korb=null;korbZeichnen()};
   $('#zur-kasse').onclick=()=>{lade(false);kasse()};
 }
-function zusammen(){const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=(j?p.altJahr:p.alt)||0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Gründer-Aktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
+function zusammen(){const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=(j?p.altJahr:p.alt)||0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Einführungsaktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
 function lade(auf){$('#lade').hidden=!auf;$('#schleier').hidden=!auf&&$('#login').hidden}
 function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-liefer').hidden=!p.lieferung; $('#k-zahl-nr').textContent=p.lieferung?4:3; $('#k-zus').innerHTML='<h3>Ihre Bestellung</h3>'+zusammen().replace('<div class="zus">','<div>'); ansicht('kasse')}
 function alert2(t){const p=document.createElement('div');p.className='login-box';p.innerHTML=`<p>${t}</p><button class="btn" type="button">OK</button>`;document.body.append(p);p.querySelector('button').onclick=()=>p.remove()}

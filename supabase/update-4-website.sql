@@ -13,6 +13,6 @@ drop policy if exists p_website_admin on public.website;
 create policy p_website_admin on public.website for all using (public.meine_rolle() = 'admin') with check (public.meine_rolle() = 'admin');
 
 insert into public.website (id, daten) values (1, '{
-  "countdown": {"an": true, "ende": "2026-11-30T23:59", "titel": "Jetzt Gründerpreis sichern – nur noch kurze Zeit!", "fuss": "Nur für die ersten 50 Familien · noch 37 Plätze", "balken": 26},
+  "countdown": {"an": true, "ende": "2026-11-30T23:59", "titel": "Jetzt Einführungspreis sichern – nur noch kurze Zeit!", "fuss": "Nur für die ersten 50 Familien · noch 37 Plätze", "balken": 26},
   "popup": {"an": false, "titel": "", "text": "", "knopf": "Zu den Paketen", "code": "", "ab": "", "bis": "", "sekunden": 8}
 }'::jsonb) on conflict (id) do nothing;
