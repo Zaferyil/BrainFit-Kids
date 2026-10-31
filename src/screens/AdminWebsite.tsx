@@ -1,12 +1,13 @@
 // Admin-Bereich „Website“: Countdown und Kampagnen-Popup der Website ändern – gilt sofort, ohne neues Deploy
 import { useEffect, useState, type FormEvent } from 'react'
-import { STANDARD, websiteLaden, websiteSpeichern, type WebsiteDaten } from '../lib/website'
+import { STANDARD, bildHochladen, websiteLaden, websiteSpeichern, type WebsiteDaten } from '../lib/website'
 
 export function AdminWebsite() {
   const [d, setD] = useState<WebsiteDaten>(STANDARD)
   const [status, setStatus] = useState<'laden' | 'bereit' | 'fehlt'>('laden')
   const [meldung, setMeldung] = useState('')
   const [laeuft, setLaeuft] = useState(false)
+  const [upload, setUpload] = useState('')
 
   useEffect(() => {
     websiteLaden().then((x) => { setD(x); setStatus('bereit') }).catch(() => setStatus('fehlt'))
@@ -14,6 +15,13 @@ export function AdminWebsite() {
 
   const cd = <K extends keyof WebsiteDaten['countdown']>(k: K, v: WebsiteDaten['countdown'][K]) => setD((x) => ({ ...x, countdown: { ...x.countdown, [k]: v } }))
   const pp = <K extends keyof WebsiteDaten['popup']>(k: K, v: WebsiteDaten['popup'][K]) => setD((x) => ({ ...x, popup: { ...x.popup, [k]: v } }))
+
+  const hochladen = async (datei: File | undefined) => {
+    if (!datei) return
+    setUpload('Wird hochgeladen …')
+    try { const url = await bildHochladen(datei); pp('bild', url); pp('bildAn', true); setUpload('Hochgeladen – bitte unten speichern.') }
+    catch (err) { setUpload('Hochladen hat nicht geklappt: ' + String((err as Error).message)) }
+  }
 
   const speichern = async (e: FormEvent) => {
     e.preventDefault()
@@ -57,10 +65,28 @@ export function AdminWebsite() {
           <label>Sichtbar bis<input type="datetime-local" value={d.popup.bis} onChange={(e) => pp('bis', e.target.value)} /></label>
           <label>Erscheint nach (Sekunden)<input type="number" min={0} max={120} value={d.popup.sekunden} onChange={(e) => pp('sekunden', Math.max(0, Math.min(120, Number(e.target.value) || 0)))} /></label>
         </div>
+        <div className="adm-web-zusatz">
+          <div>
+            <label className="adm-schalter"><input type="checkbox" checked={d.popup.bildAn} onChange={(e) => pp('bildAn', e.target.checked)} /> 🖼️ Bild zeigen</label>
+            <div className="adm-web-bild">
+              {d.popup.bild ? <img src={d.popup.bild} alt="" /> : <span className="adm-muted">Noch kein Bild</span>}
+              <label className="adm-btn">Bild wählen<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden onChange={(e) => void hochladen(e.target.files?.[0])} /></label>
+              {d.popup.bild && <button type="button" className="adm-btn" onClick={() => { pp('bild', ''); pp('bildAn', false) }}>Entfernen</button>}
+            </div>
+            {upload && <small className="adm-muted">{upload}</small>}
+            <small className="adm-muted">JPG, PNG, WebP oder GIF, höchstens 3 MB. Am besten quer (z. B. 1200 × 600).</small>
+          </div>
+          <div>
+            <label className="adm-schalter"><input type="checkbox" checked={d.popup.uhrAn} onChange={(e) => pp('uhrAn', e.target.checked)} /> ⏰ Countdown im Popup</label>
+            <label className="adm-web-einzel">Läuft bis<input type="datetime-local" value={d.popup.uhrEnde} onChange={(e) => pp('uhrEnde', e.target.value)} /></label>
+            <small className="adm-muted">Leer = bis „Sichtbar bis“. Ist die Zeit abgelaufen, verschwindet das Popup.</small>
+          </div>
+        </div>
         <p className="adm-muted">Jede Besucherin, jeder Besucher sieht das Popup nur einmal pro Kampagne. Den Gutscheincode legen Sie in Stripe unter Produktkatalog → Gutscheine an und erlauben in den Zahlungslinks „Promotion-Codes“.</p>
         {d.popup.titel && (
           <div className="adm-web-vorschau" aria-label="Vorschau">
-            <b>{d.popup.titel}</b>{d.popup.text && <p>{d.popup.text}</p>}{d.popup.code && <span>Code: <b>{d.popup.code}</b></span>}<i>{d.popup.knopf}</i>
+            {d.popup.bildAn && d.popup.bild && <img src={d.popup.bild} alt="" />}
+            <b>{d.popup.titel}</b>{d.popup.uhrAn && <span>⏰ 02 Tg : 14 Std : 30 Min : 12 Sek</span>}{d.popup.text && <p>{d.popup.text}</p>}{d.popup.code && <span>Code: <b>{d.popup.code}</b></span>}<i>{d.popup.knopf}</i>
           </div>
         )}
       </section>

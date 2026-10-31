@@ -2,12 +2,12 @@
 import { supabase } from './supabase'
 
 export type Countdown = { an: boolean; ende: string; titel: string; fuss: string; balken: number }
-export type Popup = { an: boolean; titel: string; text: string; knopf: string; code: string; ab: string; bis: string; sekunden: number }
+export type Popup = { an: boolean; titel: string; text: string; knopf: string; code: string; ab: string; bis: string; sekunden: number; bildAn: boolean; bild: string; uhrAn: boolean; uhrEnde: string }
 export type WebsiteDaten = { countdown: Countdown; popup: Popup }
 
 export const STANDARD: WebsiteDaten = {
   countdown: { an: true, ende: '2026-11-30T23:59', titel: 'Jetzt Gründerpreis sichern – nur noch kurze Zeit!', fuss: 'Nur für die ersten 50 Familien · noch 37 Plätze', balken: 26 },
-  popup: { an: false, titel: '', text: '', knopf: 'Zu den Paketen', code: '', ab: '', bis: '', sekunden: 8 },
+  popup: { an: false, titel: '', text: '', knopf: 'Zu den Paketen', code: '', ab: '', bis: '', sekunden: 8, bildAn: false, bild: '', uhrAn: false, uhrEnde: '' },
 }
 
 export async function websiteLaden(): Promise<WebsiteDaten> {
@@ -15,6 +15,16 @@ export async function websiteLaden(): Promise<WebsiteDaten> {
   if (error) throw error
   const d = (data?.daten ?? {}) as Partial<WebsiteDaten>
   return { countdown: { ...STANDARD.countdown, ...d.countdown }, popup: { ...STANDARD.popup, ...d.popup } }
+}
+
+// Bild für das Popup hochladen (Supabase Storage „website“), liefert die öffentliche Adresse
+export async function bildHochladen(datei: File): Promise<string> {
+  if (datei.size > 3 * 1024 * 1024) throw new Error('Das Bild ist größer als 3 MB.')
+  const endung = (datei.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '')
+  const pfad = `popup/${Date.now()}.${endung}`
+  const { error } = await supabase.storage.from('website').upload(pfad, datei, { contentType: datei.type, upsert: false })
+  if (error) throw error
+  return supabase.storage.from('website').getPublicUrl(pfad).data.publicUrl
 }
 
 export async function websiteSpeichern(daten: WebsiteDaten) {
