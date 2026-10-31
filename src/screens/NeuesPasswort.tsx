@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import { Icon } from '../components/Icon'
 import { supabase } from '../lib/supabase'
 
 // Link aus der E-Mail „Passwort zurücksetzen“: Supabase meldet die Person an, hier setzt sie ein neues Passwort.
@@ -26,7 +25,7 @@ export function NeuesPasswort({ onFertig }: { onFertig: () => void }) {
   return (
     <div className="adm adm-login">
       <form className="adm-card adm-login-card" onSubmit={(e) => void speichern(e)}>
-        <div className="adm-logo"><Icon name="lock" size={30} color="#5B47D6" /></div>
+        <img className="app-logo" src={`${import.meta.env.BASE_URL}logo.webp`} alt="BrainFit Kids" />
         <h1>Neues Passwort</h1>
         {ok ? (
           <>

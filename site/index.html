@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1B1446">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <title>BrainFit Kids</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -293,7 +293,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .willkommen{border-radius:28px;padding:26px;color:#fff;background:linear-gradient(150deg,#3A22A8,#5B47D6 45%,#7B5CFF);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}
 @media (max-width:620px){.willkommen{grid-template-columns:1fr}}
 .willkommen img{width:180px}
-.marke{white-space:nowrap}
+.marke{white-space:nowrap}.marke-logo{height:52px;width:auto;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}@media (max-width:520px){.marke-logo{height:40px}}
 @media (max-width:520px){.korb-wort{display:none}.marke{font-size:17px}.top-in{gap:8px}.knopf{padding:0 11px}}
 .danke{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
 @media (max-width:860px){.danke{grid-template-columns:1fr}}
@@ -661,7 +661,7 @@ body::before{background:#100A30}
 </style>
 
 <header class="top"><div class="top-in">
-  <button class="marke" type="button" data-ansicht="start"><span class="logo-perlen" aria-hidden="true"><i></i><i></i><i></i></span>BrainFit Kids</button>
+  <button class="marke" type="button" data-ansicht="start"><img class="marke-logo" src="logo.webp" alt="BrainFit Kids" width="800" height="463"></button>
   <nav class="links" aria-label="Seite"><a href="#inhalt" data-ziel="inhalt">Kurs</a><a href="#so" data-ziel="so">Lektionen</a><a href="#denkspiele" data-ziel="denkspiele">Denkspiele</a><a href="#lernplan" data-ziel="lernplan">Lernplan</a><a href="#preise" data-ziel="preise">Pakete</a><a href="#faq" data-ziel="faq">Fragen</a></nav>
   <div class="rechts">
     <button class="knopf" type="button" id="login-knopf"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Login</button>

@@ -56,7 +56,7 @@ function AdminLogin({ onOk }: { onOk: () => void }) {
   return (
     <div className="adm adm-login">
       <form className="adm-card adm-login-card" onSubmit={(e) => void pruefen(e)}>
-        <div className="adm-logo"><Icon name="lock" size={30} color="#5B47D6" /></div>
+        <img className="app-logo" src={`${import.meta.env.BASE_URL}logo.webp`} alt="BrainFit Kids" />
         <h1>Lehrkraft &amp; Admin</h1>
         <p>Mit E-Mail und Passwort anmelden.</p>
         <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} aria-label="E-Mail" placeholder="E-Mail" autoComplete="username" />

@@ -7,7 +7,6 @@ import { createPortal } from 'react-dom'
 import { getProgress } from '../lib/progress'
 import { nextStop } from '../lib/mapPath'
 import { Icon } from '../components/Icon'
-import { Perli } from '../components/Perli'
 import { Stage } from '../components/Stage'
 import { findeLogin, type Kid, type SchoolClass } from '../data/demo'
 import { saveSession } from '../lib/session'
@@ -119,7 +118,7 @@ function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
   return (
     <section className="nk-step popin">
       <header className="nk-title">
-        <Perli mood={error ? 'think' : 'happy'} size={120} />
+        <img className="app-logo gross" src={`${import.meta.env.BASE_URL}logo.webp`} alt="BrainFit Kids" />
         <h1>Hallo! Melde dich an.</h1>
         <p>Benutzername und Passwort stehen in der E-Mail deiner Eltern.</p>
       </header>

@@ -94,6 +94,7 @@ async function zugangsMail(an: string, eltern: string, kind: string, benutzer: s
   const von = Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>'
   const antwortAn = Deno.env.get('MAIL_REPLY_TO') ?? 'info@mentalmath.at'
   const html = `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#231A4F">
+    <p style="text-align:center;margin:0 0 8px"><img src="${app}/logo.png" alt="BrainFit Kids" width="240" style="max-width:240px;height:auto"></p>
     <h1 style="color:#5B47D6">Willkommen bei BrainFit Kids!</h1>
     <p>Hallo ${esc(eltern || 'liebe Eltern')},</p>
     <p>danke für Ihre Bestellung (${esc(paket)}). Hier sind die Zugangsdaten für <b>${esc(kind)}</b>:</p>

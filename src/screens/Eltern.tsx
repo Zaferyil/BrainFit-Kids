@@ -57,7 +57,7 @@ function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
   return (
     <div className="adm adm-login">
       <form className="adm-card adm-login-card eltern-login" onSubmit={(e) => void anmelden(e)}>
-        <div className="adm-logo"><Icon name="users" size={30} color="#5B47D6" /></div>
+        <img className="app-logo" src={`${import.meta.env.BASE_URL}logo.webp`} alt="BrainFit Kids" />
         <h1>Eltern-Bereich</h1>
         <p>Mit der E-Mail-Adresse und dem Passwort anmelden, die Sie beim Kauf gewählt haben.</p>
         <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} placeholder="E-Mail" aria-label="E-Mail" autoComplete="username" />

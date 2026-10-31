@@ -2392,3 +2392,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-login .adm-fehler { background: #FFE4EA; color: #C2184B; }
 .adm-login .eltern-kinder { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
 .adm-login .eltern-kinder button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px; border: 0; border-radius: 22px; background: #F2F0FF; color: #231A4F; font-family: var(--font-display); font-weight: 800; font-size: 18px; cursor: pointer; box-shadow: 0 5px 0 #D6CFFF; }
+
+/* Logo auf Login-Seiten */
+.app-logo{display:block;width:min(240px,70%);height:auto;margin:0 auto 6px;filter:drop-shadow(0 4px 10px rgba(35,26,79,.25))}
+.app-logo.gross{width:min(300px,80%)}
