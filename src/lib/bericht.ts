@@ -30,14 +30,28 @@ export function verlauf(kidId: string): [string, Monat][] {
   return Object.entries(load<Record<string, Monat>>(`bfk.verlauf.${kidId}`, {})).sort(([a], [b]) => a.localeCompare(b)).slice(-12)
 }
 
-export type Vergleich = { n: number; mittel?: Werte; werte?: Record<string, number[]> }
+export type Vergleich = { n: number; mittel?: Werte; werte?: Record<string, number[]>; richtwert?: boolean }
 
-/** Vergleichsgruppe derselben Schulstufe vom Server (nur für angemeldete Cloud-Kinder) */
-export async function vergleichLaden(kid: Kid): Promise<Vergleich | null> {
-  if (!istCloudKind(kid.id)) return null
+// Richtwerte je Schulstufe: 10 typische Lernstände (mittleres Niveau, gut erreichbar), solange noch zu wenige
+// echte Vergleichsdaten vorliegen. Sie werden im Bericht als „Richtwerte“ gekennzeichnet, nicht als echte Kinder.
+const BASIS: Werte = { rechnen: 46, tempo: 40, konzentration: 43, aufmerksamkeit: 45, gedaechtnis: 38 }
+const STREUUNG = [-14, -10, -7, -4, -1, 2, 5, 8, 11, 15]
+export function richtwerte(stufe: number): Vergleich {
+  const werte = Object.fromEntries(FAEHIGKEITEN.map((f, i) => [f.id, STREUUNG.map((d, j) =>
+    Math.max(5, Math.min(90, BASIS[f.id] + d + ((stufe * 3 + i * 5 + j * 7) % 5) - 2)))])) as Record<string, number[]>
+  const mittel = Object.fromEntries(Object.entries(werte).map(([k, xs]) => [k, Math.round(xs.reduce((a, b) => a + b, 0) / xs.length)])) as Werte
+  return { n: STREUUNG.length, mittel, werte, richtwert: true }
+}
+export const MIN_ECHT = 10
+
+/** Vergleichsgruppe derselben Schulstufe vom Server; bis genug echte Kinder da sind: Richtwerte */
+export async function vergleichLaden(kid: Kid): Promise<Vergleich> {
+  const rw = richtwerte(stufeVon(kid))
+  if (!istCloudKind(kid.id)) return rw
   const { data, error } = await supabase.rpc('vergleich', { p_kind: kid.id })
-  if (error) return null
-  return data as Vergleich
+  const v = data as Vergleich | null
+  if (error || !v || v.n < MIN_ECHT || !v.mittel) return rw
+  return v
 }
 
 /** Anteil der Vergleichskinder, die weniger erreicht haben (0–100) */

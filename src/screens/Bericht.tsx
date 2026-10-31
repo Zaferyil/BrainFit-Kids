@@ -31,6 +31,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   const ein = einschaetzung(werte, kid.name, mittel)
   const du = eltern ? kid.name : 'Du'
   const stufe = STUFE[stufeVon(kid)] ?? ''
+  const gruppe = vgl?.richtwert ? `BrainFit-Richtwerte · ${stufe}` : `${vgl?.n ?? 0} Kindern · ${stufe}`
 
   const karten = ['Überblick', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Einschätzung']
   const zu = (i: number) => leiste.current?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
@@ -89,8 +90,8 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
                 </div>
               ))}
             </div>
-            <div className="ber-zeile"><span>Vergleich</span><b>{mitVergleich ? `${stufe}, ${vgl!.n} Kinder` : 'noch nicht verfügbar'}</b></div>
-            <p className="ber-zitat">„{mitVergleich ? 'Kräftige Balken: ' + (eltern ? 'Ihr Kind' : 'du') + '. Helle Balken: Durchschnitt der Schulstufe.' : `Der Vergleich erscheint, sobald mindestens ${MIN_VERGLEICH} Kinder der Schulstufe mitlernen.`}“</p>
+            <div className="ber-zeile"><span>Vergleich</span><b>{mitVergleich ? (vgl!.richtwert ? `Richtwerte · ${stufe}` : `${stufe}, ${vgl!.n} Kinder`) : 'wird geladen …'}</b></div>
+            <p className="ber-zitat">„{mitVergleich ? 'Kräftige Balken: ' + (eltern ? 'Ihr Kind' : 'du') + (vgl!.richtwert ? '. Helle Balken: Richtwert der Schulstufe – das Ziel zum Überholen!' : '. Helle Balken: Durchschnitt der Schulstufe.') : `Der Vergleich erscheint, sobald mindestens ${MIN_VERGLEICH} Kinder der Schulstufe mitlernen.`}“</p>
           </div>
         </section>
 
@@ -105,8 +106,8 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
                 ))}
               </div>
               {chips}
-              <div className="ber-zeile"><span>Verglichen mit</span><b>{vgl!.n} Kindern · {stufe}</b></div>
-              <p className="ber-zitat">„{du === 'Du' ? 'Du bist' : `${kid.name} ist`} bei {FAEHIGKEITEN.find((x) => x.id === f)!.name} unter den <b>Top {top} %</b>!“</p>
+              <div className="ber-zeile"><span>Verglichen mit</span><b>{gruppe}</b></div>
+              <p className="ber-zitat">„{werte[f] === 0 ? `Noch keine Punkte bei ${FAEHIGKEITEN.find((x) => x.id === f)!.name} – leg los und klettere die Treppe hinauf!` : top > 50 ? `Noch ${Math.max(1, (vgl!.mittel as Werte)[f] - werte[f])} Punkte bis zum Durchschnitt – das schaffst ${du === 'Du' ? 'du' : kid.name}!` : <>{du === 'Du' ? 'Du bist' : `${kid.name} ist`} bei {FAEHIGKEITEN.find((x) => x.id === f)!.name} unter den <b>Top {top} %</b>!</>}“</p>
             </> : <p className="ber-leer">Die Platzierung erscheint, sobald mindestens {MIN_VERGLEICH} Kinder derselben Schulstufe mitlernen. Namen anderer Kinder werden nie angezeigt.</p>}
           </div>
         </section>
