@@ -1,8 +1,20 @@
+import { useEffect } from 'react'
 import { SeZa } from '../components/SeZa'
+import { save } from '../lib/storage'
+import { supabase } from '../lib/supabase'
 import { Stage } from '../components/Stage'
 
 // Nach der Schnupperwoche: freundlicher Hinweis, weiter geht's mit einem Paket (Lernstand bleibt erhalten)
-export function SchnupperVorbei({ name, onLogout }: { name: string; onLogout: () => void }) {
+export function SchnupperVorbei({ kidId, name, onLogout }: { kidId: string; name: string; onLogout: () => void }) {
+  // Haben die Eltern inzwischen ein Paket gekauft? Dann Zugang aktualisieren und weiter
+  useEffect(() => {
+    void supabase.from('kinder').select('paket, gueltig_bis').eq('id', kidId).maybeSingle().then(({ data }) => {
+      if (data && (!data.gueltig_bis || new Date(data.gueltig_bis).getTime() > Date.now())) {
+        save(`bfk.zugang.${kidId}`, { paket: data.paket, bis: data.gueltig_bis })
+        location.reload()
+      }
+    })
+  }, [kidId])
   return (
     <Stage>
       <div className="dp ich ich2" style={{ textAlign: 'center' }}>

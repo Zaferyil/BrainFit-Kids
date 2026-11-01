@@ -121,7 +121,7 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
     // Schnupperwoche abgelaufen: nur noch Hinweis mit Weg zu den Paketen
     const zugang = load<{ paket: string | null; bis: string | null } | null>(`bfk.zugang.${kid.id}`, null)
-    if (zugang?.bis && new Date(zugang.bis).getTime() < Date.now()) return <SchnupperVorbei name={kid.name} onLogout={logout} />
+    if (zugang?.bis && new Date(zugang.bis).getTime() < Date.now()) return <SchnupperVorbei kidId={kid.id} name={kid.name} onLogout={logout} />
     if (!berichtStand.has(kid.id)) { berichtStand.add(kid.id); berichtAktualisieren(kid) }
     if (route === 'rangliste') return <Rangliste kid={kid} />
     if (route === 'bericht') return <Bericht kid={kid} zurueck={{ href: '#/garderobe' }} />
