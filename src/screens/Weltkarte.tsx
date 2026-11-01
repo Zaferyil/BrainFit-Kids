@@ -1,4 +1,5 @@
 import { konto } from '../lib/wirtschaft'
+import { PushKindKnopf } from '../components/PushEinstellungen'
 import { SeZa } from '../components/SeZa'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Avatar } from '../components/Avatar'
@@ -83,6 +84,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
 
   return (
     <Stage background="linear-gradient(180deg, #4FC3F2, #2E9FDB)">
+      <PushKindKnopf kidId={kid.id} />
       <header className="nk-hello nk-map-head">
         <a href="#/karte" className="nk-zurueck" aria-label="Zurück zur Startseite">
           <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />

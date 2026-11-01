@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
 import { Bericht } from './Bericht'
+import { PushKarte } from '../components/PushEinstellungen'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { alleKinder, type Kid } from '../data/demo'
@@ -184,6 +185,8 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
             })}
           </div>
         </section>
+
+        <PushKarte kidId={kid.id} name={kid.name} />
 
         <section className="adm-card eltern-tipps">
           <h2>Tipps für zu Hause</h2>
