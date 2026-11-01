@@ -934,8 +934,6 @@ body::before{background:#100A30}
         <span class="dk-eyebrow">Wer steht dahinter?</span>
         <h2>Hallo, ich bin Zafer Yildiz</h2>
         <p>Seit 12 Jahren unterrichte ich Kinder in Mentaler Arithmetik – über 1.000 Kinder haben bei mir in Linz mit dem Abakus rechnen gelernt. Mit BrainFit Kids bringe ich meinen Unterricht zu Ihnen nach Hause: mit Lernvideos, Denkspielen, echten Büchern und einem Abakus.</p>
-        <button type="button" class="gr-hoeren" id="gr-hoeren"><span>▶</span> Persönliche Begrüßung anhören <small>0:21</small></button>
-        <audio id="gr-audio" src="zafer-hallo.mp3" preload="none"></audio>
         <p class="gr-unterschrift">Zafer Yildiz, MSc</p>
         <p class="gr-marken"><span>Gründer von</span><b>Academy SeZa Kids</b><b>MentalMath Kids</b><b>RoboCode MakerKids</b><b>ReadUP</b><b>BrainFit Kids</b></p>
       </div>
@@ -1096,7 +1094,6 @@ function taktSetzen(t){takt=t;
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
 /*kl*/
-;(()=>{const b=$('#gr-hoeren'),a=$('#gr-audio');if(!b||!a)return;b.onclick=()=>{if(a.paused){a.play();b.firstElementChild.textContent='❚❚'}else{a.pause();b.firstElementChild.textContent='▶'}};a.onended=()=>{b.firstElementChild.textContent='▶'}})();
 
 // Handy: Kauf-Leiste unten, sobald der Startbereich verlassen ist (nicht bei den Paketen und nicht in der Kasse)
 ;(()=>{const l=$('#kauf-leiste');if(!l)return;const held=$('.np-held'),preise=$('#preise');let a=false,b=false;
