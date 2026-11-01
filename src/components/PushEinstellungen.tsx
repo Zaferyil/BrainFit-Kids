@@ -60,9 +60,13 @@ export function PushKarte({ kidId, name }: { kidId: string; name: string }) {
 export function PushKindKnopf({ kidId }: { kidId: string }) {
   const zuKey = `bfk.push-knopf-zu.${kidId}`
   const [zeigen, setZeigen] = useState(false)
+  const [iphone, setIphone] = useState(false)
   useEffect(() => {
-    if (!/^[0-9a-f]{8}-/.test(kidId) || !pushMoeglich() || Notification.permission === 'denied') return
+    if (!/^[0-9a-f]{8}-/.test(kidId)) return
     try { if (localStorage.getItem(zuKey) === new Date().toISOString().slice(0, 10)) return } catch { /* egal */ }
+    // iPhone im Browser: Push geht erst nach „Zum Home-Bildschirm“ → Hinweis zeigen
+    if (istIphone() && !istInstalliert()) { void einstellungenLaden(kidId).then((e) => { if (e.kind_an) { setIphone(true); setZeigen(true) } }); return }
+    if (!pushMoeglich() || Notification.permission === 'denied') return
     void Promise.all([einstellungenLaden(kidId), pushAktiv(kidId, 'kind')]).then(([e, aktiv]) => setZeigen(e.kind_an && !aktiv))
   }, [kidId, zuKey])
   if (!zeigen) return null
@@ -74,7 +78,9 @@ export function PushKindKnopf({ kidId }: { kidId: string }) {
   const zu = () => { try { localStorage.setItem(zuKey, new Date().toISOString().slice(0, 10)) } catch { /* egal */ } setZeigen(false) }
   return (
     <div className="push-kind" role="group" aria-label="Erinnerungen">
-      <button type="button" onClick={() => void an()} style={{ all: 'unset', cursor: 'pointer' }}>🔔 Erinnerungen einschalten</button>
+      {iphone
+        ? <span style={{ whiteSpace: 'normal', fontSize: 13 }}>📲 Für Erinnerungen: unten auf „Teilen“ → „Zum Home-Bildschirm“ tippen und BrainFit Kids von dort öffnen.</span>
+        : <button type="button" onClick={() => void an()} style={{ all: 'unset', cursor: 'pointer' }}>🔔 Erinnerungen einschalten</button>}
       <button type="button" className="zu" aria-label="Später" onClick={zu} style={{ border: 0, cursor: 'pointer' }}>✕</button>
     </div>
   )
