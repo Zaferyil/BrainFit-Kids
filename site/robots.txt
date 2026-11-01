@@ -3,4 +3,18 @@ Allow: /
 Disallow: /app/
 Disallow: /kuendigen.html
 
+# KI-Suchdienste ausdrücklich erlaubt (Antworten in ChatGPT, Claude, Perplexity, Google AI)
+User-agent: GPTBot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://brainfitkids.mentalmath.at/sitemap.xml
