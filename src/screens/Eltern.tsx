@@ -117,6 +117,8 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
       </header>
       <main className="adm-main">
         <button type="button" className="adm-btn primary eltern-bericht-knopf" onClick={() => setBericht(true)}>📊 Lernbericht ansehen – Stärken, Entwicklung &amp; Vergleich</button>
+        <a className="adm-btn eltern-portal-knopf" href="https://billing.stripe.com/p/login/00w7sMafb8SUa6Z9WX9oc00" target="_blank" rel="noopener">🧾 Rechnungen &amp; Zahlungsdaten</a>
+        <p className="adm-muted eltern-portal-hinweis">Rechnungen herunterladen, Karte oder Adresse ändern – Anmeldung mit der E-Mail-Adresse vom Kauf. Kündigen: <a href="/kuendigen.html">Verträge hier kündigen</a></p>
         <div className="adm-kpis">
           <div className="adm-card adm-kpi"><span>Lektion</span><b>{nr} <small>von {ALLE_LEKTIONEN.length}</small></b><small>{welt?.units[p.unit - 1]}</small></div>
           <div className="adm-card adm-kpi"><span>Level</span><b>{p.level}</b><small>{p.perlen} Perlen gesammelt</small></div>

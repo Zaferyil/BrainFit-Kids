@@ -2633,3 +2633,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .partner-mengen input { width: 100%; box-sizing: border-box; }
 .partner-summe { display: flex; flex-direction: column; gap: 4px; background: #F4F2FB; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
 .partner-preise input { width: 90px; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid #D8D2F2; }
+.eltern-portal-knopf { display: inline-flex; margin: 0 0 6px; text-decoration: none; }
+.eltern-portal-hinweis { margin: 0 0 16px; font-size: 13px; }
