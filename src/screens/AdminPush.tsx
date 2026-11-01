@@ -53,7 +53,7 @@ export function AdminPush({ zeilen }: { zeilen: KidZeile[] }) {
     const { data, error } = await supabase.functions.invoke('push-senden', { body: { titel, text, ziel, kind: kind || null } })
     setLaeuft(false)
     if (error || data?.fehler) { setInfo(`Nicht gesendet: ${data?.fehler ?? error?.message}`); return }
-    setInfo(`Gesendet an ${data.gesendet} von ${data.geraete} Geräten ✓`)
+    setInfo(data.geraete ? `Gesendet an ${data.gesendet} von ${data.geraete} Geräten ✓` : '⚠️ Nicht gesendet: Für diese Auswahl ist noch kein Gerät für Benachrichtigungen angemeldet.')
     setTitel(''); setText('')
     void laden()
   }
