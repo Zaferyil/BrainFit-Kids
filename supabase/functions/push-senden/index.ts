@@ -23,8 +23,46 @@ const hhmm = (s: string) => { const [h, m] = s.split(':').map(Number); return h 
 type Abo = { id: number; endpoint: string; kind: string; rolle: 'kind' | 'eltern'; p256dh: string; auth: string }
 type Nachricht = { art: string; title: string; body: string; url: string }
 
+const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type' }
+const json = (d: unknown, status = 200) => new Response(JSON.stringify(d), { status, headers: { ...CORS, 'Content-Type': 'application/json' } })
+
+async function senden(a: Abo, n: Record<string, string>) {
+  try {
+    await webpush.sendNotification({ endpoint: a.endpoint, keys: { p256dh: a.p256dh, auth: a.auth } }, JSON.stringify(n), { TTL: 3600 })
+    return true
+  } catch (err: any) {
+    // Gerät abgemeldet oder App gelöscht → Abo entfernen
+    if (err?.statusCode === 404 || err?.statusCode === 410) await db.from('push_abos').delete().eq('id', a.id)
+    else console.warn('Push fehlgeschlagen', err?.statusCode, err?.body)
+    return false
+  }
+}
+
+/** Admin: eigene Nachricht sofort senden (an alle, nur Kinder, nur Eltern oder ein Kind) */
+async function adminNachricht(req: Request) {
+  const jwt = (req.headers.get('Authorization') ?? '').replace('Bearer ', '')
+  const { data: { user } } = await db.auth.getUser(jwt)
+  const { data: p } = user ? await db.from('personen').select('rolle').eq('id', user.id).maybeSingle() : { data: null }
+  if (p?.rolle !== 'admin') return json({ fehler: 'Nur für Admins' }, 403)
+  const { titel, text, ziel, kind } = await req.json()
+  if (!titel?.trim() || !text?.trim() || !['alle', 'kind', 'eltern'].includes(ziel)) return json({ fehler: 'Titel, Text und Ziel fehlen' }, 400)
+  let q = db.from('push_abos').select('id, endpoint, kind, rolle, p256dh, auth')
+  if (ziel !== 'alle') q = q.eq('rolle', ziel)
+  if (kind) q = q.eq('kind', kind)
+  const { data: abos } = await q
+  let ok = 0
+  for (const a of (abos ?? []) as Abo[])
+    if (await senden(a, { title: titel.trim().slice(0, 80), body: text.trim().slice(0, 240), url: a.rolle === 'kind' ? '/app/?push=1#/inseln' : '/app/#/eltern', tag: `admin-${Date.now()}` })) ok++
+  await db.from('push_nachrichten').insert({ titel: titel.trim(), text: text.trim(), ziel, kind: kind || null, geraete: ok })
+  return json({ gesendet: ok, geraete: abos?.length ?? 0 })
+}
+
 Deno.serve(async (req) => {
-  if (req.headers.get('x-cron') !== Deno.env.get('CRON_GEHEIM')) return new Response('nein', { status: 401 })
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
+  if (req.headers.get('x-cron') !== Deno.env.get('CRON_GEHEIM')) return adminNachricht(req)
+  // Im Admin-Bereich ausgeschaltet?
+  const { data: g } = await db.from('push_global').select('auto_an').eq('id', 1).maybeSingle()
+  if (g && !g.auto_an) return Response.json({ aus: true })
   const jetzt = wien()
   // Nachtruhe: zwischen 20:00 und 08:00 nichts
   if (jetzt.minuten < 8 * 60 || jetzt.minuten >= 20 * 60) return Response.json({ ruhe: true })
@@ -81,16 +119,7 @@ Deno.serve(async (req) => {
         if (anzahl >= MAX_PRO_TAG || heute.some((l) => l.art === n.art)) continue
         anzahl++
         await db.from('push_log').insert({ kind: id, rolle, art: n.art, tag: jetzt.datum })
-        for (const a of ziel) {
-          try {
-            await webpush.sendNotification({ endpoint: a.endpoint, keys: { p256dh: a.p256dh, auth: a.auth } }, JSON.stringify({ ...n, tag: `${rolle}-${n.art}` }), { TTL: 3600 })
-            gesendet++
-          } catch (err: any) {
-            // Gerät abgemeldet oder App gelöscht → Abo entfernen
-            if (err?.statusCode === 404 || err?.statusCode === 410) await db.from('push_abos').delete().eq('id', a.id)
-            else console.warn('Push fehlgeschlagen', err?.statusCode, err?.body)
-          }
-        }
+        for (const a of ziel) if (await senden(a, { ...n, tag: `${rolle}-${n.art}` })) gesendet++
       }
     }
   }

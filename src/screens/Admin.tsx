@@ -9,6 +9,7 @@ import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivClou
 import { istCloudKind } from '../lib/serverRpc'
 import { AdminWebsite } from './AdminWebsite'
 import { AdminBestellungen } from './AdminBestellungen'
+import { AdminPush } from './AdminPush'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
 import { fotoVerkleinern } from '../lib/hausaufgaben'
@@ -19,7 +20,7 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
 
 
-type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'website' | 'einstellungen'
+type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
@@ -28,6 +29,7 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
   { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
   { id: 'website', titel: 'Website', icon: 'sparkle' },
+  { id: 'nachrichten', titel: 'Nachrichten', icon: 'bell' },
   { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
 ]
 
@@ -110,6 +112,7 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
         {tab === 'shop' && <Shop zeilen={zeilen} />}
         {tab === 'lektionen' && <Lektionen zeilen={zeilen} />}
         {tab === 'website' && <AdminWebsite />}
+        {tab === 'nachrichten' && <AdminPush zeilen={zeilen} />}
         {tab === 'einstellungen' && <Einstellungen />}
       </main>
     </div>
