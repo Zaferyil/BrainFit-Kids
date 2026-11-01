@@ -261,6 +261,8 @@ p{margin:0}
 .schluss p{max-width:52ch;opacity:.95}
 .schluss small{font-weight:800;opacity:.9}
 .fuss a{color:inherit}
+.kauf-leiste{position:fixed;left:0;right:0;bottom:0;z-index:7990;display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#231A4F;color:#fff;box-shadow:0 -8px 24px rgba(0,0,0,.3)}.kauf-leiste div{display:grid}.kauf-leiste b{font-family:var(--display);font-size:18px;color:#FFE066}.kauf-leiste small{opacity:.8;font-weight:700;font-size:12px}.kauf-leiste .btn{white-space:nowrap;padding:12px 20px}@media (max-width:760px){.kauf-leiste:not([hidden]){display:flex}body:has(.kauf-leiste:not([hidden])) .wa-knopf,body:has(.kauf-leiste:not([hidden])) #lisa-knopf{bottom:84px}}
+.zahl-logos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:14px 0 0;font-size:12px;font-weight:800}.zahl-logos span{margin-right:4px;opacity:.85}.zahl-logos i{font-style:normal;padding:4px 9px;border-radius:7px;background:#fff;color:#1A1F71;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .flex-hinweis{text-align:center;margin:12px 0 0;color:#CFC7F5;font-size:14px}.flex-hinweis button{background:none;border:0;color:#fff;text-decoration:underline;font:inherit;font-weight:800;cursor:pointer;padding:0}
 .schnupper{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:18px auto 0;max-width:900px;padding:16px 20px;border-radius:22px;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,197,49,.6)}.schnupper div{display:grid;gap:2px;color:#fff;flex:1;min-width:220px}.schnupper div b:first-child{font-family:var(--display);font-size:20px;color:#FFE066}.schnupper span{color:#CFC7F5}
 .wa-knopf{position:fixed;left:16px;bottom:18px;z-index:7999;display:flex;align-items:center;gap:8px;padding:10px 16px 10px 12px;border-radius:999px;background:#25D366;color:#fff;font-weight:900;text-decoration:none;box-shadow:0 10px 26px rgba(0,0,0,.3)}@media (max-width:520px){.wa-knopf span{display:none}.wa-knopf{padding:12px}}
@@ -904,6 +906,7 @@ body::before{background:#100A30}
     
     <div class="schnupper"><div><b>Erst ausprobieren?</b><span>Die <b>Schnupperwoche</b>: 7 Tage alle Lektionen und Denkspiele – einmalig 9,90 €, kein Abo.</span></div><button class="btn" type="button" id="schnupper-knopf">Schnupperwoche für 9,90 €</button></div>
     <p class="flex-hinweis">Lieber ohne Bindung? <button type="button" id="flex-knopf">Flex: nur App, monatlich kündbar – 79 € / Monat</button></p>
+    <p class="zahl-logos" aria-label="Sichere Zahlung mit Karte, Apple Pay, Google Pay, SEPA und EPS"><span>🔒 Sichere Zahlung</span><i>VISA</i><i>Mastercard</i><i> Pay</i><i>G Pay</i><i>SEPA</i><i>eps</i></p>
     <p class="dk-klein" id="takt-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar. „Monatlich zahlen“ heißt: 12 Monatsraten, nicht monatlich kündbar.</p>
   </section>
 
@@ -986,7 +989,7 @@ body::before{background:#100A30}
           </div>
         </div>
         <div class="abschnitt"><h3><b id="k-zahl-nr">3</b>Bezahlen</h3>
-          <p class="stripe-kurz">🔒 Sie bezahlen sicher auf der Seite von <b>Stripe</b> (Karte, Apple Pay, Google Pay, SEPA, EPS).</p>
+          <p class="stripe-kurz">🔒 Sie bezahlen sicher auf der Seite von <b>Stripe</b>.</p><p class="zahl-logos" aria-label="Sichere Zahlung mit Karte, Apple Pay, Google Pay, SEPA und EPS"><span>🔒 Sichere Zahlung</span><i>VISA</i><i>Mastercard</i><i> Pay</i><i>G Pay</i><i>SEPA</i><i>eps</i></p>
           <label class="check"><input id="k-agb" type="checkbox"><span>Ich akzeptiere die <a href="agb.html" target="_blank">AGB</a> und habe die <a href="datenschutz.html" target="_blank">Datenschutzerklärung</a> gelesen.</span></label>
           <label class="check"><input id="k-wid" type="checkbox"><span>Ich verlange ausdrücklich, dass die App sofort freigeschaltet wird, und weiß, dass ich damit mein <a href="widerruf.html" target="_blank">Widerrufsrecht</a> für die App verliere (für Bücher und Abakus gilt es 14 Tage).</span></label>
           <label class="check"><input id="k-lauf" type="checkbox"><span>Mindestlaufzeit 12 Monate, danach monatlich kündbar.</span></label>
@@ -1019,6 +1022,7 @@ body::before{background:#100A30}
   <p class="zahl-hinweis">Die Zahlung läuft über Stripe. Zugangsdaten gibt es erst nach erfolgreicher Zahlung.</p>
 </div>
 
+<div class="kauf-leiste" id="kauf-leiste" hidden><div><b>Ab 49 € / Monat</b><small>Einführungspreis · 15 Min. am Tag</small></div><button class="btn" type="button" data-ziel="preise">Jetzt starten</button></div>
 <div class="schleier" id="schleier" hidden></div>
 <aside class="lade" id="lade" hidden aria-label="Warenkorb">
   <div class="lade-kopf"><h2>Warenkorb</h2><button class="zu" type="button" id="lade-zu" aria-label="Schließen">×</button></div>
@@ -1061,6 +1065,12 @@ function taktSetzen(t){takt=t;
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
 $('#schnupper-knopf').onclick=()=>{korb=4;korbZeichnen();kasse()};
+/*kl*/
+// Handy: Kauf-Leiste unten, sobald der Startbereich verlassen ist (nicht bei den Paketen und nicht in der Kasse)
+;(()=>{const l=$('#kauf-leiste');if(!l)return;const held=$('.np-held'),preise=$('#preise');let a=false,b=false;
+  const zeig=()=>{l.hidden=!(a&&!b&&!$('#v-start').hidden)};
+  new IntersectionObserver(([e])=>{a=!e.isIntersecting;zeig()}).observe(held);new IntersectionObserver(([e])=>{b=e.isIntersecting;zeig()}).observe(preise);
+  l.querySelector('button').onclick=()=>preise.scrollIntoView({behavior:'smooth'})})();
 $('#flex-knopf').onclick=()=>{korb=5;korbZeichnen();kasse()};
 // Elternstimmen – BEISPIELTEXTE, vor dem Start durch echte, freigegebene Stimmen ersetzen
 const STIMMEN=[
