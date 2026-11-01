@@ -26,8 +26,10 @@ export async function cloudLogin(benutzer: string, passwort: string) {
   const email = `${benutzer.trim().toLowerCase()}@kinder.brainfit-kids.at`
   const { data, error } = await supabase.auth.signInWithPassword({ email, password: passwort.trim() })
   if (error || !data.user) return null
-  const { data: k } = await supabase.from('kinder').select('id, benutzer, vorname, stufe').eq('id', data.user.id).maybeSingle()
+  const { data: k } = await supabase.from('kinder').select('id, benutzer, vorname, stufe, paket, gueltig_bis').eq('id', data.user.id).maybeSingle()
   if (!k) return null
+  // Zugang (z. B. Schnupperwoche mit Ablaufdatum) für die App merken
+  save(`bfk.zugang.${k.id}`, { paket: k.paket ?? null, bis: k.gueltig_bis ?? null })
 
   kindLokal({ ...k, klasse: KLASSE, archiviert: false })
   await herunterladen(k.id)

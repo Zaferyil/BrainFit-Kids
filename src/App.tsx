@@ -43,6 +43,8 @@ import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
 import { currentStation, getProgress, viewProgress } from './lib/progress'
 import { Bericht } from './screens/Bericht'
+import { SchnupperVorbei } from './screens/SchnupperVorbei'
+import { load } from './lib/storage'
 import { berichtAktualisieren } from './lib/bericht'
 
 // Fähigkeiten einmal pro App-Start speichern (für Monatsverlauf und Vergleich)
@@ -117,6 +119,9 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'karte') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
+    // Schnupperwoche abgelaufen: nur noch Hinweis mit Weg zu den Paketen
+    const zugang = load<{ paket: string | null; bis: string | null } | null>(`bfk.zugang.${kid.id}`, null)
+    if (zugang?.bis && new Date(zugang.bis).getTime() < Date.now()) return <SchnupperVorbei name={kid.name} onLogout={logout} />
     if (!berichtStand.has(kid.id)) { berichtStand.add(kid.id); berichtAktualisieren(kid) }
     if (route === 'rangliste') return <Rangliste kid={kid} />
     if (route === 'bericht') return <Bericht kid={kid} zurueck={{ href: '#/garderobe' }} />

@@ -28,9 +28,30 @@ Deno.serve(async (req) => {
     if (s.status !== 'complete' || !['paid', 'no_payment_required'].includes(s.payment_status)) return antwort({ fehler: 'Zahlung nicht abgeschlossen' }, 402)
 
     const [paketName, takt] = String(s.client_reference_id ?? 'Basic-monat').split('-')
-    const paket = paketName.toLowerCase()
+    const paket = paketName.toLowerCase() === 'schnupperwoche' ? 'schnupper' : paketName.toLowerCase()
+    // Schnupperwoche: Zugang 7 Tage
+    const gueltigBis = paket === 'schnupper' ? new Date(Date.now() + 7 * 864e5).toISOString() : null
     const mail = s.customer_details?.email ?? s.customer_email ?? ''
     const name = String(vorname ?? '').trim() || 'Kind'
+
+    // Nach der Schnupperwoche: Paket gekauft → vorhandenes Kind derselben Eltern freischalten (Lernstand bleibt)
+    if (paket !== 'schnupper' && mail) {
+      let elternId: string | null = null
+      for (let seite = 1; seite <= 20 && !elternId; seite++) {
+        const { data: l } = await admin.auth.admin.listUsers({ page: seite, perPage: 200 })
+        elternId = l?.users.find((u: { email?: string }) => u.email?.toLowerCase() === mail.toLowerCase())?.id ?? null
+        if (!l || l.users.length < 200) break
+      }
+      const { data: probe } = elternId ? await admin.from('kinder').select('id, benutzer').eq('eltern', elternId).eq('paket', 'schnupper').limit(1).maybeSingle() : { data: null }
+      if (probe) {
+        const { data: alt } = await admin.from('bestellungen').select('passwort_start').eq('kind', probe.id).maybeSingle()
+        const pwAlt = alt?.passwort_start ?? ''
+        const { error: dop2 } = await admin.from('bestellungen').insert({ stripe_session: session_id, eltern_mail: mail, paket, takt: takt === 'jahr' ? 'jahr' : 'monat',
+          kind: probe.id, kind_vorname: name, kind_stufe: stufe, kind_benutzer: probe.benutzer, passwort_start: pwAlt })
+        if (!dop2) await admin.from('kinder').update({ paket, gueltig_bis: null }).eq('id', probe.id)
+        return antwort({ benutzer: probe.benutzer, passwort: pwAlt, weiter: true })
+      }
+    }
 
     // freier Benutzername
     const b0 = basis(name)
@@ -52,7 +73,7 @@ Deno.serve(async (req) => {
     if (error) throw error
     const id = neu.user.id
     await admin.from('personen').insert({ id, rolle: 'kind', name })
-    await admin.from('kinder').insert({ id, benutzer, vorname: name, stufe, paket: ['basic', 'plus', 'premium'].includes(paket) ? paket : null })
+    await admin.from('kinder').insert({ id, benutzer, vorname: name, stufe, paket: ['basic', 'plus', 'premium', 'schnupper'].includes(paket) ? paket : null, gueltig_bis: gueltigBis })
     await admin.from('konten').insert({ kind: id })
     const { data: start } = await admin.from('shop_artikel').select('id').eq('start', true)
     if (start?.length) await admin.from('besitz').insert(start.map((a: { id: string }) => ({ kind: id, artikel: a.id })))

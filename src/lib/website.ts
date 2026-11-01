@@ -48,11 +48,11 @@ export type Bestellung = {
 }
 
 // Preise wie auf der Website (aus den Website-Einstellungen, sonst Einführungspreise)
-const PREIS: Record<string, { monat: number; jahr: number }> = { basic: { monat: 49, jahr: 490 }, plus: { monat: 79, jahr: 790 }, premium: { monat: 99, jahr: 990 } }
+const PREIS: Record<string, { monat: number; jahr: number }> = { basic: { monat: 49, jahr: 490 }, plus: { monat: 79, jahr: 790 }, premium: { monat: 99, jahr: 990 }, schnupper: { monat: 9.9, jahr: 9.9 } }
 
 export async function bestellungenLaden(): Promise<Bestellung[]> {
   const { data: b, error } = await supabase.from('bestellungen').select('*').order('erstellt', { ascending: false })
-  try { const w = await websiteLaden(); for (const k of Object.keys(PREIS)) PREIS[k] = { monat: w.preise[k as PaketKey].monat, jahr: w.preise[k as PaketKey].jahr } } catch { /* Standardpreise */ }
+  try { const w = await websiteLaden(); for (const k of ['basic', 'plus', 'premium']) PREIS[k] = { monat: w.preise[k as PaketKey].monat, jahr: w.preise[k as PaketKey].jahr } } catch { /* Standardpreise */ }
   if (error) throw error
   const kindIds = (b ?? []).map((x) => x.kind).filter(Boolean)
   const { data: k } = kindIds.length ? await supabase.from('kinder').select('id, vorname, benutzer, stufe, eltern, erstellt').in('id', kindIds) : { data: [] }
