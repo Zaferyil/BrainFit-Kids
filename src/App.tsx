@@ -15,6 +15,7 @@ import { Rangliste } from './screens/Rangliste'
 import { InstallHinweis } from './components/InstallHinweis'
 import { NeuesPasswort } from './screens/NeuesPasswort'
 import { Partner } from './screens/Partner'
+import { Check } from './screens/Check'
 import { supabase } from './lib/supabase'
 import { MeinSeZa } from './screens/MeinSeZa'
 import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
@@ -95,7 +96,7 @@ export default function App() {
       location.hash = data?.rolle === 'partner' ? '#/partner' : '#eltern'
     })()
   }} />
-  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><InstallHinweis /></>
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} />{route !== 'check' && <InstallHinweis />}</>
 }
 
 function Inhalt({ roh }: { roh: string }) {
@@ -118,6 +119,7 @@ function Inhalt({ roh }: { roh: string }) {
   if (route === 'admin') return <Admin />
   if (route === 'eltern') return <Eltern />
   if (route === 'partner') return <Partner />
+  if (route === 'check') return <Check />
   if (route.startsWith('studio/')) return <Studio id={route.slice('studio/'.length).split('?')[0]} />
 
   if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {

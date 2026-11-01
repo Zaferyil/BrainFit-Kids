@@ -11,6 +11,7 @@ import { AdminWebsite } from './AdminWebsite'
 import { AdminBestellungen } from './AdminBestellungen'
 import { AdminPush } from './AdminPush'
 import { AdminPartner } from './AdminPartner'
+import { AdminCheck } from './AdminCheck'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
 import { fotoVerkleinern } from '../lib/hausaufgaben'
@@ -107,7 +108,7 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
       <main className="adm-main">
         <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
-        {tab === 'uebersicht' && <Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />}
+        {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} /><AdminCheck /></>}
         {tab === 'bestellungen' && <AdminBestellungen />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
