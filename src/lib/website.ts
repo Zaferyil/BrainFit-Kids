@@ -48,7 +48,7 @@ export type Bestellung = {
 }
 
 // Preise wie auf der Website (aus den Website-Einstellungen, sonst Einführungspreise)
-const PREIS: Record<string, { monat: number; jahr: number }> = { basic: { monat: 49, jahr: 490 }, plus: { monat: 79, jahr: 790 }, premium: { monat: 99, jahr: 990 }, schnupper: { monat: 9.9, jahr: 9.9 }, flex: { monat: 79, jahr: 79 } }
+const PREIS: Record<string, { monat: number; jahr: number }> = { basic: { monat: 49, jahr: 490 }, plus: { monat: 79, jahr: 790 }, premium: { monat: 99, jahr: 990 }, schnupper: { monat: 9.9, jahr: 9.9 }, flex: { monat: 120, jahr: 120 } }
 
 export async function bestellungenLaden(): Promise<Bestellung[]> {
   const { data: b, error } = await supabase.from('bestellungen').select('*').order('erstellt', { ascending: false })
