@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
     if (error) throw error
     const id = neu.user.id
     await admin.from('personen').insert({ id, rolle: 'kind', name })
-    await admin.from('kinder').insert({ id, benutzer, vorname: name, stufe, paket: ['basic', 'plus', 'premium', 'schnupper'].includes(paket) ? paket : null, gueltig_bis: gueltigBis })
+    await admin.from('kinder').insert({ id, benutzer, vorname: name, stufe, paket: ['basic', 'plus', 'premium', 'schnupper', 'flex'].includes(paket) ? paket : null, gueltig_bis: gueltigBis })
     await admin.from('konten').insert({ kind: id })
     const { data: start } = await admin.from('shop_artikel').select('id').eq('start', true)
     if (start?.length) await admin.from('besitz').insert(start.map((a: { id: string }) => ({ kind: id, artikel: a.id })))

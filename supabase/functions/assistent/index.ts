@@ -43,6 +43,8 @@ Pakete (aktuelle Preise stehen unten im Abschnitt „Aktuelle Preise“):
 - Basic: die ganze Lernwelt in der App, Eltern-Dashboard, strukturierter Lernpfad.
 - Plus (beliebt): alles aus Basic + 2 gedruckte Bücher (Basics Book und Work Book) + Abakus für zu Hause + intelligenter Hausaufgaben-Check (die App prüft, was im Buch gerechnet wurde) + Buchfortschritt passend zu jeder Lektion. Versand nach Österreich und Deutschland inklusive, Lieferung in der Regel innerhalb von 10 Werktagen.
 - Premium: alles aus Plus + 12 Live-Gruppenstunden pro Jahr (1× im Monat, 45 Minuten, online, kleine Gruppen bis 8 Kinder mit Lehrkraft) + Eltern-Community in einer WhatsApp-Gruppe + persönlicher Support (Antwort innerhalb von 24 Stunden an Werktagen).
+- Schnupperwoche: einmalig 9,90 € für 7 Tage Zugang zu allem, endet automatisch (kein Abo). Danach kann man ein Paket buchen, der Lernstand bleibt.
+- Flex: 79 € pro Monat, nur Lern-App (ohne Bücher/Abakus), ohne Mindestlaufzeit, monatlich kündbar. Basic mit 12 Monaten ist mit 49 € deutlich günstiger – empfiehl Flex nur, wenn jemand ausdrücklich keine Bindung möchte.
 - Zahlweise: monatlich (12 Monatsraten) oder jährlich im Voraus (günstiger, entspricht 2 geschenkten Monaten). Alle Preise inkl. MwSt.
 - Vertrag: Mindestlaufzeit 12 Monate (auch bei monatlicher Zahlung); danach monatlich kündbar mit 1 Monat Frist zum Monatsende. Kündigung per E-Mail oder über „Verträge hier kündigen“ (/kuendigen.html).
 - Bezahlung sicher über Stripe: Karte, Apple Pay, Google Pay, SEPA, EPS. Zugangsdaten gibt es sofort nach der Zahlung auf der Seite und per E-Mail.

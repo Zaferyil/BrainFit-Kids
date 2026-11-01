@@ -261,6 +261,7 @@ p{margin:0}
 .schluss p{max-width:52ch;opacity:.95}
 .schluss small{font-weight:800;opacity:.9}
 .fuss a{color:inherit}
+.flex-hinweis{text-align:center;margin:12px 0 0;color:#CFC7F5;font-size:14px}.flex-hinweis button{background:none;border:0;color:#fff;text-decoration:underline;font:inherit;font-weight:800;cursor:pointer;padding:0}
 .schnupper{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:18px auto 0;max-width:900px;padding:16px 20px;border-radius:22px;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 2px rgba(255,197,49,.6)}.schnupper div{display:grid;gap:2px;color:#fff;flex:1;min-width:220px}.schnupper div b:first-child{font-family:var(--display);font-size:20px;color:#FFE066}.schnupper span{color:#CFC7F5}
 .wa-knopf{position:fixed;left:16px;bottom:18px;z-index:7999;display:flex;align-items:center;gap:8px;padding:10px 16px 10px 12px;border-radius:999px;background:#25D366;color:#fff;font-weight:900;text-decoration:none;box-shadow:0 10px 26px rgba(0,0,0,.3)}@media (max-width:520px){.wa-knopf span{display:none}.wa-knopf{padding:12px}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -902,6 +903,7 @@ body::before{background:#100A30}
       
     
     <div class="schnupper"><div><b>Erst ausprobieren?</b><span>Die <b>Schnupperwoche</b>: 7 Tage alle Lektionen und Denkspiele – einmalig 9,90 €, kein Abo.</span></div><button class="btn" type="button" id="schnupper-knopf">Schnupperwoche für 9,90 €</button></div>
+    <p class="flex-hinweis">Lieber ohne Bindung? <button type="button" id="flex-knopf">Flex: nur App, monatlich kündbar – 79 € / Monat</button></p>
     <p class="dk-klein" id="takt-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar. „Monatlich zahlen“ heißt: 12 Monatsraten, nicht monatlich kündbar.</p>
   </section>
 
@@ -1044,7 +1046,7 @@ body::before{background:#100A30}
 </div>
 
 <script>
-const PAKETE={1:{name:'Basic',preis:49,alt:79,jahr:490,altJahr:790,lieferung:false},2:{name:'Plus',preis:79,alt:109,jahr:790,altJahr:1090,lieferung:true},3:{name:'Premium',preis:99,alt:129,jahr:990,altJahr:1290,lieferung:true},4:{name:'Schnupperwoche',preis:9.9,alt:0,jahr:9.9,altJahr:0,lieferung:false,einmal:true}};
+const PAKETE={1:{name:'Basic',preis:49,alt:79,jahr:490,altJahr:790,lieferung:false},2:{name:'Plus',preis:79,alt:109,jahr:790,altJahr:1090,lieferung:true},3:{name:'Premium',preis:99,alt:129,jahr:990,altJahr:1290,lieferung:true},4:{name:'Schnupperwoche',preis:9.9,alt:0,jahr:9.9,altJahr:0,lieferung:false,einmal:true},5:{name:'Flex',preis:79,alt:0,jahr:79,altJahr:0,lieferung:false,flex:true}};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let korb=null, angemeldet=false, kinder=[], takt='monat';
 // Zahlweise: monatlich (12 Raten) oder jährlich (einmal für 12 Monate, 2 Monate geschenkt)
@@ -1059,6 +1061,7 @@ function taktSetzen(t){takt=t;
   if(korb)korbZeichnen()}
 $$('.abrechnung button').forEach(b=>b.onclick=()=>taktSetzen(b.dataset.takt));
 $('#schnupper-knopf').onclick=()=>{korb=4;korbZeichnen();kasse()};
+$('#flex-knopf').onclick=()=>{korb=5;korbZeichnen();kasse()};
 // Elternstimmen – BEISPIELTEXTE, vor dem Start durch echte, freigegebene Stimmen ersetzen
 const STIMMEN=[
   ['Mama von Lena','8 Jahre · 2. Klasse','#FF4FA3','Lena fragt jeden Tag nach ihrer Lektion. Kopfrechnen ist plötzlich ihr Lieblingsfach.'],
@@ -1106,14 +1109,14 @@ function korbZeichnen(){
   $$('.paket').forEach((p,i)=>{const on=korb===i+1;p.classList.toggle('im-korb',on);p.querySelector('.in-korb').textContent=on?'✓ Im Warenkorb':'In den Warenkorb'});
   if(!korb){$('#korb-inhalt').innerHTML='<p class="leer">Ihr Warenkorb ist leer.</p>';$('#korb-fuss').innerHTML='<button class="btn zweit" type="button" data-ziel="preise">Pakete ansehen</button>';return}
   const p=PAKETE[korb];
-  $('#korb-inhalt').innerHTML=`<div class="korb-pos"><span class="ico">${p.name[0]}</span><div><b>BrainFit Kids ${p.name}</b><small>${p.einmal?'9,90 € einmalig · 7 Tage alles testen · endet automatisch':`${euro(betrag(p))} € / ${einheit()} · 12 Monate`}${p.lieferung?' · inkl. 2 Bücher und Abakus':''}</small></div><button class="entf" type="button" id="entf">Entfernen</button></div>`;
+  $('#korb-inhalt').innerHTML=`<div class="korb-pos"><span class="ico">${p.name[0]}</span><div><b>BrainFit Kids ${p.name}</b><small>${p.flex?'79 € / Monat · nur App · monatlich kündbar':p.einmal?'9,90 € einmalig · 7 Tage alles testen · endet automatisch':`${euro(betrag(p))} € / ${einheit()} · 12 Monate`}${p.lieferung?' · inkl. 2 Bücher und Abakus':''}</small></div><button class="entf" type="button" id="entf">Entfernen</button></div>`;
   $('#korb-fuss').innerHTML=zusammen()+'<button class="btn gross" type="button" id="zur-kasse">Zur Kasse</button>';
   $('#entf').onclick=()=>{korb=null;korbZeichnen()};
   $('#zur-kasse').onclick=()=>{lade(false);kasse()};
 }
-function zusammen(){if(PAKETE[korb].einmal)return '<div class="zus"><div class="zeile"><span>Schnupperwoche · 7 Tage</span><b>9,90 €</b></div><div class="zeile klein"><span>Alle Lektionen und Denkspiele</span><span>inklusive</span></div><div class="zeile summe"><span>Heute</span><span>9,90 €</span></div><p class="klein">Einmalig · kein Abo · endet automatisch nach 7 Tagen · inkl. MwSt.</p></div>';const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=(j?p.altJahr:p.alt)||0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Einführungsaktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
+function zusammen(){if(PAKETE[korb].flex)return '<div class="zus"><div class="zeile"><span>Flex · monatlich</span><b>79 € / Monat</b></div><div class="zeile klein"><span>Lern-App, alle Lektionen und Denkspiele</span><span>inklusive</span></div><div class="zeile summe"><span>Heute</span><span>79,00 €</span></div><p class="klein">Ohne Mindestlaufzeit · jederzeit zum Monatsende kündbar · ohne Bücher und Abakus · inkl. MwSt.</p></div>';if(PAKETE[korb].einmal)return '<div class="zus"><div class="zeile"><span>Schnupperwoche · 7 Tage</span><b>9,90 €</b></div><div class="zeile klein"><span>Alle Lektionen und Denkspiele</span><span>inklusive</span></div><div class="zeile summe"><span>Heute</span><span>9,90 €</span></div><p class="klein">Einmalig · kein Abo · endet automatisch nach 7 Tagen · inkl. MwSt.</p></div>';const p=PAKETE[korb],b=betrag(p),j=takt==='jahr',alt=(j?p.altJahr:p.alt)||0;return `<div class="zus"><div class="zeile"><span>${p.name} · ${j?'jährlich':'monatlich'}</span><b>${euro(b)} € / ${einheit()}</b></div>${alt?`<div class="zeile klein"><span>Einführungsaktion (statt ${euro(alt)} €)</span><span>−${euro(alt-b)} €</span></div>`:''}${j?`<div class="zeile klein"><span>Statt 12 × ${p.preis} € (${euro(p.preis*12)} €)</span><span>2 Monate gratis</span></div>`:''}${p.lieferung?'<div class="zeile klein"><span>Bücher + Abakus, Versand</span><span>inklusive</span></div>':''}<div class="zeile summe"><span>Heute</span><span>${euro(b)},00 €</span></div><p class="klein">${j?`Einmalig ${euro(b)} € für 12 Monate · inkl. MwSt.`:`Danach monatlich ${p.preis} € · 12 Monate Mindestlaufzeit (${p.preis*12} € gesamt) · inkl. MwSt.`}</p></div>`}
 function lade(auf){$('#lade').hidden=!auf;$('#schleier').hidden=!auf&&$('#login').hidden}
-function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-lauf').closest('label').hidden=!!p.einmal; $('#k-liefer').hidden=!p.lieferung; $('#k-zahl-nr').textContent=p.lieferung?4:3; $('#k-zus').innerHTML='<h3>Ihre Bestellung</h3>'+zusammen().replace('<div class="zus">','<div>'); ansicht('kasse')}
+function kasse(){if(!korb)return; const p=PAKETE[korb]; $('#k-lauf').closest('label').hidden=!!(p.einmal||p.flex); $('#k-liefer').hidden=!p.lieferung; $('#k-zahl-nr').textContent=p.lieferung?4:3; $('#k-zus').innerHTML='<h3>Ihre Bestellung</h3>'+zusammen().replace('<div class="zus">','<div>'); ansicht('kasse')}
 function alert2(t){const p=document.createElement('div');p.className='login-box';p.innerHTML=`<p>${t}</p><button class="btn" type="button">OK</button>`;document.body.append(p);p.querySelector('button').onclick=()=>p.remove()}
 document.addEventListener('click',e=>{const z=e.target.closest('[data-ziel]');if(z){e.preventDefault();lade(false);if($('#v-start').hidden)ansicht('start');document.getElementById(z.dataset.ziel)?.scrollIntoView({behavior:'smooth',block:'start'})}
   const a=e.target.closest('[data-ansicht]');if(a){zuStart()}});
@@ -1127,22 +1130,23 @@ const STRIPE_LINKS={
   1:{monat:'https://buy.stripe.com/00w7sMafb8SUa6Z9WX9oc00',jahr:'https://buy.stripe.com/aFafZi873glm3IB1qr9oc01'}, // Basic
   2:{monat:'https://buy.stripe.com/8x2dRa1IFfhienfgll9oc02',jahr:'https://buy.stripe.com/dRmcN61IF3yAfrj0mn9oc03'}, // Plus
   4:{monat:'',jahr:''},
+  5:{monat:'',jahr:''},
   3:{monat:'https://buy.stripe.com/3cIbJ20EBglmfrj5GH9oc04',jahr:'https://buy.stripe.com/fZufZi1IF1qs4MFfhh9oc05'}, // Premium
 };
 const KASSE_KEY='bfk.kasse';
 const FELDER=['k-vn','k-nn','k-mail','f-kind','f-stufe','k-str','k-plz','k-ort','k-land'];
 $('#bestellen').onclick=()=>{
-  if(!$('#k-agb').checked||!$('#k-wid').checked||!($('#k-lauf').checked||PAKETE[korb].einmal)){alert2('Bitte bestätigen Sie AGB, sofortige Freischaltung und Mindestlaufzeit.');return}
+  if(!$('#k-agb').checked||!$('#k-wid').checked||!($('#k-lauf').checked||PAKETE[korb].einmal||PAKETE[korb].flex)){alert2('Bitte bestätigen Sie AGB, sofortige Freischaltung und Mindestlaufzeit.');return}
   if(!$('#k-mail').value||!$('#f-kind').value){alert2('Bitte E-Mail-Adresse und Vorname Ihres Kindes eintragen.');return}
   if(($('#k-pw').value||'').length<8){alert2('Bitte ein Passwort mit mindestens 8 Zeichen für Ihr Eltern-Konto wählen.');return}
   try{sessionStorage.setItem('bfk.kasse-pw',$('#k-pw').value)}catch{}
   // Angaben merken, damit nach der Rückkehr von Stripe das Kind angelegt werden kann
   const daten={korb,takt,felder:Object.fromEntries(FELDER.map(id=>[id,$('#'+id)?.value??'']))};
   try{localStorage.setItem(KASSE_KEY,JSON.stringify(daten))}catch{}
-  const link=STRIPE_LINKS[korb]?.[takt];
+  const link=STRIPE_LINKS[korb]?.[PAKETE[korb].flex||PAKETE[korb].einmal?'monat':takt];
   // ohne Bezahllink keine Bestellung: Zugangsdaten gibt es nur nach erfolgreicher Zahlung
   if(!link){try{localStorage.removeItem(KASSE_KEY)}catch{};alert2('Die Online-Zahlung ist noch nicht freigeschaltet. Bitte versuchen Sie es bald wieder.');return}
-  const u=new URL(link);u.searchParams.set('prefilled_email',$('#k-mail').value);u.searchParams.set('client_reference_id',PAKETE[korb].name+'-'+takt);
+  const u=new URL(link);u.searchParams.set('prefilled_email',$('#k-mail').value);u.searchParams.set('client_reference_id',PAKETE[korb].name+'-'+(PAKETE[korb].flex||PAKETE[korb].einmal?'monat':takt));
   // In eingebetteten Vorschauen ist Weiterleiten blockiert: dann in neuem Tab öffnen, sonst Link anzeigen
   try{ if(window.top===window.self){location.href=u.toString();return} }catch{}
   const w=window.open(u.toString(),'_blank','noopener');
