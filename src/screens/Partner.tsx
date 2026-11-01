@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Icon } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
 import { adminAbmelden, elternPasswortVergessen } from '../lib/adminCloud'
-import { datum, kindAnlegen, kinderLaden, PAKETE, paketName, partnerAnmelden, partnerLaden, standLaden, zugangNeu, type Paket, type PartnerInfo, type PartnerKind, type Stand } from '../lib/partner'
+import { bestellen, bestellungenLaden, datum, euro, kindAnlegen, kinderLaden, mindestmenge, PAKETE, paketName, partnerAnmelden, partnerLaden, preiseLaden, standLaden, stufeFuer, STUFEN, USt, zugangNeu, type Bestellung, type Paket, type PartnerInfo, type PartnerKind, type Preis, type Stand } from '../lib/partner'
 
 // Partner-Dashboard: Kredite, Kinder anlegen (1 Kredit = 1 Kind, 12 Monate), Zugangsdaten drucken.
 
@@ -58,7 +58,9 @@ export function Dashboard({ partner, onLogout }: { partner: PartnerInfo; onLogou
   const [neu, setNeu] = useState(false)
   const [karte, setKarte] = useState<Karte | null>(null)
   const [suche, setSuche] = useState('')
-  const laden = () => { void standLaden().then(setStand); void kinderLaden(partner.id).then(setKinder) }
+  const [bestellenOffen, setBestellen] = useState(false)
+  const [bestellungen, setBestellungen] = useState<Bestellung[]>([])
+  const laden = () => { void standLaden().then(setStand); void kinderLaden(partner.id).then(setKinder); void bestellungenLaden(partner.id).then(setBestellungen) }
   useEffect(laden, [partner.id])
 
   const passwortNeu = async (k: PartnerKind) => {
@@ -104,7 +106,7 @@ export function Dashboard({ partner, onLogout }: { partner: PartnerInfo; onLogou
 
         <div className="partner-aktionen">
           <button type="button" className="adm-btn primary" disabled={!partner.aktiv} onClick={() => setNeu(true)}>➕ Neues Kind anlegen</button>
-          <a className="adm-btn" href={`mailto:info@mentalmath.at?subject=${encodeURIComponent('Kredite nachbestellen – ' + (partner.firma || partner.name))}`}>🛒 Kredite nachbestellen</a>
+          <button type="button" className="adm-btn" disabled={!partner.aktiv} onClick={() => setBestellen(true)}>🛒 Kredite bestellen</button>
         </div>
 
         <section className="adm-card adm-tabelle-wrap">
@@ -129,6 +131,21 @@ export function Dashboard({ partner, onLogout }: { partner: PartnerInfo; onLogou
           )}
         </section>
 
+        {bestellungen.length > 0 && (
+          <section className="adm-card adm-tabelle-wrap">
+            <div className="adm-card-head"><h2>Meine Bestellungen</h2></div>
+            <table className="adm-tabelle">
+              <thead><tr><th>Nr.</th><th>Datum</th><th>Kredite</th><th>Summe netto</th><th>Status</th></tr></thead>
+              <tbody>{bestellungen.map((b) => (
+                <tr key={b.id}><td>#{b.id}</td><td>{datum(b.erstellt)}</td>
+                  <td>{b.positionen.map((x) => `${x.anzahl} × ${paketName(x.paket)}`).join(', ')}</td>
+                  <td>{euro(b.netto)}</td>
+                  <td><span className={b.status === 'bezahlt' ? 'adm-badge ok' : 'adm-badge warn'}>{b.status === 'offen' ? 'wartet auf Zahlung' : b.status === 'bezahlt' ? 'bezahlt · Kredite gebucht' : 'storniert'}</span></td></tr>
+              ))}</tbody>
+            </table>
+          </section>
+        )}
+
         <section className="adm-card eltern-tipps">
           <h2>So funktioniert’s</h2>
           <ul>
@@ -143,6 +160,7 @@ export function Dashboard({ partner, onLogout }: { partner: PartnerInfo; onLogou
 
       {neu && <NeuesKind stand={stand} onZu={() => setNeu(false)} onFertig={(k) => { setNeu(false); setKarte(k); laden() }} />}
       {karte && <Zugangskarte karte={karte} onZu={() => setKarte(null)} />}
+      {bestellenOffen && <KrediteBestellen onZu={() => setBestellen(false)} onFertig={() => { setBestellen(false); laden() }} />}
     </div>
   )
 }
@@ -211,6 +229,76 @@ function Zugangskarte({ karte, onZu }: { karte: Karte; onZu: () => void }) {
           <button type="button" className="adm-btn primary" onClick={() => window.print()}>🖨️ Drucken</button>
           <button type="button" className="adm-btn" onClick={onZu}>Fertig</button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function KrediteBestellen({ onZu, onFertig }: { onZu: () => void; onFertig: () => void }) {
+  const [preise, setPreise] = useState<Preis[] | null>(null)
+  const [anzahl, setAnzahl] = useState<Record<Paket, number>>({ basic: 0, plus: 0, premium: 0 })
+  const [fehler, setFehler] = useState('')
+  const [fertig, setFertig] = useState<{ id: number; netto: number } | null>(null)
+  const [laeuft, setLaeuft] = useState(false)
+  useEffect(() => { void preiseLaden().then(setPreise) }, [])
+  if (!preise) return null
+  const gesamt = anzahl.basic + anzahl.plus + anzahl.premium
+  const stufe = stufeFuer(preise, gesamt)
+  const preis = (st: string, p: Paket) => preise.find((x) => x.stufe === st && x.paket === p)?.preis ?? 0
+  const netto = stufe ? PAKETE.reduce((a, p) => a + anzahl[p.id] * preis(stufe.id, p.id), 0) : 0
+  const min = mindestmenge(preise)
+
+  const senden = async () => {
+    if (!stufe || !window.confirm(`Verbindlich bestellen: ${gesamt} Kredite für ${euro(netto)} netto?`)) return
+    setLaeuft(true); setFehler('')
+    const r = await bestellen(anzahl)
+    setLaeuft(false)
+    if (r.fehler) setFehler(r.fehler)
+    else setFertig({ id: r.id, netto: r.netto })
+  }
+
+  return (
+    <div className="partner-modal" role="dialog" aria-modal="true" aria-label="Kredite bestellen">
+      <div className="adm-card push-admin partner-bestellen">
+        <div className="adm-card-head"><h2>🛒 Kredite bestellen</h2><button type="button" className="adm-btn" onClick={fertig ? onFertig : onZu} aria-label="Schließen">✕</button></div>
+        {fertig ? (
+          <>
+            <p className="adm-info">Danke! Ihre Bestellung #{fertig.id} über {euro(fertig.netto)} netto ist eingegangen.</p>
+            <p>Sie erhalten in Kürze die Rechnung per E-Mail. Sobald die Zahlung eingegangen ist, stehen die Kredite hier im Partner-Bereich bereit.</p>
+            <button type="button" className="adm-btn primary" onClick={onFertig}>Fertig</button>
+          </>
+        ) : (
+          <>
+            <table className="adm-tabelle partner-preistabelle">
+              <thead><tr><th>Stufe</th>{PAKETE.map((p) => <th key={p.id}>{p.name}</th>)}</tr></thead>
+              <tbody>{STUFEN.map((st) => (
+                <tr key={st.id} className={stufe?.id === st.id ? 'aktiv' : ''}>
+                  <td><b>{st.name}</b><br /><small>ab {Math.min(...preise.filter((x) => x.stufe === st.id).map((x) => x.min_kredite))} Kredite</small></td>
+                  {PAKETE.map((p) => <td key={p.id}>{euro(preis(st.id, p.id))}</td>)}
+                </tr>
+              ))}</tbody>
+            </table>
+            <p className="adm-muted">Preise je Kredit (1 Kind, 12 Monate), netto zzgl. {USt * 100} % USt. Die Stufe richtet sich nach der Gesamtzahl der Kredite einer Bestellung.</p>
+            <div className="partner-mengen">
+              {PAKETE.map((p) => (
+                <label key={p.id}>{p.name}
+                  <input type="number" min={0} max={1000} value={anzahl[p.id] || ''} placeholder="0" onChange={(e) => setAnzahl({ ...anzahl, [p.id]: Math.max(0, Math.floor(Number(e.target.value) || 0)) })} />
+                </label>
+              ))}
+            </div>
+            <div className="partner-summe">
+              {stufe ? (
+                <>
+                  <span>{gesamt} Kredite · Stufe <b>{stufe.name}</b></span>
+                  <span>Netto <b>{euro(netto)}</b> · USt. {euro(netto * USt)} · <b>Gesamt {euro(netto * (1 + USt))}</b></span>
+                </>
+              ) : <span>Mindestbestellung: {min} Kredite (gemischt möglich). Aktuell: {gesamt}.</span>}
+            </div>
+            <p className="adm-muted">Bezahlung per Rechnung (Überweisung). Die Kredite sind ab Buchung 18 Monate gültig. Bücher und Abakus für Plus/Premium schicken wir gesammelt an Sie.</p>
+            {fehler && <p className="adm-fehler">{fehler}</p>}
+            <button type="button" className="adm-btn primary" disabled={!stufe || laeuft} onClick={() => void senden()}>{laeuft ? 'Wird gesendet …' : 'Verbindlich bestellen'}</button>
+          </>
+        )}
       </div>
     </div>
   )

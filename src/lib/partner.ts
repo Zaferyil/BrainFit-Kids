@@ -65,3 +65,29 @@ export const partnerAnlegen = (d: { mail: string; name: string; firma: string; t
   aufruf<{ id: string; mail: string; passwort: string }>({ aktion: 'partner-anlegen', ...d })
 
 export const datum = (s: string | null) => (s ? new Date(s).toLocaleDateString('de-AT') : '—')
+
+// ───── Bestellungen und Preise ─────
+export type Preis = { stufe: 'starter' | 'pro' | 'master'; paket: Paket; min_kredite: number; preis: number }
+export type Bestellung = { id: number; partner: string; erstellt: string; stufe: string; positionen: { paket: Paket; anzahl: number; preis: number }[]; netto: number; status: 'offen' | 'bezahlt' | 'storniert'; notiz: string; erledigt: string | null }
+export const STUFEN: { id: Preis['stufe']; name: string }[] = [{ id: 'starter', name: 'Starter' }, { id: 'pro', name: 'Pro' }, { id: 'master', name: 'Master' }]
+export const USt = 0.2
+export const euro = (n: number) => n.toLocaleString('de-AT', { style: 'currency', currency: 'EUR' })
+
+export async function preiseLaden(): Promise<Preis[]> {
+  const { data } = await supabase.from('partner_preise').select('*')
+  return ((data ?? []) as Preis[]).map((p) => ({ ...p, preis: Number(p.preis) }))
+}
+/** Stufe für eine Gesamtmenge (höchste Stufe, deren Mindestmenge erreicht ist) */
+export function stufeFuer(preise: Preis[], gesamt: number) {
+  const min = (st: string) => Math.min(...preise.filter((p) => p.stufe === st).map((p) => p.min_kredite))
+  return [...STUFEN].reverse().find((s) => preise.some((p) => p.stufe === s.id) && gesamt >= min(s.id)) ?? null
+}
+export const mindestmenge = (preise: Preis[]) => Math.min(...preise.map((p) => p.min_kredite))
+
+export async function bestellungenLaden(partner?: string): Promise<Bestellung[]> {
+  let q = supabase.from('partner_bestellungen').select('*').order('erstellt', { ascending: false })
+  if (partner) q = q.eq('partner', partner)
+  const { data } = await q
+  return ((data ?? []) as Bestellung[]).map((b) => ({ ...b, netto: Number(b.netto) }))
+}
+export const bestellen = (anzahl: Record<Paket, number>) => aufruf<{ id: number; stufe: string; netto: number }>({ aktion: 'bestellen', anzahl })

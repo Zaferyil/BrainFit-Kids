@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
-import { datum, kinderLaden, PAKETE, paketName, partnerAnlegen, standLaden, type Kredit, type Paket, type PartnerInfo, type PartnerKind, type Stand } from '../lib/partner'
+import { bestellungenLaden, datum, euro, kinderLaden, PAKETE, paketName, partnerAnlegen, preiseLaden, standLaden, STUFEN, type Bestellung, type Kredit, type Paket, type PartnerInfo, type PartnerKind, type Preis, type Stand } from '../lib/partner'
 
 // Admin: Partner anlegen, Kredite buchen, Partner pausieren, Kinder und Verbrauch ansehen.
 
@@ -32,6 +32,7 @@ export function AdminPartner() {
           <button type="button" className="adm-link" onClick={() => setInfo(null)}>Ausblenden</button>
         </div>
       )}
+      {liste && <Bestellungen partner={liste} onAenderung={() => void laden()} />}
       {neu && <NeuerPartner onZu={() => setNeu(false)} onFertig={(i) => { setNeu(false); setInfo(i); void laden() }} />}
 
       <section className="adm-card adm-tabelle-wrap">
@@ -52,6 +53,7 @@ export function AdminPartner() {
         )}
       </section>
       {offen && liste?.find((p) => p.id === offen) && <Verwalten partner={liste.find((p) => p.id === offen)!} onAenderung={() => void laden()} />}
+      <Preise />
     </>
   )
 }
@@ -135,6 +137,76 @@ function Verwalten({ partner, onAenderung }: { partner: PartnerInfo & { stand: S
         <table className="adm-tabelle"><thead><tr><th>Kind</th><th>Paket</th><th>Lektion</th><th>Zuletzt</th><th>Zugang bis</th><th>Eltern</th></tr></thead>
           <tbody>{kinder.map((k) => <tr key={k.id}><td>{k.vorname} <small className="adm-muted">{k.benutzer}</small></td><td>{paketName(k.paket)}</td><td>{k.lektion ?? '—'}</td><td>{datum(k.zuletzt)}</td><td>{datum(k.gueltig_bis)}</td><td>{k.eltern_mail ?? '—'}</td></tr>)}</tbody></table>
       ) : <p className="adm-muted">Noch keine Kinder angelegt.</p>}
+    </section>
+  )
+}
+
+function Bestellungen({ partner, onAenderung }: { partner: PartnerInfo[]; onAenderung: () => void }) {
+  const [liste, setListe] = useState<Bestellung[]>([])
+  const [alle, setAlle] = useState(false)
+  const laden = () => void bestellungenLaden().then(setListe)
+  useEffect(laden, [])
+  const name = (id: string) => { const p = partner.find((x) => x.id === id); return p ? p.firma || p.name : '—' }
+  const bezahlt = async (b: Bestellung) => {
+    const notiz = window.prompt(`Bestellung #${b.id} von ${name(b.partner)} ist bezahlt? Die Kredite werden jetzt gebucht.\n\nNotiz (z. B. Rechnungsnummer):`, '')
+    if (notiz === null) return
+    const { error } = await supabase.rpc('partner_bestellung_bezahlt', { b: b.id, notiz })
+    if (error) window.alert(error.message)
+    laden(); onAenderung()
+  }
+  const stornieren = async (b: Bestellung) => {
+    if (!window.confirm(`Bestellung #${b.id} stornieren?`)) return
+    await supabase.from('partner_bestellungen').update({ status: 'storniert', erledigt: new Date().toISOString() }).eq('id', b.id)
+    laden()
+  }
+  const zeigen = alle ? liste : liste.filter((b) => b.status === 'offen')
+  if (!liste.length) return null
+  return (
+    <section className="adm-card adm-tabelle-wrap">
+      <div className="adm-card-head"><h2>🛒 Bestellungen {liste.some((b) => b.status === 'offen') && <span className="adm-badge warn">{liste.filter((b) => b.status === 'offen').length} offen</span>}</h2>
+        <label className="adm-muted"><input type="checkbox" checked={alle} onChange={(e) => setAlle(e.target.checked)} /> auch erledigte zeigen</label></div>
+      {!zeigen.length ? <p className="adm-muted">Keine offenen Bestellungen.</p> : (
+        <table className="adm-tabelle">
+          <thead><tr><th>Nr.</th><th>Datum</th><th>Partner</th><th>Kredite</th><th>Netto</th><th>Status</th><th /></tr></thead>
+          <tbody>{zeigen.map((b) => (
+            <tr key={b.id}><td>#{b.id}</td><td>{datum(b.erstellt)}</td><td>{name(b.partner)}</td>
+              <td>{b.positionen.map((x) => `${x.anzahl} × ${paketName(x.paket)} à ${euro(x.preis)}`).join(', ')}<br /><small className="adm-muted">Stufe {b.stufe}</small></td>
+              <td><b>{euro(b.netto)}</b><br /><small className="adm-muted">brutto {euro(b.netto * 1.2)}</small></td>
+              <td>{b.status === 'offen' ? <span className="adm-badge warn">offen</span> : b.status === 'bezahlt' ? <span className="adm-badge ok">bezahlt {datum(b.erledigt)}</span> : 'storniert'}</td>
+              <td>{b.status === 'offen' && <><button type="button" className="adm-btn primary" onClick={() => void bezahlt(b)}>Bezahlt – Kredite buchen</button> <button type="button" className="adm-link" onClick={() => void stornieren(b)}>Stornieren</button></>}</td></tr>
+          ))}</tbody>
+        </table>
+      )}
+    </section>
+  )
+}
+
+function Preise() {
+  const [preise, setPreise] = useState<Preis[]>([])
+  const [info, setInfo] = useState('')
+  useEffect(() => { void preiseLaden().then(setPreise) }, [])
+  const wert = (st: string, p: string) => preise.find((x) => x.stufe === st && x.paket === p)
+  const setzen = (st: Preis['stufe'], p: Paket, feld: 'preis' | 'min_kredite', v: number) =>
+    setPreise(preise.map((x) => (x.stufe === st && (feld === 'min_kredite' || x.paket === p) ? { ...x, [feld]: v } : x)))
+  const speichern = async () => {
+    const { error } = await supabase.from('partner_preise').upsert(preise)
+    setInfo(error ? `Fehler: ${error.message}` : 'Preise gespeichert ✓')
+  }
+  if (!preise.length) return null
+  return (
+    <section className="adm-card adm-tabelle-wrap partner-preise">
+      <div className="adm-card-head"><h2>💶 Partner-Preise</h2><span className="adm-muted">€ je Kredit, netto</span></div>
+      <table className="adm-tabelle">
+        <thead><tr><th>Stufe</th><th>ab Kredite</th>{PAKETE.map((p) => <th key={p.id}>{p.name}</th>)}</tr></thead>
+        <tbody>{STUFEN.map((st) => (
+          <tr key={st.id}><td><b>{st.name}</b></td>
+            <td><input type="number" min={1} value={wert(st.id, 'basic')?.min_kredite ?? 0} onChange={(e) => setzen(st.id, 'basic', 'min_kredite', Number(e.target.value))} aria-label={`${st.name} ab Kredite`} /></td>
+            {PAKETE.map((p) => <td key={p.id}><input type="number" min={0} step="0.01" value={wert(st.id, p.id)?.preis ?? 0} onChange={(e) => setzen(st.id, p.id, 'preis', Number(e.target.value))} aria-label={`${st.name} ${p.name}`} /></td>)}
+          </tr>
+        ))}</tbody>
+      </table>
+      <button type="button" className="adm-btn primary" onClick={() => void speichern()}>Preise speichern</button>
+      {info && <p className="adm-info">{info}</p>}
     </section>
   )
 }

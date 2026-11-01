@@ -2625,3 +2625,11 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
   .partner-modal { position: static; background: none; padding: 0; }
   .partner-modal > .adm-card { box-shadow: none; max-height: none; }
 }
+.partner-modal > .partner-bestellen { width: min(640px, 100%); }
+.partner-preistabelle td, .partner-preistabelle th { text-align: center; }
+.partner-preistabelle td:first-child, .partner-preistabelle th:first-child { text-align: left; }
+.partner-preistabelle tr.aktiv td { background: #EFEBFF; font-weight: 800; }
+.partner-mengen { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+.partner-mengen input { width: 100%; box-sizing: border-box; }
+.partner-summe { display: flex; flex-direction: column; gap: 4px; background: #F4F2FB; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+.partner-preise input { width: 90px; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid #D8D2F2; }

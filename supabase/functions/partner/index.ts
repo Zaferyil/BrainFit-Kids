@@ -47,6 +47,7 @@ Deno.serve(async (req) => {
     if (!p?.aktiv) return antwort({ fehler: 'Ihr Partner-Konto ist nicht aktiv. Bitte melden Sie sich bei info@mentalmath.at.' }, 403)
     if (body.aktion === 'kind-anlegen') return antwort(await kindAnlegen(user.id, p.firma || p.name, body))
     if (body.aktion === 'zugang-neu') return antwort(await zugangNeu(user.id, body.kind))
+    if (body.aktion === 'bestellen') return antwort(await bestellen(user.id, p.firma || p.name, user.email ?? '', body.anzahl ?? {}))
     return antwort({ fehler: 'Unbekannte Aktion' }, 400)
   } catch (e) {
     return antwort({ fehler: String((e as Error).message ?? e) }, 500)
@@ -172,4 +173,34 @@ async function zugangsMail(an: string, eltern: string, kind: string, benutzer: s
     body: JSON.stringify({ from: von, reply_to: 'info@mentalmath.at', to: [an], subject: `Willkommen bei BrainFit Kids – so startet ${kind}`, html }),
   })
   if (!r.ok) throw new Error(await r.text())
+}
+
+/** Partner bestellt Kredite: Stufe und Preise rechnet der Server; Bezahlung per Rechnung */
+async function bestellen(partnerId: string, partnerName: string, mail: string, anzahl: Record<string, unknown>) {
+  const menge: Record<string, number> = {}
+  for (const k of ['basic', 'plus', 'premium']) menge[k] = Math.max(0, Math.min(1000, Math.floor(Number(anzahl[k] ?? 0)) || 0))
+  const gesamt = menge.basic + menge.plus + menge.premium
+  const { data: preise } = await db.from('partner_preise').select('stufe, paket, min_kredite, preis')
+  const stufen = [...new Set((preise ?? []).map((x: { stufe: string }) => x.stufe))]
+    .map((st) => ({ st, min: Math.min(...(preise ?? []).filter((x: { stufe: string }) => x.stufe === st).map((x: { min_kredite: number }) => x.min_kredite)) }))
+    .sort((a, b) => b.min - a.min)
+  const stufe = stufen.find((x) => gesamt >= x.min)
+  if (!stufe) return { fehler: `Mindestbestellung: ${Math.min(...stufen.map((x) => x.min))} Kredite.` }
+  const positionen = (['basic', 'plus', 'premium'] as const).filter((k) => menge[k] > 0).map((k) => ({
+    paket: k, anzahl: menge[k], preis: Number((preise ?? []).find((x: { stufe: string; paket: string }) => x.stufe === stufe.st && x.paket === k)?.preis ?? 0),
+  }))
+  const netto = positionen.reduce((a, x) => a + x.anzahl * x.preis, 0)
+  const { data: b, error } = await db.from('partner_bestellungen').insert({ partner: partnerId, stufe: stufe.st, positionen, netto }).select('id').single()
+  if (error) throw error
+  if (Deno.env.get('RESEND_API_KEY')) {
+    const zeilen = positionen.map((x) => `${x.anzahl} × ${PAKET_NAME[x.paket]} à ${x.preis.toFixed(2)} €`).join('<br>')
+    const text = `<p><b>Bestellung #${b.id}</b> (Stufe ${esc(stufe.st)})<br>${zeilen}<br><b>Summe netto: ${netto.toFixed(2)} €</b> zzgl. USt.</p>`
+    const senden = (an: string, betreff: string, html: string) => fetch('https://api.resend.com/emails', {
+      method: 'POST', headers: { Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>', reply_to: 'info@mentalmath.at', to: [an], subject: betreff, html }),
+    }).catch((e) => console.error('Mail:', e))
+    await senden('info@mentalmath.at', `Neue Partner-Bestellung #${b.id} – ${partnerName}`, `<div style="font-family:Arial,sans-serif">${esc(partnerName)} (${esc(mail)}) hat Kredite bestellt.${text}<p>Nach Zahlungseingang im Admin-Bereich → Partner → „Bezahlt – Kredite buchen“.</p></div>`)
+    if (mail) await senden(mail, `Ihre Bestellung #${b.id} bei BrainFit Kids`, `<div style="font-family:Arial,sans-serif;color:#231A4F">Vielen Dank für Ihre Bestellung!${text}<p>Sie erhalten in Kürze die Rechnung. Sobald die Zahlung eingegangen ist, stehen die Kredite in Ihrem Partner-Bereich bereit.</p><p>Ihr BrainFit-Kids-Team</p></div>`)
+  }
+  return { id: b.id, stufe: stufe.st, netto }
 }
