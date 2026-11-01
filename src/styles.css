@@ -2596,3 +2596,32 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .adm-badge.ok { background: #DFF7E9; color: #14794A; }
 .push-admin textarea { background: #fff; color: #231A4F; resize: vertical; }
 .adm-card .adm-btn { white-space: normal; max-width: 100%; }
+
+/* Partner-Bereich */
+.partner-kredite { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 14px; margin-bottom: 16px; }
+.partner-kredit { display: flex; flex-direction: column; gap: 6px; }
+.partner-kredit > span { font-weight: 800; color: #6B648F; }
+.partner-kredit b { font-size: 34px; line-height: 1; }
+.partner-kredit b small { font-size: 15px; color: #8A84AD; }
+.partner-kredit small { color: #8A84AD; }
+.partner-aktionen { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 16px; }
+.partner-aktionen a.adm-btn { text-decoration: none; }
+.partner-suche { font: inherit; padding: 7px 10px; border-radius: 10px; border: 1px solid #D8D2F2; min-width: 0; }
+.partner-modal { position: fixed; inset: 0; z-index: 50; background: rgba(27, 20, 70, .55); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.partner-modal > .adm-card { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; box-sizing: border-box; }
+.partner-pakete { display: flex; flex-wrap: wrap; gap: 8px; font-weight: 400; }
+.partner-pakete small { opacity: .75; }
+.partner-karte { text-align: center; }
+.partner-karte img { width: 200px; max-width: 70%; }
+.partner-karte dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; text-align: left; background: #F4F2FB; border-radius: 14px; padding: 14px 18px; margin: 14px 0; }
+.partner-karte dt { color: #6B648F; font-weight: 700; }
+.partner-karte dd { margin: 0; font-size: 20px; font-weight: 900; color: #231A4F; word-break: break-all; }
+.partner-buchen { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.partner-buchen select, .partner-buchen input { width: auto; flex: 1 1 120px; }
+.partner-neu-info { margin-bottom: 16px; border-left: 5px solid #3DBE5B; }
+.push-admin h3 { margin: 18px 0 8px; }
+@media print {
+  .no-print { display: none !important; }
+  .partner-modal { position: static; background: none; padding: 0; }
+  .partner-modal > .adm-card { box-shadow: none; max-height: none; }
+}

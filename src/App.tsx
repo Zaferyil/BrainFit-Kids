@@ -14,6 +14,7 @@ import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { InstallHinweis } from './components/InstallHinweis'
 import { NeuesPasswort } from './screens/NeuesPasswort'
+import { Partner } from './screens/Partner'
 import { supabase } from './lib/supabase'
 import { MeinSeZa } from './screens/MeinSeZa'
 import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
@@ -85,7 +86,15 @@ export default function App() {
   const s = getSession()
   const kidId = s && findKid(s.classCode, s.kidId) ? s.kidId : null
   useEffect(() => { if (kidId) einstellungenAnwenden(kindEinstellungen(kidId)) }, [kidId])
-  if (neuesPw) return <NeuesPasswort onFertig={() => { setNeuesPw(false); location.hash = '#eltern' }} />
+  if (neuesPw) return <NeuesPasswort onFertig={() => {
+    setNeuesPw(false)
+    // Partner zurück in den Partner-Bereich, alle anderen in den Eltern-Bereich
+    void (async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      const { data } = user ? await supabase.from('personen').select('rolle').eq('id', user.id).maybeSingle() : { data: null }
+      location.hash = data?.rolle === 'partner' ? '#/partner' : '#eltern'
+    })()
+  }} />
   return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><InstallHinweis /></>
 }
 
@@ -108,6 +117,7 @@ function Inhalt({ roh }: { roh: string }) {
   if (route === 'abakus-test') return <AbakusTest />
   if (route === 'admin') return <Admin />
   if (route === 'eltern') return <Eltern />
+  if (route === 'partner') return <Partner />
   if (route.startsWith('studio/')) return <Studio id={route.slice('studio/'.length).split('?')[0]} />
 
   if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {
@@ -121,7 +131,7 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />
     // Schnupperwoche abgelaufen: nur noch Hinweis mit Weg zu den Paketen
     const zugang = load<{ paket: string | null; bis: string | null } | null>(`bfk.zugang.${kid.id}`, null)
-    if (zugang?.bis && new Date(zugang.bis).getTime() < Date.now()) return <SchnupperVorbei kidId={kid.id} name={kid.name} onLogout={logout} />
+    if (zugang?.bis && new Date(zugang.bis).getTime() < Date.now()) return <SchnupperVorbei kidId={kid.id} name={kid.name} schnupper={zugang.paket === 'schnupper'} onLogout={logout} />
     if (!berichtStand.has(kid.id)) { berichtStand.add(kid.id); berichtAktualisieren(kid) }
     if (route === 'rangliste') return <Rangliste kid={kid} />
     if (route === 'bericht') return <Bericht kid={kid} zurueck={{ href: '#/garderobe' }} />
