@@ -2935,3 +2935,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .laby-tasten button { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 18px; border: 0; background: #fff; font-size: 32px; box-shadow: 0 4px 0 #C9C1EE; cursor: pointer; }
 .laby-tasten button:disabled { opacity: .45; }
 .laby-tasten .laby-weg { background: #FFE58A; }
+/* SeZa steht klein direkt neben der aktuellen Station auf dem Weg */
+.stop-seza { position: absolute; right: calc(50% + min(34px, 6cqw)); bottom: -34px; z-index: 3; display: block; }
+.stop-seza svg, .stop-seza img { width: min(64px, 13cqw) !important; height: auto; display: block; }
+.insel-stop.rand-l .stop-seza { right: auto; left: calc(50% + min(34px, 6cqw)); }

@@ -164,13 +164,13 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
                     <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} onLocked={(text) => setSay(text)} />
+                    {s.state === 'current' && <a href="#/seza" className="stop-seza" aria-label="Mein SeZa"><SeZa kidId={kid.id} groesse={72} /></a>}
                   </div>
                 )
               })}
               {start === 0 && (
                 <div className="insel-perli">
                   <div className="map-bubble" role="status">{say}</div>
-                  <a href="#/seza" aria-label="Mein SeZa"><SeZa kidId={kid.id} groesse={88} /></a>
                 </div>
               )}
               {burg && frei && (
