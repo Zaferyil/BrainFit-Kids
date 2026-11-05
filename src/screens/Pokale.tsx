@@ -11,6 +11,7 @@ import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { load } from '../lib/storage'
 import { Funkeln } from './Anmelden'
+import { RanglisteInhalt } from './Rangliste'
 
 // Pokale: Tagesaufgaben und die Gürtel der Welten. Ich: Profil des Kindes mit Abmelden.
 
@@ -28,7 +29,8 @@ export function Pokale({ kid, progress }: { kid: Kid; progress: Progress }) {
       <Funkeln />
       <div className="dp">
         <header className="dp-head"><h1>Pokale</h1><p>{progress.perlen} Perlen gesammelt</p></header>
-        <a href="#/rangliste" className="pk-rangliste"><Icon name="trophy" color="#2B2257" fill="#FFE58F" size={30} /><span><strong>Rangliste</strong><small>Vergleiche dich mit deiner Klasse</small></span><Icon name="right" color="#2B2257" size={24} /></a>
+        <h2 className="pk-rl-titel"><Icon name="trophy" color="#FFE58F" fill="#FFC531" size={28} /> Rangliste</h2>
+        <RanglisteInhalt kid={kid} />
 
         <section className="pk-box">
           <h2>Tagesaufgaben</h2>

@@ -2899,3 +2899,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .regel-ziel.ok { background: #DFF7E9; transform: scale(1.06); }
 .regel-ziel.falsch { background: #FFE3E8; animation: sort-wackel .35s; }
 .regel-tipp { background: #FF4D6D; color: #fff; font: 800 22px Nunito, sans-serif; padding: 6px 18px; border-radius: 999px; }
+
+/* SeZa klein, vom Bauch aufwärts (Rangliste) */
+.seza-kopf.halb { background-size: 92% auto; background-position: 50% 12%; }
+.pk-rl-titel { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-display); font-size: 26px; margin: 4px 0 8px; }

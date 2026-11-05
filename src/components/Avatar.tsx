@@ -16,13 +16,15 @@ type Props = {
   photo?: string
   /** Kind-ID: zeigt den SeZa des Kindes (mit Kostüm) – Standard für alle Kinder */
   seza?: string
+  /** SeZa kleiner, vom Bauch aufwärts statt nur Kopf */
+  halb?: boolean
 }
 
 export function Avatar({
   size = 160, skin = '#F6C9A6', hair = '#6B3E1F', shirt = '#3BA7FF', hat = 'none',
-  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6', photo, seza,
+  hatColor = '#FF4D6D', belt = '', glasses = false, bg = '#5B47D6', photo, seza, halb,
 }: Props) {
-  if (seza) return <SeZaKopf kidId={seza} size={size} ring={belt} />
+  if (seza) return <SeZaKopf kidId={seza} size={size} ring={belt} halb={halb} />
   if (photo) {
     return (
       <img
