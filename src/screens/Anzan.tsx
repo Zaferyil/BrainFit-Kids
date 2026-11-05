@@ -59,7 +59,7 @@ export function Anzan({ kid }: { kid: Kid }) {
     if (phase !== 'zeigen' || !a) return
     if (schritt >= a.numbers.length) { timer.current = window.setTimeout(() => { setPhase('tippen'); void speak(SAY.ergebnisEintippen) }, 200); return }
     if (hoeren && schritt >= 0) { const z = a.numbers[schritt]; void speak(schritt === 0 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]) }
-    timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? 1100 : ms)
+    timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? 3700 : ms)
     return () => window.clearTimeout(timer.current)
   }, [phase, schritt, a, ms, hoeren])
 
@@ -156,7 +156,9 @@ export function Anzan({ kid }: { kid: Kid }) {
                 : phase === 'zeigen'
                 ? (zahl !== null
                   ? <b key={schritt} className="az-zahl" style={{ color: FARBEN[schritt % FARBEN.length] }}>{schritt > 0 && zahl > 0 ? '+' : ''}{zahl}</b>
-                  : <span className="az-bereit">{schritt < 0 ? 'Bereit?' : ''}</span>)
+                  : (schritt < 0
+                    ? <span key={`uhr-${nr}`} className="az-uhr" aria-label="Gleich geht's los"><i /><b>Los!</b></span>
+                    : <span className="az-bereit" />))
                 : <b className="az-eingabe">{ergebnis === 'falsch' ? a.answer : eingabe || '?'}</b>}
             </div>
             {phase === 'tippen' && (
