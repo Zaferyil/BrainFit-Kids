@@ -2903,3 +2903,4 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 /* SeZa klein, vom Bauch aufwärts (Rangliste) */
 .seza-kopf.halb { background-size: 92% auto; background-position: 50% 12%; }
 .pk-rl-titel { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-display); font-size: 26px; margin: 4px 0 8px; }
+.nk-hello-btn { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; color: inherit; font: inherit; }

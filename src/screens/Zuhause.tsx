@@ -1,6 +1,5 @@
 import { konto } from '../lib/wirtschaft'
 import { useState } from 'react'
-import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { SeZa } from '../components/SeZa'
@@ -29,13 +28,10 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <button type="button" className="nk-zurueck" aria-label="Zurück zur Startseite" onClick={onLogout}>
             <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />
           </button>
-          <button type="button" className="nk-me" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
-            <Avatar size={52} {...kid.avatar} />
-          </button>
-          <div className="nk-hello-text">
+          <button type="button" className="nk-hello-text nk-hello-btn" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
             <strong>Hallo {kid.name}!</strong>
             <span>Gürtel: {world.belt.replace(/en$/, '')} · Level {progress.level}</span>
-          </div>
+          </button>
           <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
           {menu && (
             <div className="nk-menu popin">

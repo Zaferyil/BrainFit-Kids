@@ -2,7 +2,6 @@ import { konto } from '../lib/wirtschaft'
 import { PushKindKnopf } from '../components/PushEinstellungen'
 import { SeZa } from '../components/SeZa'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
@@ -89,13 +88,10 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         <a href="#/karte" className="nk-zurueck" aria-label="Zurück zur Startseite">
           <Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} />
         </a>
-        <button type="button" className="nk-me" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
-          <Avatar size={48} {...kid.avatar} />
-        </button>
-        <div className="nk-hello-text">
+        <button type="button" className="nk-hello-text nk-hello-btn" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
           <strong>Hallo {kid.name}!</strong>
           <span>Welt {progress.world} · {WORLDS[progress.world - 1]?.name.replace(/-/g, ' ')}</span>
-        </div>
+        </button>
         <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
         <div className="path-tools">
           <button type="button" className={questsOpen ? 'quest-chip open' : 'quest-chip'} onClick={() => setQuestsOpen(!questsOpen)} aria-expanded={questsOpen}>
