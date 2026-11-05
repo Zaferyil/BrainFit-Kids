@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 /**
  * Skaliert einen Inhalt mit fester Größe (Abakus, Karte, Spielfeld) so,
@@ -29,7 +29,7 @@ export function Fit({ children, max = 1, className = '' }: { children: ReactNode
 
   return (
     <div ref={outer} className={`fit ${className}`}>
-      <div ref={inner} className="fit-inner" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+      <div ref={inner} className="fit-inner" style={{ transform: `translate(-50%, -50%) scale(${scale})`, '--fit': scale } as CSSProperties}>
         {children}
       </div>
     </div>

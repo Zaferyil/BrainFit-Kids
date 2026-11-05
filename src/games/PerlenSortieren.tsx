@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { Icon } from '../components/Icon'
 import { speak } from '../lib/speak'
@@ -72,7 +72,6 @@ function neuesRaetsel(level: number): { stangen: Stangen; ziel: number } {
 }
 
 const RUNDEN = 3
-export const ERKLAERUNG = 'Tippe zuerst eine Stange an und dann eine andere. Die oberste Perle springt hinüber – aber nur auf eine leere Stange oder auf die gleiche Farbe. Am Ende hat jede Stange nur eine Farbe!'
 
 export function PerlenSortieren({ level, onFinish, rounds = RUNDEN }: GameProps) {
   const [runde, setRunde] = useState(0)
@@ -86,12 +85,6 @@ export function PerlenSortieren({ level, onFinish, rounds = RUNDEN }: GameProps)
   const [geschafft, setGeschafft] = useState(false)
   const farben = FARBEN.slice(0, groesse(level).farben)
   const hoch = usePortrait()
-  // beim ersten Öffnen kurz mit Stimme erklären (danach nur über den Lautsprecher-Knopf)
-  useEffect(() => {
-    try { if (localStorage.getItem('bfk.sortieren-erklaert')) return; localStorage.setItem('bfk.sortieren-erklaert', '1') } catch { /* egal */ }
-    const t = window.setTimeout(() => speak(ERKLAERUNG), 400)
-    return () => window.clearTimeout(t)
-  }, [])
 
   const tippe = (i: number) => {
     if (geschafft) return

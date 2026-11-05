@@ -2825,3 +2825,6 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .game-sort.hoch .sort-perle.hoch { transform: translateY(-20px); }
 .game-sort.hoch .sort-hinweis { font-size: 20px; }
 .game-sort.hoch .sort-knoepfe .round-btn { width: 56px; height: 56px; }
+/* Hinweise in Spielen: Verkleinerung durch Fit ausgleichen, damit die Schrift auf dem Handy lesbar bleibt (~17 px) */
+.fit-inner .game-hint { font-size: clamp(15px, calc(17px / var(--fit, 1)), 26px); line-height: 1.3; color: #fff; max-width: 420px; white-space: normal; margin: 0 auto; }
+.fit-inner .sort-hinweis { font-size: clamp(18px, calc(18px / var(--fit, 1)), 30px); }

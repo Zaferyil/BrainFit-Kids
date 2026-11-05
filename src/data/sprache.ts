@@ -80,6 +80,11 @@ export function sayDescribe(n: number): string[] {
 }
 
 // Texte anderer Bildschirme, die ebenfalls vorgelesen werden
+/** längere Erklärung, die beim ersten Öffnen eines Spiels gesprochen wird (sonst GAME_INTRO) */
+export const GAME_ERKLAERUNG: Record<string, string> = {
+  sortieren: 'Tippe zuerst eine Stange an und dann eine andere. Die oberste Perle springt hinüber – aber nur auf eine leere Stange oder auf die gleiche Farbe. Am Ende hat jede Stange nur eine Farbe!',
+}
+
 export const GAME_INTRO: Record<string, string> = {
   memory: 'Decke immer zwei Karten auf. Finde alle Paare!',
   muster: 'Schau dir die Reihe an. Was kommt als Nächstes?',
@@ -89,6 +94,9 @@ export const GAME_INTRO: Record<string, string> = {
   zahlenmerken: 'Merk dir die Zahlen. Danach tippst du sie ein.',
   vergleich: 'Lies die Abakusse ab. Tippe auf den richtigen!',
   schnellzaehlen: 'Die Perlen blitzen kurz auf. Zähle die Perlen in der gesuchten Farbe!',
+  abakusrechnen: 'Schau dir die Abakusse an und rechne im Kopf. Tippe auf das richtige Ergebnis!',
+  sorobankarten: 'Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!',
+  bildermerken: 'Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!',
   sortieren: 'Sortiere die Perlen! Auf jede Stange darf am Ende nur eine Farbe.',
 }
 

@@ -1,5 +1,5 @@
 import { PerlenSortieren } from '../games/PerlenSortieren'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Fit } from '../components/Fit'
 import { Bead } from '../components/Bead'
 import { Icon } from '../components/Icon'
@@ -22,7 +22,7 @@ import { AREAS, type GameMeta } from '../games/registry'
 import type { GameProps } from '../games/types'
 import { rewardGame } from '../lib/progress'
 import { speak } from '../lib/speak'
-import { GAME_INTRO as INTRO } from '../data/sprache'
+import { GAME_ERKLAERUNG, GAME_INTRO as INTRO } from '../data/sprache'
 import { cameFromMap, clearActiveStop, finishActiveStop } from '../lib/mapPath'
 
 const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
@@ -54,6 +54,15 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
   const back = fromMap ? '#/karte' : '#/denkpark'
   const Game = COMPONENTS[game.id]
   const area = AREAS.find((a) => a.id === game.area)!
+  // beim ersten Öffnen eines Spiels erklärt Lisa es kurz (danach nur über den Lautsprecher-Knopf)
+  useEffect(() => {
+    const k = `bfk.erklaert.${game.id}`
+    try { if (localStorage.getItem(k)) return; localStorage.setItem(k, '1') } catch { /* egal */ }
+    const text = GAME_ERKLAERUNG[game.id] ?? INTRO[game.id]
+    if (!text) return
+    const t = window.setTimeout(() => speak(text), 500)
+    return () => window.clearTimeout(t)
+  }, [game.id])
 
   const finish = (score: number, summary: string) => {
     const adj = adjustLevel(kid.id, game.id, tier, score)

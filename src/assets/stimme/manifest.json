@@ -335,5 +335,8 @@
  "minus": "s-59b6536256.mp3",
  "plus": "s-6a8437dd00.mp3",
  "Sortiere die Perlen! Auf jede Stange darf am Ende nur eine Farbe.": "s-sortieren.mp3",
- "Tippe zuerst eine Stange an und dann eine andere. Die oberste Perle springt hinüber – aber nur auf eine leere Stange oder auf die gleiche Farbe. Am Ende hat jede Stange nur eine Farbe!": "s-sortieren-2.mp3"
+ "Tippe zuerst eine Stange an und dann eine andere. Die oberste Perle springt hinüber – aber nur auf eine leere Stange oder auf die gleiche Farbe. Am Ende hat jede Stange nur eine Farbe!": "s-sortieren-2.mp3",
+ "Schau dir die Abakusse an und rechne im Kopf. Tippe auf das richtige Ergebnis!": "s-intro-abakusrechnen.mp3",
+ "Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!": "s-intro-sorobankarten.mp3",
+ "Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!": "s-intro-bildermerken.mp3"
 }
