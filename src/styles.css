@@ -2860,3 +2860,14 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 @keyframes blase-faellt { from { transform: translateY(var(--fall)); } }
 .blasen-feld.aus .blase { filter: grayscale(.7) brightness(.7); }
 .blasen-aus { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); background: #FF4D6D; color: #fff; font: 800 28px 'Baloo 2', sans-serif; padding: 10px 24px; border-radius: 20px; white-space: nowrap; box-shadow: 0 8px 20px rgba(0,0,0,.4); }
+/* Zahlen-Blasen: Effekte */
+.blasen-funke { position: absolute; width: 12px; height: 12px; margin: -6px; border-radius: 50%; pointer-events: none; box-shadow: 0 0 8px #fff; animation: blasen-funke .6s ease-out forwards; z-index: 3; }
+@keyframes blasen-funke { from { transform: rotate(var(--w)) translateX(0) scale(1); opacity: 1; } to { transform: rotate(var(--w)) translateX(58px) scale(.2); opacity: 0; } }
+.blasen-text { position: absolute; transform: translate(-50%, -50%); pointer-events: none; font: 800 30px 'Baloo 2', sans-serif; white-space: nowrap; z-index: 4; animation: blasen-text .9s ease-out forwards; text-shadow: 0 3px 0 rgba(0,0,0,.35); }
+.blasen-text.gut { color: #FFE58A; }
+.blasen-text.schlecht { color: #fff; background: #FF4D6D; padding: 2px 14px; border-radius: 999px; font-size: 24px; }
+@keyframes blasen-text { 0% { opacity: 0; transform: translate(-50%, -30%) scale(.6); } 20% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -160%) scale(1); } }
+.blasen-feld.rot { animation: blasen-rot .35s; }
+@keyframes blasen-rot { 0%, 100% { background: linear-gradient(180deg, #1B3A6B, #0E2347); } 40% { background: linear-gradient(180deg, #7A1630, #4A0B1C); transform: translateX(-5px); } 70% { transform: translateX(5px); } }
+.blase.gewaehlt { animation: blase-puls .7s ease-in-out infinite alternate; }
+@keyframes blase-puls { to { transform: scale(1.18); } }

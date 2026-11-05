@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { speak } from '../lib/speak'
+import { tonFalsch, tonRichtig, tonVorbei } from '../lib/effekte'
 import { usePortrait } from '../lib/usePortrait'
 import { randInt, type GameProps } from './types'
 
@@ -58,6 +59,18 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
   const [gleichung, setGleichung] = useState<string | null>(null)
   const [neuZiel, setNeuZiel] = useState(false)
   const [aus, setAus] = useState(false)
+  // Effekte: Funken an den geplatzten Blasen, „+1“/„✗“ und eine Serie für schnelle richtige Paare
+  const [funken, setFunken] = useState<{ id: number; x: number; y: number; farbe: string }[]>([])
+  const [text, setText] = useState<{ id: number; x: number; y: number; inhalt: string; gut: boolean } | null>(null)
+  const [rot, setRot] = useState(false)
+  const [serie, setSerie] = useState(0)
+  const feldRef = useRef<HTMLDivElement>(null)
+  const ort = (id: number) => {
+    const el = feldRef.current?.querySelector<HTMLElement>(`[data-id="${id}"]`), f = feldRef.current
+    if (!el || !f) return { x: 0, y: 0 }
+    const a = el.getBoundingClientRect(), b = f.getBoundingClientRect(), k = b.width / f.offsetWidth || 1
+    return { x: (a.left + a.width / 2 - b.left) / k, y: (a.top + a.height / 2 - b.top) / k }
+  }
   const vorbei = useRef(false)
   const zustand = useRef({ paare: 0, fehler: 0 })
   zustand.current = { paare, fehler }
@@ -72,7 +85,7 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
     const { fehler: f } = zustand.current
     const p = paareJetzt ?? zustand.current.paare
     const score = Math.max(0, Math.min(1, (gewonnen ? 1 : p / st.sieg) - f * 0.03))
-    if (!gewonnen) { setAus(true); speak('Oh, die Blasen sind oben angekommen!') }
+    if (!gewonnen) { setAus(true); tonVorbei(); window.setTimeout(() => speak('Oh, die Blasen sind oben angekommen!'), 500) }
     window.setTimeout(() => onFinish(score, gewonnen ? `Geschafft! ${p} Paare gefunden${f ? ` · ${f} × daneben` : ''}` : `${p} von ${st.sieg} Paaren – die Blasen waren oben`), gewonnen ? 600 : 1600)
   }
 
@@ -104,6 +117,13 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
     if (a.n + b.n === ziel) {
       const ids = [a.id, b.id]
       setPlatzt(ids); setWahl(null); setGleichung(`${a.n} + ${b.n} = ${ziel}`)
+      const s2 = serie + 1
+      setSerie(s2); tonRichtig(s2)
+      const orte = ids.map(ort)
+      setFunken(orte.flatMap((o, j) => Array.from({ length: 8 }, (_, k) => ({ id: Date.now() + j * 10 + k, x: o.x, y: o.y, farbe: farbe(j ? b.n : a.n) }))))
+      window.setTimeout(() => setFunken([]), 650)
+      const m = { x: (orte[0].x + orte[1].x) / 2, y: (orte[0].y + orte[1].y) / 2 }
+      setText({ id: Date.now(), x: m.x, y: m.y, inhalt: s2 >= 2 ? `+1  x${s2}` : '+1', gut: true })
       window.setTimeout(() => {
         const rest = feld.current.map((sp) => sp.filter((x) => !ids.includes(x.id)))
         const z = neuesZiel(rest, st.min, st.max, ziel)
@@ -116,7 +136,10 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
       }, 340)
       window.setTimeout(() => setGleichung(null), 1000)
     } else {
-      setFalsch([a.id, b.id]); setFehler(fehler + 1); setWahl(null)
+      setFalsch([a.id, b.id]); setFehler(fehler + 1); setWahl(null); setSerie(0)
+      tonFalsch(); setRot(true); window.setTimeout(() => setRot(false), 350)
+      const o = ort(b.id)
+      setText({ id: Date.now(), x: o.x, y: o.y, inhalt: `${a.n} + ${b.n} = ${a.n + b.n}`, gut: false })
       window.setTimeout(() => setFalsch([]), 450)
     }
   }
@@ -130,13 +153,14 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
         <span className="blasen-zaehler">{paare}/{st.sieg}</span>
       </div>
       <div className="game-hint">Tippe zwei Blasen, die zusammen {ziel} ergeben – schnell, bevor sie oben ankommen!</div>
-      <div className={`blasen-feld${hoechste >= REIHEN - 1 ? ' gefahr' : ''}${aus ? ' aus' : ''}`} style={{ height: gr * REIHEN + 8, width: (gr + 6) * SPALTEN }}>
+      <div ref={feldRef} className={`blasen-feld${hoechste >= REIHEN - 1 ? ' gefahr' : ''}${aus ? ' aus' : ''}${rot ? ' rot' : ''}`} style={{ height: gr * REIHEN + 8, width: (gr + 6) * SPALTEN }}>
         <div className="blasen-linie" />
         {spalten.map((sp, si) => (
           <div key={si} className="blasen-spalte">
             {sp.map((b, k) => (
               <button
                 key={b.id}
+                data-id={b.id}
                 type="button"
                 className={`blase${wahl === b.id ? ' gewaehlt' : ''}${platzt.includes(b.id) ? ' platzt' : ''}${falsch.includes(b.id) ? ' falsch' : ''}${b.neu ? ' faellt' : ''}`}
                 style={{ width: gr, height: gr, fontSize: gr * (b.n >= 10 ? 0.42 : 0.52), '--fall': `${-(REIHEN - k) * gr}px`, background: `radial-gradient(circle at 32% 28%, #FFFFFFcc 0 12%, ${farbe(b.n)} 45%, ${farbe(b.n)}dd 70%, #00000055 100%)` } as CSSProperties}
@@ -147,6 +171,8 @@ export function ZahlenBlasen({ level, onFinish }: GameProps) {
           </div>
         ))}
         {gleichung && <div className="blasen-gleichung">{gleichung} ✓</div>}
+        {funken.map((f, i) => <i key={f.id} className="blasen-funke" style={{ left: f.x, top: f.y, background: f.farbe, '--w': `${(i % 8) * 45}deg` } as CSSProperties} />)}
+        {text && <span key={text.id} className={text.gut ? 'blasen-text gut' : 'blasen-text schlecht'} style={{ left: text.x, top: text.y }}>{text.gut ? text.inhalt : <>✗ {text.inhalt}</>}</span>}
         {aus && <div className="blasen-aus">Oben angekommen!</div>}
       </div>
     </div>
