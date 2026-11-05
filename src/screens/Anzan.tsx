@@ -52,13 +52,21 @@ export function Anzan({ kid }: { kid: Kid }) {
 
   const a = aufgaben[nr]
   // Hör-Rechnen: die Stimme braucht etwas Zeit pro Zahl
-  const ms = Math.max(TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms, hoeren ? 1300 : 0)
+  const ms = TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
 
   // Zahlen nacheinander zeigen
   useEffect(() => {
     if (phase !== 'zeigen' || !a) return
     if (schritt >= a.numbers.length) { timer.current = window.setTimeout(() => { setPhase('tippen'); void speak(SAY.ergebnisEintippen) }, 200); return }
-    if (hoeren && schritt >= 0) { const z = a.numbers[schritt]; void speak(schritt === 0 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]) }
+    // Hören: erst „plus 6" ganz aussprechen lassen, dann kurze Pause je nach Tempo, dann die nächste Zahl
+    if (hoeren && schritt >= 0) {
+      let aus = false
+      const z = a.numbers[schritt]
+      void speak(schritt === 0 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]).then(() => {
+        if (!aus) timer.current = window.setTimeout(() => setSchritt((s) => s + 1), Math.max(200, ms - 900))
+      })
+      return () => { aus = true; window.clearTimeout(timer.current) }
+    }
     timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? 3700 : ms)
     return () => window.clearTimeout(timer.current)
   }, [phase, schritt, a, ms, hoeren])
