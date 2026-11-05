@@ -2122,7 +2122,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .az-levels button { aspect-ratio: 1; font-size: 17px; display: grid; place-items: center; }
 .az-levels button:disabled { background: rgba(255,255,255,.25); color: rgba(255,255,255,.7); box-shadow: none; cursor: default; }
 .az-levels button.an, .az-tempo button.an { background: linear-gradient(#FFE14D, #FFB800); box-shadow: 0 4px 0 #C98A00; }
-.az-tempo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.az-tempo { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .az-tempo button { height: 48px; font-size: 16px; }
 .az-start { justify-self: center; display: inline-flex; align-items: center; gap: 8px; border: 0; cursor: pointer; font-family: var(--font-display); font-weight: 800; font-size: 22px; color: #231A4F; padding: 14px 40px; border-radius: 999px; background: linear-gradient(#FFE14D, #FFB800); box-shadow: 0 6px 0 #C98A00; }
 .az-start:disabled { opacity: .5; cursor: default; }
@@ -2941,3 +2941,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .insel-stop.rand-l .stop-seza { right: auto; left: calc(50% + min(34px, 6cqw)); }
 .mental-abakus.kopf-1 .abakus, .mental-abakus.kopf-1 > * { opacity: .55; }
 .kopf-leer { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #fff; font-family: var(--font-display); font-size: 20px; opacity: .85; text-align: center; }
+.az-tempo button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 2px; font-size: 13px; }
+.az-tempo button small { font-size: 11px; opacity: .7; }
+.az-tempo button:disabled { opacity: .5; cursor: default; }
+.az-neu { color: #FFE58A; font-weight: 900; }

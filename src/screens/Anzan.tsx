@@ -18,10 +18,13 @@ import daten from '../../content/mathkids-levels.json'
 type Aufgabe = { numbers: number[]; answer: number }
 const LEVELS = (daten as { levels: { levelNumber: number; questions: Aufgabe[] }[] }).levels
 const RUNDE = 5
+// Tempo 1,5 s → 0,3 s je Zahl. Ein schnelleres Tempo öffnet sich, wenn alle 5 Aufgaben im jetzigen Tempo richtig sind.
 const TEMPO = [
-  { name: 'Langsam', ms: 1600 },
+  { name: 'Langsam', ms: 1500 },
   { name: 'Normal', ms: 1100 },
-  { name: 'Schnell', ms: 700 },
+  { name: 'Schnell', ms: 800 },
+  { name: 'Blitz', ms: 500 },
+  { name: 'Profi', ms: 300 },
 ]
 const FARBEN = ['#FF4D6D', '#1E9BFF', '#14B86A', '#FF8A1F', '#A93BFF', '#00B3A4', '#FFB300']
 
@@ -31,7 +34,9 @@ type Phase = 'wahl' | 'zeigen' | 'tippen' | 'fertig'
 
 export function Anzan({ kid }: { kid: Kid }) {
   const key = `bfk.anzan.${kid.id}`
-  const [stand, setStand] = useState(() => load<{ level: number; tempo: number; frei: number }>(key, { level: 1, tempo: 0, frei: 1 }))
+  const [stand, setStand] = useState(() => load<{ level: number; tempo: number; frei: number; tempoFrei?: number }>(key, { level: 1, tempo: 0, frei: 1, tempoFrei: 2 }))
+  const tempoFrei = Math.max(stand.tempoFrei ?? 2, Math.min(stand.tempo, TEMPO.length - 1))
+  const [neuesTempo, setNeuesTempo] = useState(false)
   const [phase, setPhase] = useState<Phase>('wahl')
   const [aufgaben, setAufgaben] = useState<Aufgabe[]>([])
   const [nr, setNr] = useState(0)
@@ -45,7 +50,7 @@ export function Anzan({ kid }: { kid: Kid }) {
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const a = aufgaben[nr]
-  const ms = TEMPO[stand.tempo].ms
+  const ms = TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
 
   // Zahlen nacheinander zeigen
   useEffect(() => {
@@ -76,6 +81,9 @@ export function Anzan({ kid }: { kid: Kid }) {
         const r = richtig + (ok ? 1 : 0)
         rewardGame(kid.id, r * 2, r >= 4 ? `anzan-${stand.level}` : undefined)
         if (r >= 4 && stand.level === stand.frei && stand.frei < LEVELS.length) setStand((s) => ({ ...s, frei: s.frei + 1 }))
+        const tNeu = r === RUNDE && stand.tempo === tempoFrei && tempoFrei < TEMPO.length - 1
+        setNeuesTempo(tNeu)
+        if (tNeu) setStand((s) => ({ ...s, tempoFrei: tempoFrei + 1 }))
         setPhase('fertig')
       }
     }, 1500)
@@ -118,11 +126,14 @@ export function Anzan({ kid }: { kid: Kid }) {
             <div className="az-gruppe">
               <h2>Tempo</h2>
               <div className="az-tempo">
-                {TEMPO.map((t, i) => <button key={t.name} type="button" className={i === stand.tempo ? 'an' : ''} onClick={() => setStand((s) => ({ ...s, tempo: i }))}>{t.name}</button>)}
+                {TEMPO.map((t, i) => {
+                  const offen = ALLES_OFFEN || i <= tempoFrei
+                  return <button key={t.name} type="button" disabled={!offen} className={i === stand.tempo ? 'an' : ''} onClick={() => setStand((s) => ({ ...s, tempo: i }))}>{offen ? <>{t.name}<small>{(t.ms / 1000).toLocaleString('de-AT')} s</small></> : <><Icon name="lock" size={14} color="currentColor" /><small>{(t.ms / 1000).toLocaleString('de-AT')} s</small></>}</button>
+                })}
               </div>
             </div>
             <button type="button" className="az-start" onClick={starten}><Icon name="play" size={22} color="#231A4F" fill="#231A4F" /> Start</button>
-            <p className="az-hinweis">{RUNDE} Aufgaben · 4 richtig öffnen das nächste Level</p>
+            <p className="az-hinweis">{RUNDE} Aufgaben · 4 richtig öffnen das nächste Level · alle richtig öffnen das nächste Tempo</p>
           </section>
         )}
 
@@ -150,6 +161,7 @@ export function Anzan({ kid }: { kid: Kid }) {
             <div className="az-sterne">{[0, 1, 2].map((i) => <Icon key={i} name="star" size={44} color="#E0A100" fill={i < Math.round((richtig / RUNDE) * 3) ? '#FFC531' : 'rgba(255,255,255,.25)'} />)}</div>
             <h2>{richtig} von {RUNDE} richtig!</h2>
             <p>+{richtig * 2} Perlen</p>
+            {neuesTempo && <p className="az-neu">⚡ Neues Tempo frei: {TEMPO[tempoFrei].name} ({(TEMPO[tempoFrei].ms / 1000).toLocaleString('de-AT')} s)!</p>}
             <button type="button" className="az-start" onClick={starten}>Nochmal</button>
             <button type="button" className="az-zurueck" onClick={() => setPhase('wahl')}>Level wählen</button>
           </section>
