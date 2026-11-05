@@ -2814,3 +2814,14 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .sort-feld.fertig .sort-stange { background: rgba(61,190,91,.25); }
 .sort-knoepfe { display: flex; gap: 16px; }
 .sort-knoepfe .round-btn:disabled { opacity: .35; }
+.sort-hinweis { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 14px; font: 800 26px/1.2 Nunito, sans-serif; color: #fff; text-align: center; }
+.sort-hinweis b { background: #FFC531; color: #231A4F; padding: 4px 16px; border-radius: 999px; }
+.sort-zuege { background: rgba(255,255,255,.2); padding: 4px 14px; border-radius: 999px; }
+.game-sort.hoch { gap: 16px; max-width: 360px; }
+.game-sort.hoch .sort-feld { max-width: 360px; gap: 12px 8px; }
+.game-sort.hoch .sort-stange { width: 64px; height: 190px; border-radius: 20px; padding-bottom: 12px; }
+.game-sort.hoch .sort-stab { width: 8px; margin-left: -4px; top: 16px; }
+.game-sort.hoch .sort-fuss { left: 8px; right: 8px; height: 10px; }
+.game-sort.hoch .sort-perle.hoch { transform: translateY(-20px); }
+.game-sort.hoch .sort-hinweis { font-size: 20px; }
+.game-sort.hoch .sort-knoepfe .round-btn { width: 56px; height: 56px; }
