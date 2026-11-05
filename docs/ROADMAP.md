@@ -1,0 +1,34 @@
+# BrainFit Kids – Roadmap (Mentale Arithmetik)
+
+Status-Legende: [ ] offen · [~] in Arbeit · [x] fertig
+Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufgabe hier abhaken und committen.
+
+## 1. Kern der Mentalen Arithmetik (höchste Priorität)
+- [ ] 1.1 Abakus ausblenden – Übergang vom echten zum Kopf-Abakus (voll → blass → nur Rahmen → kein Abakus), automatisch nach Stufe
+- [ ] 1.2 Flash-Anzan-Modus – Zahlen blitzen nacheinander auf, Kind nennt die Summe; Tempo (1,5 s → 0,3 s) und Stellenzahl einstellbar
+- [ ] 1.3 Gürtel-Prüfung + Urkunde – offizielle Prüfung mit Zeitlimit pro Gürtel, bei Bestehen PDF-Urkunde zum Teilen
+- [ ] 1.4 Hör-Rechnen – Zahlen werden vorgelesen (Lisa-Stimme), Kind rechnet nur nach Gehör
+- [ ] 1.5 Formel-Training – gezielte Mini-Übungen für Kleine Freunde (5er) und Große Freunde (10er), z. B. „+4 = +5 −1"
+
+## 2. Nachhaltiges Lernen
+- [ ] 2.1 Fehleranalyse + verteilte Wiederholung – Regeln, bei denen das Kind oft Fehler macht, nach einigen Tagen erneut üben
+- [ ] 2.2 Tempo- und Genauigkeitskurve im Bericht (z. B. Ø 4,2 s → 2,1 s pro Aufgabe)
+- [ ] 2.3 Tägliches 5-Minuten-Training (Aufwärmen + Neues + Wiederholung)
+
+## 3. Motivation
+- [ ] 3.1 Wöchentliches Klassen-Turnier / Duell (gleiche Flash-Anzan-Aufgabe gleichzeitig)
+- [ ] 3.2 Serien-Belohnungen (7 Tage am Stück → Perlen-Bonus + SeZa-Kostüm)
+
+## 4. Eltern und Lehrkräfte
+- [ ] 4.1 Wöchentliche Eltern-Zusammenfassung per E-Mail (Resend)
+- [ ] 4.2 Lehrkräfte vergeben Hausaufgaben an die Klasse
+- [ ] 4.3 Druckbare Arbeitsblätter (PDF)
+
+## 5. Klein, aber wichtig
+- [ ] 5.1 Antwort per Handschrift oder Sprache für jüngere Kinder
+- [ ] 5.2 Barrierefreiheit: Perlen zusätzlich mit Mustern (Farbenblindheit), Schriftgröße einstellbar
+- [ ] 5.3 Offline-Modus der PWA für Übungen
+
+## Offene Punkte aus früheren Sitzungen
+- „Genie Kids Math" in der Werbung: Markenrecht prüfen (vorerst „Mathe-Genie")
+- Angeboten: Shorts-Version (9:16) des YouTube-Videos; Effekt-Sounds auf ältere Spiele übertragen
