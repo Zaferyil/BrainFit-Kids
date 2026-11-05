@@ -97,6 +97,7 @@ export const GAME_INTRO: Record<string, string> = {
   abakusrechnen: 'Schau dir die Abakusse an und rechne im Kopf. Tippe auf das richtige Ergebnis!',
   sorobankarten: 'Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!',
   bildermerken: 'Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!',
+  blasen: 'Tippe zwei Blasen an, die zusammen die Zielzahl ergeben. Dann platzen sie!',
   sortieren: 'Sortiere die Perlen! Auf jede Stange darf am Ende nur eine Farbe.',
 }
 

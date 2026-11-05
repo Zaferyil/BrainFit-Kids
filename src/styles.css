@@ -2828,3 +2828,20 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 /* Hinweise in Spielen: Verkleinerung durch Fit ausgleichen, damit die Schrift auf dem Handy lesbar bleibt (~17 px) */
 .fit-inner .game-hint { font-size: clamp(15px, calc(17px / var(--fit, 1)), 26px); line-height: 1.3; color: #fff; max-width: 420px; white-space: normal; margin: 0 auto; }
 .fit-inner .sort-hinweis { font-size: clamp(18px, calc(18px / var(--fit, 1)), 30px); }
+/* Zahlen-Blasen */
+.game-blasen { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 380px; }
+.blasen-kopf { display: flex; align-items: center; gap: 12px; width: 100%; }
+.blasen-ziel { background: #FFC531; color: #231A4F; font: 800 22px 'Baloo 2', sans-serif; border-radius: 999px; padding: 4px 16px; white-space: nowrap; }
+.blasen-ziel b { font-size: 30px; }
+.blasen-zeit { flex: 1; height: 14px; border-radius: 9px; background: rgba(255,255,255,.2); overflow: hidden; }
+.blasen-zeit i { display: block; height: 100%; background: linear-gradient(90deg, #3DBE5B, #A8F0B8); transition: width 1s linear; }
+.blasen-zaehler { color: #fff; font: 800 20px 'Baloo 2', sans-serif; white-space: nowrap; }
+.blasen-feld { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: 6px; width: 100%; padding: 12px 8px; border-radius: 28px; background: linear-gradient(180deg, #1B3A6B, #0E2347); box-shadow: inset 0 0 0 6px #FF9F1C, inset 0 0 0 10px #B86A00; box-sizing: content-box; }
+.blasen-spalte { display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; }
+.blase { border: 0; border-radius: 50%; color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; text-shadow: 0 2px 0 rgba(0,0,0,.35); cursor: pointer; box-shadow: inset 0 -6px 10px rgba(0,0,0,.25), 0 4px 8px rgba(0,0,0,.3); transition: transform .15s; padding: 0; line-height: 1; }
+.blase.gewaehlt { transform: scale(1.12); box-shadow: 0 0 0 4px #FFE58A, 0 0 22px #FFC531; }
+.blase.falsch { animation: sort-wackel .35s; }
+.blase.platzt { animation: blase-platzt .38s forwards; }
+@keyframes blase-platzt { 50% { transform: scale(1.35); opacity: .9; } 100% { transform: scale(.2); opacity: 0; } }
+.blasen-gleichung { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: #3DBE5B; color: #fff; font: 800 28px 'Baloo 2', sans-serif; padding: 6px 20px; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.35); white-space: nowrap; animation: blasen-auf .3s; }
+@keyframes blasen-auf { from { transform: translate(-50%, 10px); opacity: 0; } }

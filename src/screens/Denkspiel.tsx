@@ -1,3 +1,4 @@
+import { ZahlenBlasen } from '../games/ZahlenBlasen'
 import { PerlenSortieren } from '../games/PerlenSortieren'
 import { useEffect, useState } from 'react'
 import { Fit } from '../components/Fit'
@@ -39,6 +40,7 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   abakusrechnen: AbakusRechnen,
   bildermerken: BilderMerken,
   sortieren: PerlenSortieren,
+  blasen: ZahlenBlasen,
 }
 
 
