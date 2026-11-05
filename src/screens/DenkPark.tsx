@@ -11,6 +11,9 @@ import type { Progress } from '../lib/progress'
 import { Funkeln } from './Anmelden'
 import { SpielBild } from '../components/SpielBild'
 
+// Spiele mit echtem Vorschaubild (Bildschirmfoto aus dem Spiel, public/spiele)
+const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich'])
+
 // kräftige Farben je Kategorie (wie die früheren Kacheln): Verlauf, Rand-Schatten, Schrift
 const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
   rechnen: { bg: 'radial-gradient(circle at 30% 20%, #FFE58A, #FFC531 60%, #F2A900)', rand: '#C98A00', ink: '#2B2257' },
@@ -76,11 +79,10 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
                 {offen.map((g) => {
                   const st = getLevel(kid.id, g.id, tier)
                   return (
-                    <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte" style={{ background: f.bg, color: f.ink, boxShadow: `0 6px 0 ${f.rand}` }}>
-                      <span className="dp-karte-bild"><SpielBild id={g.id} fallback={SYMBOL[g.id] ?? kat.icon} /></span>
+                    <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte">
+                      <span className="dp-karte-bild">{BILDER.has(g.id) ? <img src={`${import.meta.env.BASE_URL}spiele/${g.id}.webp`} alt="" loading="lazy" /> : <SpielBild id={g.id} fallback={SYMBOL[g.id] ?? kat.icon} />}</span>
                       <strong>{g.name}</strong>
-                      <span className="dp-karte-text">{g.text}</span>
-                      <span className="dp-karte-stufe"><b>Stufe {st}</b><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%` }} /></i></span>
+                      <span className="dp-karte-stufe"><b>Stufe {st}</b><small>{st}/20</small><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%` }} /></i></span>
                     </a>
                   )
                 })}
