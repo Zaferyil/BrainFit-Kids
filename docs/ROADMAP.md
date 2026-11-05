@@ -21,8 +21,8 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 
 ## 4. Eltern und Lehrkräfte
 - [ ] 4.1 Wöchentliche Eltern-Zusammenfassung per E-Mail (Resend)
-- [ ] 4.2 Lehrkräfte vergeben Hausaufgaben an die Klasse
-- [ ] 4.3 Druckbare Arbeitsblätter (PDF)
+- [x] 4.2 Lehrkräfte vergeben Hausaufgaben an die Klasse (Admin → „Aufträge & Blätter“; Kind: #/auftraege + Knopf auf der Startseite; SQL: supabase/update-16-auftraege.sql einspielen!)
+- [x] 4.3 Druckbare Arbeitsblätter (PDF) (Admin → „Aufträge & Blätter“: Lektion, Abakus ablesen, Anzan-Ketten, mit Lösungsseite)
 
 ## 5. Klein, aber wichtig
 - [~] 5.1 Antwort per Handschrift oder Sprache für jüngere Kinder (Sprache fertig: Einstellung „Antwort sagen“, Mikrofon über den Zahlen-Tasten; Handschrift noch offen)

@@ -52,7 +52,7 @@ export function Wiederholen({ kid }: { kid: Kid }) {
     if (ok) tonRichtig(r); else { tonFalsch(); void speak(['Fast! Das ist', String(a.loesung)]) }
     window.setTimeout(() => {
       setFb(null); setEingabe('')
-      if (i + 1 >= aufg.length) { rewardGame(kid.id, r * 2); setFertig(true) } else setI(i + 1)
+      if (i + 1 >= aufg.length) { rewardGame(kid.id, r * 2, 'wiederholen'); setFertig(true) } else setI(i + 1)
     }, ok ? 600 : 1600)
   }
 

@@ -1,6 +1,7 @@
+import { erledigt, meineAuftraege } from '../lib/auftraege'
 import { faelligeRegeln } from '../lib/lernspur'
 import { konto } from '../lib/wirtschaft'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { SeZa } from '../components/SeZa'
@@ -18,6 +19,8 @@ type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 export function Zuhause({ kid, progress, onLogout }: Props) {
   const [menu, setMenu] = useState(false)
   const faellig = faelligeRegeln(kid.id).length
+  const [offen, setOffen] = useState(0)
+  useEffect(() => { void meineAuftraege(kid.id).then((l) => setOffen(l.filter((a) => !erledigt(kid.id, a)).length)) }, [kid.id])
   const world = WORLDS[progress.world - 1] ?? WORLDS[0]
 
 
@@ -50,6 +53,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <span className="zh-podest" />
         </div>
 
+        {offen > 0 && <a href="#/auftraege" className="zh-wdh zh-auftrag">📋 {offen} {offen === 1 ? 'Aufgabe' : 'Aufgaben'} von deiner Lehrkraft</a>}
         {faellig > 0 && <a href="#/wiederholen" className="zh-wdh">🔁 {faellig} {faellig === 1 ? 'Regel' : 'Regeln'} wiederholen</a>}
         <a href="#/inseln" className="zh-los" aria-label="Los geht’s – zur Karte">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />

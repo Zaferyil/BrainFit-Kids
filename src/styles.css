@@ -2990,3 +2990,24 @@ html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .
 .ber-schwer li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 12px; background: #FFF1F3; font-weight: 800; }
 .ber-schwer b { color: #FF4D6D; white-space: nowrap; }
 .ber-wdh { display: block; text-align: center; padding: 10px; border-radius: 14px; background: #5B47D6; color: #fff; font-weight: 900; text-decoration: none; }
+/* Aufträge */
+.zh-auftrag { background: #FFC531; color: #231A4F; box-shadow: 0 4px 0 #C98A00; animation: none; }
+.af-titel { color: #fff; font-family: var(--font-display); font-size: 30px; margin: 0; }
+.af-leer { color: #fff; font-weight: 800; }
+.af-karte { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 22px; background: #fff; color: #2B2257; box-shadow: 0 5px 0 #C9C1EE; }
+.af-karte.fertig { opacity: .75; }
+.af-text { flex: 1; display: grid; gap: 6px; }
+.af-text small { color: #7A6FB3; font-weight: 800; }
+.af-los { padding: 10px 14px; border-radius: 14px; background: #5B47D6; color: #fff; font-weight: 900; text-decoration: none; white-space: nowrap; }
+.af-ok { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #3DBE5B; color: #fff; font-size: 24px; font-weight: 900; }
+/* Admin: Aufträge & Arbeitsblätter */
+.adm-form-reihe { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.adm-form-reihe label { display: grid; gap: 4px; font-weight: 800; font-size: 13px; }
+.adm-form-reihe select, .adm-form-reihe input { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--a-line); font: inherit; min-width: 110px; }
+.adm-auftrag { border-top: 1px solid var(--a-line); padding: 12px 0; display: grid; gap: 8px; }
+.adm-auftrag-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.adm-auftrag-kopf strong { flex: 1; }
+.adm-btn.klein { padding: 4px 10px; font-size: 13px; }
+.adm-auftrag-kinder { display: flex; flex-wrap: wrap; gap: 6px; }
+.adm-auftrag-kinder span { padding: 4px 10px; border-radius: 999px; background: #F1EEFB; font-weight: 800; font-size: 13px; }
+.adm-auftrag-kinder span.ok { background: #DDF6E4; color: #1E7A3C; } .adm-auftrag-kinder span.teil { background: #FFF2CC; color: #8A5A00; }

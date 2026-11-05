@@ -1,3 +1,4 @@
+import { auftragMelden } from './auftraege'
 import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
 import { addDaily, aktivitaet } from './daily'
@@ -142,6 +143,7 @@ export function rewardGame(kidId: string, perlen: number, spiel?: string) {
   addDaily(kidId, { games: 1, minutes: 2 })
   if (spiel) aktivitaet(kidId, spiel.startsWith('anzan') ? 'rechnen' : (findGame(spiel) ? kategorieVon(spiel) : 'rechnen'), perlen > 0 ? 1 : 0, 1)
   if (spiel && perlen > 0) spielBelohnung(kidId, spiel)
+  if (spiel) auftragMelden(kidId, spiel)
   if (level > p.level) levelAufstieg(level)
 }
 
