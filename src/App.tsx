@@ -36,6 +36,7 @@ import { unitContent, STATIONS } from './data/units'
 import { unitVideos } from './data/videos'
 import { WORLDS } from './data/curriculum'
 import { ALLES_OFFEN } from './lib/testmodus'
+import { OfflineHinweis } from './components/OfflineHinweis'
 import { Anzan } from './screens/Anzan'
 import { DenkPark } from './screens/DenkPark'
 import { Ich, Pokale } from './screens/Pokale'
@@ -88,7 +89,8 @@ export default function App() {
   useEffect(() => supabase.auth.onAuthStateChange((e) => { if (e === 'PASSWORD_RECOVERY') setNeuesPw(true) }).data.subscription.unsubscribe, [])
   const s = getSession()
   const kidId = s && findKid(s.classCode, s.kidId) ? s.kidId : null
-  useEffect(() => { if (kidId) einstellungenAnwenden(kindEinstellungen(kidId)) }, [kidId])
+  // sofort anwenden (nicht erst nach dem ersten Zeichnen), damit z. B. Farb-Zeichen gleich da sind
+  if (kidId) einstellungenAnwenden(kindEinstellungen(kidId))
   if (neuesPw) return <NeuesPasswort onFertig={() => {
     setNeuesPw(false)
     // Partner zurück in den Partner-Bereich, alle anderen in den Eltern-Bereich
@@ -98,7 +100,7 @@ export default function App() {
       location.hash = data?.rolle === 'partner' ? '#/partner' : '#eltern'
     })()
   }} />
-  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} />{route !== 'check' && <InstallHinweis />}</>
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><OfflineHinweis />{route !== 'check' && <InstallHinweis />}</>
 }
 
 function Inhalt({ roh }: { roh: string }) {

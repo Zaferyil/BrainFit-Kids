@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { hoereZahl, spracheMoeglich } from '../../lib/sprachEingabe'
 import { SeZa } from '../../components/SeZa'
 import { getSession } from '../../lib/session'
 import { useEffect, type ReactNode } from 'react'
@@ -121,7 +123,7 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
   )
 }
 
-export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
+function KeypadTasten({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
   // 4 Kreise je Reihe: 1–4, 5–8, dann C · 0 · 9 · Löschen
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', '0', '9', 'del']
   return (
@@ -139,6 +141,33 @@ export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabl
         </button>
       ))}
     </div>
+  )
+}
+
+/** Zahlen-Tasten; mit Einstellung „Antwort sagen" zusätzlich ein Mikrofon-Knopf */
+export function Keypad({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
+  const [hoert, setHoert] = useState(false)
+  const [nicht, setNicht] = useState(false)
+  const an = typeof document !== 'undefined' && document.documentElement.classList.contains('sprechen') && spracheMoeglich()
+  const sprechen = async () => {
+    setHoert(true); setNicht(false)
+    const z = await hoereZahl()
+    setHoert(false)
+    if (z === null || z < 0) { setNicht(true); return }
+    // kurz warten zwischen den Ziffern, damit jede Station den neuen Stand sieht
+    const warte = () => new Promise((r) => window.setTimeout(r, 60))
+    onKey('C'); await warte()
+    for (const d of String(z)) { onKey(d); await warte() }
+  }
+  return (
+    <>
+      {an && (
+        <button type="button" className={hoert ? 'keypad-mic an' : 'keypad-mic'} disabled={disabled || hoert} onClick={sprechen} aria-label="Antwort sagen">
+          🎤 {hoert ? 'Ich höre zu …' : nicht ? 'Nochmal sagen' : 'Antwort sagen'}
+        </button>
+      )}
+      <KeypadTasten onKey={onKey} disabled={disabled} />
+    </>
   )
 }
 

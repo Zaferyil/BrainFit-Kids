@@ -9,6 +9,9 @@ type Form = 'kreis' | 'dreieck' | 'quadrat' | 'stern'
 type Karte = { form: Form; farbe: string }
 const FARBEN = ['#FF4D6D', '#3BA7FF', '#FFC531', '#3DBE5B']
 const FORMEN: Form[] = ['kreis', 'dreieck', 'quadrat', 'stern']
+/** Farbenblind-Hilfe: Buchstabe der Farbe in der Form */
+const FARB_BUCHSTABE: Record<string, string> = { '#FF4D6D': 'R', '#3BA7FF': 'B', '#FFC531': 'G', '#3DBE5B': 'Gr' }
+const mitMuster = () => document.documentElement.classList.contains('muster')
 
 function stufe(level: number) {
   if (level <= 3) return { runden: 12, wechsel: 6, zeit: 0 }
@@ -26,6 +29,7 @@ function Symbol({ k, gr }: { k: Karte; gr: number }) {
       {k.form === 'quadrat' && <rect x="12" y="12" width="76" height="76" rx="10" {...p} />}
       {k.form === 'dreieck' && <polygon points="50,8 94,90 6,90" {...p} />}
       {k.form === 'stern' && <polygon points="50,6 62,38 96,38 68,58 79,92 50,72 21,92 32,58 4,38 38,38" {...p} />}
+      {mitMuster() && <text x="50" y={k.form === 'dreieck' ? 74 : 62} textAnchor="middle" fontSize="30" fontWeight="900" fill="#1B1446" fontFamily="sans-serif">{FARB_BUCHSTABE[k.farbe]}</text>}
     </svg>
   )
 }

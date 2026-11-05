@@ -105,10 +105,14 @@ async function hochladen() {
   const ids = [...offen]; offen.clear()
   for (const id of ids) {
     const daten = Object.fromEntries(lernSchluessel(id).map((k) => [k, load(k, null)]))
-    const { error } = await supabase.from('fortschritt').upsert({ kind: id, daten, geaendert: new Date().toISOString() })
-    if (error) console.warn('Fortschritt nicht gespeichert:', error.message)
+    try {
+      const { error } = await supabase.from('fortschritt').upsert({ kind: id, daten, geaendert: new Date().toISOString() })
+      if (error) { console.warn('Fortschritt nicht gespeichert:', error.message); offen.add(id) }
+    } catch { offen.add(id) } // offline: später nochmal
   }
 }
+// wieder online: liegengebliebene Fortschritte hochladen
+window.addEventListener('online', () => { if (offen.size) void hochladen() })
 // beim Schließen der Seite noch schnell speichern
 window.addEventListener('pagehide', () => { if (offen.size) void hochladen() })
 

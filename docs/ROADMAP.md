@@ -25,9 +25,9 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - [ ] 4.3 Druckbare Arbeitsblätter (PDF)
 
 ## 5. Klein, aber wichtig
-- [ ] 5.1 Antwort per Handschrift oder Sprache für jüngere Kinder
-- [ ] 5.2 Barrierefreiheit: Perlen zusätzlich mit Mustern (Farbenblindheit), Schriftgröße einstellbar
-- [ ] 5.3 Offline-Modus der PWA für Übungen
+- [~] 5.1 Antwort per Handschrift oder Sprache für jüngere Kinder (Sprache fertig: Einstellung „Antwort sagen“, Mikrofon über den Zahlen-Tasten; Handschrift noch offen)
+- [x] 5.2 Barrierefreiheit: Perlen zusätzlich mit Mustern (Farbenblindheit), Schriftgröße einstellbar (Einstellungen auf „Ich“)
+- [x] 5.3 Offline-Modus der PWA für Übungen (Bilder jetzt im Offline-Speicher, Fortschritt wird nachgeladen, Offline-Hinweis; Lektions-Videos brauchen Internet)
 
 ## Offene Punkte aus früheren Sitzungen
 - „Genie Kids Math" in der Werbung: Markenrecht prüfen (vorerst „Mathe-Genie")

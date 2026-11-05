@@ -12,6 +12,7 @@ import type { Progress } from '../lib/progress'
 import { load } from '../lib/storage'
 import { Funkeln } from './Anmelden'
 import { pruefungen } from '../lib/pruefung'
+import { spracheMoeglich } from '../lib/sprachEingabe'
 import { RanglisteInhalt } from './Rangliste'
 
 // Pokale: Tagesaufgaben und die Gürtel der Welten. Ich: Profil des Kindes mit Abmelden.
@@ -185,6 +186,9 @@ function Einstellungen({ kidId }: { kidId: string }) {
     <div className="ich-schalter">
       <label><input type="checkbox" checked={e.ton} onChange={(x) => setze({ ...e, ton: x.target.checked })} /> Ton und Vorlesen</label>
       <label><input type="checkbox" checked={e.animation} onChange={(x) => setze({ ...e, animation: x.target.checked })} /> Animationen</label>
+      {spracheMoeglich() && <label><input type="checkbox" checked={!!e.sprechen} onChange={(x) => setze({ ...e, sprechen: x.target.checked })} /> 🎤 Antwort sagen statt tippen</label>}
+      <label><input type="checkbox" checked={!!e.gross} onChange={(x) => setze({ ...e, gross: x.target.checked })} /> 🔠 Größere Schrift</label>
+      <label><input type="checkbox" checked={!!e.muster} onChange={(x) => setze({ ...e, muster: x.target.checked })} /> 🎨 Farben mit Zeichen (bei Farbenblindheit)</label>
     </div>
   )
 }
