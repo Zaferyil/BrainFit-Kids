@@ -13,6 +13,7 @@ import { EntdeckenStation } from './screens/stations/EntdeckenStation'
 import { UebenStation } from './screens/stations/UebenStation'
 import { Rangliste } from './screens/Rangliste'
 import { Pruefung } from './screens/Pruefung'
+import { Wiederholen } from './screens/Wiederholen'
 import { InstallHinweis } from './components/InstallHinweis'
 import { NeuesPasswort } from './screens/NeuesPasswort'
 import { Partner } from './screens/Partner'
@@ -67,7 +68,7 @@ const TITLES: Record<string, string> = {
 }
 
 // Diese Seiten brauchen ein angemeldetes Kind.
-const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', 'bericht', 'seza', ...STATIONS.map((s) => `station/${s.id}`), ...WORLDS.map((w) => `pruefung/${w.n}`)]
+const KID_ROUTES = ['karte', 'inseln', 'einheit', 'denkpark', 'anzan', 'einstufung', 'shop', 'garderobe', 'pokale', 'rangliste', 'bericht', 'wiederholen', 'seza', ...STATIONS.map((s) => `station/${s.id}`), ...WORLDS.map((w) => `pruefung/${w.n}`)]
 
 function useRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, '')
@@ -145,6 +146,7 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'garderobe') return <Ich kid={kid} progress={progress} onLogout={logout} />
     if (route === 'denkpark') return <DenkPark kid={kid} progress={progress} onLogout={logout} />
     if (route === 'anzan') return <Anzan kid={kid} />
+    if (route === 'wiederholen') return <Wiederholen kid={kid} />
     if (route.startsWith('pruefung/')) {
       const welt = Number(route.slice(9))
       if (welt < progress.world || ALLES_OFFEN) return <Pruefung kid={kid} welt={welt} />

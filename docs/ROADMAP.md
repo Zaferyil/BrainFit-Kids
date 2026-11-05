@@ -11,8 +11,8 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - [ ] 1.5 Formel-Training – gezielte Mini-Übungen für Kleine Freunde (5er) und Große Freunde (10er), z. B. „+4 = +5 −1"
 
 ## 2. Nachhaltiges Lernen
-- [ ] 2.1 Fehleranalyse + verteilte Wiederholung – Regeln, bei denen das Kind oft Fehler macht, nach einigen Tagen erneut üben
-- [ ] 2.2 Tempo- und Genauigkeitskurve im Bericht (z. B. Ø 4,2 s → 2,1 s pro Aufgabe)
+- [x] 2.1 Fehleranalyse + verteilte Wiederholung – Regeln, bei denen das Kind oft Fehler macht, nach einigen Tagen erneut üben (src/lib/lernspur.ts, #/wiederholen, Abstände 1/3/7/14 Tage, Knopf auf der Startseite)
+- [x] 2.2 Tempo- und Genauigkeitskurve im Bericht (z. B. Ø 4,2 s → 2,1 s pro Aufgabe) (Bericht-Karte „Tempo & Genauigkeit“ + „Noch üben“)
 - [ ] 2.3 Tägliches 5-Minuten-Training (Aufwärmen + Neues + Wiederholung)
 
 ## 3. Motivation

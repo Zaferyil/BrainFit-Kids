@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
@@ -55,6 +56,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
     setInput(t.input)
     if (!t.done) return
     const ok = Number(t.input) === n
+    merkeAntwort(kidId, ok)
     const res = [...results, ok ? 'right' as const : 'wrong' as const]
     setResults(res)
     setState(ok ? 'right' : 'wrong')

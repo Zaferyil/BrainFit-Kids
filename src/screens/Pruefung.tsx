@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Stage } from '../components/Stage'
@@ -120,6 +121,7 @@ export function Pruefung({ kid, welt }: { kid: Kid; welt: number }) {
   const weiter = () => {
     if (!eingabe || fb) return
     const ok = Number(eingabe) === aufg[i].loesung
+    merkeAntwort(kid.id, ok, { regel: null })
     const r = richtig + (ok ? 1 : 0)
     setRichtig(r); setFb(ok ? 'ok' : 'falsch')
     if (ok) tonRichtig(r); else tonFalsch()

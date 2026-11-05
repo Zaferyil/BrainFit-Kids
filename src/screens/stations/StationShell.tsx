@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { hoereZahl, spracheMoeglich } from '../../lib/sprachEingabe'
+import { frageBereit } from '../../lib/lernspur'
 import { SeZa } from '../../components/SeZa'
 import { getSession } from '../../lib/session'
 import { useEffect, type ReactNode } from 'react'
@@ -124,6 +125,8 @@ export function StationDone({ stars, perlen, text, title = 'Geschafft!', href = 
 }
 
 function KeypadTasten({ onKey, disabled }: { onKey: (k: string) => void; disabled?: boolean }) {
+  // Antwortzeit messen: ab dem Moment, in dem die Tasten benutzbar werden
+  useEffect(() => { if (!disabled) frageBereit() }, [disabled])
   // 4 Kreise je Reihe: 1–4, 5–8, dann C · 0 · 9 · Löschen
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', '0', '9', 'del']
   return (

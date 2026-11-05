@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -82,6 +83,7 @@ export function Anzan({ kid }: { kid: Kid }) {
   const pruefen = () => {
     if (!a || eingabe === '') return
     const ok = Number(eingabe) === a.answer
+    merkeAntwort(kid.id, ok, { regel: null })
     setErgebnis(ok ? 'richtig' : 'falsch')
     if (ok) setRichtig((r) => r + 1)
     void speak(ok ? SAY.richtig : [SAY.fastDasIst, String(a.answer)])

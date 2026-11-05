@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus3D } from '../../components/Abakus3D'
@@ -143,6 +144,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
     if (picked !== null || result || !bereit) return
     setPicked(v)
     const ok = v === q.n
+    merkeAntwort(kidId, ok, { zeit: false })
     const nextHits = ok ? hits + 1 : hits
     const nextLives = ok ? lives : lives - 1
     void speak(ok ? SAY.treffer : [SAY.autsch, String(q.n)])

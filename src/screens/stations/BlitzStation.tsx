@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus3D } from '../../components/Abakus3D'
@@ -73,6 +74,7 @@ export function BlitzStation({ kidId, content }: { kidId: string; content: UnitC
     setInput(t.input)
     if (!t.done) return
     const ok = Number(t.input) === n
+    merkeAntwort(kidId, ok)
     const res = [...results, ok ? 'right' as const : 'wrong' as const]
     setResults(res)
     setStreak(ok ? streak + 1 : 0)

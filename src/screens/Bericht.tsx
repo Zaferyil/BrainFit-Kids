@@ -1,3 +1,4 @@
+import { schwierigeRegeln, verlauf as lernVerlauf } from '../lib/lernspur'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ALLE_LEKTIONEN } from '../lib/admin'
 import type { Kid } from '../data/demo'
@@ -56,7 +57,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   })
   const meist = [...teile].sort((a, b) => b.n - a.n)[0]
 
-  const karten = ['Überblick', 'Aktivität', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Mein Jahr', 'Einschätzung']
+  const karten = ['Überblick', 'Aktivität', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Tempo', 'Mein Jahr', 'Einschätzung']
   const zu = (i: number) => leiste.current?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
   const onScroll = () => { const el = leiste.current; if (el) setKarte(Math.round(el.scrollLeft / el.clientWidth)) }
 
@@ -79,6 +80,13 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   const jahr = monate.map((m) => vm[m] ?? { minuten: 0, aufgaben: 0, stationen: 0, spiele: 0, tage: [] })
   const maxMin = Math.max(60, ...jahr.map((x) => x.minuten))
   const summe = { minuten: jahr.reduce((a, x) => a + x.minuten, 0), tage: jahr.reduce((a, x) => a + x.tage.length, 0), aufgaben: jahr.reduce((a, x) => a + x.aufgaben, 0) }
+
+  // Tempo & Genauigkeit der letzten 14 Übungstage
+  const spur = lernVerlauf(kid.id)
+  const SX = (i: number) => 30 + (i * 260) / Math.max(1, spur.length - 1)
+  const mitSek = spur.map((q, i) => ({ ...q, i })).filter((q) => q.sek !== null)
+  const maxSek = Math.max(2, ...mitSek.map((q) => q.sek!))
+  const schwer = schwierigeRegeln(kid.id)
 
   return (
     <div className="ber">
@@ -176,6 +184,30 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
             </svg>
             {chips}
             <p className="ber-zitat">„{punkte.length < 2 ? 'Ab dem nächsten Monat siehst du hier, wie du dich entwickelst.' : punkte[punkte.length - 1].w >= punkte[0].w ? 'Es geht aufwärts – weiter so!' : 'Dranbleiben lohnt sich – kleine Schritte jeden Tag.'}“</p>
+          </div>
+        </section>
+
+        {/* 4b Tempo & Genauigkeit (Lernspur) */}
+        <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#6C7BFF,#4FC3B4)' }}>
+          <h2>Tempo & Genauigkeit</h2>
+          <div className="ber-weiss">
+            {spur.length < 2 ? <p className="ber-leer">Nach ein paar Übungstagen siehst du hier, wie {du === 'Du' ? 'du' : kid.name} schneller und genauer {du === 'Du' ? 'wirst' : 'wird'}.</p> : <>
+              <svg className="ber-linie" viewBox="0 0 320 180" role="img" aria-label="Genauigkeit und Antwortzeit pro Tag">
+                {[0, 25, 50, 75, 100].map((y) => <g key={y}><line x1="30" x2="290" y1={160 - y * 1.4} y2={160 - y * 1.4} /><text x="24" y={164 - y * 1.4}>{y}</text></g>)}
+                {[0, maxSek / 2, maxSek].map((y) => <text key={y} x="312" y={164 - (y / maxSek) * 140} style={{ fill: '#FF8A1F' }}>{y.toFixed(y < 10 ? 1 : 0)}s</text>)}
+                {spur.map((q, i) => i % Math.ceil(spur.length / 7) === 0 && <text key={q.tag} className="m" x={SX(i)} y="177">{q.tag.slice(8)}.{q.tag.slice(5, 7)}</text>)}
+                <polyline fill="none" stroke="#3DBE5B" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" points={spur.map((q, i) => `${SX(i)},${160 - q.prozent * 1.4}`).join(' ')} />
+                {spur.map((q, i) => <circle key={q.tag} cx={SX(i)} cy={160 - q.prozent * 1.4} r="4" fill="#3DBE5B" />)}
+                {mitSek.length > 1 && <polyline fill="none" stroke="#FF8A1F" strokeWidth="4" strokeDasharray="8 6" strokeLinecap="round" points={mitSek.map((q) => `${SX(q.i)},${160 - (q.sek! / maxSek) * 140}`).join(' ')} />}
+              </svg>
+              <div className="ber-legende"><span style={{ color: '#3DBE5B' }}>● richtig (%)</span><span style={{ color: '#FF8A1F' }}>– – Ø Antwortzeit</span></div>
+              {mitSek.length > 1 && <p className="ber-zitat">„Antwortzeit: Ø {mitSek[0].sek!.toFixed(1)} s → {mitSek[mitSek.length - 1].sek!.toFixed(1)} s · Genauigkeit: {spur[0].prozent} % → {spur[spur.length - 1].prozent} %“</p>}
+            </>}
+            {schwer.length > 0 && <>
+              <h3>Noch üben</h3>
+              <ul className="ber-schwer">{schwer.map((r) => <li key={r.key}><span>{r.name}</span><b>{Math.round(r.quote * 100)} % Fehler</b></li>)}</ul>
+              {!eltern && <a className="ber-wdh" href="#/wiederholen">🔁 Jetzt wiederholen</a>}
+            </>}
           </div>
         </section>
 

@@ -1,3 +1,4 @@
+import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../components/Icon'
 import { Abakus3D } from '../../components/Abakus3D'
@@ -57,6 +58,7 @@ export function KettenStation({ kidId, content, platz, art }: Props) {
     setInput(t.input)
     if (!t.done) return
     const ok = Number(t.input) === a.antwort
+    merkeAntwort(kidId, ok)
     const res = [...ergebnisse, ok ? 'right' as const : 'wrong' as const]
     setErgebnisse(res)
     setStatus(ok ? 'richtig' : 'falsch')
@@ -128,6 +130,7 @@ export function SchnellStation({ kidId, content, platz, art }: Props) {
     setInput(t.input)
     if (!t.done) return
     const ok = Number(t.input) === aufgabe.n
+    merkeAntwort(kidId, ok)
     if (ok) setRichtig((x) => x + 1); else setFalsch((x) => x + 1)
     setBlink(ok ? 'right' : 'wrong')
     window.setTimeout(() => setBlink(''), 350)

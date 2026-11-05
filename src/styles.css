@@ -2983,3 +2983,10 @@ html.gross body { zoom: 1.12; }
 html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .893; }
 /* Offline-Hinweis */
 .offline-hinweis { position: fixed; left: 50%; top: 10px; translate: -50% 0; z-index: 999; max-width: min(92vw, 520px); padding: 10px 16px; border-radius: 16px; background: #231A4F; color: #fff; font-weight: 800; font-size: 14px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+/* Wiederholung + Tempo-Kurve */
+.zh-wdh { position: relative; z-index: 2; align-self: center; margin: 0 auto 8px; display: inline-block; padding: 10px 18px; border-radius: 999px; background: #fff; color: #4B2FC2; font-weight: 900; text-decoration: none; box-shadow: 0 4px 0 #C9C1EE; animation: blase-puls .8s infinite alternate; }
+.ber-legende { display: flex; gap: 16px; justify-content: center; font-weight: 800; font-size: 13px; }
+.ber-schwer { list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 6px; }
+.ber-schwer li { display: flex; justify-content: space-between; gap: 8px; padding: 8px 12px; border-radius: 12px; background: #FFF1F3; font-weight: 800; }
+.ber-schwer b { color: #FF4D6D; white-space: nowrap; }
+.ber-wdh { display: block; text-align: center; padding: 10px; border-radius: 14px; background: #5B47D6; color: #fff; font-weight: 900; text-decoration: none; }

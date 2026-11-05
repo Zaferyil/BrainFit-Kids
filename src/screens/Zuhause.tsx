@@ -1,3 +1,4 @@
+import { faelligeRegeln } from '../lib/lernspur'
 import { konto } from '../lib/wirtschaft'
 import { useState } from 'react'
 import { Icon } from '../components/Icon'
@@ -16,6 +17,7 @@ type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
 export function Zuhause({ kid, progress, onLogout }: Props) {
   const [menu, setMenu] = useState(false)
+  const faellig = faelligeRegeln(kid.id).length
   const world = WORLDS[progress.world - 1] ?? WORLDS[0]
 
 
@@ -48,6 +50,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <span className="zh-podest" />
         </div>
 
+        {faellig > 0 && <a href="#/wiederholen" className="zh-wdh">🔁 {faellig} {faellig === 1 ? 'Regel' : 'Regeln'} wiederholen</a>}
         <a href="#/inseln" className="zh-los" aria-label="Los geht’s – zur Karte">
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
           <span>Los geht’s</span>
