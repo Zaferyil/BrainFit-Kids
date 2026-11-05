@@ -2799,3 +2799,18 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .dp-karte.bald { background: rgba(255,255,255,.16) !important; color: #fff !important; box-shadow: none !important; }
 .dp-karte.bald .dp-karte-bild { border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.1); }
 .dp-karte.bald strong { color: #fff; }
+/* Perlen sortieren */
+.game-sort { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.sort-feld { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 14px; max-width: 640px; }
+.sort-stange { position: relative; width: 96px; height: 250px; border: 0; background: rgba(255,255,255,.06); border-radius: 26px; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 0 0 14px; transition: transform .15s, background .15s; }
+.sort-stange.aktiv { background: rgba(255,197,49,.22); box-shadow: 0 0 0 3px #FFC531 inset; }
+.sort-stange.wackel { animation: sort-wackel .35s; }
+@keyframes sort-wackel { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.sort-stab { position: absolute; top: 22px; bottom: 18px; left: 50%; width: 10px; margin-left: -5px; border-radius: 6px; background: linear-gradient(90deg, #C77800, #FFB300, #C77800); }
+.sort-fuss { position: absolute; bottom: 8px; left: 12px; right: 12px; height: 12px; border-radius: 8px; background: linear-gradient(#FF9F1C, #D97706); }
+.sort-perlen { position: relative; display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; margin-bottom: 6px; }
+.sort-perle { transition: transform .15s; }
+.sort-perle.hoch { transform: translateY(-26px); }
+.sort-feld.fertig .sort-stange { background: rgba(61,190,91,.25); }
+.sort-knoepfe { display: flex; gap: 16px; }
+.sort-knoepfe .round-btn:disabled { opacity: .35; }

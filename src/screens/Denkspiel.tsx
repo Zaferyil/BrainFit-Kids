@@ -1,3 +1,4 @@
+import { PerlenSortieren } from '../games/PerlenSortieren'
 import { useState } from 'react'
 import { Fit } from '../components/Fit'
 import { Bead } from '../components/Bead'
@@ -37,6 +38,7 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   sorobankarten: SorobanKarten,
   abakusrechnen: AbakusRechnen,
   bildermerken: BilderMerken,
+  sortieren: PerlenSortieren,
 }
 
 

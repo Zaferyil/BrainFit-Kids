@@ -89,6 +89,7 @@ export const GAME_INTRO: Record<string, string> = {
   zahlenmerken: 'Merk dir die Zahlen. Danach tippst du sie ein.',
   vergleich: 'Lies die Abakusse ab. Tippe auf den richtigen!',
   schnellzaehlen: 'Die Perlen blitzen kurz auf. Zähle die Perlen in der gesuchten Farbe!',
+  sortieren: 'Sortiere die Perlen! Auf jede Stange darf am Ende nur eine Farbe.',
 }
 
 const ONES = ['', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']

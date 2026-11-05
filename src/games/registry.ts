@@ -26,7 +26,7 @@ export const KATEGORIEN: { id: Kategorie; name: string; text: string; icon: Icon
 const KATEGORIE_VON: Record<string, Kategorie> = {
   memory: 'gedaechtnis', kette: 'gedaechtnis', bildermerken: 'gedaechtnis', zahlenmerken: 'gedaechtnis', blitzabakus: 'gedaechtnis',
   jagd: 'konzentration', detektiv: 'konzentration', stopp: 'konzentration', farbwort: 'konzentration',
-  muster: 'aufmerksamkeit', sudoku: 'aufmerksamkeit', waage: 'aufmerksamkeit', vergleich: 'aufmerksamkeit',
+  muster: 'aufmerksamkeit', sortieren: 'aufmerksamkeit', sudoku: 'aufmerksamkeit', waage: 'aufmerksamkeit', vergleich: 'aufmerksamkeit',
   abakusrechnen: 'rechnen',
   sorobankarten: 'tempo', schnellzaehlen: 'tempo', sortierer: 'tempo', symbol: 'tempo', rennen: 'tempo',
   tangram: 'raum', spiegel: 'raum', wuerfel: 'raum',
@@ -50,6 +50,7 @@ export const GAMES: GameMeta[] = [
   { id: 'detektiv', name: 'Fehler-Detektiv', area: 'konzentration', minTier: 'A', text: 'Finde die Unterschiede', ready: false },
   { id: 'stopp', name: 'Stopp-Perle', area: 'konzentration', minTier: 'B', text: 'Grün tippen, Rot nicht', ready: false },
   { id: 'muster', name: 'Muster-Meister', area: 'logik', minTier: 'A', text: 'Was kommt als Nächstes?', ready: true },
+  { id: 'sortieren', name: 'Perlen sortieren', area: 'logik', minTier: 'A', text: 'Jede Stange nur eine Farbe', ready: true },
   { id: 'sudoku', name: 'Perlen-Sudoku', area: 'logik', minTier: 'B', text: 'Jede Perle einmal', ready: false },
   { id: 'waage', name: 'Waage-Rätsel', area: 'logik', minTier: 'C', text: 'Was ist schwerer?', ready: false },
   { id: 'abakusrechnen', name: 'Abakus-Rechnen', area: 'logik', minTier: 'A', text: 'Plus und Minus mit dem Abakus', ready: true },
