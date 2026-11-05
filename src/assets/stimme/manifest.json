@@ -339,5 +339,7 @@
  "Schau dir die Abakusse an und rechne im Kopf. Tippe auf das richtige Ergebnis!": "s-intro-abakusrechnen.mp3",
  "Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!": "s-intro-sorobankarten.mp3",
  "Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!": "s-intro-bildermerken.mp3",
- "Tippe zwei Blasen an, die zusammen die Zielzahl ergeben. Dann platzen sie!": "s-intro-blasen.mp3"
+ "Von oben fallen Zahlen-Blasen. Tippe zwei Blasen an, die zusammen die Zielzahl ergeben – dann platzen sie. Nach jedem Paar gibt es ein neues Ziel. Sei schnell, bevor die Blasen oben ankommen!": "s-blasen-erkl.mp3",
+ "Tippe zwei Blasen, die zusammen die Zielzahl ergeben – schnell, bevor sie oben ankommen!": "s-blasen-intro.mp3",
+ "Oh, die Blasen sind oben angekommen!": "s-blasen-oben.mp3"
 }

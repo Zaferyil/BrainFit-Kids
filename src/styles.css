@@ -2845,3 +2845,18 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 @keyframes blase-platzt { 50% { transform: scale(1.35); opacity: .9; } 100% { transform: scale(.2); opacity: 0; } }
 .blasen-gleichung { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); background: #3DBE5B; color: #fff; font: 800 28px 'Baloo 2', sans-serif; padding: 6px 20px; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.35); white-space: nowrap; animation: blasen-auf .3s; }
 @keyframes blasen-auf { from { transform: translate(-50%, 10px); opacity: 0; } }
+.blasen-fort { flex: 1; height: 14px; border-radius: 9px; background: rgba(255,255,255,.2); overflow: hidden; }
+.blasen-fort i { display: block; height: 100%; background: linear-gradient(90deg, #FFC531, #FF8A1F); transition: width .3s; }
+.blasen-ziel.neu { animation: blasen-ziel-neu .5s; }
+@keyframes blasen-ziel-neu { 40% { transform: scale(1.3); background: #3DBE5B; color: #fff; } }
+.game-blasen { width: auto; }
+.blasen-feld { box-sizing: border-box; padding: 4px; overflow: hidden; }
+.blasen-linie { position: absolute; left: 0; right: 0; top: 4px; height: 3px; background: repeating-linear-gradient(90deg, #FF4D6D 0 12px, transparent 12px 20px); opacity: .5; }
+.blasen-feld.gefahr .blasen-linie { opacity: 1; animation: blasen-blink .6s infinite alternate; }
+@keyframes blasen-blink { to { opacity: .3; } }
+.blasen-feld.gefahr { box-shadow: inset 0 0 0 6px #FF4D6D, inset 0 0 0 10px #A8102C; }
+.blase { transition: transform .15s; }
+.blase.faellt { animation: blase-faellt .45s cubic-bezier(.5, 0, .75, 1.25); }
+@keyframes blase-faellt { from { transform: translateY(var(--fall)); } }
+.blasen-feld.aus .blase { filter: grayscale(.7) brightness(.7); }
+.blasen-aus { position: absolute; left: 50%; top: 40%; transform: translateX(-50%); background: #FF4D6D; color: #fff; font: 800 28px 'Baloo 2', sans-serif; padding: 10px 24px; border-radius: 20px; white-space: nowrap; box-shadow: 0 8px 20px rgba(0,0,0,.4); }
