@@ -32,8 +32,24 @@ function aufgabenFuer(welt: number): Aufgabe[] {
   return out
 }
 
+/** Doktorhut (Absolventen-Kappe), selbst gezeichnet */
+function kappe(g: CanvasRenderingContext2D, x: number, y: number, s: number, winkel: number) {
+  g.save(); g.translate(x, y); g.rotate(winkel); g.scale(s, s)
+  g.fillStyle = '#2B2257'
+  g.beginPath(); g.moveTo(-60, 10); g.lineTo(60, 10); g.lineTo(52, 62); g.quadraticCurveTo(0, 80, -52, 62); g.closePath(); g.fill()
+  g.fillStyle = '#3A2F70'
+  g.beginPath(); g.moveTo(0, -48); g.lineTo(110, 0); g.lineTo(0, 46); g.lineTo(-110, 0); g.closePath(); g.fill()
+  g.fillStyle = '#FFC531'; g.beginPath(); g.arc(0, 0, 9, 0, Math.PI * 2); g.fill()
+  g.strokeStyle = '#FFC531'; g.lineWidth = 6; g.lineCap = 'round'
+  g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(70, 6, 80, 60); g.stroke()
+  g.beginPath(); g.moveTo(72, 58); g.lineTo(70, 92); g.moveTo(80, 60); g.lineTo(82, 94); g.moveTo(88, 58); g.lineTo(94, 90); g.stroke()
+  g.restore()
+}
+
+const bildLaden = (src: string) => new Promise<HTMLImageElement | null>((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src })
+
 /** Urkunde als PNG zeichnen */
-function urkundeZeichnen(name: string, guertel: string, farbe: string, b: Bestanden): string {
+async function urkundeZeichnen(name: string, guertel: string, farbe: string, b: Bestanden): Promise<string> {
   const c = document.createElement('canvas'); c.width = 1600; c.height = 1130
   const g = c.getContext('2d')!
   const bg = g.createLinearGradient(0, 0, 1600, 1130); bg.addColorStop(0, '#FFF8E1'); bg.addColorStop(1, '#FFE9F3')
@@ -52,8 +68,12 @@ function urkundeZeichnen(name: string, guertel: string, farbe: string, b: Bestan
   g.fillStyle = '#231A4F'; g.font = '900 60px "Baloo 2", "Fredoka", sans-serif'; g.fillText(`${guertel[0].toUpperCase() + guertel.slice(1)}er Gürtel`, 800, 785)
   g.fillStyle = '#2B2257'; g.font = '700 40px "Nunito", sans-serif'
   const m = Math.floor(b.sekunden / 60), s = b.sekunden % 60
-  g.fillText(`${b.richtig} von ${b.von} Aufgaben richtig · Zeit ${m}:${String(s).padStart(2, '0')} min`, 800, 900)
-  g.font = '600 36px "Nunito", sans-serif'; g.fillText(new Date(b.datum).toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' }), 800, 970)
+  g.fillText(`${b.richtig} von ${b.von} Aufgaben richtig · Zeit ${m}:${String(s).padStart(2, '0')} min`, 800, 870)
+  g.font = '600 34px "Nunito", sans-serif'; g.fillText(new Date(b.datum).toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' }), 800, 925)
+  kappe(g, 230, 200, 1.05, -0.18)
+  kappe(g, 1370, 200, 1.05, 0.18)
+  const logo = await bildLaden(`${import.meta.env.BASE_URL}logo.webp`)
+  if (logo) { const w = 150, h = (logo.height / logo.width) * w; g.drawImage(logo, 800 - w / 2, 1040 - h, w, h) }
   return c.toDataURL('image/png')
 }
 
@@ -77,7 +97,7 @@ export function Pruefung({ kid, welt }: { kid: Kid; welt: number }) {
     setErgebnis(b); setPhase('ende')
     if (r >= PRUEFUNG.bestehen) {
       pruefungBestanden(kid.id, welt, b); rewardGame(kid.id, 20, `pruefung-${welt}`)
-      setBild(urkundeZeichnen(kid.name, guertel, w.color, b)); tonRichtig(5)
+      void urkundeZeichnen(kid.name, guertel, w.color, b).then(setBild); tonRichtig(5)
       void speak(`Herzlichen Glückwunsch! Du hast die Prüfung für den ${guertel}en Gürtel bestanden!`)
     } else { tonFalsch(); void speak('Fast geschafft! Übe noch ein bisschen und versuch es dann noch einmal.') }
   }
