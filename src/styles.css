@@ -2939,3 +2939,5 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .stop-seza { position: absolute; right: calc(50% + min(34px, 6cqw)); bottom: -34px; z-index: 3; display: block; }
 .stop-seza svg, .stop-seza img { width: min(64px, 13cqw) !important; height: auto; display: block; }
 .insel-stop.rand-l .stop-seza { right: auto; left: calc(50% + min(34px, 6cqw)); }
+.mental-abakus.kopf-1 .abakus, .mental-abakus.kopf-1 > * { opacity: .55; }
+.kopf-leer { flex: 1; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #fff; font-family: var(--font-display); font-size: 20px; opacity: .85; text-align: center; }

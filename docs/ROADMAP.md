@@ -4,7 +4,7 @@ Status-Legende: [ ] offen · [~] in Arbeit · [x] fertig
 Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufgabe hier abhaken und committen.
 
 ## 1. Kern der Mentalen Arithmetik (höchste Priorität)
-- [ ] 1.1 Abakus ausblenden – Übergang vom echten zum Kopf-Abakus (voll → blass → nur Rahmen → kein Abakus), automatisch nach Stufe
+- [x] 1.1 Abakus ausblenden – Übergang vom echten zum Kopf-Abakus (voll → blass → nur Rahmen → kein Abakus), automatisch nach Stufe (Station „Kopfrechnen“, src/lib/kopfAbakus.ts: 2× fehlerfrei → weiter, 3+ Fehler → zurück)
 - [ ] 1.2 Flash-Anzan-Modus – Zahlen blitzen nacheinander auf, Kind nennt die Summe; Tempo (1,5 s → 0,3 s) und Stellenzahl einstellbar
 - [ ] 1.3 Gürtel-Prüfung + Urkunde – offizielle Prüfung mit Zeitlimit pro Gürtel, bei Bestehen PDF-Urkunde zum Teilen
 - [ ] 1.4 Hör-Rechnen – Zahlen werden vorgelesen (Lisa-Stimme), Kind rechnet nur nach Gehör
