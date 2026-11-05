@@ -1,4 +1,6 @@
 import { SpiegelPerlen } from '../games/SpiegelPerlen'
+import { PerlenTangram } from '../games/PerlenTangram'
+import { LabyrinthPlaner } from '../games/LabyrinthPlaner'
 import { RegelWechsel } from '../games/RegelWechsel'
 import { ZahlenBlasen } from '../games/ZahlenBlasen'
 import { PerlenSortieren } from '../games/PerlenSortieren'
@@ -45,6 +47,8 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   blasen: ZahlenBlasen,
   spiegel: SpiegelPerlen,
   regel: RegelWechsel,
+  tangram: PerlenTangram,
+  labyrinth: LabyrinthPlaner,
 }
 
 

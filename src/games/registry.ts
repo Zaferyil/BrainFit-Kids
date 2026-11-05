@@ -56,7 +56,7 @@ export const GAMES: GameMeta[] = [
   { id: 'blasen', name: 'Zahlen-Blasen', area: 'logik', minTier: 'A', text: 'Zwei Zahlen ergeben das Ziel', ready: true },
   { id: 'abakusrechnen', name: 'Abakus-Rechnen', area: 'logik', minTier: 'A', text: 'Plus und Minus mit dem Abakus', ready: true },
   { id: 'vergleich', name: 'Zahlen vergleichen', area: 'logik', minTier: 'A', text: 'Welcher Abakus zeigt mehr?', ready: true },
-  { id: 'tangram', name: 'Perlen-Tangram', area: 'raum', minTier: 'A', text: 'Lege die Form', ready: false },
+  { id: 'tangram', name: 'Perlen-Tangram', area: 'raum', minTier: 'A', text: 'Fülle die Form', ready: true },
   { id: 'spiegel', name: 'Spiegel-Perlen', area: 'raum', minTier: 'A', text: 'Lege das Spiegelbild', ready: true },
   { id: 'wuerfel', name: 'Würfel-Welt', area: 'raum', minTier: 'C', text: 'Wie viele Würfel?', ready: false },
   { id: 'sortierer', name: 'Schnell-Sortierer', area: 'tempo', minTier: 'A', text: 'Sortiere blitzschnell', ready: false },
@@ -66,7 +66,7 @@ export const GAMES: GameMeta[] = [
   { id: 'schnellzaehlen', name: 'Schnell zählen', area: 'tempo', minTier: 'A', text: 'Zähle die Perlen im Blitz', ready: true },
   { id: 'regel', name: 'Regel-Wechsel', area: 'flex', minTier: 'A', text: 'Farbe oder Form?', ready: true },
   { id: 'farbwort', name: 'Farb-Wort', area: 'flex', minTier: 'B', text: 'Tippe die Farbe, nicht das Wort', ready: true },
-  { id: 'labyrinth', name: 'Labyrinth-Planer', area: 'flex', minTier: 'A', text: 'Plane den Weg', ready: false },
+  { id: 'labyrinth', name: 'Labyrinth-Planer', area: 'flex', minTier: 'A', text: 'Plane den Weg', ready: true },
 ]
 
 export const findGame = (id: string) => GAMES.find((g) => g.id === id)

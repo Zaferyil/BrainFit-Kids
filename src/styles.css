@@ -2904,3 +2904,34 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .seza-kopf.halb { background-size: 92% auto; background-position: 50% 12%; }
 .pk-rl-titel { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-display); font-size: 26px; margin: 4px 0 8px; }
 .nk-hello-btn { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+/* Perlen-Tangram */
+.game-tangram { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.tg-feld { display: grid; gap: 4px; padding: 10px; border-radius: 22px; background: rgba(255,255,255,.1); transition: box-shadow .2s; }
+.tg-feld.ok { box-shadow: 0 0 0 5px #3DBE5B, 0 0 30px #3DBE5B; }
+.tg-feld.falsch { animation: sort-wackel .35s; }
+.tg-zelle { border: 0; padding: 0; border-radius: 10px; background: transparent; }
+.tg-zelle.form { background: #CFC8EE; cursor: pointer; box-shadow: inset 0 -3px 0 rgba(0,0,0,.12); }
+.tg-teile { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; min-height: 70px; }
+.tg-teil { border: 0; background: rgba(255,255,255,.9); border-radius: 16px; padding: 10px; cursor: pointer; }
+.tg-teil.an { box-shadow: 0 0 0 4px #FFC531; transform: scale(1.06); }
+.tg-mini { display: grid; gap: 3px; }
+.tg-mini i { border-radius: 6px; box-shadow: inset 0 -2px 0 rgba(0,0,0,.18); display: grid; place-items: center; }
+.tg-mini i.anker::after { content: ''; width: 35%; height: 35%; border-radius: 50%; background: #fff; }
+.tg-unten { display: flex; align-items: center; gap: 12px; max-width: 420px; }
+.tg-tipp { color: #fff; opacity: .85; font-weight: 700; font-size: 14px; }
+/* Labyrinth-Planer */
+.game-laby { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.laby-feld { display: grid; gap: 4px; padding: 10px; border-radius: 22px; background: rgba(255,255,255,.1); }
+.laby-feld.ok { box-shadow: 0 0 0 5px #3DBE5B, 0 0 30px #3DBE5B; }
+.laby-feld.falsch { box-shadow: 0 0 0 5px #FF4D6D; animation: sort-wackel .35s; }
+.laby-zelle { border-radius: 10px; background: rgba(255,255,255,.88); display: grid; place-items: center; line-height: 1; }
+.laby-zelle.mauer { background: #6B5BA8; }
+.laby-zelle.spur { background: #FFF1B8; }
+.laby-perle { width: 62%; height: 62%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFB3C6, #FF4D6D 60%, #C2183F); box-shadow: 0 3px 6px rgba(0,0,0,.3); }
+.laby-plan { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 400px; }
+.laby-plan span { width: 36px; height: 36px; border-radius: 10px; border: 2px dashed rgba(255,255,255,.5); display: grid; place-items: center; font-size: 22px; }
+.laby-plan span.voll { background: #fff; border: 2px solid #fff; }
+.laby-tasten { display: flex; gap: 10px; }
+.laby-tasten button { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 18px; border: 0; background: #fff; font-size: 32px; box-shadow: 0 4px 0 #C9C1EE; cursor: pointer; }
+.laby-tasten button:disabled { opacity: .45; }
+.laby-tasten .laby-weg { background: #FFE58A; }

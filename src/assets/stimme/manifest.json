@@ -345,5 +345,9 @@
  "Lege auf der anderen Seite das Spiegelbild. Tippe die Felder an!": "s-spiegel-intro.mp3",
  "Schau auf die Regel: nach Farbe oder nach Form? Tippe die passende Karte!": "s-regel-intro.mp3",
  "Oben steht die Regel. Bei Farbe tippst du die Karte mit der gleichen Farbe, bei Form die mit der gleichen Form. Pass auf – die Regel wechselt!": "s-regel-erkl.mp3",
- "Schau, so sieht das Spiegelbild aus.": "s-spiegel-falsch.mp3"
+ "Schau, so sieht das Spiegelbild aus.": "s-spiegel-falsch.mp3",
+ "Fülle die graue Form mit allen Teilen. Tippe ein Teil an und dann das Feld, wo die Perle mit dem Punkt hin soll.": "s-tangram-erkl.mp3",
+ "Plane zuerst den ganzen Weg mit den Pfeilen. Dann drückst du Los, und die Perle läuft zum Stern. Pass auf die Mauern auf!": "s-laby-erkl.mp3",
+ "Oh, da ist eine Mauer!": "s-laby-mauer.mp3",
+ "Fast! Plane den Weg noch einmal.": "s-laby-fast.mp3"
 }
