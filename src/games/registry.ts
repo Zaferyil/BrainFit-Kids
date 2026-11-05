@@ -12,6 +12,32 @@ export const AREAS: { id: Area; name: string; text: string; icon: IconName; colo
   { id: 'flex', name: 'Flexibilität', text: 'Regeln wechseln', icon: 'refresh', color: '#FF5C8A' },
 ]
 
+/** Kategorien im Denk-Park = Bereiche im Lernbericht und in der Rangliste (eine Quelle für beides) */
+export type Kategorie = 'rechnen' | 'tempo' | 'konzentration' | 'aufmerksamkeit' | 'gedaechtnis' | 'raum' | 'flex'
+export const KATEGORIEN: { id: Kategorie; name: string; text: string; icon: IconName; color: string; bericht: boolean }[] = [
+  { id: 'rechnen', name: 'Mathe-Spiele', text: 'Rechnen mit dem Abakus', icon: 'bars', color: '#5B47D6', bericht: true },
+  { id: 'tempo', name: 'Tempo-Spiele', text: 'Blitzschnell sehen und zählen', icon: 'bolt', color: '#3DBE5B', bericht: true },
+  { id: 'gedaechtnis', name: 'Gedächtnis-Spiele', text: 'Merken und erinnern', icon: 'brain', color: '#A06BFF', bericht: true },
+  { id: 'konzentration', name: 'Konzentrations-Spiele', text: 'Genau hinschauen, nicht ablenken lassen', icon: 'target', color: '#FF8A1F', bericht: true },
+  { id: 'aufmerksamkeit', name: 'Logik-Spiele', text: 'Muster erkennen und vergleichen', icon: 'bulb', color: '#FFC531', bericht: true },
+  { id: 'raum', name: 'Raumdenken', text: 'Formen drehen und legen', icon: 'image', color: '#3BA7FF', bericht: false },
+  { id: 'flex', name: 'Flexibles Denken', text: 'Regeln wechseln', icon: 'refresh', color: '#FF5C8A', bericht: false },
+]
+const KATEGORIE_VON: Record<string, Kategorie> = {
+  memory: 'gedaechtnis', kette: 'gedaechtnis', bildermerken: 'gedaechtnis', zahlenmerken: 'gedaechtnis', blitzabakus: 'gedaechtnis',
+  jagd: 'konzentration', detektiv: 'konzentration', stopp: 'konzentration', farbwort: 'konzentration',
+  muster: 'aufmerksamkeit', sudoku: 'aufmerksamkeit', waage: 'aufmerksamkeit', vergleich: 'aufmerksamkeit',
+  abakusrechnen: 'rechnen',
+  sorobankarten: 'tempo', schnellzaehlen: 'tempo', sortierer: 'tempo', symbol: 'tempo', rennen: 'tempo',
+  tangram: 'raum', spiegel: 'raum', wuerfel: 'raum',
+  regel: 'flex', labyrinth: 'flex',
+}
+export const kategorieVon = (spielId: string): Kategorie => KATEGORIE_VON[spielId] ?? 'aufmerksamkeit'
+/** frühere Aktivitäts-Schlüssel (alte Bereiche) auf die neuen Kategorien abbilden */
+export const ALTE_BEREICHE: Record<string, Kategorie> = { logik: 'aufmerksamkeit', flex: 'konzentration' }
+/** spielbare Spiele einer Kategorie */
+export const spieleIn = (k: Kategorie) => GAMES.filter((g) => g.ready && kategorieVon(g.id) === k).map((g) => g.id)
+
 export type GameMeta = { id: string; name: string; area: Area; minTier: Tier; text: string; ready: boolean }
 
 export const GAMES: GameMeta[] = [

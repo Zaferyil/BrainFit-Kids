@@ -6,7 +6,7 @@ import { FAEHIGKEITEN, MIN_VERGLEICH, berichtAktualisieren, einschaetzung, perze
 import { stufeVon } from '../lib/rangliste'
 import { load } from '../lib/storage'
 import type { Aktivitaet } from '../lib/daily'
-import { AREAS } from '../games/registry'
+import { ALTE_BEREICHE, KATEGORIEN } from '../games/registry'
 
 // Lernbericht für Kind und Eltern: Überblick, Fähigkeiten im Vergleich zur Schulstufe, Platzierung,
 // Entwicklung über die Monate und eine pädagogische Einschätzung. Karten zum Wischen wie in der App.
@@ -39,8 +39,11 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
 
   // Aktivität: wie viele Lektions-Stationen und Denkspiele in welchem Bereich
   const akt = load<Aktivitaet>(`bfk.aktivitaet.${kid.id}`, { bereiche: {}, richtig: 0, gesamt: 0 })
-  const TEILE = [{ id: 'rechnen', name: 'Rechnen (Lektionen)', color: '#5B47D6' }, ...AREAS.map((a) => ({ id: a.id, name: a.name, color: a.color }))]
-  const teile = TEILE.map((t) => ({ ...t, n: akt.bereiche[t.id] ?? 0 })).filter((t) => t.n > 0)
+  // Aktivität je Kategorie (frühere Bereichs-Schlüssel werden zugeordnet)
+  const proKat: Record<string, number> = {}
+  for (const [k, n] of Object.entries(akt.bereiche)) { const z = ALTE_BEREICHE[k] ?? k; proKat[z] = (proKat[z] ?? 0) + n }
+  const TEILE = KATEGORIEN.map((k) => ({ id: k.id, name: k.id === 'rechnen' ? 'Rechnen (Lektionen & Mathe-Spiele)' : k.name, color: k.color }))
+  const teile = TEILE.map((t) => ({ ...t, n: proKat[t.id] ?? 0 })).filter((t) => t.n > 0)
   const gesamtAkt = teile.reduce((a, t) => a + t.n, 0)
   const quote = akt.gesamt ? Math.round((akt.richtig / akt.gesamt) * 100) : 0
   let winkel = -Math.PI / 2
@@ -112,7 +115,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
                   {stuecke.map((t) => <path key={t.id} d={t.d} fill={t.color} stroke="#fff" strokeWidth="2" />)}
                   {stuecke.filter((t) => t.pz >= 7).map((t) => <text key={t.id} x={t.lx} y={t.ly} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontWeight="900" fontSize="15">{t.pz}%</text>)}
                 </svg>
-                <ul>{TEILE.map((t) => <li key={t.id} className={akt.bereiche[t.id] ? '' : 'leer'}><i style={{ background: t.color }} />{t.name}</li>)}</ul>
+                <ul>{TEILE.map((t) => <li key={t.id} className={proKat[t.id] ? '' : 'leer'}><i style={{ background: t.color }} />{t.name}</li>)}</ul>
               </div>
               <div className="ber-zeile"><span>Aktivitäten gesamt</span><b>{gesamtAkt}</b></div>
               <div className="ber-zeile"><span>Richtig</span><b>{quote} %</b></div>

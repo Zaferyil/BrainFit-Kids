@@ -3,26 +3,23 @@ import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
 import { getLevel, getPlacement, tierFor, tierRank, TIERS } from '../games/engine'
-import { GAMES } from '../games/registry'
+import { useState } from 'react'
+import { GAMES, KATEGORIEN, kategorieVon, type Kategorie } from '../games/registry'
+import { echteWerte } from '../lib/rangliste'
 import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { Funkeln } from './Anmelden'
 
-// Denkspiele im neuen Look: oben das Spiel des Tages, darunter die spielbaren Spiele als bunte Kacheln.
+// Denkspiele: oben das Spiel des Tages, darunter die Spiele nach Kategorien (= Bereiche im Lernbericht).
 
-const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff' }
+const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff', bildermerken: 'image', abakusrechnen: 'plus', sorobankarten: 'bolt' }
 
-const KACHEL: { bg: string; rand: string; ink: string; icon: IconName }[] = [
-  { bg: 'radial-gradient(circle at 30% 20%, #FFE58A, #FFC531 60%, #F2A900)', rand: '#C98A00', ink: '#2B2257', icon: 'brain' },
-  { bg: 'radial-gradient(circle at 30% 20%, #A8F0B8, #2ECC8F 60%, #1F9E6C)', rand: '#167A53', ink: '#0E3D28', icon: 'search' },
-  { bg: 'radial-gradient(circle at 30% 20%, #CDE8FF, #3BA7FF 60%, #1C7FD6)', rand: '#145FA3', ink: '#08294A', icon: 'bulb' },
-  { bg: 'radial-gradient(circle at 30% 20%, #FFD0E4, #FF4F9A 60%, #C21F6A)', rand: '#8E1450', ink: '#FFFFFF', icon: 'target' },
-]
 
 export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () => void }) {
   const tier = tierFor(kid.birthYear)
   const playable = GAMES.filter((g) => g.ready && tierRank(tier) >= tierRank(g.minTier))
-  const soon = GAMES.length - playable.length
+  const werte = echteWerte(kid)
+  const [alleOffen, setAlleOffen] = useState<string | null>(null)
   const daily = getDaily(kid.id)
   // jeden Tag ein anderes Spiel des Tages
   const heute = playable[[...daily.date].reduce((n, c) => n + c.charCodeAt(0), 0) % Math.max(1, playable.length)]
@@ -49,25 +46,44 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
           </a>
         )}
 
-        <div className="dp-grid">
-          {playable.map((g, i) => {
-            const k = KACHEL[i % KACHEL.length]
-            return (
-              <a key={g.id} href={`#/spiel/${g.id}`} className="dp-kachel" style={{ background: k.bg, color: k.ink, boxShadow: `0 7px 0 ${k.rand}`, rotate: `${i % 2 ? 2 : -2}deg` }}>
-                <Icon name={SYMBOL[g.id] ?? k.icon} color={k.ink} size={52} strokeWidth={2.2} />
-                <strong>{g.name}</strong>
-                <span>Stufe {getLevel(kid.id, g.id, tier)}</span>
-              </a>
-            )
-          })}
-          {soon > 0 && (
-            <div className="dp-kachel bald">
-              <Icon name="lock" color="#FFFFFF" size={38} strokeWidth={2.4} />
-              <strong>{soon} weitere</strong>
-              <span>kommen bald</span>
-            </div>
-          )}
-        </div>
+        {KATEGORIEN.map((kat) => {
+          const spiele = GAMES.filter((g) => kategorieVon(g.id) === kat.id)
+          const offen = spiele.filter((g) => playable.includes(g))
+          const bald = spiele.filter((g) => !playable.includes(g))
+          const alle = alleOffen === kat.id
+          return (
+            <section key={kat.id} className="dp-kat">
+              <header className="dp-kat-kopf">
+                <span className="dp-kat-icon" style={{ background: kat.color }}><Icon name={kat.icon} color="#231A4F" size={22} strokeWidth={2.5} /></span>
+                <div><h2>{kat.name}</h2><small>{kat.text}</small></div>
+                {kat.bericht && offen.length > 0 && <span className="dp-kat-wert" title="Dein Wert in dieser Kategorie (0–100, fließt in den Lernbericht)">Wert {werte[kat.id as Exclude<Kategorie, 'raum' | 'flex'>] ?? 0}</span>}
+                {offen.length > 2 && <button type="button" className="dp-kat-alle" onClick={() => setAlleOffen(alle ? null : kat.id)}>{alle ? 'Weniger' : 'Alle ansehen'} ›</button>}
+              </header>
+              <div className={alle ? 'dp-reihe alle' : 'dp-reihe'}>
+                {offen.map((g) => {
+                  const st = getLevel(kid.id, g.id, tier)
+                  return (
+                    <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte">
+                      <span className="dp-karte-bild" style={{ background: `radial-gradient(circle at 30% 20%, #FFFFFF66, ${kat.color} 70%)` }}>
+                        <Icon name={SYMBOL[g.id] ?? kat.icon} color="#231A4F" size={46} strokeWidth={2.2} />
+                      </span>
+                      <strong>{g.name}</strong>
+                      <span className="dp-karte-text">{g.text}</span>
+                      <span className="dp-karte-stufe"><b>Stufe {st}</b><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%`, background: kat.color }} /></i></span>
+                    </a>
+                  )
+                })}
+                {bald.map((g) => (
+                  <div key={g.id} className="dp-karte bald">
+                    <span className="dp-karte-bild"><Icon name="lock" color="#FFFFFF" size={34} strokeWidth={2.4} /></span>
+                    <strong>{g.name}</strong>
+                    <span className="dp-karte-text">kommt bald</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        })}
 
         {getPlacement(kid.id)?.status !== 'done' && (
           <a href="#/einstufung" className="nk-btn yellow dp-invite"><Icon name="sparkle" color="#2B2257" size={20} /> Perli kennenlernen</a>

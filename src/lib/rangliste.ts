@@ -2,6 +2,7 @@ import { CLASSES, type Kid } from '../data/demo'
 import { STATIONS } from '../data/units'
 import { getProgress } from './progress'
 import { load } from './storage'
+import { spieleIn } from '../games/registry'
 
 // Rangliste: Kinder werden nur mit Kindern derselben Klassenstufe verglichen,
 // in einer Gesamtwertung und in pädagogischen Bereichen.
@@ -12,20 +13,12 @@ export type Bereich = 'gesamt' | 'rechnen' | 'tempo' | 'konzentration' | 'aufmer
 
 export const BEREICHE: { id: Bereich; name: string; text: string }[] = [
   { id: 'gesamt', name: 'Gesamt', text: 'Gesammelte Perlen' },
-  { id: 'rechnen', name: 'Rechnen', text: 'Üben, Kopfrechnen und Boss' },
-  { id: 'tempo', name: 'Tempo', text: 'Blitz-Abakus und Schnell zählen' },
-  { id: 'konzentration', name: 'Konzentration', text: 'Perlen-Jagd und Farb-Wort' },
-  { id: 'aufmerksamkeit', name: 'Aufmerksamkeit', text: 'Zahlen vergleichen und Muster' },
-  { id: 'gedaechtnis', name: 'Gedächtnis', text: 'Memory, Perlen-Kette, Zahlen merken' },
+  { id: 'rechnen', name: 'Rechnen', text: 'Lektionen und Mathe-Spiele' },
+  { id: 'tempo', name: 'Tempo', text: 'Blitz-Abakus und Tempo-Spiele' },
+  { id: 'konzentration', name: 'Konzentration', text: 'Konzentrations-Spiele' },
+  { id: 'aufmerksamkeit', name: 'Aufmerksamkeit', text: 'Logik-Spiele' },
+  { id: 'gedaechtnis', name: 'Gedächtnis', text: 'Gedächtnis-Spiele' },
 ]
-
-/** Welche Denkspiele in welchen Bereich zählen */
-const SPIELE: Partial<Record<Bereich, string[]>> = {
-  tempo: ['schnellzaehlen'],
-  konzentration: ['jagd', 'farbwort'],
-  aufmerksamkeit: ['vergleich', 'muster'],
-  gedaechtnis: ['memory', 'kette', 'zahlenmerken'],
-}
 
 export type Eintrag = { id: string; name: string; kid?: Kid; beispiel: boolean; werte: Record<Bereich, number> }
 
@@ -47,15 +40,17 @@ export function echteWerte(kid: Kid): Record<Bereich, number> {
     return Object.values(p.stationStars).map((st) => st[i]).filter((s) => s > 0)
   }
   const spiel = (ids: string[]) => mittel(ids.filter((id) => levels[id] !== undefined).map((id) => (levels[id] / 20) * 100))
-  const rechnen = mittel([...sterne('ueben'), ...sterne('kopfrechnen'), ...sterne('boss')]) / 3 * 100
+  const lektionen = mittel([...sterne('ueben'), ...sterne('kopfrechnen'), ...sterne('boss')]) / 3 * 100
   const blitz = mittel(sterne('blitz')) / 3 * 100
+  // Rechnen: Lektionen und Mathe-Spiele; die anderen Bereiche aus den Spielen ihrer Kategorie
+  const rechnen = mittel([lektionen, spiel(spieleIn('rechnen'))].filter((x) => x > 0))
   return {
     gesamt: p.perlen,
     rechnen: Math.round(rechnen),
-    tempo: Math.round(mittel([blitz, spiel(SPIELE.tempo!)].filter((x) => x > 0))),
-    konzentration: Math.round(spiel(SPIELE.konzentration!)),
-    aufmerksamkeit: Math.round(spiel(SPIELE.aufmerksamkeit!)),
-    gedaechtnis: Math.round(spiel(SPIELE.gedaechtnis!)),
+    tempo: Math.round(mittel([blitz, spiel(spieleIn('tempo'))].filter((x) => x > 0))),
+    konzentration: Math.round(spiel(spieleIn('konzentration'))),
+    aufmerksamkeit: Math.round(spiel(spieleIn('aufmerksamkeit'))),
+    gedaechtnis: Math.round(spiel(spieleIn('gedaechtnis'))),
   }
 }
 

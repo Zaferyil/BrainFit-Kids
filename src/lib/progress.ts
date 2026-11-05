@@ -1,7 +1,7 @@
 import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
 import { addDaily, aktivitaet } from './daily'
-import { findGame } from '../games/registry'
+import { findGame, kategorieVon } from '../games/registry'
 import { unitVideos } from '../data/videos'
 import { ALLES_OFFEN } from './testmodus'
 import { buchAuftrag } from '../data/buch'
@@ -140,7 +140,7 @@ export function rewardGame(kidId: string, perlen: number, spiel?: string) {
   while (xp >= 100) { xp -= 100; level += 1 }
   saveProgress(kidId, { ...p, perlen: p.perlen + perlen, xp, level })
   addDaily(kidId, { games: 1, minutes: 2 })
-  if (spiel) aktivitaet(kidId, spiel.startsWith('anzan') ? 'rechnen' : findGame(spiel)?.area ?? 'rechnen', perlen > 0 ? 1 : 0, 1)
+  if (spiel) aktivitaet(kidId, spiel.startsWith('anzan') ? 'rechnen' : (findGame(spiel) ? kategorieVon(spiel) : 'rechnen'), perlen > 0 ? 1 : 0, 1)
   if (spiel && perlen > 0) spielBelohnung(kidId, spiel)
   if (level > p.level) levelAufstieg(level)
 }
