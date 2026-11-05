@@ -1,3 +1,5 @@
+import { SpiegelPerlen } from '../games/SpiegelPerlen'
+import { RegelWechsel } from '../games/RegelWechsel'
 import { ZahlenBlasen } from '../games/ZahlenBlasen'
 import { PerlenSortieren } from '../games/PerlenSortieren'
 import { useEffect, useState } from 'react'
@@ -41,6 +43,8 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   bildermerken: BilderMerken,
   sortieren: PerlenSortieren,
   blasen: ZahlenBlasen,
+  spiegel: SpiegelPerlen,
+  regel: RegelWechsel,
 }
 
 

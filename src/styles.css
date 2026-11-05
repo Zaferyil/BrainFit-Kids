@@ -2871,3 +2871,31 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 @keyframes blasen-rot { 0%, 100% { background: linear-gradient(180deg, #1B3A6B, #0E2347); } 40% { background: linear-gradient(180deg, #7A1630, #4A0B1C); transform: translateX(-5px); } 70% { transform: translateX(5px); } }
 .blase.gewaehlt { animation: blase-puls .7s ease-in-out infinite alternate; }
 @keyframes blase-puls { to { transform: scale(1.18); } }
+/* Spiegel-Perlen */
+.game-spiegel { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.spiegel-feld { position: relative; display: grid; gap: 6px; padding: 10px; border-radius: 22px; background: rgba(255,255,255,.1); }
+.spiegel-zelle { border: 0; border-radius: 14px; background: rgba(255,255,255,.85); display: grid; place-items: center; cursor: pointer; padding: 0; transition: transform .1s; }
+.spiegel-zelle:active { transform: scale(.94); }
+.spiegel-zelle.vorlage { background: #EFEBFF; cursor: default; }
+.spiegel-zelle.fehlt { box-shadow: 0 0 0 4px #FF4D6D inset; }
+.spiegel-achse { position: absolute; top: 4px; bottom: 4px; left: 50%; width: 6px; margin-left: -3px; border-radius: 4px; background: repeating-linear-gradient(#FFC531 0 10px, transparent 10px 16px); }
+.spiegel-achse.waagrecht { top: 50%; bottom: auto; left: 4px; right: 4px; width: auto; height: 6px; margin: -3px 0 0; background: repeating-linear-gradient(90deg, #FFC531 0 10px, transparent 10px 16px); }
+.spiegel-feld.ok { box-shadow: 0 0 0 5px #3DBE5B, 0 0 30px #3DBE5B; animation: blase-puls .3s 2 alternate; }
+.spiegel-feld.falsch { box-shadow: 0 0 0 5px #FF4D6D; animation: sort-wackel .35s; }
+.spiegel-unten { display: flex; align-items: center; gap: 12px; }
+.spiegel-farbe { border: 0; background: rgba(255,255,255,.2); border-radius: 16px; padding: 8px; cursor: pointer; }
+.spiegel-farbe.an { background: #fff; box-shadow: 0 0 0 4px #FFC531; }
+/* Regel-Wechsel */
+.game-regel { display: flex; flex-direction: column; align-items: center; gap: 18px; width: 380px; }
+.regel-schild { font: 800 34px 'Baloo 2', sans-serif; padding: 8px 30px; border-radius: 999px; color: #231A4F; }
+.regel-schild.farbe { background: linear-gradient(90deg, #FF4D6D, #FFC531, #3DBE5B, #3BA7FF); color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.3); }
+.regel-schild.form { background: #fff; }
+.regel-schild.neu { animation: blasen-ziel-neu .7s; }
+.regel-karte { width: 190px; height: 190px; border-radius: 28px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 0 #C9C0EE; }
+.regel-karte.ok { box-shadow: 0 0 0 6px #3DBE5B, 0 10px 0 #C9C0EE; }
+.regel-karte.falsch { box-shadow: 0 0 0 6px #FF4D6D, 0 10px 0 #C9C0EE; animation: sort-wackel .35s; }
+.regel-ziele { display: flex; gap: 24px; }
+.regel-ziel { width: 150px; height: 150px; border: 0; border-radius: 24px; background: rgba(255,255,255,.9); display: grid; place-items: center; cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,.2); }
+.regel-ziel.ok { background: #DFF7E9; transform: scale(1.06); }
+.regel-ziel.falsch { background: #FFE3E8; animation: sort-wackel .35s; }
+.regel-tipp { background: #FF4D6D; color: #fff; font: 800 22px Nunito, sans-serif; padding: 6px 18px; border-radius: 999px; }

@@ -341,5 +341,9 @@
  "Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!": "s-intro-bildermerken.mp3",
  "Von oben fallen Zahlen-Blasen. Tippe zwei Blasen an, die zusammen die Zielzahl ergeben – dann platzen sie. Nach jedem Paar gibt es ein neues Ziel. Sei schnell, bevor die Blasen oben ankommen!": "s-blasen-erkl.mp3",
  "Tippe zwei Blasen, die zusammen die Zielzahl ergeben – schnell, bevor sie oben ankommen!": "s-blasen-intro.mp3",
- "Oh, die Blasen sind oben angekommen!": "s-blasen-oben.mp3"
+ "Oh, die Blasen sind oben angekommen!": "s-blasen-oben.mp3",
+ "Lege auf der anderen Seite das Spiegelbild. Tippe die Felder an!": "s-spiegel-intro.mp3",
+ "Schau auf die Regel: nach Farbe oder nach Form? Tippe die passende Karte!": "s-regel-intro.mp3",
+ "Oben steht die Regel. Bei Farbe tippst du die Karte mit der gleichen Farbe, bei Form die mit der gleichen Form. Pass auf – die Regel wechselt!": "s-regel-erkl.mp3",
+ "Schau, so sieht das Spiegelbild aus.": "s-spiegel-falsch.mp3"
 }

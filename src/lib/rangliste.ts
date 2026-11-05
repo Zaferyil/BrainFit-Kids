@@ -48,8 +48,8 @@ export function echteWerte(kid: Kid): Record<Bereich, number> {
     gesamt: p.perlen,
     rechnen: Math.round(rechnen),
     tempo: Math.round(mittel([blitz, spiel(spieleIn('tempo'))].filter((x) => x > 0))),
-    konzentration: Math.round(spiel(spieleIn('konzentration'))),
-    aufmerksamkeit: Math.round(spiel(spieleIn('aufmerksamkeit'))),
+    konzentration: Math.round(spiel([...spieleIn('konzentration'), ...spieleIn('flex')])),
+    aufmerksamkeit: Math.round(spiel([...spieleIn('aufmerksamkeit'), ...spieleIn('raum')])),
     gedaechtnis: Math.round(spiel(spieleIn('gedaechtnis'))),
   }
 }

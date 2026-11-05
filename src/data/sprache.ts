@@ -82,6 +82,7 @@ export function sayDescribe(n: number): string[] {
 // Texte anderer Bildschirme, die ebenfalls vorgelesen werden
 /** längere Erklärung, die beim ersten Öffnen eines Spiels gesprochen wird (sonst GAME_INTRO) */
 export const GAME_ERKLAERUNG: Record<string, string> = {
+  regel: 'Oben steht die Regel. Bei Farbe tippst du die Karte mit der gleichen Farbe, bei Form die mit der gleichen Form. Pass auf – die Regel wechselt!',
   blasen: 'Von oben fallen Zahlen-Blasen. Tippe zwei Blasen an, die zusammen die Zielzahl ergeben – dann platzen sie. Nach jedem Paar gibt es ein neues Ziel. Sei schnell, bevor die Blasen oben ankommen!',
   sortieren: 'Tippe zuerst eine Stange an und dann eine andere. Die oberste Perle springt hinüber – aber nur auf eine leere Stange oder auf die gleiche Farbe. Am Ende hat jede Stange nur eine Farbe!',
 }
@@ -99,6 +100,8 @@ export const GAME_INTRO: Record<string, string> = {
   sorobankarten: 'Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!',
   bildermerken: 'Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!',
   blasen: 'Tippe zwei Blasen, die zusammen die Zielzahl ergeben – schnell, bevor sie oben ankommen!',
+  spiegel: 'Lege auf der anderen Seite das Spiegelbild. Tippe die Felder an!',
+  regel: 'Schau auf die Regel: nach Farbe oder nach Form? Tippe die passende Karte!',
   sortieren: 'Sortiere die Perlen! Auf jede Stange darf am Ende nur eine Farbe.',
 }
 
