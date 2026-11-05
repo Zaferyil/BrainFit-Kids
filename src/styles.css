@@ -2961,3 +2961,7 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .pk-g em { font-style: normal; font-size: 11px; font-weight: 900; background: #FFC531; color: #231A4F; border-radius: 10px; padding: 2px 7px; }
 .pk-g.bestanden em { background: #3DBE5B; color: #fff; }
 a.pk-g { text-decoration: none; color: inherit; }
+.az-modus { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.az-modus button { display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; font: inherit; font-weight: 900; padding: 12px; border-radius: 14px; background: rgba(255,255,255,.9); color: #2B2257; box-shadow: 0 4px 0 rgba(0,0,0,.18); cursor: pointer; }
+.az-modus button.an { background: linear-gradient(#FFE14D, #FFB800); box-shadow: 0 4px 0 #C98A00; }
+.az-hoer { display: flex; flex-direction: column; align-items: center; gap: 6px; animation: blase-puls .35s 2 alternate; color: #5B47D6; font-weight: 900; }

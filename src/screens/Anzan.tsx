@@ -34,7 +34,8 @@ type Phase = 'wahl' | 'zeigen' | 'tippen' | 'fertig'
 
 export function Anzan({ kid }: { kid: Kid }) {
   const key = `bfk.anzan.${kid.id}`
-  const [stand, setStand] = useState(() => load<{ level: number; tempo: number; frei: number; tempoFrei?: number }>(key, { level: 1, tempo: 0, frei: 1, tempoFrei: 2 }))
+  const [stand, setStand] = useState(() => load<{ level: number; tempo: number; frei: number; tempoFrei?: number; hoeren?: boolean }>(key, { level: 1, tempo: 0, frei: 1, tempoFrei: 2 }))
+  const hoeren = !!stand.hoeren
   const tempoFrei = Math.max(stand.tempoFrei ?? 2, Math.min(stand.tempo, TEMPO.length - 1))
   const [neuesTempo, setNeuesTempo] = useState(false)
   const [phase, setPhase] = useState<Phase>('wahl')
@@ -50,15 +51,17 @@ export function Anzan({ kid }: { kid: Kid }) {
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const a = aufgaben[nr]
-  const ms = TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
+  // Hör-Rechnen: die Stimme braucht etwas Zeit pro Zahl
+  const ms = Math.max(TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms, hoeren ? 1300 : 0)
 
   // Zahlen nacheinander zeigen
   useEffect(() => {
     if (phase !== 'zeigen' || !a) return
     if (schritt >= a.numbers.length) { timer.current = window.setTimeout(() => { setPhase('tippen'); void speak(SAY.ergebnisEintippen) }, 200); return }
+    if (hoeren && schritt >= 0) { const z = a.numbers[schritt]; void speak(schritt === 0 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]) }
     timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? 1100 : ms)
     return () => window.clearTimeout(timer.current)
-  }, [phase, schritt, a, ms])
+  }, [phase, schritt, a, ms, hoeren])
 
   const starten = () => {
     const qs = LEVELS[stand.level - 1].questions
@@ -124,6 +127,13 @@ export function Anzan({ kid }: { kid: Kid }) {
               </div>
             </div>
             <div className="az-gruppe">
+              <h2>Modus</h2>
+              <div className="az-modus">
+                <button type="button" className={!hoeren ? 'an' : ''} onClick={() => setStand((s) => ({ ...s, hoeren: false }))}><Icon name="bolt" size={20} color="currentColor" /> Sehen</button>
+                <button type="button" className={hoeren ? 'an' : ''} onClick={() => setStand((s) => ({ ...s, hoeren: true }))}><Icon name="volume" size={20} color="currentColor" /> Hören</button>
+              </div>
+            </div>
+            <div className="az-gruppe">
               <h2>Tempo</h2>
               <div className="az-tempo">
                 {TEMPO.map((t, i) => {
@@ -141,7 +151,9 @@ export function Anzan({ kid }: { kid: Kid }) {
           <section className="az-spiel">
             <div className="az-info"><span>Level {stand.level}</span><span>Aufgabe {nr + 1} / {RUNDE}</span></div>
             <div className={`az-tafel ${ergebnis ?? ''}`}>
-              {phase === 'zeigen'
+              {phase === 'zeigen' && hoeren && schritt >= 0 && zahl !== null
+                ? <span key={schritt} className="az-hoer"><Icon name="volume" size={90} color="#5B47D6" /><small>Zahl {schritt + 1}</small></span>
+                : phase === 'zeigen'
                 ? (zahl !== null
                   ? <b key={schritt} className="az-zahl" style={{ color: FARBEN[schritt % FARBEN.length] }}>{schritt > 0 && zahl > 0 ? '+' : ''}{zahl}</b>
                   : <span className="az-bereit">{schritt < 0 ? 'Bereit?' : ''}</span>)
