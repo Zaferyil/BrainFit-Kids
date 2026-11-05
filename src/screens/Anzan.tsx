@@ -51,7 +51,6 @@ export function Anzan({ kid }: { kid: Kid }) {
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const a = aufgaben[nr]
-  // Hör-Rechnen: die Stimme braucht etwas Zeit pro Zahl
   const ms = TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
 
   // Zahlen nacheinander zeigen
@@ -62,8 +61,8 @@ export function Anzan({ kid }: { kid: Kid }) {
     if (hoeren && schritt >= 0) {
       let aus = false
       const z = a.numbers[schritt]
-      void speak(schritt === 0 ? String(z) : z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]).then(() => {
-        if (!aus) timer.current = window.setTimeout(() => setSchritt((s) => s + 1), Math.max(200, ms - 900))
+      void speak(z < 0 ? [SAY.minus, String(-z)] : [SAY.plus, String(z)]).then(() => {
+        if (!aus) timer.current = window.setTimeout(() => setSchritt((s) => s + 1), Math.max(550, ms - 700))
       })
       return () => { aus = true; window.clearTimeout(timer.current) }
     }
@@ -163,7 +162,7 @@ export function Anzan({ kid }: { kid: Kid }) {
                 ? <span key={schritt} className="az-hoer"><Icon name="volume" size={90} color="#5B47D6" /><small>Zahl {schritt + 1}</small></span>
                 : phase === 'zeigen'
                 ? (zahl !== null
-                  ? <b key={schritt} className="az-zahl" style={{ color: FARBEN[schritt % FARBEN.length] }}>{schritt > 0 && zahl > 0 ? '+' : ''}{zahl}</b>
+                  ? <b key={schritt} className="az-zahl" style={{ color: FARBEN[schritt % FARBEN.length] }}>{zahl > 0 ? '+' : ''}{zahl}</b>
                   : (schritt < 0
                     ? <span key={`uhr-${nr}`} className="az-uhr" aria-label="Gleich geht's los"><i /><b>Los!</b></span>
                     : <span className="az-bereit" />))
