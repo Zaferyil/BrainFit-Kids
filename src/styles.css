@@ -2945,3 +2945,19 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .az-tempo button small { font-size: 11px; opacity: .7; }
 .az-tempo button:disabled { opacity: .5; cursor: default; }
 .az-neu { color: #FFE58A; font-weight: 900; }
+/* Gürtel-Prüfung */
+.pr { position: relative; z-index: 1; width: min(100%, 460px); margin: 0 auto; padding: 20px 16px 40px; display: flex; flex-direction: column; gap: 16px; }
+.pr-zurueck { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.18); }
+.pr-box { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; color: #fff; padding: 24px 18px; border-radius: 28px; background: rgba(255,255,255,.14); border: 2px solid rgba(255,255,255,.25); }
+.pr-box h1 { font-family: var(--font-display); font-size: 30px; margin: 0; }
+.pr-box p { margin: 0; font-weight: 700; }
+.pr-guertel { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 6px 0 rgba(0,0,0,.2); }
+.pr-regeln { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-weight: 800; font-size: 18px; }
+.pr-frueher { color: #FFE58A; }
+.pr-spiel { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.pr-aufgabe { font-family: var(--font-display); font-size: 44px; color: #2B2257; }
+.pr-knapp { color: #FFE58A; animation: blase-puls .5s infinite alternate; }
+.pr-urkunde { width: 100%; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+.pk-g em { font-style: normal; font-size: 11px; font-weight: 900; background: #FFC531; color: #231A4F; border-radius: 10px; padding: 2px 7px; }
+.pk-g.bestanden em { background: #3DBE5B; color: #fff; }
+a.pk-g { text-decoration: none; color: inherit; }

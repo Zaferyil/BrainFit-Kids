@@ -6,7 +6,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 ## 1. Kern der Mentalen Arithmetik (höchste Priorität)
 - [x] 1.1 Abakus ausblenden – Übergang vom echten zum Kopf-Abakus (voll → blass → nur Rahmen → kein Abakus), automatisch nach Stufe (Station „Kopfrechnen“, src/lib/kopfAbakus.ts: 2× fehlerfrei → weiter, 3+ Fehler → zurück)
 - [x] 1.2 Flash-Anzan-Modus – Zahlen blitzen nacheinander auf, Kind nennt die Summe; Tempo (1,5 s → 0,3 s) und Stellenzahl einstellbar (Seite „Anzan“: 96 Level + 5 Tempi, schnelleres Tempo öffnet sich bei 5/5)
-- [ ] 1.3 Gürtel-Prüfung + Urkunde – offizielle Prüfung mit Zeitlimit pro Gürtel, bei Bestehen PDF-Urkunde zum Teilen
+- [x] 1.3 Gürtel-Prüfung + Urkunde – offizielle Prüfung mit Zeitlimit pro Gürtel, bei Bestehen PDF-Urkunde zum Teilen (#/pruefung/<welt> über Pokale → Gürtel; 10 Aufgaben, 4 min, 8 richtig; Urkunde als PNG – PDF-Variante noch offen)
 - [ ] 1.4 Hör-Rechnen – Zahlen werden vorgelesen (Lisa-Stimme), Kind rechnet nur nach Gehör
 - [ ] 1.5 Formel-Training – gezielte Mini-Übungen für Kleine Freunde (5er) und Große Freunde (10er), z. B. „+4 = +5 −1"
 

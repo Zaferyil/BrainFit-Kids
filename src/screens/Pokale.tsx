@@ -11,6 +11,7 @@ import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { load } from '../lib/storage'
 import { Funkeln } from './Anmelden'
+import { pruefungen } from '../lib/pruefung'
 import { RanglisteInhalt } from './Rangliste'
 
 // Pokale: Tagesaufgaben und die Gürtel der Welten. Ich: Profil des Kindes mit Abmelden.
@@ -51,13 +52,16 @@ export function Pokale({ kid, progress }: { kid: Kid; progress: Progress }) {
           <div className="pk-guertel">
             {WORLDS.map((w) => {
               const has = w.n < progress.world
+              const ok = pruefungen(kid.id)[w.n]
+              const Tag = has ? 'a' : 'div'
               return (
-                <div key={w.n} className={has ? 'pk-g' : 'pk-g zu'}>
+                <Tag key={w.n} {...(has ? { href: `#/pruefung/${w.n}` } : {})} className={has ? `pk-g${ok ? ' bestanden' : ' pruef'}` : 'pk-g zu'}>
                   <span style={{ background: has ? w.color : undefined, color: w.ink }}>
                     {has ? <Icon name="medal" color={w.ink} size={26} /> : <Icon name="lock" color="#FFFFFF" size={20} />}
                   </span>
                   <small>{w.belt === 'orangen' ? 'orange' : w.belt.replace(/en$/, '')}</small>
-                </div>
+                  {has && <em>{ok ? '📜 Urkunde' : 'Prüfung'}</em>}
+                </Tag>
               )
             })}
           </div>
