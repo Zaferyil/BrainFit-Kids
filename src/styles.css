@@ -2761,3 +2761,28 @@ html, body { overflow-x: clip; overscroll-behavior-x: none; }
 .dp-karte.bald { background: rgba(255,255,255,.18); color: #fff; box-shadow: none; }
 .dp-karte.bald .dp-karte-bild { background: rgba(255,255,255,.15); }
 .dp-karte.bald .dp-karte-text { color: rgba(255,255,255,.8); }
+.dp-kat-wert { white-space: nowrap; }
+.dp-karte { color: inherit; }
+.dp-karte .dp-karte-bild { background: rgba(255,255,255,.55); box-shadow: inset 0 -4px 0 rgba(0,0,0,.08); overflow: hidden; }
+.dp-karte .dp-karte-text { color: inherit; opacity: .8; }
+.dp-karte .dp-karte-stufe i { background: rgba(255,255,255,.45); }
+.dp-karte .dp-karte-stufe em { background: currentColor; opacity: .85; }
+/* Vorschaubilder der Spiele */
+.sb { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.sb-abakus > div, .sb-abakus > span:not(.sb-blitz) { transform: scale(.92); }
+.sb-zeichen { font: 800 36px/1 'Baloo 2', sans-serif; color: #231A4F; margin-left: 2px; }
+.sb-zeichen.klein { font-size: 28px; }
+.sb-blitz { position: absolute; right: 12%; top: 8%; font-size: 26px; }
+.sb-frei > span { position: absolute; }
+.sb-kette { gap: 0; }
+.sb-kette { gap: 2px; }
+.sb-karten { gap: 0; }
+.sb-karte { width: 44px; height: 58px; border-radius: 10px; display: grid; place-items: center; font-size: 26px; box-shadow: 0 4px 8px rgba(0,0,0,.2); margin: 0 -4px; }
+.sb-frage { font: 800 30px 'Baloo 2', sans-serif; color: #fff; }
+.sb-frage.dunkel { color: #231A4F; margin-left: 4px; }
+.sb-zahlen b { width: 36px; height: 46px; border-radius: 10px; background: #231A4F; color: #FFC531; display: grid; place-items: center; font: 800 30px 'Baloo 2', sans-serif; }
+.sb-jagd { flex-direction: column; gap: 2px; }
+.sb-reihe { display: flex; gap: 2px; }
+.sb-lupe { position: absolute; right: 8%; bottom: 6%; }
+.sb-farbwort { flex-direction: column; gap: 0; }
+.sb-farbwort b { font: 800 30px/1 'Baloo 2', sans-serif; text-shadow: 0 2px 0 rgba(0,0,0,.12); }

@@ -9,6 +9,18 @@ import { echteWerte } from '../lib/rangliste'
 import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { Funkeln } from './Anmelden'
+import { SpielBild } from '../components/SpielBild'
+
+// kräftige Farben je Kategorie (wie die früheren Kacheln): Verlauf, Rand-Schatten, Schrift
+const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
+  rechnen: { bg: 'radial-gradient(circle at 30% 20%, #FFE58A, #FFC531 60%, #F2A900)', rand: '#C98A00', ink: '#2B2257' },
+  tempo: { bg: 'radial-gradient(circle at 30% 20%, #A8F0B8, #2ECC8F 60%, #1F9E6C)', rand: '#167A53', ink: '#0E3D28' },
+  gedaechtnis: { bg: 'radial-gradient(circle at 30% 20%, #FFD0E4, #FF4F9A 60%, #C21F6A)', rand: '#8E1450', ink: '#FFFFFF' },
+  konzentration: { bg: 'radial-gradient(circle at 30% 20%, #FFD2A8, #FF8A1F 60%, #E0600A)', rand: '#A84500', ink: '#2B1200' },
+  aufmerksamkeit: { bg: 'radial-gradient(circle at 30% 20%, #CDE8FF, #3BA7FF 60%, #1C7FD6)', rand: '#145FA3', ink: '#08294A' },
+  raum: { bg: 'radial-gradient(circle at 30% 20%, #D9F7FF, #2CC5E8 60%, #1495B5)', rand: '#0E6F87', ink: '#06303A' },
+  flex: { bg: 'radial-gradient(circle at 30% 20%, #E7D8FF, #A06BFF 60%, #7444D9)', rand: '#5230A6', ink: '#FFFFFF' },
+}
 
 // Denkspiele: oben das Spiel des Tages, darunter die Spiele nach Kategorien (= Bereiche im Lernbericht).
 
@@ -51,10 +63,11 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
           const offen = spiele.filter((g) => playable.includes(g))
           const bald = spiele.filter((g) => !playable.includes(g))
           const alle = alleOffen === kat.id
+          const f = FARBE[kat.id]
           return (
             <section key={kat.id} className="dp-kat">
               <header className="dp-kat-kopf">
-                <span className="dp-kat-icon" style={{ background: kat.color }}><Icon name={kat.icon} color="#231A4F" size={22} strokeWidth={2.5} /></span>
+                <span className="dp-kat-icon" style={{ background: f.bg, boxShadow: `0 4px 0 ${f.rand}` }}><Icon name={kat.icon} color={f.ink} size={22} strokeWidth={2.5} /></span>
                 <div><h2>{kat.name}</h2><small>{kat.text}</small></div>
                 {kat.bericht && offen.length > 0 && <span className="dp-kat-wert" title="Dein Wert in dieser Kategorie (0–100, fließt in den Lernbericht)">Wert {werte[kat.id as Exclude<Kategorie, 'raum' | 'flex'>] ?? 0}</span>}
                 {offen.length > 2 && <button type="button" className="dp-kat-alle" onClick={() => setAlleOffen(alle ? null : kat.id)}>{alle ? 'Weniger' : 'Alle ansehen'} ›</button>}
@@ -63,13 +76,11 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
                 {offen.map((g) => {
                   const st = getLevel(kid.id, g.id, tier)
                   return (
-                    <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte">
-                      <span className="dp-karte-bild" style={{ background: `radial-gradient(circle at 30% 20%, #FFFFFF66, ${kat.color} 70%)` }}>
-                        <Icon name={SYMBOL[g.id] ?? kat.icon} color="#231A4F" size={46} strokeWidth={2.2} />
-                      </span>
+                    <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte" style={{ background: f.bg, color: f.ink, boxShadow: `0 6px 0 ${f.rand}` }}>
+                      <span className="dp-karte-bild"><SpielBild id={g.id} fallback={SYMBOL[g.id] ?? kat.icon} /></span>
                       <strong>{g.name}</strong>
                       <span className="dp-karte-text">{g.text}</span>
-                      <span className="dp-karte-stufe"><b>Stufe {st}</b><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%`, background: kat.color }} /></i></span>
+                      <span className="dp-karte-stufe"><b>Stufe {st}</b><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%` }} /></i></span>
                     </a>
                   )
                 })}
