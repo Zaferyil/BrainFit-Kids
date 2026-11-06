@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { WORLDS } from '../data/curriculum'
 import { GAMES } from '../games/registry'
 import type { KidZeile } from '../lib/admin'
-import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, type Auftrag, type AuftragArt } from '../lib/auftraege'
+import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, fuerKind, type Auftrag, type AuftragArt } from '../lib/auftraege'
 import { arbeitsblattDrucken, type BlattArt } from '../lib/arbeitsblatt'
 import { istCloudKind } from '../lib/serverRpc'
 import { supabase } from '../lib/supabase'
@@ -40,6 +40,8 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
   const [faellig, setFaellig] = useState('')
   const [liste, setListe] = useState<Auftrag[]>([])
   const [meldung, setMeldung] = useState('')
+  const [auswahl, setAuswahl] = useState<string[]>([]) // leer = ganze Klasse
+  useEffect(() => setAuswahl([]), [klasse])
   const kinder = zeilen.filter((z) => z.klassenCode === klasse)
   const cloud = kinder.some((z) => istCloudKind(z.kid.id))
   const neuLaden = () => { if (klasse) void auftraegeLaden(klasse).then(setListe) }
@@ -47,7 +49,8 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
 
   const anlegen = async () => {
     setMeldung('')
-    const ziel = art === 'anzan' ? { anzahl, level } : art === 'spiel' ? { anzahl, spiel } : art === 'pruefung' ? { welt, anzahl: 1 } : { anzahl }
+    const basis = art === 'anzan' ? { anzahl, level } : art === 'spiel' ? { anzahl, spiel } : art === 'pruefung' ? { welt, anzahl: 1 } : { anzahl }
+    const ziel = auswahl.length ? { ...basis, kinder: auswahl } : basis
     try { await auftragAnlegen({ klasse, art, ziel, faellig: faellig || null }, cloud); setMeldung('✓ Hausaufgabe gespeichert'); neuLaden() }
     catch (e) { setMeldung(`Fehler: ${(e as Error).message}. Ist supabase/update-16-auftraege.sql schon eingespielt?`) }
   }
@@ -76,6 +79,17 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
           <label>Bis (optional)<input type="date" value={faellig} onChange={(e) => setFaellig(e.target.value)} /></label>
           <button type="button" className="adm-btn primary" disabled={!klasse} onClick={() => void anlegen()}>Hausaufgabe geben</button>
         </div>
+        {kinder.length > 0 && (
+          <div className="adm-fuer">
+            <span>Für:</span>
+            <label className={!auswahl.length ? 'an' : ''}><input type="checkbox" checked={!auswahl.length} onChange={() => setAuswahl([])} /> Ganze Klasse</label>
+            {kinder.map((z) => (
+              <label key={z.kid.id} className={auswahl.includes(z.kid.id) ? 'an' : ''}>
+                <input type="checkbox" checked={auswahl.includes(z.kid.id)} onChange={(e) => setAuswahl(e.target.checked ? [...auswahl, z.kid.id] : auswahl.filter((x) => x !== z.kid.id))} /> {z.kid.name}
+              </label>
+            ))}
+          </div>
+        )}
         {rolle === 'lehrkraft' && db?.length === 0 && <p className="adm-muted">Dir ist noch keine Klasse zugeteilt. Bitte beim Admin melden.</p>}
         {meldung && <p className="adm-muted">{meldung}</p>}
       </section>
@@ -85,15 +99,16 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
         {!liste.length && <p className="adm-muted">Noch keine Hausaufgaben.</p>}
         {liste.map((a) => {
           const n = a.ziel.anzahl ?? 1
-          const fertig = kinder.filter((z) => (auftragStand(z.kid.id)[a.id] ?? 0) >= n)
+          const fuer = kinder.filter((z) => fuerKind(a, z.kid.id))
+          const fertig = fuer.filter((z) => (auftragStand(z.kid.id)[a.id] ?? 0) >= n)
           return (
             <div key={a.id} className="adm-auftrag">
               <div className="adm-auftrag-kopf">
                 <strong>{a.titel}</strong>
-                <span className="adm-muted">{a.faellig ? `bis ${new Date(a.faellig).toLocaleDateString('de-AT')} · ` : ''}{fertig.length} von {kinder.length} erledigt</span>
+                <span className="adm-muted">{a.faellig ? `bis ${new Date(a.faellig).toLocaleDateString('de-AT')} · ` : ''}{a.ziel.kinder?.length ? `nur für ${fuer.map((z) => z.kid.name).join(', ')} · ` : 'ganze Klasse · '}{fertig.length} von {fuer.length} erledigt</span>
                 <button type="button" className="adm-btn klein" onClick={() => void auftragLoeschen(a).then(neuLaden)}>Löschen</button>
               </div>
-              <div className="adm-auftrag-kinder">{kinder.map((z) => {
+              <div className="adm-auftrag-kinder">{fuer.map((z) => {
                 const k = Math.min(n, auftragStand(z.kid.id)[a.id] ?? 0)
                 return <span key={z.kid.id} className={k >= n ? 'ok' : k ? 'teil' : ''}>{z.kid.name} {k >= n ? '✓' : `${k}/${n}`}</span>
               })}</div>

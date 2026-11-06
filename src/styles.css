@@ -3011,3 +3011,6 @@ html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .
 .adm-auftrag-kinder { display: flex; flex-wrap: wrap; gap: 6px; }
 .adm-auftrag-kinder span { padding: 4px 10px; border-radius: 999px; background: #F1EEFB; font-weight: 800; font-size: 13px; }
 .adm-auftrag-kinder span.ok { background: #DDF6E4; color: #1E7A3C; } .adm-auftrag-kinder span.teil { background: #FFF2CC; color: #8A5A00; }
+.adm-fuer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-weight: 800; font-size: 14px; }
+.adm-fuer label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--a-line); cursor: pointer; }
+.adm-fuer label.an { background: #EEEAFE; border-color: #5B47D6; color: #4B2FC2; }

@@ -9,7 +9,7 @@ import { supabase } from './supabase'
 // Datenbank-Tabelle „auftraege“ (supabase/update-16-auftraege.sql); ohne Datenbank (Beispiel-Klassen) auf diesem Gerät.
 
 export type AuftragArt = 'anzan' | 'spiel' | 'wiederholen' | 'pruefung'
-export type Auftrag = { id: string; klasse: string; art: AuftragArt; ziel: { anzahl?: number; level?: number; spiel?: string; welt?: number }; titel: string; faellig: string | null }
+export type Auftrag = { id: string; klasse: string; art: AuftragArt; ziel: { anzahl?: number; level?: number; spiel?: string; welt?: number; kinder?: string[] }; titel: string; faellig: string | null }
 
 const lokalKey = (klasse: string) => `bfk.auftraege.${klasse}`
 const standKey = (kid: string) => `bfk.auftragstand.${kid}`
@@ -51,19 +51,22 @@ export async function auftragLoeschen(a: Auftrag) {
   if (error) throw error
 }
 
+/** gilt der Auftrag für dieses Kind? (ohne Auswahl: ganze Klasse) */
+export const fuerKind = (a: Auftrag, kid: string) => !a.ziel.kinder?.length || a.ziel.kinder.includes(kid)
+
 // ---- Kind ----
 /** Aufträge der eigenen Klasse (Datenbank, sonst zuletzt bekannte bzw. lokale) */
 export async function meineAuftraege(kid: string): Promise<Auftrag[]> {
   const klasse = getSession()?.classCode
   if (!klasse) return []
   const lokal = load<Auftrag[]>(lokalKey(klasse), [])
-  if (!istCloudKind(kid)) return lokal
+  if (!istCloudKind(kid)) return lokal.filter((a) => fuerKind(a, kid))
   try {
     const { data, error } = await supabase.from('auftraege').select('id, klasse, art, ziel, titel, faellig').order('erstellt', { ascending: false })
     if (error) throw error
     save(cacheKey(kid), data)
-    return [...(data as Auftrag[]), ...lokal]
-  } catch { return [...load<Auftrag[]>(cacheKey(kid), []), ...lokal] }
+    return [...(data as Auftrag[]), ...lokal].filter((a) => fuerKind(a, kid))
+  } catch { return [...load<Auftrag[]>(cacheKey(kid), []), ...lokal].filter((a) => fuerKind(a, kid)) }
 }
 export const auftragStand = (kid: string) => load<Record<string, number>>(standKey(kid), {})
 export const erledigt = (kid: string, a: Auftrag) => (auftragStand(kid)[a.id] ?? 0) >= (a.ziel.anzahl ?? 1)
@@ -76,6 +79,7 @@ export function auftragMelden(kid: string, spiel: string) {
   const st = auftragStand(kid)
   let geaendert = false
   for (const a of alle) {
+    if (!fuerKind(a, kid)) continue
     const passt =
       (a.art === 'anzan' && /^anzan-(\d+)$/.test(spiel) && Number(spiel.slice(6)) >= (a.ziel.level ?? 1)) ||
       (a.art === 'spiel' && spiel === a.ziel.spiel) ||
