@@ -13,7 +13,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 ## 2. Nachhaltiges Lernen
 - [x] 2.1 Fehleranalyse + verteilte Wiederholung – Regeln, bei denen das Kind oft Fehler macht, nach einigen Tagen erneut üben (src/lib/lernspur.ts, #/wiederholen, Abstände 1/3/7/14 Tage, Knopf auf der Startseite)
 - [x] 2.2 Tempo- und Genauigkeitskurve im Bericht (z. B. Ø 4,2 s → 2,1 s pro Aufgabe) (Bericht-Karte „Tempo & Genauigkeit“ + „Noch üben“)
-- [ ] 2.3 Tägliches 5-Minuten-Training (Aufwärmen + Neues + Wiederholung)
+- [x] 2.3 Tägliches 5-Minuten-Training (Aufwärmen + Neues + Wiederholung) (#/training, grüner Knopf auf der Startseite, 10 Aufgaben, 1× täglich doppelte Perlen)
 
 ## 3. Motivation
 - [ ] 3.1 Wöchentliches Klassen-Turnier / Duell (gleiche Flash-Anzan-Aufgabe gleichzeitig)

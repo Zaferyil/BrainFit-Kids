@@ -3048,3 +3048,9 @@ label .pw-feld { margin-top: 4px; }
 .ich-eltern select { margin-left: 8px; padding: 6px; border-radius: 8px; font: inherit; }
 .zh-regel { margin: 4px 0; font-weight: 800; } .zh-regel b { color: #4B2FC2; font-size: 1.15em; }
 .zh-ideen { margin: 8px 0; padding-left: 20px; display: grid; gap: 8px; font-weight: 700; line-height: 1.4; }
+.zh-training { background: #3DBE5B; color: #fff; box-shadow: 0 4px 0 #23843C; }
+.zh-training.fertig { background: rgba(255,255,255,.85); color: #23843C; box-shadow: none; animation: none; }
+.tr-teile { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.tr-teile span { padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.18); color: #fff; font-weight: 900; font-size: 14px; }
+.tr-teile span.an { background: #FFC531; color: #231A4F; } .tr-teile span.fertig { opacity: .55; }
+.tr-abakus { width: 220px; height: 190px; }

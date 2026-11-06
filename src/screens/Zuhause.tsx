@@ -1,3 +1,4 @@
+import { trainingHeuteFertig } from './Training'
 import { HAUSAUFGABEN_AKTIV, erledigt, meineAuftraege } from '../lib/auftraege'
 import { faelligeRegeln } from '../lib/lernspur'
 import { konto } from '../lib/wirtschaft'
@@ -53,6 +54,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           <span className="zh-podest" />
         </div>
 
+        <a href="#/training" className={trainingHeuteFertig(kid.id) ? 'zh-wdh zh-training fertig' : 'zh-wdh zh-training'}>{trainingHeuteFertig(kid.id) ? '✓ Tages-Training geschafft' : '💪 Tages-Training · 5 Min'}</a>
         {offen > 0 && <a href="#/auftraege" className="zh-wdh zh-auftrag">📋 {offen} {offen === 1 ? 'Hausaufgabe' : 'Hausaufgaben'} von deiner Lehrkraft</a>}
         {faellig > 0 && <a href="#/wiederholen" className="zh-wdh">🔁 {faellig} {faellig === 1 ? 'Regel' : 'Regeln'} wiederholen</a>}
         <a href="#/inseln" className="zh-los" aria-label="Los geht’s – zur Karte">
