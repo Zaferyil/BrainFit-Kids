@@ -361,9 +361,19 @@ const bigFriendMinus = (k: number, a: number, say: string): UnitContent => ({
     { text: `Big Friends: ${k} und ${10 - k} sind 10.`, say, mood: 'happy', start: 0, goal: null },
     { text: `Stelle zuerst die ${a} ein.`, say: `Stell zuerst die ${ZAHLWORT[a]} ein.`, mood: 'happy', start: 0, goal: a },
     { text: 'Jetzt 10 weg: eine Perle bei den Zehnern runter.', say: 'Jetzt zehn weg: Eine Perle bei den Zehnern runter.', mood: 'think', start: a, goal: a - 10 },
-    { text: `Und ${10 - k} dazu: bei den Einern hoch.`, say: `Und jetzt ${ZAHLWORT[10 - k]} dazu: Bei den Einern hoch.`, mood: 'think', start: a - 10, goal: a - k },
+    // bis 4 dazu: Erdperlen hoch; ab 5 dazu: Himmelsperle runter (und Erdperlen hoch)
+    k > 5
+      ? { text: `Und ${10 - k} dazu: bei den Einern hoch.`, say: `Und jetzt ${ZAHLWORT[10 - k]} dazu: Bei den Einern hoch.`, mood: 'think', start: a - 10, goal: a - k }
+      : { text: `Und ${10 - k} dazu bei den Einern (Himmelsperle runter${10 - k > 5 ? ', Erdperlen hoch' : ''}).`, say: `Und jetzt ${ZAHLWORT[10 - k]} dazu bei den Einern.`, mood: 'think', start: a - 10, goal: a - k },
     { text: `Fertig! ${a} − ${k} = ${a - k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} minus ${ZAHLWORT[k]} ist ${ZAHLWORT[a - k]}.`, mood: 'cheer', start: a - k, goal: null },
   ],
 })
-UNITS['4-2'] = bigFriendMinus(8, 13, 'Acht und zwei sind zusammen zehn. Jetzt rechnen wir minus acht: zehn weg und zwei dazu!')
+UNITS['4-3'] = bigFriendMinus(7, 11, 'Sieben und drei sind zusammen zehn. Jetzt rechnen wir minus sieben: zehn weg und drei dazu!')
+UNITS['4-4'] = bigFriendMinus(6, 10, 'Sechs und vier sind zusammen zehn. Jetzt rechnen wir minus sechs: zehn weg und vier dazu!')
+UNITS['4-5'] = bigFriendMinus(5, 11, 'Fünf und fünf sind zusammen zehn. Jetzt rechnen wir minus fünf: zehn weg und fünf dazu!')
+UNITS['4-6'] = bigFriendMinus(4, 12, 'Vier und sechs sind zusammen zehn. Jetzt rechnen wir minus vier: zehn weg und sechs dazu!')
+UNITS['4-7'] = bigFriendMinus(3, 11, 'Drei und sieben sind zusammen zehn. Jetzt rechnen wir minus drei: zehn weg und sieben dazu!')
+UNITS['4-8'] = bigFriendMinus(2, 11, 'Zwei und acht sind zusammen zehn. Jetzt rechnen wir minus zwei: zehn weg und acht dazu!')
+UNITS['4-9'] = bigFriendMinus(1, 10, 'Eins und neun sind zusammen zehn. Jetzt rechnen wir minus eins: zehn weg und neun dazu!')
+UNITS['4-2'] = bigFriendMinus(8, 12, 'Acht und zwei sind zusammen zehn. Jetzt rechnen wir minus acht: zehn weg und zwei dazu!')
 UNITS['4-1'] = bigFriendMinus(9, 12, 'Neun und eins sind zusammen zehn. Jetzt rechnen wir minus neun: zehn weg und eins dazu!')
