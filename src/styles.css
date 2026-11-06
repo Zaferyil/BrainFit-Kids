@@ -3023,3 +3023,9 @@ html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .
 .pw-auge { position: absolute; right: 8px; top: 50%; translate: 0 -50%; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: #6B5FA8; display: grid; place-items: center; cursor: pointer; }
 .pw-auge:hover { background: rgba(91,71,214,.1); }
 label .pw-feld { margin-top: 4px; }
+/* Kiga-Buch */
+.kiga-seiten { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; margin: 10px 0; }
+.kiga-seiten figure { margin: 0; display: grid; gap: 4px; justify-items: center; }
+.kiga-seiten img { width: 100%; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,.18); background: #fff; }
+.kiga-seiten figcaption { font-weight: 900; color: #FF4D6D; }
+.kiga-thema { margin: 6px 0 0; font-weight: 900; font-size: 18px; color: #4B2FC2; text-align: center; }
