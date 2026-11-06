@@ -5,6 +5,7 @@ import { KLASSEN } from '../lib/klasse'
 import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
 import { benutzerVon, passwortVon } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
+import { klasseInDB } from '../lib/adminCloud'
 import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, stufeCloud } from '../lib/adminCloud'
 import { istCloudKind } from '../lib/serverRpc'
 import { AdminWebsite } from './AdminWebsite'
@@ -123,7 +124,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
         {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />{rolle === 'admin' && <AdminCheck />}</>}
         {tab === 'bestellungen' && <AdminBestellungen />}
-        {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
+        {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} rolle={rolle} dbKlassen={meine} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
         {tab === 'auftraege' && <AdminAuftraege zeilen={zeilen} rolle={rolle} />}
         {tab === 'lehrkraefte' && <AdminLehrkraefte />}
@@ -173,15 +174,16 @@ function Uebersicht({ zeilen, onKind }: { zeilen: KidZeile[]; onKind: () => void
   )
 }
 
-function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void }) {
+function Kinder({ zeilen, onChange, rolle, dbKlassen }: { zeilen: KidZeile[]; onChange: () => void; rolle: 'admin' | 'lehrkraft'; dbKlassen: string[] | null }) {
   const [offen, setOffen] = useState<string | null>(null)
   const [filter, setFilter] = useState('alle')
-  const codes = klassenCodes()
+  // Admin: alle Klassen; Lehrkraft: nur die vom Admin zugeteilten
+  const codes = rolle === 'admin' ? [...new Set([...klassenCodes(), ...(dbKlassen ?? [])])].sort() : dbKlassen ?? []
   const sichtbar = filter === 'alle' ? zeilen : zeilen.filter((z) => z.klassenCode === filter)
   const archiv = archivierteKinder()
   return (
     <>
-      <NeuesKind codes={codes} onChange={onChange} />
+      <NeuesKind codes={codes} onChange={onChange} rolle={rolle} />
       <section className="adm-card adm-tabelle-wrap">
         <div className="adm-card-head"><h2>Kinder</h2>
           <label className="adm-filter">Klasse
@@ -236,9 +238,10 @@ function Kinder({ zeilen, onChange }: { zeilen: KidZeile[]; onChange: () => void
   )
 }
 
-function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void }) {
+function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () => void; rolle: 'admin' | 'lehrkraft' }) {
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState(codes[0] ?? '')
+  useEffect(() => { if (!codes.includes(klasse)) setKlasse(codes[0] ?? '') }, [codes, klasse])
   const [neu, setNeu] = useState<{ name: string; benutzer: string; passwort: string } | null>(null)
   const [code, setCode] = useState('')
   const [meldung, setMeldung] = useState('')
@@ -251,10 +254,11 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
     } catch (x) { setMeldung(`Kind konnte nicht angelegt werden: ${(x as Error).message}`) }
     setLaeuft(false)
   }
-  const klasseNeu = (e: FormEvent) => {
+  const klasseNeu = async (e: FormEvent) => {
     e.preventDefault()
     const c = klasseAnlegen(code)
-    setMeldung(c ? `Klasse ${c} angelegt.` : 'Diesen Klassen-Code gibt es schon oder er ist leer.')
+    if (c) await klasseInDB(c)
+    setMeldung(c ? `Klasse ${c} angelegt. Lehrkraft zuteilen: Tab „Lehrkräfte“ → „Klassen“.` : 'Diesen Klassen-Code gibt es schon oder er ist leer.')
     if (c) { setCode(''); setKlasse(c); onChange() }
   }
   return (
@@ -275,7 +279,7 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
           </div>
         )}
       </form>
-      <form className="adm-neu-form" onSubmit={klasseNeu}>
+      {rolle === 'admin' ? <form className="adm-neu-form" onSubmit={(e) => void klasseNeu(e)}>
         <h2>Neue Klasse</h2>
         <p className="adm-muted">Mit diesem Code melden sich die Kinder an.</p>
         <div className="adm-neu-reihe">
@@ -283,7 +287,7 @@ function NeuesKind({ codes, onChange }: { codes: string[]; onChange: () => void 
           <button type="submit" className="adm-btn primary" disabled={!code.trim()}>Anlegen</button>
         </div>
         {meldung && <div className="adm-muted">{meldung}</div>}
-      </form>
+      </form> : <div className="adm-neu-form"><h2>Meine Klassen</h2><p className="adm-muted">{codes.length ? codes.join(', ') : 'Dir ist noch keine Klasse zugeteilt.'}</p><p className="adm-muted">Neue Klassen legt der Admin an und teilt sie dir zu.</p>{meldung && <div className="adm-muted">{meldung}</div>}</div>}
     </section>
   )
 }

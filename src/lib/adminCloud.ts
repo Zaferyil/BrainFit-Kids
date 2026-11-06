@@ -35,6 +35,9 @@ export async function alleKinderLaden() {
   return (data ?? []).length
 }
 
+/** Klasse in der Datenbank anlegen (nur Admin darf) */
+export const klasseInDB = (code: string) => klasseSichern(code).catch(() => null)
+
 async function klasseSichern(code: string) {
   if (!code || code === 'ONLINE') return null
   await supabase.from('klassen').upsert({ code }, { onConflict: 'code', ignoreDuplicates: true })
