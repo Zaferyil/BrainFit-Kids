@@ -242,7 +242,7 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState(codes[0] ?? '')
   useEffect(() => { if (!codes.includes(klasse)) setKlasse(codes[0] ?? '') }, [codes, klasse])
-  const [neu, setNeu] = useState<{ name: string; benutzer: string; passwort: string } | null>(null)
+  const [neu, setNeu] = useState<{ name: string; benutzer: string; passwort: string; klasse: string } | null>(null)
   const [code, setCode] = useState('')
   const [meldung, setMeldung] = useState('')
   const [laeuft, setLaeuft] = useState(false)
@@ -250,7 +250,7 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
     e.preventDefault(); setLaeuft(true); setMeldung('')
     try {
       const k = await kindAnlegenCloud(name.trim(), klasse)
-      setNeu({ name: name.trim(), benutzer: k.benutzer, passwort: k.passwort }); setName(''); onChange()
+      setNeu({ name: name.trim(), benutzer: k.benutzer, passwort: k.passwort, klasse }); setName(''); onChange()
     } catch (x) { setMeldung(`Kind konnte nicht angelegt werden: ${(x as Error).message}`) }
     setLaeuft(false)
   }
@@ -273,7 +273,7 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
         </div>
         {neu && (
           <div className="adm-erfolg">
-            <div><b>{neu.name}</b> ist angelegt. Bitte die Zugangsdaten notieren – das Passwort wird nur jetzt angezeigt.
+            <div><b>{neu.name}</b> ist in Klasse <b>{neu.klasse}</b> angelegt. Bitte die Zugangsdaten notieren – das Passwort wird nur jetzt angezeigt.
               <span className="adm-zugang">Benutzername: <b>{neu.benutzer}</b> · Passwort: <b>{neu.passwort}</b></span>
             </div>
           </div>
