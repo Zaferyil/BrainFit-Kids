@@ -1,3 +1,4 @@
+import { zuhauseTipp } from '../data/zuhause'
 import { schwierigeRegeln, verlauf as lernVerlauf } from '../lib/lernspur'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ALLE_LEKTIONEN } from '../lib/admin'
@@ -28,6 +29,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   useEffect(() => { void vergleichLaden(kid).then(setVgl) }, [kid])
 
   const p = getProgress(kid.id)
+  const zt = zuhauseTipp(p.world, p.unit)
   const v = verlauf(kid.id)
   const monat = v[v.length - 1]?.[1]
   const lektion = Math.max(0, ALLE_LEKTIONEN.findIndex((l) => l.world === p.world && l.unit === p.unit))
@@ -57,7 +59,7 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
   })
   const meist = [...teile].sort((a, b) => b.n - a.n)[0]
 
-  const karten = ['Überblick', 'Aktivität', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Tempo', 'Mein Jahr', 'Einschätzung']
+  const karten = ['Überblick', 'Zuhause', 'Aktivität', 'Fähigkeiten', 'Platzierung', 'Entwicklung', 'Tempo', 'Mein Jahr', 'Einschätzung']
   const zu = (i: number) => leiste.current?.children[i]?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
   const onScroll = () => { const el = leiste.current; if (el) setKarte(Math.round(el.scrollLeft / el.clientWidth)) }
 
@@ -110,6 +112,17 @@ export function Bericht({ kid, eltern, zurueck }: Props) {
             <div className="ber-lektion"><span>Lektion</span><b>{lektion + 1} <small>von {ALLE_LEKTIONEN.length}</small></b>
               <i><em style={{ width: `${(lektion / ALLE_LEKTIONEN.length) * 100}%` }} /></i></div>
             <p className="ber-zitat">„{(monat?.tage.length ?? 0) >= 12 ? `${du === 'Du' ? 'Du übst' : `${kid.name} übt`} richtig regelmäßig – super!` : 'Ein bisschen jeden Tag bringt am meisten: etwa 15 Minuten.'}“</p>
+          </div>
+        </section>
+
+        {/* 1b Zuhause üben: 5 Minuten pro Tag passend zur Lektion */}
+        <section className="ber-karte" style={{ ['--k' as string]: 'linear-gradient(135deg,#3DBE5B,#4FC3B4)' }}>
+          <h2>Zuhause üben · 5 Minuten</h2>
+          <div className="ber-weiss">
+            <h3>Diese Woche: {zt.thema}</h3>
+            {zt.regel && <p className="zh-regel">Regel der Woche: <b>{zt.regel}</b></p>}
+            <ol className="zh-ideen">{zt.ideen.map((x) => <li key={x}>{x}</li>)}</ol>
+            <p className="ber-zitat">„Lieber jeden Tag 5 Minuten als einmal pro Woche eine Stunde. Loben Sie die Anstrengung, nicht nur das Ergebnis.“</p>
           </div>
         </section>
 

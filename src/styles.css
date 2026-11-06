@@ -3046,3 +3046,5 @@ label .pw-feld { margin-top: 4px; }
 .ich-eltern-knopf { border: 2px dashed rgba(255,255,255,.6); background: transparent; color: #fff; font: inherit; font-weight: 900; padding: 10px 14px; border-radius: 16px; cursor: pointer; }
 .ich-eltern { display: grid; gap: 8px; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.18); color: #fff; font-weight: 800; }
 .ich-eltern select { margin-left: 8px; padding: 6px; border-radius: 8px; font: inherit; }
+.zh-regel { margin: 4px 0; font-weight: 800; } .zh-regel b { color: #4B2FC2; font-size: 1.15em; }
+.zh-ideen { margin: 8px 0; padding-left: 20px; display: grid; gap: 8px; font-weight: 700; line-height: 1.4; }
