@@ -242,6 +242,7 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState(codes[0] ?? '')
   useEffect(() => { if (!codes.includes(klasse)) setKlasse(codes[0] ?? '') }, [codes, klasse])
+  const [stufe, setStufeNeu] = useState(2)
   const [neu, setNeu] = useState<{ name: string; benutzer: string; passwort: string; klasse: string } | null>(null)
   const [code, setCode] = useState('')
   const [meldung, setMeldung] = useState('')
@@ -249,7 +250,8 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
   const hinzu = async (e: FormEvent) => {
     e.preventDefault(); setLaeuft(true); setMeldung('')
     try {
-      const k = await kindAnlegenCloud(name.trim(), klasse)
+      const k = await kindAnlegenCloud(name.trim(), klasse, stufe)
+      setStufe(k.id, stufe)
       setNeu({ name: name.trim(), benutzer: k.benutzer, passwort: k.passwort, klasse }); setName(''); onChange()
     } catch (x) { setMeldung(`Kind konnte nicht angelegt werden: ${(x as Error).message}`) }
     setLaeuft(false)
@@ -269,6 +271,7 @@ function NeuesKind({ codes, onChange, rolle }: { codes: string[]; onChange: () =
         <div className="adm-neu-reihe">
           <label>Vorname<input id="adm-vorname" value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Sara" autoComplete="off" maxLength={24} /></label>
           <label>Klasse<select id="adm-neu-klasse" value={klasse} onChange={(e) => setKlasse(e.target.value)}>{codes.map((c) => <option key={c} value={c}>{c}</option>)}</select></label>
+          <label>Schulstufe<select value={stufe} onChange={(e) => setStufeNeu(Number(e.target.value))}>{KLASSEN.map((k, i) => <option key={k.name} value={i}>{k.name}</option>)}</select></label>
           <button type="submit" className="adm-btn primary" disabled={laeuft || !name.trim()}>{laeuft ? 'Wird angelegt …' : 'Hinzufügen'}</button>
         </div>
         {neu && (
