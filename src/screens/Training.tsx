@@ -90,7 +90,7 @@ export function Training({ kid }: { kid: Kid }) {
         {!fertig && a && (
           <section className="pr-spiel">
             <div className="tr-teile">{(['Aufwärmen', 'Neu', 'Wiederholen'] as Teil[]).map((t) => <span key={t} className={t === a.teil ? 'an' : aufg.findIndex((x) => x.teil === t) < i ? 'fertig' : ''}>{t === 'Aufwärmen' ? '🔥' : t === 'Neu' ? '⭐' : '🔁'} {t}</span>)}</div>
-            <div className="az-info"><span>Tages-Training</span><span>{i + 1} / {aufg.length}</span></div>
+            <div className="az-info"><span>Aufwärm-Training</span><span>{i + 1} / {aufg.length}</span></div>
             {a.abakus && <Fit className="tr-abakus"><Abakus key={i} value={a.abakus.n} cols={a.abakus.cols} colw={80} interactive={false} /></Fit>}
             <div className={`az-tafel ${fb === 'ok' ? 'richtig' : fb === 'falsch' ? 'falsch' : ''}`}>
               <div className="pr-aufgabe" style={a.abakus ? { fontSize: 20 } : undefined}>{a.abakus ? a.text : `${a.text} =`}</div>
@@ -102,7 +102,7 @@ export function Training({ kid }: { kid: Kid }) {
         )}
         {fertig && (
           <section className="pr-box popin">
-            <h1>Training geschafft! 💪</h1>
+            <h1>Aufwärm-Training geschafft! 🔥</h1>
             <p>{richtig} von {aufg.length} richtig · +{schonHeute ? richtig : richtig * 2} Perlen</p>
             <p>Jeden Tag ein bisschen – so wird dein Kopf-Abakus immer schneller.</p>
             <a href="#/karte" className="az-start">Fertig</a>
