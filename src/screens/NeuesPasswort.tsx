@@ -1,3 +1,4 @@
+import { PasswortFeld } from '../components/PasswortFeld'
 import { useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
 
@@ -35,8 +36,8 @@ export function NeuesPasswort({ onFertig }: { onFertig: () => void }) {
         ) : (
           <>
             <p>Bitte wählen Sie ein neues Passwort (mindestens 8 Zeichen).</p>
-            <input type="password" autoFocus value={pw} onChange={(e) => { setPw(e.target.value); setMeldung('') }} placeholder="Neues Passwort" aria-label="Neues Passwort" autoComplete="new-password" />
-            <input type="password" value={pw2} onChange={(e) => { setPw2(e.target.value); setMeldung('') }} placeholder="Nochmal eingeben" aria-label="Passwort wiederholen" autoComplete="new-password" />
+            <PasswortFeld autoFocus value={pw} onChange={(e) => { setPw(e.target.value); setMeldung('') }} placeholder="Neues Passwort" aria-label="Neues Passwort" autoComplete="new-password" />
+            <PasswortFeld value={pw2} onChange={(e) => { setPw2(e.target.value); setMeldung('') }} placeholder="Nochmal eingeben" aria-label="Passwort wiederholen" autoComplete="new-password" />
             {meldung && <div className="adm-fehler">{meldung}</div>}
             <button type="submit" className="adm-btn primary">Speichern</button>
           </>

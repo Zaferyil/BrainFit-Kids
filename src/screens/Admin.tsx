@@ -1,3 +1,4 @@
+import { PasswortFeld } from '../components/PasswortFeld'
 import { Fragment, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
@@ -77,7 +78,7 @@ function AdminLogin({ onOk }: { onOk: () => void }) {
         <h1>Lehrkraft &amp; Admin</h1>
         <p>Mit E-Mail und Passwort anmelden.</p>
         <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} aria-label="E-Mail" placeholder="E-Mail" autoComplete="username" />
-        <input type="password" value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} aria-label="Passwort" placeholder="Passwort" autoComplete="current-password" />
+        <PasswortFeld value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} aria-label="Passwort" placeholder="Passwort" autoComplete="current-password" />
         {fehler && <div className="adm-fehler">{fehler}</div>}
         <button type="submit" className="adm-btn primary" disabled={laeuft || !mail || !pw}>{laeuft ? 'Anmelden …' : 'Anmelden'}</button>
         <a href="../index.html" className="adm-link">Zurück zur Website</a>

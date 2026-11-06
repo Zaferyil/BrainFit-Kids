@@ -3017,3 +3017,9 @@ html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .
 .af-blatt { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
 .af-los { border: 0; font: inherit; cursor: pointer; }
 .af-fertig { border: 0; font: inherit; font-weight: 900; padding: 8px 12px; border-radius: 14px; background: #3DBE5B; color: #fff; cursor: pointer; }
+/* Passwort mit Auge */
+.pw-feld { position: relative; display: block; width: 100%; }
+.pw-feld > input { width: 100%; box-sizing: border-box; padding-right: 52px !important; }
+.pw-auge { position: absolute; right: 8px; top: 50%; translate: 0 -50%; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: #6B5FA8; display: grid; place-items: center; cursor: pointer; }
+.pw-auge:hover { background: rgba(91,71,214,.1); }
+label .pw-feld { margin-top: 4px; }

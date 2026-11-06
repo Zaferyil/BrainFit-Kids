@@ -1,3 +1,4 @@
+import { PasswortFeld } from '../components/PasswortFeld'
 import { SeZa } from '../components/SeZa'
 import { cloudLogin } from '../lib/cloud'
 import { START_KOSTUEME } from '../data/seza'
@@ -127,7 +128,7 @@ function LoginForm({ onLogin }: { onLogin: (c: SchoolClass, k: Kid) => void }) {
         <input id="login-name" className={error ? 'error' : ''} value={benutzer} onChange={(e) => { setBenutzer(e.target.value); setError(false) }}
           placeholder="Benutzername" autoComplete="username" autoCapitalize="none" spellCheck={false} maxLength={24} />
         <label htmlFor="login-pw" className="sr-only">Passwort</label>
-        <input id="login-pw" type="password" className={error ? 'error' : ''} value={passwort} onChange={(e) => { setPasswort(e.target.value); setError(false) }}
+        <PasswortFeld id="login-pw" className={error ? 'error' : ''} value={passwort} onChange={(e) => { setPasswort(e.target.value); setError(false) }}
           placeholder="Passwort" autoComplete="current-password" maxLength={24} />
         {error && <p className="nk-wrong" role="alert">Das hat nicht geklappt. Schau nochmal nach.</p>}
         <button type="submit" className="nk-btn yellow big" disabled={laedt || !benutzer.trim() || !passwort.trim()}>

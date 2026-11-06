@@ -1,3 +1,4 @@
+import { PasswortFeld } from '../components/PasswortFeld'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
@@ -166,9 +167,9 @@ function PasswortAendern({ kid }: { kid: Kid }) {
   }
   return (
     <form className="pw-form" onSubmit={(e) => { e.preventDefault(); speichern() }}>
-      <label>Altes Passwort<input type="password" value={alt} onChange={(e) => setAlt(e.target.value)} autoComplete="current-password" /></label>
-      <label>Neues Passwort<input type="password" value={neu} onChange={(e) => setNeu(e.target.value)} autoComplete="new-password" /></label>
-      <label>Nochmal neues Passwort<input type="password" value={nochmal} onChange={(e) => setNochmal(e.target.value)} autoComplete="new-password" /></label>
+      <label>Altes Passwort<PasswortFeld value={alt} onChange={(e) => setAlt(e.target.value)} autoComplete="current-password" /></label>
+      <label>Neues Passwort<PasswortFeld value={neu} onChange={(e) => setNeu(e.target.value)} autoComplete="new-password" /></label>
+      <label>Nochmal neues Passwort<PasswortFeld value={nochmal} onChange={(e) => setNochmal(e.target.value)} autoComplete="new-password" /></label>
       {meldung && <p className={meldung.ok ? 'pw-ok' : 'pw-fehler'}>{meldung.text}</p>}
       <div className="pw-knoepfe">
         <button type="button" className="pw-abbrechen" onClick={() => setOffen(false)}>Abbrechen</button>

@@ -1,3 +1,4 @@
+import { PasswortFeld } from '../components/PasswortFeld'
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
 import { Bericht } from './Bericht'
 import { PushKarte } from '../components/PushEinstellungen'
@@ -63,7 +64,7 @@ function Login({ onOk }: { onOk: (k: KindKurz[]) => void }) {
         <h1>Eltern-Bereich</h1>
         <p>Mit der E-Mail-Adresse und dem Passwort anmelden, die Sie beim Kauf gewählt haben.</p>
         <input type="email" autoFocus value={mail} onChange={(e) => { setMail(e.target.value); setFehler('') }} placeholder="E-Mail" aria-label="E-Mail" autoComplete="username" />
-        <input type="password" value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} placeholder="Passwort" aria-label="Passwort" autoComplete="current-password" />
+        <PasswortFeld value={pw} onChange={(e) => { setPw(e.target.value); setFehler('') }} placeholder="Passwort" aria-label="Passwort" autoComplete="current-password" />
         {fehler && <div className="adm-fehler">{fehler}</div>}
         {info && <div className="adm-info">{info}</div>}
         <button type="submit" className="adm-btn primary" disabled={laeuft || !mail || !pw}>{laeuft ? 'Anmelden …' : 'Anmelden'}</button>

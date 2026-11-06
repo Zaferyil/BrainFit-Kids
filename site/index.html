@@ -695,6 +695,7 @@ body::before{background:#100A30}
   .dk-vorteile h3{font-size:15px}
   .dk-vorteile p{display:none}
 }
+.pw-feld{position:relative;display:block}.pw-feld>input{width:100%;box-sizing:border-box;padding-right:52px}.pw-auge{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#6B5FA8;display:grid;place-items:center;cursor:pointer}
 </style>
 
 <header class="top"><div class="top-in">
@@ -1019,7 +1020,7 @@ body::before{background:#100A30}
             <label class="feld">Vorname<input id="k-vn" autocomplete="given-name" value="" placeholder="Vorname"></label>
             <label class="feld">Nachname<input id="k-nn" autocomplete="family-name" value="" placeholder="Nachname"></label>
             <label class="feld ganz">E-Mail<input id="k-mail" type="email" autocomplete="email" value="" placeholder="name@beispiel.at"></label>
-            <label class="feld ganz">Passwort<input id="k-pw" type="password" minlength="8" autocomplete="new-password" value="" placeholder="mind. 8 Zeichen"></label>
+            <label class="feld ganz">Passwort<span class="pw-feld"><input id="k-pw" type="password" minlength="8" autocomplete="new-password" value="" placeholder="mind. 8 Zeichen"><button type="button" class="pw-auge" aria-label="Passwort anzeigen" onclick="var i=this.previousElementSibling;i.type=i.type==='password'?'text':'password';this.setAttribute('aria-label',i.type==='password'?'Passwort anzeigen':'Passwort verstecken')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></span></label>
           </div>
         </div>
         <div class="abschnitt"><h3><b>2</b>Ihr Kind</h3>
