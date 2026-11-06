@@ -3029,3 +3029,8 @@ label .pw-feld { margin-top: 4px; }
 .kiga-seiten img { width: 100%; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,.18); background: #fff; }
 .kiga-seiten figcaption { font-weight: 900; color: #FF4D6D; }
 .kiga-thema { margin: 6px 0 0; font-weight: 900; font-size: 18px; color: #4B2FC2; text-align: center; }
+/* Gestufte Hilfe */
+.hilfe-tipp { font-weight: 900; color: #8A5A00; }
+.hilfe-schritte { display: grid; gap: 4px; margin-bottom: 6px; font-size: 1.15em; color: #4B2FC2; }
+.hilfe-box { margin-top: 10px; padding: 10px 14px; border-radius: 16px; background: #EEEAFE; color: #4B2FC2; font-weight: 900; font-size: 18px; display: grid; gap: 4px; text-align: center; }
+.hilfe-box.tipp { background: #FFF3C4; color: #8A5A00; }

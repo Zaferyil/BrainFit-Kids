@@ -353,5 +353,7 @@
  "Jetzt kommt dein Buch! Nimm deinen Abakus und einen Stift. Schau dir die Bilder an und mach die Seiten in deinem Buch. Wenn du fertig bist, drück auf: Ich bin fertig.": "s-kiga-intro.mp3",
  "Mach in deinem Buch die Seiten": "s-kiga-seiten.mp3",
  "Toll gemacht! Deine Buchseiten sind fertig.": "s-kiga-toll.mp3",
- "Dein Buch ist fertig. Super!": "s-kiga-fertig.mp3"
+ "Dein Buch ist fertig. Super!": "s-kiga-fertig.mp3",
+ "Fast! Denk an die Regel und versuch es nochmal.": "s-hilfe-tipp.mp3",
+ "Schau, so geht es Schritt für Schritt.": "s-hilfe-schritte.mp3"
 }
