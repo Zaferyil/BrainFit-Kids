@@ -48,7 +48,7 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
   const anlegen = async () => {
     setMeldung('')
     const ziel = art === 'anzan' ? { anzahl, level } : art === 'spiel' ? { anzahl, spiel } : art === 'pruefung' ? { welt, anzahl: 1 } : { anzahl }
-    try { await auftragAnlegen({ klasse, art, ziel, faellig: faellig || null }, cloud); setMeldung('✓ Auftrag gespeichert'); neuLaden() }
+    try { await auftragAnlegen({ klasse, art, ziel, faellig: faellig || null }, cloud); setMeldung('✓ Hausaufgabe gespeichert'); neuLaden() }
     catch (e) { setMeldung(`Fehler: ${(e as Error).message}. Ist supabase/update-16-auftraege.sql schon eingespielt?`) }
   }
 
@@ -63,7 +63,7 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
   return (
     <>
       <section className="adm-card">
-        <div className="adm-card-head"><h2>Neuer Auftrag</h2><span className="adm-muted">Wird automatisch abgehakt, sobald das Kind es gespielt hat.</span></div>
+        <div className="adm-card-head"><h2>Neue Hausaufgabe</h2><span className="adm-muted">Wird automatisch abgehakt, sobald das Kind es gespielt hat.</span></div>
         <div className="adm-form-reihe">
           <label>Klasse<select value={klasse} onChange={(e) => setKlasse(e.target.value)}>{klassen.map((k) => <option key={k}>{k}</option>)}</select></label>
           <label>Art<select value={art} onChange={(e) => setArt(e.target.value as AuftragArt)}>
@@ -74,15 +74,15 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
           {art === 'pruefung' && <label>Gürtel<select value={welt} onChange={(e) => setWelt(Number(e.target.value))}>{WORLDS.map((w) => <option key={w.n} value={w.n}>{w.belt.replace(/en$/, '')}</option>)}</select></label>}
           {art !== 'pruefung' && <label>Wie oft<input type="number" min={1} max={20} value={anzahl} onChange={(e) => setAnzahl(Number(e.target.value))} /></label>}
           <label>Bis (optional)<input type="date" value={faellig} onChange={(e) => setFaellig(e.target.value)} /></label>
-          <button type="button" className="adm-btn primary" disabled={!klasse} onClick={() => void anlegen()}>Auftrag geben</button>
+          <button type="button" className="adm-btn primary" disabled={!klasse} onClick={() => void anlegen()}>Hausaufgabe geben</button>
         </div>
         {rolle === 'lehrkraft' && db?.length === 0 && <p className="adm-muted">Dir ist noch keine Klasse zugeteilt. Bitte beim Admin melden.</p>}
         {meldung && <p className="adm-muted">{meldung}</p>}
       </section>
 
       <section className="adm-card adm-tabelle-wrap">
-        <div className="adm-card-head"><h2>Aufträge der Klasse {klasse}</h2><span className="adm-muted">{liste.length} Aufträge · {kinder.length} Kinder</span></div>
-        {!liste.length && <p className="adm-muted">Noch keine Aufträge.</p>}
+        <div className="adm-card-head"><h2>Hausaufgaben der Klasse {klasse}</h2><span className="adm-muted">{liste.length} Hausaufgaben · {kinder.length} Kinder</span></div>
+        {!liste.length && <p className="adm-muted">Noch keine Hausaufgaben.</p>}
         {liste.map((a) => {
           const n = a.ziel.anzahl ?? 1
           const fertig = kinder.filter((z) => (auftragStand(z.kid.id)[a.id] ?? 0) >= n)

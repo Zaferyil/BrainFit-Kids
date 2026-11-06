@@ -30,8 +30,8 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
-  { id: 'hausaufgaben', titel: 'Hausaufgaben', icon: 'check' },
-  { id: 'auftraege', titel: 'Aufträge & Blätter', icon: 'print' },
+  { id: 'auftraege', titel: 'Hausaufgaben & Blätter', icon: 'print' },
+  { id: 'hausaufgaben', titel: 'Buch-Kontrolle', icon: 'check' },
   { id: 'lehrkraefte', titel: 'Lehrkräfte', icon: 'users' },
   { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
   { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
@@ -86,7 +86,7 @@ function AdminLogin({ onOk }: { onOk: () => void }) {
 }
 
 // Lehrkräfte sehen nur, was ihre Klassen betrifft; Bestellungen, Shop, Website usw. bleiben beim Admin
-const LEHRKRAFT_TABS: Tab[] = ['uebersicht', 'kinder', 'hausaufgaben', 'auftraege']
+const LEHRKRAFT_TABS: Tab[] = ['uebersicht', 'kinder', 'auftraege']
 
 function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis?: string; rolle: 'admin' | 'lehrkraft' }) {
   const [tab, setTab] = useState<Tab>('uebersicht')

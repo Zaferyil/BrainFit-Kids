@@ -18,9 +18,9 @@ export function Auftraege({ kid }: { kid: Kid }) {
       <Funkeln />
       <div className="pr">
         <a href="#/karte" className="pr-zurueck" aria-label="Zurück"><Icon name="left" color="#FFFFFF" size={26} strokeWidth={3} /></a>
-        <h1 className="af-titel">📋 Meine Aufgaben</h1>
+        <h1 className="af-titel">📋 Meine Hausaufgaben</h1>
         {liste === null && <p className="af-leer">Einen Moment …</p>}
-        {liste?.length === 0 && <p className="af-leer">Deine Lehrkraft hat dir gerade keine Aufgaben gegeben. 🎉</p>}
+        {liste?.length === 0 && <p className="af-leer">Deine Lehrkraft hat dir gerade keine Hausaufgaben gegeben. 🎉</p>}
         {liste?.map((a) => {
           const n = a.ziel.anzahl ?? 1, k = Math.min(n, st[a.id] ?? 0), fertig = k >= n
           return (
