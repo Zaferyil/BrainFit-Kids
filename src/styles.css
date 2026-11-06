@@ -3054,3 +3054,21 @@ label .pw-feld { margin-top: 4px; }
 .tr-teile span { padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.18); color: #fff; font-weight: 900; font-size: 14px; }
 .tr-teile span.an { background: #FFC531; color: #231A4F; } .tr-teile span.fertig { opacity: .55; }
 .tr-abakus { width: 220px; height: 190px; }
+/* Training, Wiederholen, Prüfung: kompakte Tafel, damit Tasten ohne Scrollen sichtbar sind */
+.pr-spiel { gap: 10px; }
+.pr-spiel .az-tafel { aspect-ratio: auto; max-height: none; padding: 12px 16px; gap: 2px; border-radius: 24px; }
+.pr-spiel .pr-aufgabe { font-size: 30px; line-height: 1.1; }
+.pr-spiel .az-eingabe { font-size: 54px; line-height: 1; }
+.pr-spiel .tr-abakus { width: 160px; height: 140px; }
+.pr:has(.pr-spiel) { padding-top: 10px; gap: 10px; }
+/* kleine/kurze Bildschirme (Browserleisten): alles etwas kleiner */
+@media (max-height: 760px) {
+  .pr-spiel .tr-abakus { width: 120px; height: 104px; }
+  .pr-spiel .az-tafel { padding: 8px 14px; }
+  .pr-spiel .pr-aufgabe { font-size: 24px; }
+  .pr-spiel .az-eingabe { font-size: 44px; }
+  .pr-spiel .keypad.glas { gap: 6px 12px; }
+  .nk .pr-spiel .keypad.glas .key, .pr-spiel .keypad.glas .key { --d: 60px; }
+  .pr-spiel .tr-teile span { padding: 4px 10px; font-size: 13px; }
+  .pr-spiel .az-start { padding-block: 10px; }
+}
