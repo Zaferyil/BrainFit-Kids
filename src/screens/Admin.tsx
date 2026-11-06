@@ -44,14 +44,16 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
 export function Admin() {
   const [status, setStatus] = useState<'pruefen' | 'aus' | 'laden' | 'an'>('pruefen')
   const [fehler, setFehler] = useState('')
+  const [rolle, setRolle] = useState<'admin' | 'lehrkraft'>('lehrkraft')
   const laden = async () => {
+    const r = await adminSitzung(); if (r) setRolle(r)
     setStatus('laden')
     try { await alleKinderLaden(); setStatus('an') } catch (e) { setFehler(String((e as Error).message)); setStatus('an') }
   }
   useEffect(() => { void adminSitzung().then((r) => (r ? laden() : setStatus('aus'))) }, [])
   if (status === 'pruefen' || status === 'laden') return <div className="adm adm-login"><div className="adm-card adm-login-card"><p>{status === 'laden' ? 'Daten werden geladen …' : 'Einen Moment …'}</p></div></div>
   if (status === 'aus') return <AdminLogin onOk={() => void laden()} />
-  return <Dashboard hinweis={fehler} onLogout={() => { void adminAbmelden().then(() => setStatus('aus')) }} />
+  return <Dashboard rolle={rolle} hinweis={fehler} onLogout={() => { void adminAbmelden().then(() => setStatus('aus')) }} />
 }
 
 function AdminLogin({ onOk }: { onOk: () => void }) {
@@ -82,8 +84,12 @@ function AdminLogin({ onOk }: { onOk: () => void }) {
   )
 }
 
-function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: string }) {
+// Lehrkräfte sehen nur, was ihre Klassen betrifft; Bestellungen, Shop, Website usw. bleiben beim Admin
+const LEHRKRAFT_TABS: Tab[] = ['uebersicht', 'kinder', 'hausaufgaben', 'auftraege']
+
+function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis?: string; rolle: 'admin' | 'lehrkraft' }) {
   const [tab, setTab] = useState<Tab>('uebersicht')
+  const tabs = rolle === 'admin' ? TABS : TABS.filter((t) => LEHRKRAFT_TABS.includes(t.id))
   const [version, setVersion] = useState(0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const alle = useMemo(() => kidZeilen(), [version])
@@ -95,9 +101,9 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
   return (
     <div className="adm">
       <header className="adm-head">
-        <div className="adm-brand"><span className="adm-logo small"><Icon name="chart" size={20} color="#5B47D6" /></span><b>BrainFit Kids</b><span>Admin</span></div>
+        <div className="adm-brand"><span className="adm-logo small"><Icon name="chart" size={20} color="#5B47D6" /></span><b>BrainFit Kids</b><span>{rolle === 'admin' ? 'Admin' : 'Lehrkraft'}</span></div>
         <nav className="adm-tabs" aria-label="Bereiche">
-          {TABS.map((t) => (
+          {tabs.map((t) => (
             <button key={t.id} type="button" className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>
               <Icon name={t.icon} size={18} color="currentColor" /> {t.titel}
             </button>
@@ -112,7 +118,7 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
       <main className="adm-main">
         <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
-        {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} /><AdminCheck /></>}
+        {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />{rolle === 'admin' && <AdminCheck />}</>}
         {tab === 'bestellungen' && <AdminBestellungen />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
