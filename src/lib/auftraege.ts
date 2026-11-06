@@ -9,6 +9,9 @@ import { supabase } from './supabase'
 // Aufträge der Lehrkraft an eine Klasse. Erledigt wird automatisch: jedes passende Spiel zählt.
 // Datenbank-Tabelle „auftraege“ (supabase/update-16-auftraege.sql); ohne Datenbank (Beispiel-Klassen) auf diesem Gerät.
 
+/** Hausaufgaben der Lehrkraft vorerst ausgeschaltet (Code bleibt, true schaltet wieder ein) */
+export const HAUSAUFGABEN_AKTIV = false
+
 export type AuftragArt = 'anzan' | 'spiel' | 'wiederholen' | 'pruefung' | 'blatt'
 export type Datei = { pfad: string; name: string; typ: string }
 export type Auftrag = { id: string; klasse: string; art: AuftragArt; ziel: { anzahl?: number; level?: number; spiel?: string; welt?: number; kinder?: string[]; text?: string; blatt?: BlattOptionen; datei?: Datei }; titel: string; faellig: string | null }

@@ -1,4 +1,4 @@
-import { erledigt, meineAuftraege } from '../lib/auftraege'
+import { HAUSAUFGABEN_AKTIV, erledigt, meineAuftraege } from '../lib/auftraege'
 import { faelligeRegeln } from '../lib/lernspur'
 import { konto } from '../lib/wirtschaft'
 import { useEffect, useState } from 'react'
@@ -20,7 +20,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
   const [menu, setMenu] = useState(false)
   const faellig = faelligeRegeln(kid.id).length
   const [offen, setOffen] = useState(0)
-  useEffect(() => { void meineAuftraege(kid.id).then((l) => setOffen(l.filter((a) => !erledigt(kid.id, a)).length)) }, [kid.id])
+  useEffect(() => { if (HAUSAUFGABEN_AKTIV) void meineAuftraege(kid.id).then((l) => setOffen(l.filter((a) => !erledigt(kid.id, a)).length)) }, [kid.id])
   const world = WORLDS[progress.world - 1] ?? WORLDS[0]
 
 

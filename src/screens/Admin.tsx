@@ -6,6 +6,7 @@ import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kidZeilen
 import { benutzerVon, passwortVon } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 import { klasseInDB } from '../lib/adminCloud'
+import { HAUSAUFGABEN_AKTIV } from '../lib/auftraege'
 import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, stufeCloud } from '../lib/adminCloud'
 import { istCloudKind } from '../lib/serverRpc'
 import { AdminWebsite } from './AdminWebsite'
@@ -30,7 +31,7 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
-  { id: 'auftraege', titel: 'Hausaufgaben & Blätter', icon: 'print' },
+  { id: 'auftraege', titel: HAUSAUFGABEN_AKTIV ? 'Hausaufgaben & Blätter' : 'Arbeitsblätter', icon: 'print' },
   { id: 'hausaufgaben', titel: 'Buch-Kontrolle', icon: 'check' },
   { id: 'lehrkraefte', titel: 'Lehrkräfte', icon: 'users' },
   { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },

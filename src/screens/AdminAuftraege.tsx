@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { WORLDS } from '../data/curriculum'
 import { GAMES } from '../games/registry'
 import type { KidZeile } from '../lib/admin'
-import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, dateiHochladen, fuerKind, type Auftrag, type AuftragArt } from '../lib/auftraege'
+import { HAUSAUFGABEN_AKTIV, auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, dateiHochladen, fuerKind, type Auftrag, type AuftragArt } from '../lib/auftraege'
 import { arbeitsblattDrucken, type BlattArt } from '../lib/arbeitsblatt'
 import { istCloudKind } from '../lib/serverRpc'
 import { supabase } from '../lib/supabase'
@@ -81,6 +81,7 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
 
   return (
     <>
+      {HAUSAUFGABEN_AKTIV && <>
       <section className="adm-card">
         <div className="adm-card-head"><h2>Neue Hausaufgabe</h2><span className="adm-muted">Wird automatisch abgehakt, sobald das Kind es gespielt hat.</span></div>
         <div className="adm-form-reihe">
@@ -137,6 +138,7 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
         })}
       </section>
 
+      </>}
       <section className="adm-card">
         <div className="adm-card-head"><h2>Arbeitsblatt drucken</h2><span className="adm-muted">A4 mit Lösungsseite · im Druckfenster „Als PDF speichern“ wählen</span></div>
         <div className="adm-form-reihe">
