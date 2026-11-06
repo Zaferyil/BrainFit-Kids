@@ -3072,3 +3072,18 @@ label .pw-feld { margin-top: 4px; }
   .pr-spiel .tr-teile span { padding: 4px 10px; font-size: 13px; }
   .pr-spiel .az-start { padding-block: 10px; }
 }
+/* Lernbericht auf dem Handy: alles auf eine Bildschirmhöhe, jede Karte scrollt für sich */
+.ber { height: 100dvh; min-height: 0; box-sizing: border-box; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.ber-leiste { flex: 1; min-height: 0; align-items: stretch; }
+.ber-karte { min-height: 0; max-height: 100%; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: none; box-sizing: border-box; }
+.ber-karte::-webkit-scrollbar { display: none; }
+.ber-weiss { flex: 0 0 auto; }
+@media (max-width: 600px) {
+  .ber-karte h2 { font-size: 22px; }
+  .ber-weiss { padding: 14px 12px; gap: 10px; }
+  .ber-kreis { grid-template-columns: 1fr; justify-items: center; }
+  .ber-kreis svg, .ber-kreis > :first-child { max-width: 190px; }
+  .ber-kreis ul, .ber-kreis li, .ber-kreis span { font-size: 13px; }
+  .ber-zeile { font-size: 15px; }
+  .ber-zitat { font-size: 14px; }
+}
