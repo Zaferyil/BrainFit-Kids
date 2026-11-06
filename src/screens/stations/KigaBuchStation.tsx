@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SAY, STATION_INTRO } from '../../data/sprache'
+import { SAY } from '../../data/sprache'
 import { KIGA_BUCH, kigaAuftrag } from '../../data/kigaBuch'
 import { finishStation } from '../../lib/progress'
 import { speak } from '../../lib/speak'
@@ -8,18 +8,19 @@ import { StationDone, StationShell } from './StationShell'
 // Arbeitsbuch für Kindergartenkinder: welche Seiten im Kiga-Buch dran sind, mit Bildern der Seiten.
 // Die Seiten sind zum Schreiben, Malen und Verbinden – deshalb kein Wissenscheck, das Kind hakt selbst ab.
 
+const INTRO = 'Jetzt kommt dein Buch! Nimm deinen Abakus und einen Stift. Schau dir die Bilder an und mach die Seiten in deinem Buch. Wenn du fertig bist, drück auf: Ich bin fertig.'
 const bild = (s: number) => `${import.meta.env.BASE_URL}kiga-buch/s${s}.webp`
 
 export function KigaBuchStation({ kidId, lektion }: { kidId: string; lektion: number }) {
   const a = kigaAuftrag(lektion)
   const [started, setStarted] = useState(false)
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
-  const sagen = a ? [SAY.seite, String(a.von), SAY.bis, String(a.bis)] : ['Dein Buch ist fertig. Super!']
+  const sagen = a ? ['Mach in deinem Buch die Seiten', String(a.von), SAY.bis, String(a.bis)] : ['Dein Buch ist fertig. Super!']
   useEffect(() => { if (started) void speak(sagen) }, [started]) // eslint-disable-line react-hooks/exhaustive-deps
   const seiten = a ? Array.from({ length: a.bis - a.von + 1 }, (_, i) => a.von + i) : []
 
   return (
-    <StationShell station="buch" title="Mein Arbeitsbuch" intro={STATION_INTRO.buch} started={started} onStart={() => setStarted(true)} say={sagen}>
+    <StationShell station="buch" title="Mein Arbeitsbuch" intro={INTRO} started={started} onStart={() => setStarted(true)} say={sagen}>
       <div className="buch kiga-buch">
         <div className="buch-karte">
           <div className="buch-titel">
@@ -37,7 +38,7 @@ export function KigaBuchStation({ kidId, lektion }: { kidId: string; lektion: nu
           ✓ Ich bin fertig
         </button>
       </div>
-      {done && <StationDone stars={done.stars} perlen={done.perlen} text={a ? 'Toll gemacht! Deine Buchseiten sind fertig.' : 'Super!'} />}
+      {done && <StationDone stars={done.stars} perlen={done.perlen} text={a ? 'Toll gemacht! Deine Buchseiten sind fertig.' : 'Super!'} say={a ? ['Toll gemacht! Deine Buchseiten sind fertig.'] : ['Dein Buch ist fertig. Super!']} />}
     </StationShell>
   )
 }

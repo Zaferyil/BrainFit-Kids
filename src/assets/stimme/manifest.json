@@ -349,5 +349,9 @@
  "Fülle die graue Form mit allen Teilen. Tippe ein Teil an und dann das Feld, wo die Perle mit dem Punkt hin soll.": "s-tangram-erkl.mp3",
  "Plane zuerst den ganzen Weg mit den Pfeilen. Dann drückst du Los, und die Perle läuft zum Stern. Pass auf die Mauern auf!": "s-laby-erkl.mp3",
  "Oh, da ist eine Mauer!": "s-laby-mauer.mp3",
- "Fast! Plane den Weg noch einmal.": "s-laby-fast.mp3"
+ "Fast! Plane den Weg noch einmal.": "s-laby-fast.mp3",
+ "Jetzt kommt dein Buch! Nimm deinen Abakus und einen Stift. Schau dir die Bilder an und mach die Seiten in deinem Buch. Wenn du fertig bist, drück auf: Ich bin fertig.": "s-kiga-intro.mp3",
+ "Mach in deinem Buch die Seiten": "s-kiga-seiten.mp3",
+ "Toll gemacht! Deine Buchseiten sind fertig.": "s-kiga-toll.mp3",
+ "Dein Buch ist fertig. Super!": "s-kiga-fertig.mp3"
 }
