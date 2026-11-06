@@ -5,12 +5,33 @@ import type { KidZeile } from '../lib/admin'
 import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, type Auftrag, type AuftragArt } from '../lib/auftraege'
 import { arbeitsblattDrucken, type BlattArt } from '../lib/arbeitsblatt'
 import { istCloudKind } from '../lib/serverRpc'
+import { supabase } from '../lib/supabase'
 
 // Lehrkraft: Aufträge an eine Klasse geben und sehen, wer sie erledigt hat. Dazu druckbare Arbeitsblätter.
 
-export function AdminAuftraege({ zeilen }: { zeilen: KidZeile[] }) {
-  const klassen = useMemo(() => [...new Set(zeilen.map((z) => z.klassenCode))].sort(), [zeilen])
-  const [klasse, setKlasse] = useState(klassen[0] ?? '')
+/** Klassen aus der Datenbank: Admin alle, Lehrkraft nur die eigenen (null = noch nicht geladen) */
+export function useKlassenDB(rolle: 'admin' | 'lehrkraft') {
+  const [k, setK] = useState<string[] | null>(null)
+  useEffect(() => {
+    void (async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      let q = supabase.from('klassen').select('code')
+      if (rolle === 'lehrkraft') q = q.eq('lehrkraft', user?.id ?? '')
+      const { data } = await q
+      setK((data ?? []).map((x: { code: string }) => x.code))
+    })().catch(() => setK([]))
+  }, [rolle])
+  return k
+}
+
+export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]; rolle?: 'admin' | 'lehrkraft' }) {
+  const db = useKlassenDB(rolle)
+  const klassen = useMemo(() => {
+    const ausKindern = zeilen.map((z) => z.klassenCode)
+    return [...new Set(rolle === 'admin' ? [...ausKindern, ...(db ?? [])] : db ?? [])].sort()
+  }, [zeilen, db, rolle])
+  const [klasse, setKlasse] = useState('')
+  useEffect(() => { if (!klassen.includes(klasse)) setKlasse(klassen[0] ?? '') }, [klassen, klasse])
   const [art, setArt] = useState<AuftragArt>('anzan')
   const [anzahl, setAnzahl] = useState(3)
   const [level, setLevel] = useState(1)
@@ -55,6 +76,7 @@ export function AdminAuftraege({ zeilen }: { zeilen: KidZeile[] }) {
           <label>Bis (optional)<input type="date" value={faellig} onChange={(e) => setFaellig(e.target.value)} /></label>
           <button type="button" className="adm-btn primary" disabled={!klasse} onClick={() => void anlegen()}>Auftrag geben</button>
         </div>
+        {rolle === 'lehrkraft' && db?.length === 0 && <p className="adm-muted">Dir ist noch keine Klasse zugeteilt. Bitte beim Admin melden.</p>}
         {meldung && <p className="adm-muted">{meldung}</p>}
       </section>
 

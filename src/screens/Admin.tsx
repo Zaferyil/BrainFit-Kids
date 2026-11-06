@@ -12,7 +12,7 @@ import { AdminBestellungen } from './AdminBestellungen'
 import { AdminPush } from './AdminPush'
 import { AdminPartner } from './AdminPartner'
 import { AdminCheck } from './AdminCheck'
-import { AdminAuftraege } from './AdminAuftraege'
+import { AdminAuftraege, useKlassenDB } from './AdminAuftraege'
 import { AdminLehrkraefte } from './AdminLehrkraefte'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
@@ -95,7 +95,10 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
   const alle = useMemo(() => kidZeilen(), [version])
   // Beispielkinder (nur auf diesem Gerät) standardmäßig ausblenden
   const [beispiele, setBeispiele] = useState(false)
-  const zeilen = beispiele ? alle : alle.filter((z) => istCloudKind(z.kid.id))
+  // Lehrkraft: nur Kinder der eigenen Klassen (auch wenn auf diesem Gerät noch andere gespeichert sind)
+  const meine = useKlassenDB(rolle)
+  const sichtbar = rolle === 'admin' ? alle : alle.filter((z) => meine?.includes(z.klassenCode))
+  const zeilen = beispiele ? sichtbar : sichtbar.filter((z) => istCloudKind(z.kid.id))
   const neu = () => setVersion((v) => v + 1)
 
   return (
@@ -122,7 +125,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
         {tab === 'bestellungen' && <AdminBestellungen />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
-        {tab === 'auftraege' && <AdminAuftraege zeilen={zeilen} />}
+        {tab === 'auftraege' && <AdminAuftraege zeilen={zeilen} rolle={rolle} />}
         {tab === 'lehrkraefte' && <AdminLehrkraefte />}
         {tab === 'shop' && <Shop zeilen={zeilen} />}
         {tab === 'lektionen' && <Lektionen zeilen={zeilen} />}
