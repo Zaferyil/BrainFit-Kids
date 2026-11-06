@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { WORLDS } from '../data/curriculum'
 import { GAMES } from '../games/registry'
 import type { KidZeile } from '../lib/admin'
-import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, fuerKind, type Auftrag, type AuftragArt } from '../lib/auftraege'
+import { auftragAnlegen, auftraegeLaden, auftragLoeschen, auftragStand, dateiHochladen, fuerKind, type Auftrag, type AuftragArt } from '../lib/auftraege'
 import { arbeitsblattDrucken, type BlattArt } from '../lib/arbeitsblatt'
 import { istCloudKind } from '../lib/serverRpc'
 import { supabase } from '../lib/supabase'
@@ -41,6 +41,10 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
   const [liste, setListe] = useState<Auftrag[]>([])
   const [meldung, setMeldung] = useState('')
   const [auswahl, setAuswahl] = useState<string[]>([]) // leer = ganze Klasse
+  const [quelle, setQuelle] = useState<'lektion' | 'datei'>('lektion')
+  const [datei, setDatei] = useState<File | null>(null)
+  const [text, setText] = useState('')
+  const [laeuft, setLaeuft] = useState(false)
   useEffect(() => setAuswahl([]), [klasse])
   const kinder = zeilen.filter((z) => z.klassenCode === klasse)
   const cloud = kinder.some((z) => istCloudKind(z.kid.id))
@@ -49,6 +53,18 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
 
   const anlegen = async () => {
     setMeldung('')
+    if (art === 'blatt') {
+      if (quelle === 'datei' && !datei) { setMeldung('Bitte zuerst eine Datei wählen.'); return }
+      setLaeuft(true)
+      try {
+        const z = quelle === 'datei'
+          ? { anzahl: 1, text: text || datei!.name, datei: await dateiHochladen(datei!, cloud) }
+          : { anzahl: 1, text: text || `Arbeitsblatt: ${WORLDS[bWelt - 1].units[bEinheit - 1]}`, blatt: { art: bArt, welt: bWelt, einheit: bEinheit, anzahl: bAnzahl, stellen: bStellen, laenge: bLaenge } }
+        await auftragAnlegen({ klasse, art, ziel: auswahl.length ? { ...z, kinder: auswahl } : z, faellig: faellig || null }, cloud)
+        setMeldung('✓ Hausaufgabe gespeichert'); setDatei(null); setText(''); neuLaden()
+      } catch (e) { setMeldung(`Fehler: ${(e as Error).message}`) }
+      setLaeuft(false); return
+    }
     const basis = art === 'anzan' ? { anzahl, level } : art === 'spiel' ? { anzahl, spiel } : art === 'pruefung' ? { welt, anzahl: 1 } : { anzahl }
     const ziel = auswahl.length ? { ...basis, kinder: auswahl } : basis
     try { await auftragAnlegen({ klasse, art, ziel, faellig: faellig || null }, cloud); setMeldung('✓ Hausaufgabe gespeichert'); neuLaden() }
@@ -70,15 +86,19 @@ export function AdminAuftraege({ zeilen, rolle = 'admin' }: { zeilen: KidZeile[]
         <div className="adm-form-reihe">
           <label>Klasse<select value={klasse} onChange={(e) => setKlasse(e.target.value)}>{klassen.map((k) => <option key={k}>{k}</option>)}</select></label>
           <label>Art<select value={art} onChange={(e) => setArt(e.target.value as AuftragArt)}>
-            <option value="anzan">Anzan (Flash-Rechnen)</option><option value="spiel">Denkspiel</option><option value="wiederholen">Wiederholung</option><option value="pruefung">Gürtel-Prüfung</option>
+            <option value="anzan">Anzan (Flash-Rechnen)</option><option value="spiel">Denkspiel</option><option value="wiederholen">Wiederholung</option><option value="pruefung">Gürtel-Prüfung</option><option value="blatt">📄 Arbeitsblatt / eigene Datei</option>
           </select></label>
           {art === 'anzan' && <label>ab Level<input type="number" min={1} max={96} value={level} onChange={(e) => setLevel(Number(e.target.value))} /></label>}
           {art === 'spiel' && <label>Spiel<select value={spiel} onChange={(e) => setSpiel(e.target.value)}>{GAMES.filter((g) => g.ready).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>}
           {art === 'pruefung' && <label>Gürtel<select value={welt} onChange={(e) => setWelt(Number(e.target.value))}>{WORLDS.map((w) => <option key={w.n} value={w.n}>{w.belt.replace(/en$/, '')}</option>)}</select></label>}
-          {art !== 'pruefung' && <label>Wie oft<input type="number" min={1} max={20} value={anzahl} onChange={(e) => setAnzahl(Number(e.target.value))} /></label>}
+          {art === 'blatt' && <label>Woher<select value={quelle} onChange={(e) => setQuelle(e.target.value as 'lektion' | 'datei')}><option value="lektion">Aus einer Lektion</option><option value="datei">Eigene Datei (PDF, JPG, PNG)</option></select></label>}
+          {art === 'blatt' && <label>Titel (optional)<input value={text} onChange={(e) => setText(e.target.value)} placeholder="z. B. Übungsblatt Woche 3" /></label>}
+          {art === 'blatt' && quelle === 'datei' && <label>Datei<input type="file" accept="application/pdf,image/png,image/jpeg" onChange={(e) => setDatei(e.target.files?.[0] ?? null)} /></label>}
+          {art !== 'pruefung' && art !== 'blatt' && <label>Wie oft<input type="number" min={1} max={20} value={anzahl} onChange={(e) => setAnzahl(Number(e.target.value))} /></label>}
           <label>Bis (optional)<input type="date" value={faellig} onChange={(e) => setFaellig(e.target.value)} /></label>
-          <button type="button" className="adm-btn primary" disabled={!klasse} onClick={() => void anlegen()}>Hausaufgabe geben</button>
+          <button type="button" className="adm-btn primary" disabled={!klasse || laeuft} onClick={() => void anlegen()}>{laeuft ? 'Wird gespeichert …' : 'Hausaufgabe geben'}</button>
         </div>
+        {art === 'blatt' && quelle === 'lektion' && <p className="adm-muted">Welches Blatt? Unten bei „Arbeitsblatt drucken“ Art, Welt, Lektion und Anzahl wählen – genau dieses Blatt bekommt das Kind (ohne Lösungsseite).</p>}
         {kinder.length > 0 && (
           <div className="adm-fuer">
             <span>Für:</span>

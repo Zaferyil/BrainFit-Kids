@@ -3014,3 +3014,6 @@ html.gross .nk-nav, html.gross .offline-hinweis, html.gross .belohnung { zoom: .
 .adm-fuer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; font-weight: 800; font-size: 14px; }
 .adm-fuer label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--a-line); cursor: pointer; }
 .adm-fuer label.an { background: #EEEAFE; border-color: #5B47D6; color: #4B2FC2; }
+.af-blatt { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+.af-los { border: 0; font: inherit; cursor: pointer; }
+.af-fertig { border: 0; font: inherit; font-weight: 900; padding: 8px 12px; border-radius: 14px; background: #3DBE5B; color: #fff; cursor: pointer; }

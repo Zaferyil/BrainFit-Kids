@@ -1,4 +1,5 @@
 import { findGame } from '../games/registry'
+import type { BlattOptionen } from './arbeitsblatt'
 import { WORLDS } from '../data/curriculum'
 import { getSession } from './session'
 import { istCloudKind } from './serverRpc'
@@ -8,8 +9,9 @@ import { supabase } from './supabase'
 // Aufträge der Lehrkraft an eine Klasse. Erledigt wird automatisch: jedes passende Spiel zählt.
 // Datenbank-Tabelle „auftraege“ (supabase/update-16-auftraege.sql); ohne Datenbank (Beispiel-Klassen) auf diesem Gerät.
 
-export type AuftragArt = 'anzan' | 'spiel' | 'wiederholen' | 'pruefung'
-export type Auftrag = { id: string; klasse: string; art: AuftragArt; ziel: { anzahl?: number; level?: number; spiel?: string; welt?: number; kinder?: string[] }; titel: string; faellig: string | null }
+export type AuftragArt = 'anzan' | 'spiel' | 'wiederholen' | 'pruefung' | 'blatt'
+export type Datei = { pfad: string; name: string; typ: string }
+export type Auftrag = { id: string; klasse: string; art: AuftragArt; ziel: { anzahl?: number; level?: number; spiel?: string; welt?: number; kinder?: string[]; text?: string; blatt?: BlattOptionen; datei?: Datei }; titel: string; faellig: string | null }
 
 const lokalKey = (klasse: string) => `bfk.auftraege.${klasse}`
 const standKey = (kid: string) => `bfk.auftragstand.${kid}`
@@ -17,6 +19,7 @@ const cacheKey = (kid: string) => `bfk.auftragcache.${kid}`
 
 export function auftragTitel(a: Pick<Auftrag, 'art' | 'ziel'>) {
   const n = a.ziel.anzahl ?? 1
+  if (a.art === 'blatt') return `📄 ${a.ziel.text?.trim() || (a.ziel.datei ? a.ziel.datei.name : 'Arbeitsblatt')}`
   if (a.art === 'anzan') return `${n}× Anzan ab Level ${a.ziel.level ?? 1} (mind. 4 von 5 richtig)`
   if (a.art === 'spiel') return `${n}× ${findGame(a.ziel.spiel ?? '')?.name ?? 'Denkspiel'} spielen`
   if (a.art === 'wiederholen') return `${n}× Wiederholung machen`
@@ -88,4 +91,36 @@ export function auftragMelden(kid: string, spiel: string) {
     if (passt && (st[a.id] ?? 0) < (a.ziel.anzahl ?? 1)) { st[a.id] = (st[a.id] ?? 0) + 1; geaendert = true }
   }
   if (geaendert) save(standKey(kid), st)
+}
+
+// ---- Dateien (eigene Arbeitsblätter der Lehrkraft) ----
+export const MAX_DATEI = 10 * 1024 * 1024
+export async function dateiHochladen(f: File, cloud: boolean): Promise<Datei> {
+  if (f.size > MAX_DATEI) throw new Error('Die Datei ist größer als 10 MB.')
+  if (!/^(application\/pdf|image\/(png|jpeg))$/.test(f.type)) throw new Error('Bitte eine PDF-, JPG- oder PNG-Datei wählen.')
+  if (!cloud) {
+    // Beispiel-Klassen: Datei direkt auf diesem Gerät speichern
+    const url = await new Promise<string>((ok, nein) => { const r = new FileReader(); r.onload = () => ok(String(r.result)); r.onerror = () => nein(r.error); r.readAsDataURL(f) })
+    return { pfad: url, name: f.name, typ: f.type }
+  }
+  const pfad = `${crypto.randomUUID()}-${f.name.replace(/[^\w.-]+/g, '_')}`
+  const { error } = await supabase.storage.from('hausaufgaben').upload(pfad, f, { contentType: f.type })
+  if (error) throw new Error(`${error.message}. Ist supabase/update-18-hausaufgaben-dateien.sql schon eingespielt?`)
+  return { pfad, name: f.name, typ: f.type }
+}
+export async function dateiOeffnen(d: Datei) {
+  // Fenster sofort öffnen (sonst blockt der Browser), Adresse danach setzen
+  const w = window.open('', '_blank')
+  let url = d.pfad
+  if (!d.pfad.startsWith('data:')) {
+    const { data } = await supabase.storage.from('hausaufgaben').createSignedUrl(d.pfad, 3600)
+    url = data?.signedUrl ?? ''
+  } else {
+    url = URL.createObjectURL(await (await fetch(d.pfad)).blob())
+  }
+  if (w) w.location.href = url; else window.location.href = url
+}
+/** Kind hakt ein Arbeitsblatt selbst als erledigt ab */
+export function blattErledigt(kid: string, a: Auftrag) {
+  const st = auftragStand(kid); st[a.id] = a.ziel.anzahl ?? 1; save(standKey(kid), st)
 }

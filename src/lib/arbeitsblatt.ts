@@ -50,7 +50,9 @@ function sorobanSvg(stellen: number, zahl?: number) {
   return s + '</svg>'
 }
 
-export function arbeitsblattDrucken(o: { art: BlattArt; welt: number; einheit: number; anzahl: number; stellen: number; laenge: number; name?: string }) {
+export type BlattOptionen = { art: BlattArt; welt: number; einheit: number; anzahl: number; stellen: number; laenge: number }
+
+export function arbeitsblattDrucken(o: BlattOptionen & { name?: string; mitLoesung?: boolean }) {
   const liste = aufgaben(o.art, o.welt, o.einheit, o.anzahl, o.stellen, o.laenge)
   const titel = o.art === 'kette' ? `Anzan-Ketten · ${o.stellen}-stellig · ${o.laenge} Zahlen` : `${WORLDS[o.welt - 1]?.units[o.einheit - 1] ?? ''}${o.art === 'abakus' ? ' · Abakus ablesen' : ''}`
   const cols = o.art === 'kette' ? 5 : o.art === 'abakus' ? 4 : 3
@@ -61,7 +63,7 @@ export function arbeitsblattDrucken(o: { art: BlattArt; welt: number; einheit: n
     if (a.zahl !== undefined) return `<div class="z">${nr}${sorobanSvg(stellenAbakus, a.zahl)}<div class="linie">${loesung ? a.loesung : ''}</div></div>`
     return `<div class="z">${nr}<span class="auf">${a.text}</span><span class="linie kurz">${loesung ? a.loesung : ''}</span></div>`
   }
-  const seite = (loesung: boolean) => `<section class="seite"><header><div><h1>${loesung ? 'Lösungen' : 'Arbeitsblatt'}</h1><p>${titel}</p></div><div class="kopf">Name: ________________<br>Datum: ____________</div></header>
+  const seite = (loesung: boolean) => `<section class="seite"><header><div><h1>${loesung ? 'Lösungen' : 'Arbeitsblatt'}</h1><p>${titel}</p></div><div class="kopf">Name: ${o.name ? `<b>${o.name}</b>` : '________________'}<br>Datum: ____________</div></header>
 <div class="raster" style="grid-template-columns:repeat(${cols},1fr)">${liste.map((a, i) => zelle(a, i, loesung)).join('')}</div>
 <footer>BrainFit Kids · Mentale Arithmetik mit dem Soroban · brainfitkids.mentalmath.at</footer></section>`
   const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Arbeitsblatt – ${titel}</title><style>
@@ -74,7 +76,7 @@ h1 { margin: 0; font-size: 26px; color: #4B2FC2; } header p { margin: 2px 0 0; f
 .auf { font-size: 24px; font-weight: 800; } .linie { min-width: 70px; border-bottom: 2px solid #1B1446; text-align: center; font-size: 22px; font-weight: 800; min-height: 28px; color: #D6336C; }
 pre { font: 800 20px Nunito, Arial, sans-serif; margin: 0; text-align: right; line-height: 1.35; }
 .z:not(.kette):has(.auf) { flex-direction: row; justify-content: center; } footer { margin-top: 18px; font-size: 11px; color: #7A6FB3; text-align: center; }
-</style></head><body>${seite(false)}${seite(true)}<script>window.onload=()=>setTimeout(()=>print(),300)</script></body></html>`
+</style></head><body>${seite(false)}${o.mitLoesung === false ? '' : seite(true)}<script>window.onload=()=>setTimeout(()=>print(),300)</script></body></html>`
   const w = window.open('', '_blank')
   if (!w) return false
   w.document.open(); w.document.write(html); w.document.close()

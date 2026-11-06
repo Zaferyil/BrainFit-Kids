@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
-import { auftragStand, meineAuftraege, type Auftrag } from '../lib/auftraege'
+import { auftragStand, blattErledigt, dateiOeffnen, meineAuftraege, type Auftrag } from '../lib/auftraege'
+import { arbeitsblattDrucken } from '../lib/arbeitsblatt'
 import { Funkeln } from './Anmelden'
 
 // Aufträge der Lehrkraft für das Kind: was zu tun ist, wie weit es ist, und ein Knopf zum Loslegen.
@@ -12,7 +13,9 @@ const link = (a: Auftrag) => (a.art === 'anzan' ? '#/anzan' : a.art === 'spiel' 
 export function Auftraege({ kid }: { kid: Kid }) {
   const [liste, setListe] = useState<Auftrag[] | null>(null)
   useEffect(() => { void meineAuftraege(kid.id).then(setListe) }, [kid.id])
+  const [, neu] = useState(0)
   const st = auftragStand(kid.id)
+  const oeffnen = (a: Auftrag) => { if (a.ziel.datei) void dateiOeffnen(a.ziel.datei); else if (a.ziel.blatt) arbeitsblattDrucken({ ...a.ziel.blatt, name: kid.name, mitLoesung: false }) }
   return (
     <Stage background="linear-gradient(180deg, #2A1B8C 0%, #5B47D6 50%, #FF6FB5 100%)">
       <Funkeln />
@@ -30,7 +33,12 @@ export function Auftraege({ kid }: { kid: Kid }) {
                 {a.faellig && <small>bis {new Date(a.faellig).toLocaleDateString('de-AT')}</small>}
                 <div className="pk-track"><div style={{ width: `${(k / n) * 100}%` }} /></div>
               </div>
-              {fertig ? <span className="af-ok">✓</span> : <a className="af-los" href={link(a)}>{k}/{n} ▶</a>}
+              {a.art === 'blatt'
+                ? <div className="af-blatt">
+                    <button type="button" className="af-los" onClick={() => oeffnen(a)}>📄 Öffnen</button>
+                    {fertig ? <span className="af-ok">✓</span> : <button type="button" className="af-fertig" onClick={() => { blattErledigt(kid.id, a); neu((x) => x + 1) }}>Fertig ✓</button>}
+                  </div>
+                : fertig ? <span className="af-ok">✓</span> : <a className="af-los" href={link(a)}>{k}/{n} ▶</a>}
             </div>
           )
         })}
