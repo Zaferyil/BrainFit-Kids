@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useEffect, useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { speak } from '../lib/speak'
@@ -49,6 +50,7 @@ export function SchnellZaehlen({ level, onFinish, rounds = ROUNDS }: GameProps) 
     const ok = n === task.anzahl
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       setPicked(null)

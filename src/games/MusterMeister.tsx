@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { Icon } from '../components/Icon'
@@ -76,6 +77,7 @@ export function MusterMeister({ level, onFinish, rounds = ROUNDS }: GameProps) {
     const ok = same(o, puzzle.answer)
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Schau, das kommt als Nächstes.')
     window.setTimeout(() => {
       setPicked(null)

@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useEffect, useRef, useState } from 'react'
 import { speak } from '../lib/speak'
 import { randInt, shuffle, type GameProps } from './types'
@@ -44,6 +45,7 @@ export function FarbWort({ level, onFinish, rounds = ROUNDS }: GameProps) {
     setPicked(wahl)
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} Farben richtig`)

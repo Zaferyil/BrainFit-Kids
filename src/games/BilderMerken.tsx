@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useEffect, useState } from 'react'
 import { speak } from '../lib/speak'
 import { randInt, shuffle, type GameProps } from './types'
@@ -50,6 +51,7 @@ export function BilderMerken({ level, onFinish }: GameProps) {
     setPicked(v)
     const ok = v === k.bild, c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       setPicked(null)

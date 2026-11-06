@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Abakus3D } from '../components/Abakus3D'
 import { speak } from '../lib/speak'
@@ -45,6 +46,7 @@ export function ZahlenVergleichen({ level, onFinish, rounds = ROUNDS }: GameProp
     const ok = v === task.ziel
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       setPicked(null)

@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { speak } from '../lib/speak'
@@ -52,10 +53,12 @@ export function PerlenJagd({ level, onFinish, rounds = ROUNDS }: GameProps) {
       setMiss([...miss, i])
       window.setTimeout(() => setMiss((m) => m.filter((x) => x !== i)), 500)
       setWrong((w) => w + 1)
+      tonFalsch()
       return
     }
     const f = [...found, i]
     setFound(f)
+    tonRichtig(f.length)
     if (f.length === targets) {
       const score = targets / (targets + wrong)
       const all = [...scores, score]

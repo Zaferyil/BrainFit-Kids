@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useEffect, useState } from 'react'
 import { speak } from '../lib/speak'
 import { Keypad } from '../screens/stations/StationShell'
@@ -43,6 +44,7 @@ export function ZahlenMerken({ level, onFinish, rounds = ROUNDS }: GameProps) {
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
     setPhase('fertig')
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} Reihen richtig gemerkt`)

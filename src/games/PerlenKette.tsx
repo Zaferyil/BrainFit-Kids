@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useEffect, useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { speak } from '../lib/speak'
@@ -57,6 +58,7 @@ export function PerlenKette({ level, onFinish, rounds = ROUNDS }: GameProps) {
       const c = correct + (ok ? 1 : 0)
       setCorrect(c)
       setPhase(ok ? 'right' : 'wrong')
+      if (ok) tonRichtig(c); else tonFalsch()
       speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
       window.setTimeout(() => {
         if (round + 1 >= rounds) { onFinish(c / rounds, `${c} von ${rounds} Ketten richtig, ${s.length} Perlen lang`); return }

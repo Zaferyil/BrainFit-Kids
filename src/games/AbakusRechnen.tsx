@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Abakus3D } from '../components/Abakus3D'
 import { speak } from '../lib/speak'
@@ -52,6 +53,7 @@ export function AbakusRechnen({ level, onFinish, rounds = ROUNDS }: GameProps) {
     const ok = v === task.ergebnis
     const c = correct + (ok ? 1 : 0)
     setCorrect(c)
+    if (ok) tonRichtig(c); else tonFalsch()
     speak(ok ? 'Richtig!' : 'Fast! Schau nochmal genau.')
     window.setTimeout(() => {
       setPicked(null)

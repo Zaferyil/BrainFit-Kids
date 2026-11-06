@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Abakus } from '../components/Abakus'
 import { Bead, type BeadColor } from '../components/Bead'
@@ -85,11 +86,13 @@ export function PerlenMemory({ level, onFinish }: GameProps) {
       const f = [...found, a.pair]
       setFound(f)
       setOpen([])
+      tonRichtig(f.length)
       speak(f.length === pairs ? 'Alle Paare gefunden!' : 'Ein Paar!')
       if (f.length === pairs) {
         window.setTimeout(() => onFinish(Math.min(1, (pairs * 1.6) / tries), `${pairs} Paare in ${tries} Zügen`), 700)
       }
     } else {
+      tonFalsch()
       window.setTimeout(() => setOpen([]), 900)
     }
   }

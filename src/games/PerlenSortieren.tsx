@@ -1,3 +1,4 @@
+import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { useState } from 'react'
 import { Bead, type BeadColor } from '../components/Bead'
 import { Icon } from '../components/Icon'
@@ -91,7 +92,7 @@ export function PerlenSortieren({ level, onFinish, rounds = RUNDEN }: GameProps)
     if (auswahl === null) { if (stangen[i].length) setAuswahl(i); return }
     if (auswahl === i) { setAuswahl(null); return }
     if (!erlaubt(stangen, auswahl, i)) {
-      setWackel(i); window.setTimeout(() => setWackel(null), 400)
+      setWackel(i); window.setTimeout(() => setWackel(null), 400); tonFalsch()
       if (stangen[i].length) setAuswahl(i); else setAuswahl(null)
       return
     }
@@ -102,6 +103,7 @@ export function PerlenSortieren({ level, onFinish, rounds = RUNDEN }: GameProps)
       const p = Math.min(1, raetsel.ziel / Math.max(1, zuege + 1)) * 0.4 + 0.6
       const alle = [...punkte, p]
       setPunkte(alle)
+      tonRichtig(5)
       speak('Super gemacht!')
       window.setTimeout(() => {
         if (runde + 1 >= rounds) {

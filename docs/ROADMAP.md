@@ -31,7 +31,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 
 ## Offene Punkte aus früheren Sitzungen
 - „Genie Kids Math" in der Werbung: Markenrecht prüfen (vorerst „Mathe-Genie")
-- Angeboten: Shorts-Version (9:16) des YouTube-Videos; Effekt-Sounds auf ältere Spiele übertragen
+- Angeboten: Shorts-Version (9:16) des YouTube-Videos (Effekt-Sounds in allen Denkspielen: erledigt)
 
 ## Hinweise für neue Sprachaufnahmen
 - App-Stimme: ElevenLabs „Lola – School, but Exciting!“ (voice_id JudZUClAOU1jP3wA2eDG), Modell eleven_v4. Keine andere Stimme verwenden.
