@@ -13,6 +13,7 @@ import { AdminPush } from './AdminPush'
 import { AdminPartner } from './AdminPartner'
 import { AdminCheck } from './AdminCheck'
 import { AdminAuftraege } from './AdminAuftraege'
+import { AdminLehrkraefte } from './AdminLehrkraefte'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
 import { SLOT_NAME, type Slot, type Waehrung } from '../data/seza'
 import { fotoVerkleinern } from '../lib/hausaufgaben'
@@ -23,13 +24,14 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
 
 
-type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'auftraege' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'partner' | 'einstellungen'
+type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'auftraege' | 'lehrkraefte' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'partner' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
   { id: 'kinder', titel: 'Kinder', icon: 'users' },
   { id: 'hausaufgaben', titel: 'Hausaufgaben', icon: 'check' },
   { id: 'auftraege', titel: 'Aufträge & Blätter', icon: 'print' },
+  { id: 'lehrkraefte', titel: 'Lehrkräfte', icon: 'users' },
   { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
   { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
   { id: 'website', titel: 'Website', icon: 'sparkle' },
@@ -115,6 +117,7 @@ function Dashboard({ onLogout, hinweis }: { onLogout: () => void; hinweis?: stri
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} />}
         {tab === 'hausaufgaben' && <Hausaufgaben zeilen={zeilen} />}
         {tab === 'auftraege' && <AdminAuftraege zeilen={zeilen} />}
+        {tab === 'lehrkraefte' && <AdminLehrkraefte />}
         {tab === 'shop' && <Shop zeilen={zeilen} />}
         {tab === 'lektionen' && <Lektionen zeilen={zeilen} />}
         {tab === 'website' && <AdminWebsite />}
