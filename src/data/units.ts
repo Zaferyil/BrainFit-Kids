@@ -365,4 +365,5 @@ const bigFriendMinus = (k: number, a: number, say: string): UnitContent => ({
     { text: `Fertig! ${a} − ${k} = ${a - k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} minus ${ZAHLWORT[k]} ist ${ZAHLWORT[a - k]}.`, mood: 'cheer', start: a - k, goal: null },
   ],
 })
+UNITS['4-2'] = bigFriendMinus(8, 13, 'Acht und zwei sind zusammen zehn. Jetzt rechnen wir minus acht: zehn weg und zwei dazu!')
 UNITS['4-1'] = bigFriendMinus(9, 12, 'Neun und eins sind zusammen zehn. Jetzt rechnen wir minus neun: zehn weg und eins dazu!')
