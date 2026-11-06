@@ -4,7 +4,7 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeNumber, randomIn, type UnitContent, makeSum, rechnet } from '../../data/units'
+import { describeNumber, randomIn, type UnitContent, makeSum, rechnet, rechnung, opWort } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
@@ -41,14 +41,14 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
   const add = pairs[index].b
   const a = pairs[index].a
   const n = a + add
-  const sum = add ? `${a} + ${add}` : null
+  const sum = add ? rechnung(a, add) : null
   const phrase = sum ?? describeNumber(n)
   const [started, setStarted] = useState(false)
   const [stufe] = useState(() => kopfStufe(kidId))
   const [wechsel, setWechsel] = useState(0)
   // was der Abakus während der Aufgabe zeigt (bei reinen Zahl-Aufgaben nie die Lösung)
   const zeigeStart = sum && stufe <= 1 ? a : 0
-  const question = sum ? [SAY.rechne, String(a), SAY.plus, String(add), SAY.wievielIst] : [...sayDescribe(n), SAY.welcheZahlIst]
+  const question = sum ? [SAY.rechne, String(a), opWort(add), String(Math.abs(add)), SAY.wievielIst] : [...sayDescribe(n), SAY.welcheZahlIst]
   const questionKey = question.join('|')
   const schritte = sum ? rechenSchritte(a, content.rule[0]) : []
 

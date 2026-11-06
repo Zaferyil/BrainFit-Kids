@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
-import { makeSum, randomIn, rechnet, unitContent } from '../data/units'
+import { makeSum, randomIn, rechnet, rechnung, unitContent } from '../data/units'
 import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { faelligeRegeln, merkeAntwort } from '../lib/lernspur'
 import { rewardGame } from '../lib/progress'
@@ -22,7 +22,7 @@ function aufgabenErstellen(kid: string): Aufgabe[] {
     if (!c) continue
     let prev: number | undefined
     for (let i = 0; i < 3; i++) {
-      if (rechnet(c)) { const s = makeSum(c, prev); prev = s.a; out.push({ regel: r.key, name: r.name, text: s.b ? `${s.a} + ${s.b}` : `${s.a}`, loesung: s.a + s.b }) }
+      if (rechnet(c)) { const s = makeSum(c, prev); prev = s.a; out.push({ regel: r.key, name: r.name, text: s.b ? rechnung(s.a, s.b) : `${s.a}`, loesung: s.a + s.b }) }
       else { const n = randomIn(c.range, prev); prev = n; out.push({ regel: r.key, name: r.name, text: `Stell dir ${n} vor: wie viel ist das?`, loesung: n }) }
     }
   }
@@ -68,7 +68,7 @@ export function Wiederholen({ kid }: { kid: Kid }) {
           <section className="pr-spiel">
             <div className="az-info"><span>🔁 {a.name}</span><span>{i + 1} / {aufg.length}</span></div>
             <div className={`az-tafel ${fb === 'ok' ? 'richtig' : fb === 'falsch' ? 'falsch' : ''}`}>
-              <div className="pr-aufgabe" style={a.text.length > 12 ? { fontSize: 24 } : undefined}>{a.text}{a.text.includes('+') ? ' =' : ''}</div>
+              <div className="pr-aufgabe" style={a.text.length > 12 ? { fontSize: 24 } : undefined}>{a.text}{/[+−]/.test(a.text) ? ' =' : ''}</div>
               <b className="az-eingabe">{fb === 'falsch' ? a.loesung : eingabe || '?'}</b>
             </div>
             <Keypad onKey={taste} disabled={!!fb} />

@@ -357,5 +357,10 @@
  "Fast! Denk an die Regel und versuch es nochmal.": "s-hilfe-tipp.mp3",
  "Schau, so geht es Schritt für Schritt.": "s-hilfe-schritte.mp3",
  "Super gelernt! Jetzt ist Zeit für eine kleine Pause. Steh auf, streck dich und trink einen Schluck Wasser!": "s-pause.mp3",
- "Für heute hast du genug gelernt. Toll gemacht! Morgen geht es weiter.": "s-limit.mp3"
+ "Für heute hast du genug gelernt. Toll gemacht! Morgen geht es weiter.": "s-limit.mp3",
+ "Neun und eins sind zusammen zehn. Jetzt rechnen wir minus neun: zehn weg und eins dazu!": "s-bfm9-1.mp3",
+ "Stell zuerst die zwölf ein.": "s-stell-zwoelf.mp3",
+ "Jetzt zehn weg: Eine Perle bei den Zehnern runter.": "s-zehn-weg-runter.mp3",
+ "Und jetzt eins dazu: Bei den Einern hoch.": "s-eins-dazu-hoch.mp3",
+ "Super! Zwölf minus neun ist drei.": "s-zwoelf-minus-neun.mp3"
 }

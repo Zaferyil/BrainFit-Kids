@@ -5,7 +5,7 @@ import { Fit } from '../components/Fit'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
 import { WORLDS } from '../data/curriculum'
-import { makeSum, randomIn, rechnet, unitContent, type UnitContent } from '../data/units'
+import { makeSum, randomIn, rechnet, rechnung, unitContent, type UnitContent } from '../data/units'
 import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { faelligeRegeln, merkeAntwort } from '../lib/lernspur'
 import { getProgress, rewardGame } from '../lib/progress'
@@ -24,7 +24,7 @@ const heute = () => new Date().toISOString().slice(0, 10)
 export const trainingHeuteFertig = (kid: string) => load<string | null>(tagKey(kid), null) === heute()
 
 function aufgabe(c: UnitContent, teil: Teil, regel: string | null, prev?: number): Aufgabe {
-  if (rechnet(c)) { const s = makeSum(c, prev); return { teil, regel, text: s.b ? `${s.a} + ${s.b}` : `${s.a}`, loesung: s.a + s.b } }
+  if (rechnet(c)) { const s = makeSum(c, prev); return { teil, regel, text: s.b ? rechnung(s.a, s.b) : `${s.a}`, loesung: s.a + s.b } }
   const n = randomIn(c.range, prev); return { teil, regel, text: 'Welche Zahl zeigt der Abakus?', loesung: n, abakus: { n, cols: c.cols } }
 }
 const lektionVor = (w: number, u: number, schritte: number) => {

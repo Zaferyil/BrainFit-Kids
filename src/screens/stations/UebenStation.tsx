@@ -3,7 +3,7 @@ import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
 import { Icon } from '../../components/Icon'
 import { Perli } from '../../components/Perli'
-import { describeNumber, makeSum, rechnet, randomIn, type UnitContent } from '../../data/units'
+import { describeNumber, makeSum, rechnet, randomIn, type UnitContent, rechnung, opWort, opZahl } from '../../data/units'
 import { finishStation } from '../../lib/progress'
 import { klasseVon } from '../../lib/klasse'
 import { speak } from '../../lib/speak'
@@ -51,9 +51,9 @@ export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { 
   const [done, setDone] = useState<{ stars: number; perlen: number } | null>(null)
   const [started, setStarted] = useState(false)
   const task = queue[index]
-  const sum = task.a !== undefined ? `${task.a} + ${task.b}` : null
+  const sum = task.a !== undefined ? rechnung(task.a, task.b ?? 0) : null
   const question = sum
-    ? [SAY.rechne, String(task.a), SAY.plus, String(task.b), task.kind === 'set' ? SAY.rechneAbakus : SAY.wievielIst]
+    ? [SAY.rechne, String(task.a), opWort(task.b ?? 0), String(Math.abs(task.b ?? 0)), task.kind === 'set' ? SAY.rechneAbakus : SAY.wievielIst]
     : task.kind === 'set' ? [SAY.stelleEin, String(task.n)] : [SAY.welcheZahlAbakus]
   const questionKey = question.join('|')
 
@@ -116,7 +116,7 @@ export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { 
   const dots = queue.slice(0, COUNT).map((t) => results[t.id] ?? (t.id === task.id ? 'current' : 'open'))
 
   return (
-    <StationShell station="ueben" title={content.add ? `Rechnen: +${content.add}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : content.freunde === 'best' ? 'Best' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={intro ?? STATION_INTRO.ueben} label={label} started={started} onStart={() => setStarted(true)} say={question}>
+    <StationShell station="ueben" title={content.add ? `Rechnen: ${opZahl(content.add)}` : content.adds ? `Rechnen: alle ${content.freunde === 'little' ? 'Little' : content.freunde === 'best' ? 'Best' : 'Big'} Friends` : 'Perlen einstellen und ablesen'} dots={dots} perlen={earned} intro={intro ?? STATION_INTRO.ueben} label={label} started={started} onStart={() => setStarted(true)} say={question}>
       <div className="practice">
         <section className={task.kind === 'read' ? 'task-card lesen' : 'task-card'}>
           <div className="eyebrow">{task.retry ? 'NOCH EINMAL' : `AUFGABE ${Math.min(index + 1, COUNT)} VON ${COUNT}`}</div>

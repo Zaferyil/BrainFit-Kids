@@ -3,6 +3,7 @@ import insel2 from '../assets/karte/insel-2.webp'
 import insel3 from '../assets/karte/insel-3.webp'
 import insel4 from '../assets/karte/insel-4.webp'
 import insel5 from '../assets/karte/insel-5.webp'
+import inselEis from '../assets/karte/insel-eis.webp'
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
 // mit ihren Plätzen auf dem Weg, von unten (Start) nach oben. Gibt es mehr Etappen als Bilder,
@@ -35,6 +36,11 @@ export const KARTEN: Karte[] = [
     // Ziel-Insel; 13 Plätze: in der Vorlage fehlt die 49, ihr Platz liegt auf der Brücke
     bild: insel5, w: 941, h: 1397,
     plaetze: [[392, 1197], [540, 1142], [663, 1082], [463, 949], [685, 842], [428, 770], [573, 645], [321, 552], [647, 482], [470, 387], [285, 297], [491, 237], [635, 177]],
+  },
+  {
+    // Minus-Welten (vorläufig): Eis-Insel, gleiche Wege wie die erste Insel
+    bild: inselEis, w: 941, h: 1393,
+    plaetze: [[555, 1173], [325, 1046], [157, 923], [262, 713], [449, 793], [700, 871], [766, 668], [559, 538], [329, 471], [319, 298], [565, 263], [700, 163]],
   },
 ]
 

@@ -36,3 +36,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 ## Hinweise für neue Sprachaufnahmen
 - App-Stimme: ElevenLabs „Lola – School, but Exciting!“ (voice_id JudZUClAOU1jP3wA2eDG), Modell eleven_v4. Keine andere Stimme verwenden.
 - Dateien: src/assets/stimme/*.mp3, Text → Datei in src/assets/stimme/manifest.json.
+
+## Minus-Welten (in Arbeit)
+- [~] Welt 4 Big-Friends-Eiswelt: Lektion „Big Friend −9“ fertig (UNITS['4-1']); weitere Lektionen −8 … −1, alle, Training folgen. Karte vorläufig.
+- [ ] Welt 5 Little Friends (−), Welt 6 Best Friends (−). Kartenbilder: insel-eis / insel-wueste / insel-weltraum.

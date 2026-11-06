@@ -2,7 +2,7 @@ import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../components/Icon'
 import { Abakus3D } from '../../components/Abakus3D'
-import { makeSum, type UnitContent } from '../../data/units'
+import { makeSum, rechnung, type UnitContent } from '../../data/units'
 import { kette, kettenLaenge, UEBUNGEN, type UebungsArt, type UebungsPlatz } from '../../data/uebungen'
 import { SAY } from '../../data/sprache'
 import { finishStation } from '../../lib/progress'
@@ -148,7 +148,7 @@ export function SchnellStation({ kidId, content, platz, art }: Props) {
             <span className="ue-zaehler"><b className="gruen">{richtig}</b> richtig · <b className="rot">{falsch}</b> falsch</span>
           </div>
           <div className="ue-tempo" aria-label="Tempo"><div style={{ width: `${tempo * 100}%` }} /><span>Tempo</span></div>
-          <div className="ue-aufgabe">{aufgabe.a} + {aufgabe.b} = ?</div>
+          <div className="ue-aufgabe">{rechnung(aufgabe.a, aufgabe.b)} = ?</div>
           <div className={`ue-antwort ${blink}`}>{input || '?'}</div>
         </div>
         <Keypad onKey={onKey} disabled={!s.started || rest <= 0} />
@@ -169,7 +169,7 @@ export function MemoryStation({ kidId, content, platz, art }: Props) {
     }
     return out
   })
-  const [karten] = useState(() => paare.flatMap((p, i) => [{ id: `a${i}`, paar: i, text: `${p.a} + ${p.b}` }, { id: `e${i}`, paar: i, text: String(p.n) }]).sort(() => Math.random() - 0.5))
+  const [karten] = useState(() => paare.flatMap((p, i) => [{ id: `a${i}`, paar: i, text: rechnung(p.a, p.b) }, { id: `e${i}`, paar: i, text: String(p.n) }]).sort(() => Math.random() - 0.5))
   const [offen, setOffen] = useState<string[]>([])
   const [gefunden, setGefunden] = useState<number[]>([])
   const [fehler, setFehler] = useState(0)
@@ -265,7 +265,7 @@ export function VergleichStation({ kidId, content, platz, art }: Props) {
             <button key={i} type="button" disabled={gewaehlt !== null}
               className={gewaehlt === null ? 'ue-vkarte' : i === groesser ? 'ue-vkarte right' : i === gewaehlt ? 'ue-vkarte wrong' : 'ue-vkarte dim'}
               onClick={() => waehlen(i)}>
-              <span>{p.a} + {p.b}</span>
+              <span>{rechnung(p.a, p.b)}</span>
               {gewaehlt !== null && <small>= {p.n}</small>}
             </button>
           ))}

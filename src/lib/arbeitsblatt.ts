@@ -1,5 +1,5 @@
 import { WORLDS } from '../data/curriculum'
-import { makeSum, randomIn, rechnet, unitContent } from '../data/units'
+import { makeSum, randomIn, rechnet, rechnung, unitContent } from '../data/units'
 
 // Druckbare Arbeitsblätter: Aufgaben einer Lektion (oder Anzan-Ketten) + Lösungsseite.
 // Öffnet ein Druckfenster – dort „Als PDF speichern“ oder direkt drucken.
@@ -27,7 +27,7 @@ function aufgaben(art: BlattArt, welt: number, einheit: number, anzahl: number, 
   if (!c) return out
   let prev: number | undefined
   while (out.length < anzahl) {
-    if (art === 'lektion' && rechnet(c)) { const s = makeSum(c, prev); prev = s.a; out.push({ text: s.b ? `${s.a} + ${s.b} =` : `${s.a}`, loesung: s.a + s.b }) }
+    if (art === 'lektion' && rechnet(c)) { const s = makeSum(c, prev); prev = s.a; out.push({ text: s.b ? `${rechnung(s.a, s.b)} =` : `${s.a}`, loesung: s.a + s.b }) }
     else { const n = randomIn(c.range, prev); prev = n; out.push({ text: '', loesung: n, zahl: n }) }
   }
   return out

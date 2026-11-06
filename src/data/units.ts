@@ -295,7 +295,7 @@ export function makeSum(content: UnitContent, prev?: number) {
     // gemischt: zuerst ein Big Friend, dann ein Einer, bei dem der Trick nötig ist
     const b = content.adds[Math.floor(Math.random() * content.adds.length)]
     // Little Friend +b: Einer 5−b … 4 (die Himmelsperle hilft); Big Friend +b: Einer 10−b … 9; Best Friend +b: Einer 5 … 14−b
-    const a = randomIn(content.freunde === 'little' ? [5 - b, 4] : content.freunde === 'best' ? [5, 14 - b] : [10 - b, 9], prev)
+    const a = b < 0 ? randomIn([10, 9 - b], prev) : randomIn(content.freunde === 'little' ? [5 - b, 4] : content.freunde === 'best' ? [5, 14 - b] : [10 - b, 9], prev)
     return { a, b, n: a + b }
   }
   const a = randomIn(content.range, prev)
@@ -330,3 +330,39 @@ export function randomIn([min, max]: [number, number], prev?: number) {
   while (n === prev) n = min + Math.floor(Math.random() * (max - min + 1))
   return n as number
 }
+
+/** „34 + 9“ bzw. „34 − 9“ (b negativ = Minus) */
+export const rechnung = (a: number, b: number) => (b < 0 ? `${a} − ${-b}` : `${a} + ${b}`)
+/** „plus“/„minus“ für die Sprachausgabe */
+export const opWort = (b: number) => (b < 0 ? 'minus' : 'plus')
+/** „+9“ bzw. „−9“ */
+export const opZahl = (b: number) => (b < 0 ? `−${-b}` : `+${b}`)
+
+/** Big-Friend-Minus-Einheit −k: „−k = −10 + (10−k)“. Startzahlen 10 … 9+k: bei den Einern sind zu wenige Perlen. */
+const bigFriendMinus = (k: number, a: number, say: string): UnitContent => ({
+  title: `Big Friend −${k}`,
+  lead: `Der Trick für −${k}: 10 weg und ${10 - k} dazu.`,
+  rule: [`−${k} = −10 + ${10 - k}`],
+  learn: [`${k} und ${10 - k} sind zusammen 10`, `Minus ${k} heißt: 10 weg, ${10 - k} dazu`, 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: `Der Video-Tutor zeigt dir den Trick für −${k}.`,
+    entdecken: `Perli rechnet mit dir Schritt für Schritt −${k}.`,
+    ueben: `Du rechnest −${k} mit dem Abakus.`,
+    blitz: `Der Abakus blitzt auf. Rechne −${k}!`,
+    kopfrechnen: `Rechne −${k} im Kopf.`,
+    buch: 'Rechne im Buch und hake ab.',
+    boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+  },
+  cols: 2,
+  range: [10, 9 + k],
+  board: 'Zehner · Einer',
+  add: -k,
+  discover: [
+    { text: `Big Friends: ${k} und ${10 - k} sind 10.`, say, mood: 'happy', start: 0, goal: null },
+    { text: `Stelle zuerst die ${a} ein.`, say: `Stell zuerst die ${ZAHLWORT[a]} ein.`, mood: 'happy', start: 0, goal: a },
+    { text: 'Jetzt 10 weg: eine Perle bei den Zehnern runter.', say: 'Jetzt zehn weg: Eine Perle bei den Zehnern runter.', mood: 'think', start: a, goal: a - 10 },
+    { text: `Und ${10 - k} dazu: bei den Einern hoch.`, say: `Und jetzt ${ZAHLWORT[10 - k]} dazu: Bei den Einern hoch.`, mood: 'think', start: a - 10, goal: a - k },
+    { text: `Fertig! ${a} − ${k} = ${a - k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} minus ${ZAHLWORT[k]} ist ${ZAHLWORT[a - k]}.`, mood: 'cheer', start: a - k, goal: null },
+  ],
+})
+UNITS['4-1'] = bigFriendMinus(9, 12, 'Neun und eins sind zusammen zehn. Jetzt rechnen wir minus neun: zehn weg und eins dazu!')

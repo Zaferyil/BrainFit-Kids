@@ -7,7 +7,7 @@ import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
-import { describeNumber, makeSum, randomIn, rechnet, type UnitContent } from '../../data/units'
+import { describeNumber, makeSum, randomIn, rechnet, type UnitContent, rechnung, opWort } from '../../data/units'
 import { ABSCHLUSS, type HoerAufgabe } from '../../data/abschluss'
 import { typeDigit } from '../../lib/typeDigit'
 import { completeUnit, finishStation } from '../../lib/progress'
@@ -68,7 +68,7 @@ function useMischung(content: UnitContent, hoer: HoerAufgabe[]) {
 
 function sprich(q: Question): string[] {
   if (q.art === 'hoeren') return [SAY.ergebnisEintippen]
-  if (q.art === 'abakus' || q.art === 'kopf') return [SAY.rechne, String(q.a), SAY.plus, String(q.b), SAY.wievielIst]
+  if (q.art === 'abakus' || q.art === 'kopf') return [SAY.rechne, String(q.a), opWort(q.b ?? 0), String(Math.abs(q.b ?? 0)), SAY.wievielIst]
   if (q.art === 'blitz') return [SAY.welcheZahlWar]
   if (q.art === 'lesen') return [SAY.welcheZahlAbakus]
   return [...sayDescribe(q.n), SAY.welcheZahlIst]
@@ -232,7 +232,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
                 </button>
               </>
             ) : q.art === 'kopf' ? (
-              <div className="boss-q-text">{q.a} + {q.b} = ?</div>
+              <div className="boss-q-text">{rechnung(q.a ?? 0, q.b ?? 0)} = ?</div>
             ) : q.art === 'beschreiben' ? (
               <div className="boss-q-text">{describeNumber(q.n)[0].toUpperCase() + describeNumber(q.n).slice(1)} = ?</div>
             ) : q.art === 'blitz' && !zeigen ? (
@@ -240,7 +240,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             ) : (
               <div className="boss-q-read">
                 <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 40 : 46} />
-                <span>{q.art === 'abakus' ? `${q.a} + ${q.b} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
+                <span>{q.art === 'abakus' ? `${rechnung(q.a ?? 0, q.b ?? 0)} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
               </div>
             )}
           </div>

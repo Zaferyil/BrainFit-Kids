@@ -4,7 +4,7 @@ import { Icon } from '../components/Icon'
 import { Stage } from '../components/Stage'
 import { WORLDS } from '../data/curriculum'
 import type { Kid } from '../data/demo'
-import { makeSum, randomIn, rechnet, unitContent, type UnitContent } from '../data/units'
+import { makeSum, randomIn, rechnet, rechnung, unitContent, type UnitContent } from '../data/units'
 import { tonFalsch, tonRichtig } from '../lib/effekte'
 import { rewardGame } from '../lib/progress'
 import { PRUEFUNG, pruefungBestanden, pruefungen, type Bestanden } from '../lib/pruefung'
@@ -27,7 +27,7 @@ function aufgabenFuer(welt: number): Aufgabe[] {
   let prev: number | undefined
   while (out.length < PRUEFUNG.aufgaben && pool.length) {
     const c = pool[Math.floor(Math.random() * pool.length)]
-    if (rechnet(c)) { const s = makeSum(c, prev); prev = s.a; if (s.b) out.push({ text: `${s.a} + ${s.b}`, loesung: s.a + s.b }); else out.push({ text: `${s.a}`, loesung: s.a }) }
+    if (rechnet(c)) { const s = makeSum(c, prev); prev = s.a; if (s.b) out.push({ text: rechnung(s.a, s.b), loesung: s.a + s.b }); else out.push({ text: `${s.a}`, loesung: s.a }) }
     else { const n = randomIn(c.range, prev); prev = n; out.push({ text: `${n}`, loesung: n }) }
   }
   return out
