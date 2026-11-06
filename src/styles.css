@@ -3034,3 +3034,15 @@ label .pw-feld { margin-top: 4px; }
 .hilfe-schritte { display: grid; gap: 4px; margin-bottom: 6px; font-size: 1.15em; color: #4B2FC2; }
 .hilfe-box { margin-top: 10px; padding: 10px 14px; border-radius: 16px; background: #EEEAFE; color: #4B2FC2; font-weight: 900; font-size: 18px; display: grid; gap: 4px; text-align: center; }
 .hilfe-box.tipp { background: #FFF3C4; color: #8A5A00; }
+/* Lernzeit: Pause und Tageslimit */
+.lz-overlay { position: fixed; inset: 0; z-index: 900; display: grid; place-items: center; padding: 16px; background: rgba(27,20,70,.72); backdrop-filter: blur(4px); }
+.lz-karte { width: min(100%, 380px); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 20px; border-radius: 28px; background: #fff; color: #2B2257; text-align: center; box-shadow: 0 16px 40px rgba(0,0,0,.35); }
+.lz-karte h2 { margin: 0; font-family: var(--font-display); font-size: 26px; }
+.lz-karte p { margin: 0; font-weight: 700; }
+.lz-uebung { font-size: 22px; }
+.lz-link { border: 0; background: none; font: inherit; font-weight: 900; color: #5B47D6; text-decoration: underline; cursor: pointer; padding: 6px; }
+.eltern-frage { display: grid; gap: 8px; justify-items: center; padding: 12px; border-radius: 16px; background: #F4F1FF; color: #2B2257; }
+.eltern-frage input { background: #fff; color: #2B2257; width: 120px; padding: 8px; border-radius: 10px; border: 2px solid #CFC8EE; font: inherit; font-size: 20px; text-align: center; }
+.ich-eltern-knopf { border: 2px dashed rgba(255,255,255,.6); background: transparent; color: #fff; font: inherit; font-weight: 900; padding: 10px 14px; border-radius: 16px; cursor: pointer; }
+.ich-eltern { display: grid; gap: 8px; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.18); color: #fff; font-weight: 800; }
+.ich-eltern select { margin-left: 8px; padding: 6px; border-radius: 8px; font: inherit; }

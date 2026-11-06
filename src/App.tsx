@@ -40,6 +40,7 @@ import { unitVideos } from './data/videos'
 import { WORLDS } from './data/curriculum'
 import { ALLES_OFFEN } from './lib/testmodus'
 import { OfflineHinweis } from './components/OfflineHinweis'
+import { LernzeitWaechter } from './components/LernzeitWaechter'
 import { Anzan } from './screens/Anzan'
 import { DenkPark } from './screens/DenkPark'
 import { Ich, Pokale } from './screens/Pokale'
@@ -103,7 +104,7 @@ export default function App() {
       location.hash = data?.rolle === 'partner' ? '#/partner' : '#eltern'
     })()
   }} />
-  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><OfflineHinweis />{route !== 'check' && <InstallHinweis />}</>
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><OfflineHinweis />{kidId && <LernzeitWaechter kidId={kidId} />}{route !== 'check' && <InstallHinweis />}</>
 }
 
 function Inhalt({ roh }: { roh: string }) {

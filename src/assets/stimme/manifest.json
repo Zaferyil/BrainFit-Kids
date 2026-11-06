@@ -355,5 +355,7 @@
  "Toll gemacht! Deine Buchseiten sind fertig.": "s-kiga-toll.mp3",
  "Dein Buch ist fertig. Super!": "s-kiga-fertig.mp3",
  "Fast! Denk an die Regel und versuch es nochmal.": "s-hilfe-tipp.mp3",
- "Schau, so geht es Schritt für Schritt.": "s-hilfe-schritte.mp3"
+ "Schau, so geht es Schritt für Schritt.": "s-hilfe-schritte.mp3",
+ "Super gelernt! Jetzt ist Zeit für eine kleine Pause. Steh auf, streck dich und trink einen Schluck Wasser!": "s-pause.mp3",
+ "Für heute hast du genug gelernt. Toll gemacht! Morgen geht es weiter.": "s-limit.mp3"
 }

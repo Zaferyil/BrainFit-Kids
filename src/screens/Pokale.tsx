@@ -1,3 +1,5 @@
+import { ElternFrage } from '../components/LernzeitWaechter'
+import { lernzeit, pauseNachMin } from '../lib/lernzeit'
 import { PasswortFeld } from '../components/PasswortFeld'
 import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
@@ -182,6 +184,8 @@ function PasswortAendern({ kid }: { kid: Kid }) {
 /** Ton und Animationen an/aus */
 function Einstellungen({ kidId }: { kidId: string }) {
   const [e, setE] = useState(() => kindEinstellungen(kidId))
+  const [elternFrage, setElternFrage] = useState(false)
+  const [elternOffen, setElternOffen] = useState(false)
   const setze = (neu: typeof e) => { setE(neu); speichereKindEinstellungen(kidId, neu) }
   return (
     <div className="ich-schalter">
@@ -190,6 +194,18 @@ function Einstellungen({ kidId }: { kidId: string }) {
       {spracheMoeglich() && <label><input type="checkbox" checked={!!e.sprechen} onChange={(x) => setze({ ...e, sprechen: x.target.checked })} /> 🎤 Antwort sagen statt tippen</label>}
       <label><input type="checkbox" checked={!!e.gross} onChange={(x) => setze({ ...e, gross: x.target.checked })} /> 🔠 Größere Schrift</label>
       <label><input type="checkbox" checked={!!e.muster} onChange={(x) => setze({ ...e, muster: x.target.checked })} /> 🎨 Farben mit Zeichen (bei Farbenblindheit)</label>
+      {!elternOffen ? <button type="button" className="ich-eltern-knopf" onClick={() => setElternFrage(true)}>👪 Für Eltern: Lernzeit</button> : (
+        <div className="ich-eltern">
+          <label><input type="checkbox" checked={e.pausen !== false} onChange={(x) => setze({ ...e, pausen: x.target.checked })} /> Pausen-Erinnerung (nach {pauseNachMin(kidId)} Minuten)</label>
+          <label>Tägliche Lernzeit
+            <select value={e.limitMin ?? 0} onChange={(x) => setze({ ...e, limitMin: Number(x.target.value) || undefined })}>
+              <option value={0}>ohne Grenze</option>{[15, 20, 30, 45, 60].map((m) => <option key={m} value={m}>{m} Minuten</option>)}
+            </select>
+          </label>
+          <small>Heute gelernt: {Math.round(lernzeit(kidId).sek / 60)} Minuten</small>
+        </div>
+      )}
+      {elternFrage && !elternOffen && <ElternFrage onOk={() => { setElternOffen(true); setElternFrage(false) }} onAbbruch={() => setElternFrage(false)} />}
     </div>
   )
 }

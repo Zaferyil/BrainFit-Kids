@@ -176,7 +176,7 @@ export function korrigieren(kidId: string, sterne: number, dia: number, grund: s
 }
 
 /** Einstellungen des Kindes: Ton und Animationen */
-export type KindEinstellungen = { ton: boolean; animation: boolean; sprechen?: boolean; gross?: boolean; muster?: boolean }
+export type KindEinstellungen = { ton: boolean; animation: boolean; sprechen?: boolean; gross?: boolean; muster?: boolean; pausen?: boolean; limitMin?: number }
 export const kindEinstellungen = (kidId: string) => load<KindEinstellungen>(`bfk.einstellungen.${kidId}`, { ton: true, animation: true })
 export const speichereKindEinstellungen = (kidId: string, e: KindEinstellungen) => { save(`bfk.einstellungen.${kidId}`, e); einstellungenAnwenden(e) }
 export function einstellungenAnwenden(e: KindEinstellungen) {
