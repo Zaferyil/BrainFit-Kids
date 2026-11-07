@@ -1,6 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
-import { STUFEN } from '../lib/check'
 
 // Öffentliche Anmeldung zu Online-Webinaren für Eltern (#/webinar, Website /webinar).
 // Den Zoom-Link gibt es nur per E-Mail nach der Anmeldung (Edge Function „webinar-anmeldung“).
@@ -11,7 +10,7 @@ const wann = (d: string) => new Date(d).toLocaleString('de-AT', { weekday: 'long
 export function Webinar({ wahl }: { wahl?: string }) {
   const [liste, setListe] = useState<W[] | null>(null)
   const [w, setW] = useState('')
-  const [f, setF] = useState({ vorname: '', nachname: '', mail: '', telefon: '', ort: '', kind_alter: '', kind_klasse: '' })
+  const [f, setF] = useState({ vorname: '', nachname: '', mail: '', telefon: '' })
   const [ok, setOk] = useState(false)
   const [status, setStatus] = useState<'' | 'senden' | 'fertig'>('')
   const [fehler, setFehler] = useState('')
@@ -52,17 +51,6 @@ export function Webinar({ wahl }: { wahl?: string }) {
                 <label>Nachname<input required value={f.nachname} onChange={set('nachname')} autoComplete="family-name" /></label>
                 <label>E-Mail<input required type="email" value={f.mail} onChange={set('mail')} autoComplete="email" /></label>
                 <label>Telefon<input required type="tel" value={f.telefon} onChange={set('telefon')} autoComplete="tel" /></label>
-                <label>Ort<input required value={f.ort} onChange={set('ort')} autoComplete="address-level2" /></label>
-                <label>Alter des Kindes
-                  <select required value={f.kind_alter} onChange={set('kind_alter')}>
-                    <option value="" disabled>Alter wählen</option>
-                    {Array.from({ length: 11 }, (_, i) => i + 3).map((a) => <option key={a} value={a}>{a} Jahre</option>)}
-                  </select></label>
-                <label>Klasse des Kindes
-                  <select required value={f.kind_klasse} onChange={set('kind_klasse')}>
-                    <option value="" disabled>Klasse wählen</option>
-                    {STUFEN.map((s) => <option key={s} value={s}>{s}</option>)}
-                  </select></label>
                 <label className="wb-ok"><input type="checkbox" required checked={ok} onChange={(e) => setOk(e.target.checked)} />
                   <span>Ich bin einverstanden, dass BrainFit Kids meine Angaben für dieses Webinar speichert und mir dazu E-Mails schickt (<a href="/datenschutz" target="_blank" rel="noopener">Datenschutz</a>).</span></label>
                 {fehler && <p className="wb-fehler">{fehler}</p>}

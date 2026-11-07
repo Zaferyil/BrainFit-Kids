@@ -36,7 +36,7 @@ export function AdminWebinare() {
   const kopieren = (t: string) => { void navigator.clipboard?.writeText(t); setMeldung('Link kopiert ✓') }
   const csv = (w: W) => {
     const z = anm.filter((a) => a.webinar === w.id)
-    const zeilen = [['Vorname', 'Nachname', 'E-Mail', 'Telefon', 'Ort', 'Alter Kind', 'Klasse Kind', 'Angemeldet'], ...z.map((a) => [a.vorname, a.nachname, a.mail, a.telefon ?? '', a.ort ?? '', String(a.kind_alter ?? ''), a.kind_klasse ?? '', datum(a.erstellt)])]
+    const zeilen = [['Vorname', 'Nachname', 'E-Mail', 'Telefon', 'Angemeldet'], ...z.map((a) => [a.vorname, a.nachname, a.mail, a.telefon ?? '', datum(a.erstellt)])]
     const text = '﻿' + zeilen.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(';')).join('\n')
     const u = URL.createObjectURL(new Blob([text], { type: 'text/csv' })); const l = document.createElement('a'); l.href = u; l.download = `webinar-${w.beginn.slice(0, 10)}.csv`; l.click(); URL.revokeObjectURL(u)
   }
@@ -78,8 +78,8 @@ export function AdminWebinare() {
                   </tr>
                   {offen === w.id && <tr><td colSpan={5}>
                     {!z.length ? <p className="adm-muted">Noch keine Anmeldungen.</p> : (
-                      <table className="adm-tabelle"><thead><tr><th>Name</th><th>E-Mail</th><th>Telefon</th><th>Ort</th><th>Kind</th><th>E-Mail gesendet</th><th>Angemeldet</th></tr></thead>
-                        <tbody>{z.map((a) => <tr key={a.id}><td>{a.vorname} {a.nachname}</td><td><a href={`mailto:${a.mail}`}>{a.mail}</a></td><td>{a.telefon}</td><td>{a.ort}</td><td>{a.kind_alter ? `${a.kind_alter} J.` : ''} {a.kind_klasse}</td><td>{a.mail_gesendet ? '✓' : '–'}</td><td>{datum(a.erstellt)}</td></tr>)}</tbody></table>
+                      <table className="adm-tabelle"><thead><tr><th>Name</th><th>E-Mail</th><th>Telefon</th><th>E-Mail gesendet</th><th>Angemeldet</th></tr></thead>
+                        <tbody>{z.map((a) => <tr key={a.id}><td>{a.vorname} {a.nachname}</td><td><a href={`mailto:${a.mail}`}>{a.mail}</a></td><td>{a.telefon}</td><td>{a.mail_gesendet ? '✓' : '–'}</td><td>{datum(a.erstellt)}</td></tr>)}</tbody></table>
                     )}
                   </td></tr>}
                 </Fragment>

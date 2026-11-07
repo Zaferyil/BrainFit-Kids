@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
   try {
     const b = await req.json()
-    const a = { vorname: txt(b.vorname), nachname: txt(b.nachname), mail: txt(b.mail).toLowerCase(), telefon: txt(b.telefon, 40), ort: txt(b.ort), kind_alter: Number(b.kind_alter) || null, kind_klasse: txt(b.kind_klasse, 40) }
+    const a = { vorname: txt(b.vorname), nachname: txt(b.nachname), mail: txt(b.mail).toLowerCase(), telefon: txt(b.telefon, 40) }
     if (!a.vorname || !a.nachname) return antwort({ fehler: 'Bitte Vor- und Nachnamen eingeben.' }, 400)
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.mail)) return antwort({ fehler: 'Bitte eine gültige E-Mail-Adresse eingeben.' }, 400)
     if (!b.zustimmung) return antwort({ fehler: 'Bitte der Datenverarbeitung zustimmen.' }, 400)
