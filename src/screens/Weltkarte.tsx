@@ -24,6 +24,9 @@ const BURGEN: Record<number, BurgArt> = {
 const burgVon = (welt: number): BurgArt => BURGEN[welt] ?? { bild: burgBild, hoch: 429 / 600 }
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
+/** Kurzname je Welt für die Welt-Knöpfe über der Karte */
+const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🚀 Space', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden' }
+
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
 type Stop = Exclude<MapStop, { kind: 'world' }>
@@ -139,8 +142,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
       {welten.length > 1 && (
         <nav className="welt-wahl" aria-label="Welt wählen">
           {welten.map((w) => (
-            <button key={w} type="button" className={w === zeigWelt ? 'on' : ''} aria-pressed={w === zeigWelt} onClick={() => setAnsicht(w)}>
-              {w < progress.world ? '✓ ' : ''}Welt {w}
+            <button key={w} type="button" className={w === zeigWelt ? 'on' : ''} aria-pressed={w === zeigWelt} title={`Welt ${w} – ${WORLDS[w - 1]?.name ?? ''}`} onClick={() => setAnsicht(w)}>
+              {WELT_KURZ[w] ?? `Welt ${w}`}
             </button>
           ))}
         </nav>
