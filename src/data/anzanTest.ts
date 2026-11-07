@@ -1,8 +1,10 @@
 import { buchAufgaben } from './buch'
 
-// Aufgaben der Anzan-Tests am Ende einer Welt (Karte Platz 23 und 24): je 5 Aufgaben aus den
-// Wiederholungsseiten des Basic Books, Test 1 kürzere (A), Test 2 längere Ketten (B).
-const SEITEN: Record<number, [number, number]> = { 4: [59, 60] }
+// Regel ab Welt 4: die letzten zwei Plätze jeder Welt sind Anzan-Tests (Zahlen blitzen auf, Kopfrechnen).
+// Je 5 Aufgaben aus den Wiederholungsseiten des Basic Books zum Thema der Welt:
+// Test 1 kürzere Ketten im Tempo „Normal“, Test 2 längere Ketten im Tempo „Schnell“ – das Kind wird zum Ende hin schneller.
+const SEITEN: Record<number, [number, number]> = { 4: [59, 60], 5: [69, 70] }
+export const ANZAN_TEST_TEMPO: Record<number, number> = { 1: 1100, 2: 800 }
 
 export function anzanTestAufgaben(welt: number, nr: number): { numbers: number[]; answer: number }[] {
   const [s1, s2] = SEITEN[welt] ?? [59, 60]

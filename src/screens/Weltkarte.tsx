@@ -10,7 +10,7 @@ import { setReplay, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
 import { etappenNachWelt } from '../data/karten'
 import { anzanTestKey, anzanTestStarten } from './Anzan'
-import { anzanTestAufgaben } from '../data/anzanTest'
+import { ANZAN_TEST_TEMPO, anzanTestAufgaben } from '../data/anzanTest'
 import { load } from '../lib/storage'
 import { ALLES_OFFEN } from '../lib/testmodus'
 import { WORLDS } from '../data/curriculum'
@@ -239,7 +239,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                     <div className="path-stop">
                       {offen
                         ? <a href="#/anzan" className={`path-node unit ${fertig ? 'done' : aktuell ? 'current' : 'offen'}`} aria-label={label}
-                            onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1) })}>{knopfBild}</a>
+                            onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1), ms: ANZAN_TEST_TEMPO[k + 1] })}>{knopfBild}</a>
                         : <button type="button" className="path-node unit locked" aria-label={`${label} (gesperrt)`} onClick={() => setSay(k === 0 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>{knopfBild}</button>}
                       <div className="path-label ziel-label">⚡ {label}</div>
                     </div>

@@ -32,7 +32,8 @@ const FARBEN = ['#FF4D6D', '#1E9BFF', '#14B86A', '#FF8A1F', '#A93BFF', '#00B3A4'
 const zufall = (n: number) => Math.floor(Math.random() * n)
 
 /** Anzan-Test am Ende einer Welt (Karte Platz 23/24): vorgegebene Aufgaben, kein Level-Wählen */
-export type AnzanTest = { welt: number; nr: 1 | 2; aufgaben: Aufgabe[] }
+/** ms: feste Zeit je Zahl – Test 2 ist schneller als Test 1, damit das Kind zum Ende der Welt Tempo aufbaut */
+export type AnzanTest = { welt: number; nr: 1 | 2; aufgaben: Aufgabe[]; ms?: number }
 const TEST_KEY = 'bfk.anzan-test'
 export const anzanTestStarten = (t: AnzanTest) => { try { sessionStorage.setItem(TEST_KEY, JSON.stringify(t)) } catch { /* egal */ } }
 // einmal lesen und gleich löschen: wer danach normal zu Anzan geht, bekommt wieder die Level-Wahl
@@ -67,7 +68,7 @@ export function Anzan({ kid }: { kid: Kid }) {
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const a = aufgaben[nr]
-  const ms = TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
+  const ms = test?.ms ?? TEMPO[Math.min(stand.tempo, TEMPO.length - 1)].ms
 
   // Zahlen nacheinander zeigen
   useEffect(() => {
