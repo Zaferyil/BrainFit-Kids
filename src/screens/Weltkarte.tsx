@@ -65,17 +65,26 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
     return m
   }, [plaetze])
   // Welt jeder Station (Spiele gehören zur Welt der Lektion davor)
-  const teile = useMemo(() => {
-    let w = 1
-    return etappenNachWelt(nurStops.map((s) => (s.kind === 'unit' ? (w = s.world.n) : w)))
-  }, [nurStops])
-  // Laufende Nummer nur für Lektionen und Spiele (Burgen zählen nicht mit)
-  const nummer = useMemo(() => { const m = new Map<string, number>(); let n = 0; for (const p of plaetze) if (p.kind !== 'burg') m.set(p.id, ++n); return m }, [plaetze])
+  const weltVon = useMemo(() => { let w = 1; return nurStops.map((s) => (s.kind === 'unit' ? (w = s.world.n) : w)) }, [nurStops])
+  // Es ist immer nur EINE Welt zu sehen: die aktuelle; geschaffte Welten über die Welt-Knöpfe oben
+  const [ansicht, setAnsicht] = useState(progress.world)
+  const welten = useMemo(() => [...new Set(weltVon)], [weltVon])
+  const zeigWelt = welten.includes(ansicht) ? ansicht : welten[welten.length - 1] ?? 1
+  // Bilder wie bisher über alle Welten verteilen (sie passen zu den Weltgrenzen), dann nur die Etappen dieser Welt
+  const teile = useMemo(() => etappenNachWelt(weltVon).filter((t) => weltVon[t.start] === zeigWelt), [weltVon, zeigWelt])
+  // Nummern beginnen in jeder Welt bei 1 (passt auch zu den gemalten Knöpfen der Abenteuer-Karten)
+  const nummer = useMemo(() => {
+    const m = new Map<string, number>(); const z = new Map<number, number>()
+    nurStops.forEach((s, i) => { const n = (z.get(weltVon[i]) ?? 0) + 1; z.set(weltVon[i], n); m.set(s.id, n) })
+    return m
+  }, [nurStops, weltVon])
 
-  // Beim Öffnen zur aktuellen Station scrollen
+  // Beim Öffnen und beim Weltwechsel: zur aktuellen Station, sonst zum Anfang der Welt (unten)
   useEffect(() => {
-    scroller.current?.querySelector('.path-node.current')?.scrollIntoView({ block: 'center' })
-  }, [])
+    const cur = scroller.current?.querySelector('.path-node.current')
+    if (cur) cur.scrollIntoView({ block: 'center' })
+    else window.scrollTo({ top: document.documentElement.scrollHeight })
+  }, [zeigWelt])
 
   const daily = getDaily(kid.id)
   const quests = [
@@ -94,7 +103,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </a>
         <button type="button" className="nk-hello-text nk-hello-btn" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
           <strong>Hallo {kid.name}!</strong>
-          <span>Welt {progress.world} · {WORLDS[progress.world - 1]?.name.replace(/-/g, ' ')}</span>
+          <span>Welt {zeigWelt} · {WORLDS[zeigWelt - 1]?.name.replace(/-/g, ' ')}</span>
         </button>
         <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
         <div className="path-tools">
@@ -127,6 +136,15 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         )}
       </header>
 
+      {welten.length > 1 && (
+        <nav className="welt-wahl" aria-label="Welt wählen">
+          {welten.map((w) => (
+            <button key={w} type="button" className={w === zeigWelt ? 'on' : ''} aria-pressed={w === zeigWelt} onClick={() => setAnsicht(w)}>
+              {w < progress.world ? '✓ ' : ''}Welt {w}
+            </button>
+          ))}
+        </nav>
+      )}
       <div className="path-screen">
         <div className="inseln" ref={scroller}>
           {[...teile].reverse().map(({ karte, start, anzahl }, k) => {
@@ -191,7 +209,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   </div>
                 )
               })}
-              {start === 0 && (
+              {k === teile.length - 1 && (
                 <div className="insel-perli">
                   <div className="map-bubble" role="status">{say}</div>
                 </div>

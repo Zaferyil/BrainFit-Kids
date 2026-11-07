@@ -3099,3 +3099,7 @@ label .pw-feld { margin-top: 4px; }
 .chk-start .wb-ok { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; font-size: 14px; color: #4A4370; }
 .chk-start .wb-ok input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
 .wb-fehler { color: #D9294A !important; font-weight: 800; }
+/* Welt-Knöpfe über der Karte: nur eine Welt ist zu sehen */
+.welt-wahl { position: relative; z-index: 30; display: flex; gap: 6px; justify-content: center; flex-wrap: nowrap; overflow-x: auto; padding: 8px 12px 4px; scrollbar-width: none; }
+.welt-wahl button { flex: none; border: 0; border-radius: 999px; padding: 6px 11px; font: 900 13px Nunito, sans-serif; background: rgba(255,255,255,.85); color: #4B2FC2; box-shadow: 0 3px 0 rgba(35,26,79,.25); cursor: pointer; }
+.welt-wahl button.on { background: #FFC531; color: #231A4F; box-shadow: 0 3px 0 #D99A00; }
