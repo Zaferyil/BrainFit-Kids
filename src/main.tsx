@@ -23,6 +23,13 @@ try {
   }
 } catch { /* Speicher nicht verfügbar */ }
 
+// Neue App-Version: der Service Worker übernimmt sofort (autoUpdate), die Seite läuft aber noch mit dem alten Code.
+// Dann einmal neu laden, damit beim ersten Öffnen nicht die alte Version zu sehen ist (z. B. alle Welten auf der Karte).
+if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+  let neu = false
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (!neu) { neu = true; window.location.reload() } })
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
