@@ -177,7 +177,8 @@ function LosPopup({ kid }: { kid: Kid }) {
       <div className="nk-los-karte popin">
         <small>Hallo {kid.name}!</small>
         <strong>{next.title}</strong>
-        <a href="#/inseln" className="zh-los">
+        {/* Wurde das Anmelden auf #/inseln gezeigt (Seite ohne Sitzung geöffnet), ändert der Link die Adresse nicht – dann neu laden */}
+        <a href="#/inseln" className="zh-los" onClick={(e) => { if (window.location.hash === '#/inseln') { e.preventDefault(); window.location.reload() } }}>
           <Icon name="play" color="#2B1A7A" fill="#2B1A7A" size={58} />
           <span>Los geht’s</span>
         </a>
