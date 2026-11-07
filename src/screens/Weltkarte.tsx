@@ -191,7 +191,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 if (!s) return null
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
-                    <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} onLocked={(text) => setSay(text)} />
+                    <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} bild={karte.knoepfe?.[(nummer.get(s.id) ?? 1) - 1]} onLocked={(text) => setSay(text)} />
                     {s.state === 'current' && <a href="#/seza" className="stop-seza" aria-label="Mein SeZa"><SeZa kidId={kid.id} groesse={72} /></a>}
                   </div>
                 )
@@ -201,12 +201,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 if (!p) return null
                 const pos = { left: `${(p[0] / karte.w) * 100}%`, top: `${(p[1] / hoehe) * 100}%` }
                 const offen = weltEnde.geschafft
+                const kb = karte.knoepfe?.[anzahl + k + (start - (teile[0]?.start ?? 0))]
+                const knopfBild = kb ? <img className="knopf-bild" src={kb} alt="" draggable={false} /> : null
                 return (
                   <div key={`ziel-${k}`} className="insel-stop" style={pos}>
                     <div className="path-stop">
                       {k === 0
-                        ? (offen ? <a href={`#/pruefung/${weltEnde.welt}`} className="path-node unit done" aria-label="Gürtel-Prüfung" /> : <button type="button" className="path-node unit locked" aria-label="Gürtel-Prüfung (gesperrt)" onClick={() => setSay('Die Gürtel-Prüfung kommt, wenn du alle Lektionen dieser Welt geschafft hast.')} />)
-                        : <button type="button" className={`path-node unit ${offen ? 'done' : 'locked'}`} aria-label="Ziel der Welt" onClick={() => setSay(offen ? 'Super! Diese Welt hast du geschafft!' : 'Hier ist das Ziel dieser Welt.')} />}
+                        ? (offen ? <a href={`#/pruefung/${weltEnde.welt}`} className="path-node unit done" aria-label="Gürtel-Prüfung">{knopfBild}</a> : <button type="button" className="path-node unit locked" aria-label="Gürtel-Prüfung (gesperrt)" onClick={() => setSay('Die Gürtel-Prüfung kommt, wenn du alle Lektionen dieser Welt geschafft hast.')}>{knopfBild}</button>)
+                        : <button type="button" className={`path-node unit ${offen ? 'done' : 'locked'}`} aria-label="Ziel der Welt" onClick={() => setSay(offen ? 'Super! Diese Welt hast du geschafft!' : 'Hier ist das Ziel dieser Welt.')}>{knopfBild}</button>}
                       <div className="path-label ziel-label">{k === 0 ? '🥋 Gürtel-Prüfung' : '🏆 Ziel'}</div>
                     </div>
                   </div>
@@ -247,7 +249,7 @@ function greeting(s?: MapStop) {
   return ''
 }
 
-function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onLocked: (text: string) => void }) {
+function Node({ stop, n, kid, bild, onLocked }: { stop: Stop; n: number; kid: Kid; bild?: string; onLocked: (text: string) => void }) {
   const current = stop.state === 'current'
   const cls = `path-node ${stop.kind} ${stop.state}`
   const label = stop.kind === 'unit' ? stop.name : stop.kind === 'game' ? stop.game.name : 'Perli kennenlernen'
@@ -255,6 +257,7 @@ function Node({ stop, n, kid, onLocked }: { stop: Stop; n: number; kid: Kid; onL
   // Denkspiele (nicht Mental-Arithmetik) tragen ein kleines Gehirn auf der Nummer
   const inner = (
     <>
+      {bild && <img className="knopf-bild" src={bild} alt="" draggable={false} />}
       <span className="path-num">{n}</span>
       {stop.kind === 'game' && <span className="path-gehirn" aria-hidden="true"><Icon name="brain" color="#FFFFFF" size={14} strokeWidth={2.6} /></span>}
     </>

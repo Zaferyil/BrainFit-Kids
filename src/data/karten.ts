@@ -8,13 +8,17 @@ import aeg2 from '../assets/karte/insel-aegypten-2.webp'
 import aeg3 from '../assets/karte/insel-aegypten-3.webp'
 import aeg4 from '../assets/karte/insel-aegypten-4.webp'
 
+// Nummern-Knöpfe der Ägypten-Karte (1–24, freigestellt): knoepfe[n-1] = Knopf mit Nummer n
+const KNOPF_DATEIEN = import.meta.glob('../assets/karte/knopf/aeg-*.webp', { eager: true, import: 'default' }) as Record<string, string>
+const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
+
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
 // mit ihren Plätzen auf dem Weg, von unten (Start) nach oben. Gibt es mehr Etappen als Bilder,
 // beginnen die Bilder wieder von vorn.
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
 /** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean }
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[] }
 
 export const KARTEN: Karte[] = [
   {
@@ -47,10 +51,10 @@ export const KARTEN: Karte[] = [
  *  gemalt: die Nummern-Knöpfe sind im Bild – die App legt nur unsichtbare Knöpfe mit Zustand darüber. */
 export const WELT_KARTEN: Record<number, Karte[]> = {
   4: [
-    { gemalt: true, bild: aeg1, w: 909, h: 1060, plaetze: [[304, 855], [594, 700], [309, 590], [609, 465], [399, 340], [704, 240]] },
-    { gemalt: true, bild: aeg2, w: 909, h: 1060, plaetze: [[296, 815], [584, 685], [317, 580], [609, 435], [381, 315], [681, 228]] },
-    { gemalt: true, bild: aeg3, w: 909, h: 1060, plaetze: [[339, 830], [532, 670], [319, 540], [594, 455], [389, 330], [679, 245]] },
-    { gemalt: true, bild: aeg4, w: 909, h: 1060, plaetze: [[274, 875], [554, 755], [354, 615], [609, 490], [359, 405], [569, 273]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg2, w: 941, h: 1220, plaetze: [[260, 950], [620, 830], [300, 700], [640, 550], [360, 420], [700, 300]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg3, w: 941, h: 1180, plaetze: [[260, 925], [570, 805], [300, 645], [600, 505], [360, 400], [720, 275]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg4, w: 941, h: 1180, plaetze: [[270, 960], [560, 850], [320, 720], [640, 565], [380, 445], [605, 335]] },
   ],
 }
 
