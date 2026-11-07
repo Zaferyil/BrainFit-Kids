@@ -9,6 +9,10 @@ import type { Kid } from '../data/demo'
 import { setReplay, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
 import { etappenNachWelt } from '../data/karten'
+import { anzanTestKey, anzanTestStarten } from './Anzan'
+import { anzanTestAufgaben } from '../data/anzanTest'
+import { load } from '../lib/storage'
+import { ALLES_OFFEN } from '../lib/testmodus'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
 import burgWelt2 from '../assets/karte/erfolgsburg-welt2.webp'
@@ -216,19 +220,28 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 <button type="button" className="karte-weiter unten" onClick={() => blaettern(seite - 1)} aria-label="Zurück zur vorigen Karte">⬅ Zurück</button>
               )}
               {gemalt && weltEnde && [0, 1].map((k) => {
+                // Platz 23 und 24: Anzan-Tests (Zahlen blitzen auf, das Kind rechnet im Kopf)
                 const p = karte.plaetze[anzahl + k]
                 if (!p) return null
                 const pos = { left: `${(p[0] / karte.w) * 100}%`, top: `${(p[1] / hoehe) * 100}%` }
-                const offen = weltEnde.geschafft
+                const weltStops = nurStops.filter((_, i) => weltVon[i] === weltEnde.welt)
+                const alleFertig = ALLES_OFFEN || weltStops.every((x) => x.state === 'done')
+                const t1 = load<boolean>(anzanTestKey(kid.id, weltEnde.welt, 1), false)
+                const t2 = load<boolean>(anzanTestKey(kid.id, weltEnde.welt, 2), false)
+                const offen = k === 0 ? alleFertig : alleFertig && (t1 || ALLES_OFFEN)
+                const fertig = k === 0 ? t1 : t2
+                const aktuell = offen && !fertig && (k === 0 || !t2)
                 const kb = karte.knoepfe?.[anzahl + k + (start - (teile[0]?.start ?? 0))]
                 const knopfBild = kb ? <img className="knopf-bild" src={kb} alt="" draggable={false} /> : null
+                const label = `Anzan-Test ${k + 1}`
                 return (
                   <div key={`ziel-${k}`} className="insel-stop" style={pos}>
                     <div className="path-stop">
-                      {k === 0
-                        ? (offen ? <a href={`#/pruefung/${weltEnde.welt}`} className="path-node unit done" aria-label="Gürtel-Prüfung">{knopfBild}</a> : <button type="button" className="path-node unit locked" aria-label="Gürtel-Prüfung (gesperrt)" onClick={() => setSay('Die Gürtel-Prüfung kommt, wenn du alle Lektionen dieser Welt geschafft hast.')}>{knopfBild}</button>)
-                        : <button type="button" className={`path-node unit ${offen ? 'done' : 'locked'}`} aria-label="Ziel der Welt" onClick={() => setSay(offen ? 'Super! Diese Welt hast du geschafft!' : 'Hier ist das Ziel dieser Welt.')}>{knopfBild}</button>}
-                      <div className="path-label ziel-label">{k === 0 ? '🥋 Gürtel-Prüfung' : '🏆 Ziel'}</div>
+                      {offen
+                        ? <a href="#/anzan" className={`path-node unit ${fertig ? 'done' : aktuell ? 'current' : 'offen'}`} aria-label={label}
+                            onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1) })}>{knopfBild}</a>
+                        : <button type="button" className="path-node unit locked" aria-label={`${label} (gesperrt)`} onClick={() => setSay(k === 0 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>{knopfBild}</button>}
+                      <div className="path-label ziel-label">⚡ {label}</div>
                     </div>
                   </div>
                 )

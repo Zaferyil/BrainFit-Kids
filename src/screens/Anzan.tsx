@@ -31,6 +31,14 @@ const FARBEN = ['#FF4D6D', '#1E9BFF', '#14B86A', '#FF8A1F', '#A93BFF', '#00B3A4'
 
 const zufall = (n: number) => Math.floor(Math.random() * n)
 
+/** Anzan-Test am Ende einer Welt (Karte Platz 23/24): vorgegebene Aufgaben, kein Level-Wählen */
+export type AnzanTest = { welt: number; nr: 1 | 2; aufgaben: Aufgabe[] }
+const TEST_KEY = 'bfk.anzan-test'
+export const anzanTestStarten = (t: AnzanTest) => { try { sessionStorage.setItem(TEST_KEY, JSON.stringify(t)) } catch { /* egal */ } }
+// einmal lesen und gleich löschen: wer danach normal zu Anzan geht, bekommt wieder die Level-Wahl
+const testLesen = (): AnzanTest | null => { try { const t = sessionStorage.getItem(TEST_KEY); sessionStorage.removeItem(TEST_KEY); return t ? JSON.parse(t) as AnzanTest : null } catch { return null } }
+export const anzanTestKey = (kidId: string, welt: number, nr: number) => `bfk.anzan-test.${kidId}.${welt}.${nr}`
+
 type Phase = 'wahl' | 'zeigen' | 'tippen' | 'fertig'
 
 export function Anzan({ kid }: { kid: Kid }) {
@@ -47,8 +55,15 @@ export function Anzan({ kid }: { kid: Kid }) {
   const [ergebnis, setErgebnis] = useState<'richtig' | 'falsch' | null>(null)
   const [richtig, setRichtig] = useState(0)
   const timer = useRef<number>(0)
+  const [test] = useState(testLesen)
 
   useEffect(() => { save(key, stand) }, [key, stand])
+  // Test: sofort mit den vorgegebenen Aufgaben starten (Tempo „Langsam“ bzw. das gewählte, Modus Sehen)
+  useEffect(() => {
+    if (!test) return
+    setAufgaben(test.aufgaben.slice(0, RUNDE)); setNr(0); setRichtig(0); naechste(); void speak(SAY.passAuf)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
   const a = aufgaben[nr]
@@ -91,6 +106,11 @@ export function Anzan({ kid }: { kid: Kid }) {
       if (nr + 1 < RUNDE) { setNr(nr + 1); naechste() }
       else {
         const r = richtig + (ok ? 1 : 0)
+        if (test) {
+          if (r >= 4) save(anzanTestKey(kid.id, test.welt, test.nr), true)
+          rewardGame(kid.id, r * 2)
+          setPhase('fertig'); return
+        }
         rewardGame(kid.id, r * 2, r >= 4 ? `anzan-${stand.level}` : undefined)
         if (r >= 4 && stand.level === stand.frei && stand.frei < LEVELS.length) setStand((s) => ({ ...s, frei: s.frei + 1 }))
         const tNeu = r === RUNDE && stand.tempo === tempoFrei && tempoFrei < TEMPO.length - 1
@@ -115,7 +135,7 @@ export function Anzan({ kid }: { kid: Kid }) {
       <Funkeln />
       <div className="az">
         <header className="az-kopf">
-          <h1>Anzan</h1>
+          <h1>{test ? `Anzan-Test ${test.nr}` : 'Anzan'}</h1>
           <p>Zahlen blitzen auf – rechne im Kopf!</p>
         </header>
 
@@ -158,7 +178,7 @@ export function Anzan({ kid }: { kid: Kid }) {
 
         {(phase === 'zeigen' || phase === 'tippen') && a && (
           <section className="az-spiel">
-            <div className="az-info"><span>Level {stand.level}</span><span>Aufgabe {nr + 1} / {RUNDE}</span></div>
+            <div className="az-info"><span>{test ? `Anzan-Test ${test.nr}` : `Level ${stand.level}`}</span><span>Aufgabe {nr + 1} / {RUNDE}</span></div>
             <div className={`az-tafel ${ergebnis ?? ''}`}>
               {phase === 'zeigen' && hoeren && schritt >= 0 && zahl !== null
                 ? <span key={schritt} className="az-hoer"><Icon name="volume" size={90} color="#5B47D6" /><small>Zahl {schritt + 1}</small></span>
@@ -184,9 +204,12 @@ export function Anzan({ kid }: { kid: Kid }) {
             <div className="az-sterne">{[0, 1, 2].map((i) => <Icon key={i} name="star" size={44} color="#E0A100" fill={i < Math.round((richtig / RUNDE) * 3) ? '#FFC531' : 'rgba(255,255,255,.25)'} />)}</div>
             <h2>{richtig} von {RUNDE} richtig!</h2>
             <p>+{richtig * 2} Perlen</p>
-            {neuesTempo && <p className="az-neu">⚡ Neues Tempo frei: {TEMPO[tempoFrei].name} ({(TEMPO[tempoFrei].ms / 1000).toLocaleString('de-AT')} s)!</p>}
+            {test && <p className="az-neu">{richtig >= 4 ? `🏅 Anzan-Test ${test.nr} bestanden!` : 'Für den Test brauchst du 4 richtige. Versuch es nochmal!'}</p>}
+            {test && <a className="az-start" href="#/inseln">Zur Karte</a>}
+            {!test && neuesTempo && <p className="az-neu">⚡ Neues Tempo frei: {TEMPO[tempoFrei].name} ({(TEMPO[tempoFrei].ms / 1000).toLocaleString('de-AT')} s)!</p>}
+            {test ? <button type="button" className="az-zurueck" onClick={() => { setAufgaben(test.aufgaben.slice(0, RUNDE)); setNr(0); setRichtig(0); naechste() }}>Nochmal</button> : <>
             <button type="button" className="az-start" onClick={starten}>Nochmal</button>
-            <button type="button" className="az-zurueck" onClick={() => setPhase('wahl')}>Level wählen</button>
+            <button type="button" className="az-zurueck" onClick={() => setPhase('wahl')}>Level wählen</button></>}
           </section>
         )}
       </div>
