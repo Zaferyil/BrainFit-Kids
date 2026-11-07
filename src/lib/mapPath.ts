@@ -61,6 +61,10 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
     if (s.kind === 'start') return getPlacement(kid.id) !== null
     if (s.kind === 'world') return s.world.n < progress.world
     if (s.kind === 'unit') return s.world.n < progress.world || (s.world.n === progress.world && s.unit < progress.unit)
+    // Spiel nach Lektion i: als geschafft zählen, wenn das Kind schon über die nächste Lektion hinaus ist
+    // (sonst bliebe ein übersprungenes Spiel einer früheren Welt für immer die „aktuelle“ Station)
+    const m = /^w(\d+)-e(\d+)-spiel$/.exec(s.id)
+    if (m) { const w = Number(m[1]), u = Number(m[2]) + 1; if (w < progress.world || (w === progress.world && u < progress.unit)) return true }
     return done.has(s.id)
   }
   let found = false

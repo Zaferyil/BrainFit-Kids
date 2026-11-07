@@ -3088,9 +3088,9 @@ label .pw-feld { margin-top: 4px; }
   .ber-zitat { font-size: 14px; }
 }
 /* Gemalte Karten (Welt 4 Ägypten): Nummern-Knöpfe sind im Bild, darüber nur unsichtbare Knöpfe mit Zustand */
-.insel.gemalt .path-node { width: 15.5cqw !important; height: 10.5cqw !important; aspect-ratio: auto; margin: 0 !important; border-radius: 50%; background: transparent !important; box-shadow: none; animation: none; }
+.insel.gemalt .path-node { width: 15.5cqw !important; height: 10.5cqw !important; aspect-ratio: auto; margin: 0 !important; padding: 0 !important; flex: none !important; box-sizing: border-box; backdrop-filter: none !important; border-radius: 50%; background: transparent !important; box-shadow: none; animation: none; }
 .insel.gemalt .path-num, .insel.gemalt .path-gehirn { display: none; }
-.insel.gemalt .path-node.locked { background: rgba(35,26,79,.42) !important; box-shadow: none; }
+.insel.gemalt .path-node.locked { background: rgba(35,26,79,.28) !important; box-shadow: none; backdrop-filter: none !important; }
 .insel.gemalt .path-node.current { box-shadow: 0 0 0 5px #FFE14D, 0 0 22px 8px rgba(255,225,77,.85); animation: path-pulse 2s ease-in-out infinite; }
 .insel.gemalt .path-stars { margin-top: -1.5cqw; }
 .insel.gemalt .ziel-label { font-size: 13px; }
