@@ -62,10 +62,10 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg4, w: 941, h: 1480, plaetze: [[270, 960], [560, 850], [320, 720], [640, 565], [380, 445], [605, 335]] },
   ],
   5: [
-    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum1, w: 941, h: 1672, plaetze: [[240, 1240], [450, 1190], [650, 1085], [800, 935], [785, 760], [560, 720]] },
-    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum2, w: 941, h: 1672, plaetze: [[240, 1140], [460, 1060], [640, 965], [790, 830], [745, 705], [520, 735]] },
-    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum3, w: 941, h: 1672, plaetze: [[370, 1235], [570, 1175], [725, 1080], [765, 905], [640, 810], [440, 735]] },
-    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum4, w: 941, h: 1672, plaetze: [[330, 1290], [545, 1195], [690, 1065], [520, 960], [255, 905], [480, 715]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum1, w: 941, h: 1427, plaetze: [[240, 995], [450, 945], [650, 840], [800, 690], [785, 515], [560, 475]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum2, w: 941, h: 1427, plaetze: [[240, 895], [460, 815], [640, 720], [790, 585], [745, 460], [520, 490]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum3, w: 941, h: 1427, plaetze: [[370, 990], [570, 930], [725, 835], [765, 660], [640, 565], [440, 490]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum4, w: 941, h: 1427, plaetze: [[330, 1045], [545, 950], [690, 820], [520, 715], [255, 660], [480, 470]] },
   ],
 }
 
