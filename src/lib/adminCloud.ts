@@ -85,3 +85,15 @@ export async function elternKinder() {
 }
 export const elternPasswortVergessen = (email: string) =>
   supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${location.origin}/app/` })
+
+/** Passwörter der Kinder (nur Admin darf lesen; Tabelle kind_passwort, update-19) */
+export async function kinderPasswoerter(): Promise<Record<string, string>> {
+  const { data } = await supabase.from('kind_passwort').select('kind, passwort')
+  return Object.fromEntries((data ?? []).map((x: { kind: string; passwort: string }) => [x.kind, x.passwort]))
+}
+/** Admin vergibt einem Kind ein neues Passwort und bekommt es zurück */
+export async function neuesKindPasswort(kind: string): Promise<string> {
+  const { data, error } = await supabase.functions.invoke('kind-anlegen', { body: { aktion: 'neues-passwort', kind } })
+  if (error || !data?.passwort) throw new Error(data?.fehler ?? error?.message ?? 'Fehler')
+  return data.passwort as string
+}

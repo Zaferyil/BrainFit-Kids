@@ -20,7 +20,17 @@ Deno.serve(async (req) => {
   const { data: ich } = await admin.from('personen').select('rolle').eq('id', user.id).single()
   if (!ich || !['admin', 'lehrkraft'].includes(ich.rolle)) return antwort({ fehler: 'keine Berechtigung' }, 403)
 
-  const { vorname, stufe = null, klasse = null } = await req.json()
+  const body = await req.json()
+  // Admin: neues Passwort für ein bestehendes Kind (alte Passwörter sind verschlüsselt und nicht lesbar)
+  if (body.aktion === 'neues-passwort') {
+    if (ich.rolle !== 'admin') return antwort({ fehler: 'keine Berechtigung' }, 403)
+    const pw = passwort()
+    const { error } = await admin.auth.admin.updateUserById(body.kind, { password: pw })
+    if (error) return antwort({ fehler: error.message }, 400)
+    await admin.from('kind_passwort').upsert({ kind: body.kind, passwort: pw, geaendert: new Date().toISOString() })
+    return antwort({ passwort: pw })
+  }
+  const { vorname, stufe = null, klasse = null } = body
   if (!vorname || String(vorname).trim().length < 1) return antwort({ fehler: 'Vorname fehlt' }, 400)
   const ergebnis = await kindAnlegen(admin, String(vorname).trim(), stufe, klasse, null, null)
   return antwort(ergebnis)
@@ -42,6 +52,7 @@ export async function kindAnlegen(admin: any, vorname: string, stufe: number | n
   await admin.from('personen').insert({ id, rolle: 'kind', name: vorname })
   await admin.from('kinder').insert({ id, benutzer, vorname, stufe, klasse, eltern, paket })
   await admin.from('konten').insert({ kind: id })
+  await admin.from('kind_passwort').insert({ kind: id, passwort: pw })
   const { data: start } = await admin.from('shop_artikel').select('id').eq('start', true)
   if (start?.length) await admin.from('besitz').insert(start.map((a: { id: string }) => ({ kind: id, artikel: a.id })))
   return { id, benutzer, passwort: pw }

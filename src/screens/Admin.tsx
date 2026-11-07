@@ -8,7 +8,7 @@ import { benutzerVon, passwortVon } from '../data/demo'
 import { ALLES_OFFEN, setTestmodus } from '../lib/testmodus'
 import { klasseInDB } from '../lib/adminCloud'
 import { HAUSAUFGABEN_AKTIV } from '../lib/auftraege'
-import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, stufeCloud } from '../lib/adminCloud'
+import { adminAbmelden, adminAnmelden, adminSitzung, alleKinderLaden, archivCloud, kindAnlegenCloud, klasseCloud, korrigierenCloud, kinderPasswoerter, neuesKindPasswort, stufeCloud } from '../lib/adminCloud'
 import { istCloudKind } from '../lib/serverRpc'
 import { AdminWebsite } from './AdminWebsite'
 import { AdminBestellungen } from './AdminBestellungen'
@@ -179,6 +179,13 @@ function Uebersicht({ zeilen, onKind }: { zeilen: KidZeile[]; onKind: () => void
 function Kinder({ zeilen, onChange, rolle, dbKlassen }: { zeilen: KidZeile[]; onChange: () => void; rolle: 'admin' | 'lehrkraft'; dbKlassen: string[] | null }) {
   const [offen, setOffen] = useState<string | null>(null)
   const [filter, setFilter] = useState('alle')
+  // Admin sieht die Passwörter der Online-Kinder (Tabelle kind_passwort)
+  const [pw, setPw] = useState<Record<string, string>>({})
+  useEffect(() => { if (rolle === 'admin') kinderPasswoerter().then(setPw).catch(() => {}) }, [rolle, zeilen])
+  const neuesPw = async (id: string, name: string) => {
+    if (!confirm(`${name} bekommt ein neues Passwort. Das alte gilt dann nicht mehr. Weiter?`)) return
+    try { const n = await neuesKindPasswort(id); setPw((a) => ({ ...a, [id]: n })) } catch (e) { alert('Fehler: ' + (e as Error).message) }
+  }
   // Admin: alle Klassen; Lehrkraft: nur die vom Admin zugeteilten
   const codes = rolle === 'admin' ? [...new Set([...klassenCodes(), ...(dbKlassen ?? [])])].sort() : dbKlassen ?? []
   const sichtbar = filter === 'alle' ? zeilen : zeilen.filter((z) => z.klassenCode === filter)
@@ -204,8 +211,11 @@ function Kinder({ zeilen, onChange, rolle, dbKlassen }: { zeilen: KidZeile[]; on
             {sichtbar.map((z) => (
               <Fragment key={z.kid.id}>
                 <tr>
-                  <td><span className="adm-kind"><Avatar size={32} {...z.kid.avatar} /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
-                  <td><small className="adm-login">{benutzerVon(z.kid)}<br />{istCloudKind(z.kid.id) ? <i title="Passwort ist verschlüsselt gespeichert">••••••</i> : passwortVon(z.kid)}</small></td>
+                  <td><span className="adm-kind"><Avatar size={44} {...z.kid.avatar} halb /><span><b>{z.kid.name}</b><small>{z.eingestuft ? 'eingestuft' : 'noch nicht eingestuft'}</small></span></span></td>
+                  <td><small className="adm-login">{benutzerVon(z.kid)}<br />{!istCloudKind(z.kid.id) ? passwortVon(z.kid)
+                    : pw[z.kid.id] ? <b>{pw[z.kid.id]}</b>
+                    : rolle === 'admin' ? <button type="button" className="adm-link" title="Das alte Passwort ist verschlüsselt gespeichert und nicht lesbar" onClick={() => neuesPw(z.kid.id, z.kid.name)}>neues Passwort</button>
+                    : <i>••••••</i>}</small></td>
                   <td><span className="adm-badge">{z.klassenCode}</span></td>
                   <td>{z.stufeName}</td>
                   <td><b>L{z.lektion}</b> <small>{z.lektionName}</small></td>
