@@ -19,6 +19,8 @@ function regel(welt: number, v: number, k: number): boolean {
   // Big Friend −k: 10 weg, dann (10−k) bei den Einern direkt dazu
   if (welt === 4) { const f = 10 - k; return v >= 10 && e < k && e + f <= 9 && (e >= 5 || e + f < 5 || f >= 5) }
   if (welt === 5) return k <= 4 && e >= 5 && e - 5 < k && e >= k // Little Friend −k: 5 weg, (5−k) dazu
+  // Best Friend −k (6…9): 10 weg, 5 dazu, (k−5) weg
+  if (welt === 6) return k >= 6 && v >= 10 && e < 5 && e >= k - 5
   return v >= k
 }
 

@@ -44,5 +44,5 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 ## Minus-Welten (in Arbeit)
 - [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen), Lernvideos Lektion 25–35 (Lisa/Lola), Abschlusstests; auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
 - [x] Welt 5 Weltraum-Abenteuer: Little Friends −4…−1, alle, Training + 5 gemischte Wiederholungen (11 Lektionen, 22 Stationen), Karte, Buch S. 61–70, Workbook S. 57–64, Abschlusstests, Anzan-Tests 2,7/2,3 s. Lernvideos 36–46 und alle Entdecken-Sätze mit Lola vertont.
-- [ ] Welt 6 Best Friends (−). Kartenbilder: insel-eis / insel-wueste / insel-weltraum.
+- [x] Welt 6 Dino-Abenteuer: Best Friends −6…−9, alle, Training + 5 gemischte Wiederholungen (Lektion 47–57, Lola vertont), Karte, Buch S. 81–90, Workbook S. 73–80, Abschluss, Anzan-Tests 2,4/2,0 s. Kartenbilder: insel-eis / insel-wueste / insel-weltraum.
 

@@ -29,7 +29,7 @@ const burgVon = (welt: number): BurgArt => BURGEN[welt] ?? { bild: burgBild, hoc
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 /** Kurzname je Welt für die Welt-Knöpfe über der Karte */
-const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🚀 Space', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum' }
+const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🚀 Space', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum', 6: '🦖 Dino' }
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 

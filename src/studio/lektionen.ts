@@ -737,7 +737,7 @@ function littleFriendMinusLektion(number: number, k: number, a: number, b: numbe
 }
 
 // Welt 5, Lektion 40–46: gemischte Wiederholungen – zwei Beispiele, dann eine Aufgabe zum Mitmachen
-function mischLektion(number: number, title: string, hallo: string, karte: string[], b1: [number, number], b2: [number, number], c: [number, number], merk: string): Lesson {
+function mischLektion(number: number, title: string, hallo: string, karte: string[], b1: [number, number], b2: [number, number], c: [number, number], merk: string, welt = 5): Lesson {
   const rech = (a: number, k: number) => `${a} ${k < 0 ? 'minus' : 'plus'} ${Math.abs(k)}`
   const zeichen = (a: number, k: number) => `${a} ${k < 0 ? '−' : '+'} ${Math.abs(k)}`
   // Welcher Weg auf dem Abakus? e = Einer, erd = Erdperlen oben, himmel = Himmelsperle unten
@@ -746,17 +746,19 @@ function mischLektion(number: number, title: string, hallo: string, karte: strin
     if (k < 0) {
       if (e >= n && (n < 5 ? erd >= n : himmel && erd >= n - 5)) return 'Das geht direkt.'
       if (e >= n && n < 5) return `Little Friend: 5 weg und ${5 - n} dazu.`
+      if (n > 5 && e < 5 && e >= n - 5) return `Best Friends: 10 weg, 5 dazu und ${n - 5} weg.`
       return `Big Friend: 10 weg und ${10 - n} dazu.`
     }
     if (e + n <= 9 && (n < 5 ? erd + n <= 4 : !himmel && erd + n - 5 <= 4)) return 'Das geht direkt.'
     if (e + n <= 9 && n < 5) return `Little Friend: 5 dazu und ${5 - n} weg.`
+    if (n > 5 && himmel && e + n >= 10 && erd < 10 - n) return `Best Friends: ${n - 5} dazu, 5 weg und 10 dazu.`
     return `Big Friend: 10 dazu und ${10 - n} weg.`
   }
   return {
     id: `lektion-${number}`,
     number,
     title,
-    world: 5,
+    world: welt,
     sections: [
       { title: 'Wiederholung', start: 'titel' },
       { title: 'Beispiele', start: 'beispiel-1' },
@@ -789,7 +791,67 @@ const LEKTION_44 = mischLektion(44, 'Little Friends Plus & Minus', 'Hallo! Heute
 const LEKTION_45 = mischLektion(45, 'Große Wiederholung', 'Hallo! Große Wiederholung im Weltraum. Alle Freunde kommen gemischt, plus und minus.', ['Direkt · Little Friend · Big Friend', 'Immer zuerst schauen!'], [8, 7], [6, -4], [12, -9], 'Immer zuerst den passenden Freund finden')
 const LEKTION_46 = mischLektion(46, 'Weltraum-Training', 'Hallo! Weltraum-Training! Zeig, was du kannst!', ['Direkt · Little Friend · Big Friend', 'Immer zuerst schauen!'], [9, 6], [13, -6], [7, -3], 'Immer zuerst den passenden Freund finden')
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24, LEKTION_25, LEKTION_26, LEKTION_27, LEKTION_28, LEKTION_29, LEKTION_30, LEKTION_31, LEKTION_32, LEKTION_33, LEKTION_34, LEKTION_35, LEKTION_36, LEKTION_37, LEKTION_38, LEKTION_39, LEKTION_40, LEKTION_41, LEKTION_42, LEKTION_43, LEKTION_44, LEKTION_45, LEKTION_46]
+// Welt 6, Lektion 47–50: Best Friends Minus – „−k = −10 + 5 − (k−5)“
+function bestFriendMinusLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const e = k - 5
+  const ePerlen = e === 1 ? 'eine Erdperle' : `${e} Erdperlen`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Best Friend −${k}`,
+    world: 6,
+    sections: [
+      { title: 'Best Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Willkommen im Dino-Land. Heute rechnen wir minus ${k}.` },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} − ${k}`, say: `Wir haben ${a}. Minus ${k} heißt: 10 weg und ${10 - k} dazu. Aber ${10 - k} dazu geht hier nicht direkt!` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Best Friends', lines: [{ text: `Big Friend: 10 weg, ${10 - k} dazu` }, { text: `Little Friend hilft beim ${10 - k} dazu` }] },
+        say: 'Jetzt helfen Big Friend und Little Friend zusammen. Das sind die Best Friends!',
+      },
+      {
+        id: 'trick', kind: 'karte', min: 6,
+        card: { title: 'Der Trick', lines: [{ icon: 'zeige-runter', text: '10 weg' }, { icon: 'zeige-runter', text: '5 dazu' }, { icon: 'zeige-runter', text: `${e} weg` }] },
+        say: `Der Trick: Minus ${k} heißt: 10 weg, 5 dazu und ${e} weg.`,
+      },
+      { id: 'zehn-weg', cols: 2, value: a, badge: '− 10', moves: [{ at: 'Zehnern', to: a - 10 }], say: 'Zuerst eine Perle bei den Zehnern runter. Zehn weg.' },
+      { id: 'fuenf-dazu', badge: '+ 5', moves: [{ at: 'Himmelsperle', to: a - 5 }], say: 'Dann die Himmelsperle runter. Fünf dazu.' },
+      { id: 'weg', badge: `− ${e}`, moves: [{ at: 'runter.', to: a - k }], say: `Und jetzt ${ePerlen} runter. Das ${e === 1 ? 'ist' : 'sind'} ${e} weg.` },
+      { id: 'ergebnis', badge: `${a} − ${k} = ${a - k}`, min: 3.5, say: `Fertig! ${a} minus ${k} ist ${a - k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} − ${k} = ${b - k}`, moves: [{ at: 'Zehn weg', to: b - 10 }, { at: 'fünf dazu', to: b - 5 }, { at: 'Das ist', to: b - k }],
+        say: `Noch einmal: ${b} minus ${k}. Zehn weg, fünf dazu, ${e} weg. Das ist ${b - k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c - k, say: `Jetzt du! Rechne ${c} minus ${k}. Zehn weg, fünf dazu, ${WORT[e]} weg.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Minus ${k} = 10 weg, 5 dazu, ${e} weg` }] },
+        say: `Merk dir: Minus ${k} ist 10 weg, 5 dazu und ${e} weg.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+const LEKTION_47 = bestFriendMinusLektion(47, 6, 11, 13, 22)
+const LEKTION_48 = bestFriendMinusLektion(48, 7, 13, 12, 24)
+const LEKTION_49 = bestFriendMinusLektion(49, 8, 13, 14, 23)
+const LEKTION_50 = bestFriendMinusLektion(50, 9, 14, 24, 34)
+const BEST = ['−6 = −10 + 5 − 1 · −7 = −10 + 5 − 2', '−8 = −10 + 5 − 3 · −9 = −10 + 5 − 4']
+const ALLE = ['Direkt · Little · Big · Best Friends', 'Immer zuerst schauen!']
+const LEKTION_51 = mischLektion(51, 'Best Friends Minus alle', 'Hallo! Du kennst jetzt alle Best Friends beim Minus. Jetzt mischen wir sie!', BEST, [11, -6], [13, -8], [12, -7], 'Minus mit Best Friends: 10 weg, 5 dazu, Rest weg', 6)
+const LEKTION_52 = mischLektion(52, 'Best Friends Minus Training', 'Hallo! Heute ist Training im Dino-Land. Alle Best Friends minus kommen gemischt!', BEST, [12, -7], [14, -9], [13, -6], 'Minus mit Best Friends: 10 weg, 5 dazu, Rest weg', 6)
+const LEKTION_53 = mischLektion(53, 'Best Friends Plus & Minus', 'Hallo! Heute kommen Best Friends plus und minus gemischt.', ['Plus: Rest dazu, 5 weg, 10 dazu', 'Minus: 10 weg, 5 dazu, Rest weg'], [7, 6], [13, -7], [12, -8], 'Plus und Minus sind Spiegelbilder', 6)
+const LEKTION_54 = mischLektion(54, 'Alle Freunde Minus', 'Hallo! Heute kommen alle Freunde beim Minus gemischt.', ALLE, [12, -8], [6, -3], [14, -9], 'Immer zuerst den passenden Freund finden', 6)
+const LEKTION_55 = mischLektion(55, 'Alle Freunde Plus', 'Hallo! Heute kommen alle Freunde beim Plus gemischt.', ALLE, [7, 8], [3, 4], [6, 7], 'Immer zuerst den passenden Freund finden', 6)
+const LEKTION_56 = mischLektion(56, 'Große Dino-Wiederholung', 'Hallo! Große Dino-Wiederholung. Alle Freunde kommen gemischt, plus und minus.', ALLE, [8, 7], [12, -7], [13, -6], 'Immer zuerst den passenden Freund finden', 6)
+const LEKTION_57 = mischLektion(57, 'Dino-Training', 'Hallo! Dino-Training! Zeig, was du kannst!', ALLE, [9, 6], [13, -6], [11, -6], 'Immer zuerst den passenden Freund finden', 6)
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24, LEKTION_25, LEKTION_26, LEKTION_27, LEKTION_28, LEKTION_29, LEKTION_30, LEKTION_31, LEKTION_32, LEKTION_33, LEKTION_34, LEKTION_35, LEKTION_36, LEKTION_37, LEKTION_38, LEKTION_39, LEKTION_40, LEKTION_41, LEKTION_42, LEKTION_43, LEKTION_44, LEKTION_45, LEKTION_46, LEKTION_47, LEKTION_48, LEKTION_49, LEKTION_50, LEKTION_51, LEKTION_52, LEKTION_53, LEKTION_54, LEKTION_55, LEKTION_56, LEKTION_57]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

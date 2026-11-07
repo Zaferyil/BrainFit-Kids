@@ -7,6 +7,10 @@ import aeg1 from '../assets/karte/insel-aegypten-1.webp'
 import aeg2 from '../assets/karte/insel-aegypten-2.webp'
 import aeg3 from '../assets/karte/insel-aegypten-3.webp'
 import aeg4 from '../assets/karte/insel-aegypten-4.webp'
+import dino1 from '../assets/karte/insel-dino-1.webp'
+import dino2 from '../assets/karte/insel-dino-2.webp'
+import dino3 from '../assets/karte/insel-dino-3.webp'
+import dino4 from '../assets/karte/insel-dino-4.webp'
 import raum1 from '../assets/karte/insel-weltraum-1.webp'
 import raum2 from '../assets/karte/insel-weltraum-2.webp'
 import raum3 from '../assets/karte/insel-weltraum-3.webp'
@@ -15,6 +19,7 @@ import raum4 from '../assets/karte/insel-weltraum-4.webp'
 // Nummern-Knöpfe der Ägypten-Karte (1–24, freigestellt): knoepfe[n-1] = Knopf mit Nummer n
 const KNOPF_DATEIEN = import.meta.glob('../assets/karte/knopf/*.webp', { eager: true, import: 'default' }) as Record<string, string>
 const RAUM_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/raum-${i + 1}.webp`])
+const DINO_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/dino-${i + 1}.webp`])
 const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
@@ -66,6 +71,12 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum2, w: 941, h: 1427, plaetze: [[240, 895], [460, 815], [640, 720], [790, 585], [745, 460], [520, 490]] },
     { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum3, w: 941, h: 1427, plaetze: [[370, 990], [570, 930], [725, 835], [765, 660], [640, 565], [440, 490]] },
     { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum4, w: 941, h: 1427, plaetze: [[330, 1045], [545, 950], [690, 820], [520, 715], [255, 660], [480, 470]] },
+  ],
+  6: [
+    { gemalt: true, knoepfe: DINO_KNOEPFE, bild: dino1, w: 941, h: 1472, plaetze: [[330, 1330], [230, 1120], [450, 950], [380, 800], [600, 650], [560, 430]] },
+    { gemalt: true, knoepfe: DINO_KNOEPFE, bild: dino2, w: 941, h: 1472, plaetze: [[480, 1130], [420, 640], [480, 480], [580, 320], [440, 190], [330, 110]] },
+    { gemalt: true, knoepfe: DINO_KNOEPFE, bild: dino3, w: 941, h: 1472, plaetze: [[280, 1380], [600, 1150], [300, 950], [560, 700], [250, 520], [430, 330]] },
+    { gemalt: true, knoepfe: DINO_KNOEPFE, bild: dino4, w: 941, h: 1472, plaetze: [[400, 1330], [290, 1120], [520, 960], [340, 760], [220, 500], [640, 350]] },
   ],
 }
 
