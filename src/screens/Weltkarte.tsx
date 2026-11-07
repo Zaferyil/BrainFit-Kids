@@ -8,7 +8,7 @@ import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
 import { setReplay, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
-import { etappen } from '../data/karten'
+import { etappenNachWelt } from '../data/karten'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
 import burgWelt2 from '../assets/karte/erfolgsburg-welt2.webp'
@@ -64,7 +64,11 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
     for (const p of plaetze) { if (p.kind === 'burg') m.set(i, p); else i++ }
     return m
   }, [plaetze])
-  const teile = useMemo(() => etappen(nurStops.length), [nurStops.length])
+  // Welt jeder Station (Spiele gehören zur Welt der Lektion davor)
+  const teile = useMemo(() => {
+    let w = 1
+    return etappenNachWelt(nurStops.map((s) => (s.kind === 'unit' ? (w = s.world.n) : w)))
+  }, [nurStops])
   // Laufende Nummer nur für Lektionen und Spiele (Burgen zählen nicht mit)
   const nummer = useMemo(() => { const m = new Map<string, number>(); let n = 0; for (const p of plaetze) if (p.kind !== 'burg') m.set(p.id, ++n); return m }, [plaetze])
 

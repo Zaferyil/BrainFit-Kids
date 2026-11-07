@@ -3,7 +3,10 @@ import insel2 from '../assets/karte/insel-2.webp'
 import insel3 from '../assets/karte/insel-3.webp'
 import insel4 from '../assets/karte/insel-4.webp'
 import insel5 from '../assets/karte/insel-5.webp'
-import inselEis from '../assets/karte/insel-eis.webp'
+import aeg1 from '../assets/karte/insel-aegypten-1.webp'
+import aeg2 from '../assets/karte/insel-aegypten-2.webp'
+import aeg3 from '../assets/karte/insel-aegypten-3.webp'
+import aeg4 from '../assets/karte/insel-aegypten-4.webp'
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
 // mit ihren Plätzen auf dem Weg, von unten (Start) nach oben. Gibt es mehr Etappen als Bilder,
@@ -37,14 +40,41 @@ export const KARTEN: Karte[] = [
     bild: insel5, w: 941, h: 1397,
     plaetze: [[392, 1197], [540, 1142], [663, 1082], [463, 949], [685, 842], [428, 770], [573, 645], [321, 552], [647, 482], [470, 387], [285, 297], [491, 237], [635, 177]],
   },
-  {
-    // Minus-Welten (vorläufig): Eis-Insel, gleiche Wege wie die erste Insel
-    bild: inselEis, w: 941, h: 1393,
-    plaetze: [[555, 1173], [325, 1046], [157, 923], [262, 713], [449, 793], [700, 871], [766, 668], [559, 538], [329, 471], [319, 298], [565, 263], [700, 163]],
-  },
+
 ]
 
+/** Eigene Karten je Welt (Welt 4: Ägypten-Abenteuer, je 6 Plätze, von unten nach oben) */
+export const WELT_KARTEN: Record<number, Karte[]> = {
+  4: [
+    { bild: aeg1, w: 909, h: 1060, plaetze: [[304, 855], [594, 700], [309, 590], [609, 465], [399, 340], [704, 240]] },
+    { bild: aeg2, w: 909, h: 1060, plaetze: [[296, 815], [584, 685], [317, 580], [609, 435], [381, 315], [681, 228]] },
+    { bild: aeg3, w: 909, h: 1060, plaetze: [[339, 830], [532, 670], [319, 540], [594, 455], [389, 330], [679, 245]] },
+    { bild: aeg4, w: 909, h: 1060, plaetze: [[274, 875], [554, 755], [354, 615], [609, 490], [359, 405], [569, 273]] },
+  ],
+}
+
 export type Etappe = { karte: Karte; start: number; anzahl: number }
+
+/** Etappen für die Stationen; welten[i] = Welt der i-ten Station. Welten mit eigenen Karten bekommen ihre Bilder. */
+export function etappenNachWelt(welten: number[]): Etappe[] {
+  const out: Etappe[] = []
+  let i = 0
+  while (i < welten.length) {
+    const w = welten[i], eigene = WELT_KARTEN[w]
+    let j = i
+    if (eigene) while (j < welten.length && welten[j] === w) j++
+    else while (j < welten.length && !WELT_KARTEN[welten[j]]) j++
+    if (eigene) {
+      for (let start = i, k = 0; start < j; k++) {
+        const karte = eigene[k % eigene.length]
+        const anzahl = Math.min(karte.plaetze.length, j - start)
+        out.push({ karte, start, anzahl }); start += anzahl
+      }
+    } else for (const e of etappen(j - i)) out.push({ ...e, start: e.start + i })
+    i = j
+  }
+  return out.length ? out : etappen(0)
+}
 
 /** Teilt n Stationen auf die Inselbilder auf (der Reihe nach, danach wieder von vorn). */
 export function etappen(n: number): Etappe[] {
