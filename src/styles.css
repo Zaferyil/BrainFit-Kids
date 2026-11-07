@@ -3106,3 +3106,10 @@ label .pw-feld { margin-top: 4px; }
 .welt-wahl { position: relative; z-index: 30; display: flex; gap: 5px; justify-content: safe center; flex-wrap: nowrap; overflow-x: auto; padding: 8px 12px 4px; scrollbar-width: none; }
 .welt-wahl button { flex: none; border: 0; border-radius: 999px; padding: 6px 8px; font: 900 12px Nunito, sans-serif; background: rgba(255,255,255,.85); color: #4B2FC2; box-shadow: 0 3px 0 rgba(35,26,79,.25); cursor: pointer; }
 .welt-wahl button.on { background: #FFC531; color: #231A4F; box-shadow: 0 3px 0 #D99A00; }
+/* Abenteuer-Karten als Seiten: Weiter (oben an der Brücke) / Zurück (unten) und Seitenpunkte */
+.karte-weiter { position: absolute; z-index: 8; border: 0; border-radius: 999px; padding: 9px 16px; font: 900 15px Nunito, sans-serif; color: #231A4F; background: linear-gradient(180deg, #FFE27A, #FFB21E); box-shadow: 0 4px 0 #C77A00, 0 6px 14px rgba(0,0,0,.25); cursor: pointer; }
+.karte-weiter.oben { right: 3%; top: 3%; animation: path-pulse 2s ease-in-out infinite; }
+.karte-weiter.unten { left: 3%; bottom: 3%; background: rgba(255,255,255,.92); box-shadow: 0 4px 0 rgba(35,26,79,.3); }
+.karten-seiten { display: flex; justify-content: center; gap: 8px; padding: 2px 12px 6px; position: relative; z-index: 30; }
+.karten-seiten button { width: 30px; height: 30px; border-radius: 50%; border: 0; font: 900 14px Nunito, sans-serif; background: rgba(255,255,255,.8); color: #4B2FC2; cursor: pointer; }
+.karten-seiten button.on { background: #FFC531; color: #231A4F; box-shadow: 0 3px 0 #D99A00; }

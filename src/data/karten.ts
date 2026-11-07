@@ -52,9 +52,9 @@ export const KARTEN: Karte[] = [
 export const WELT_KARTEN: Record<number, Karte[]> = {
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
-    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg2, w: 941, h: 1220, plaetze: [[260, 950], [620, 830], [300, 700], [640, 550], [360, 420], [700, 300]] },
-    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg3, w: 941, h: 1180, plaetze: [[260, 925], [570, 805], [300, 645], [600, 505], [360, 400], [720, 275]] },
-    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg4, w: 941, h: 1180, plaetze: [[270, 960], [560, 850], [320, 720], [640, 565], [380, 445], [605, 335]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg2, w: 941, h: 1480, plaetze: [[260, 950], [620, 830], [300, 700], [640, 550], [360, 420], [700, 300]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg3, w: 941, h: 1480, plaetze: [[260, 925], [570, 805], [300, 645], [600, 505], [360, 400], [720, 275]] },
+    { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg4, w: 941, h: 1480, plaetze: [[270, 960], [560, 850], [320, 720], [640, 565], [380, 445], [605, 335]] },
   ],
 }
 

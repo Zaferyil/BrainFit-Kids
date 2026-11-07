@@ -75,6 +75,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const zeigWelt = welten.includes(ansicht) ? ansicht : welten[welten.length - 1] ?? 1
   // Bilder wie bisher über alle Welten verteilen (sie passen zu den Weltgrenzen), dann nur die Etappen dieser Welt
   const teile = useMemo(() => etappenNachWelt(weltVon).filter((t) => weltVon[t.start] === zeigWelt), [weltVon, zeigWelt])
+  // Abenteuer-Karten (gemalt): jede Karte ist eine eigene Seite – der Weg endet oben an der Brücke mit dem Pfeil
+  // und geht auf der nächsten Karte unten an der Brücke weiter. Übereinander gestapelt passen die Ränder nicht.
+  const seitenModus = teile.length > 0 && teile.every((t) => t.karte.gemalt)
+  const seiteMitAktuell = Math.max(0, teile.findIndex((t) => nurStops.slice(t.start, t.start + t.anzahl).some((x) => x.state === 'current')))
+  const [seiteWahl, setSeiteWahl] = useState<{ welt: number; i: number } | null>(null)
+  const seite = seiteWahl?.welt === zeigWelt ? seiteWahl.i : (teile.some((t) => nurStops.slice(t.start, t.start + t.anzahl).some((x) => x.state === 'current')) ? seiteMitAktuell : 0)
+  const sicht = seitenModus ? teile.slice(seite, seite + 1) : teile
+  const blaettern = (i: number) => { setSeiteWahl({ welt: zeigWelt, i }); window.scrollTo({ top: 0 }) }
   // Nummern beginnen in jeder Welt bei 1 (passt auch zu den gemalten Knöpfen der Abenteuer-Karten)
   const nummer = useMemo(() => {
     const m = new Map<string, number>(); const z = new Map<number, number>()
@@ -148,9 +156,14 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
           ))}
         </nav>
       )}
+      {seitenModus && teile.length > 1 && (
+        <div className="karten-seiten" aria-label="Karte wählen">
+          {teile.map((t, i) => <button key={t.start} type="button" className={i === seite ? 'on' : ''} aria-label={`Karte ${i + 1}`} aria-pressed={i === seite} onClick={() => blaettern(i)}>{i + 1}</button>)}
+        </div>
+      )}
       <div className="path-screen">
         <div className="inseln" ref={scroller}>
-          {[...teile].reverse().map(({ karte, start, anzahl }, k) => {
+          {[...sicht].reverse().map(({ karte, start, anzahl }, k) => {
             const letzte = k === 0
             const ys = karte.plaetze.slice(0, anzahl).map(([, y]) => y)
             const oben = ys.length ? Math.min(...ys) : karte.h
@@ -182,7 +195,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '')} style={{ zIndex: burg && !letzte && !frei ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
@@ -196,6 +209,12 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   </div>
                 )
               })}
+              {seitenModus && seite < teile.length - 1 && (
+                <button type="button" className="karte-weiter oben" onClick={() => blaettern(seite + 1)} aria-label="Weiter zur nächsten Karte">Weiter ➜</button>
+              )}
+              {seitenModus && seite > 0 && (
+                <button type="button" className="karte-weiter unten" onClick={() => blaettern(seite - 1)} aria-label="Zurück zur vorigen Karte">⬅ Zurück</button>
+              )}
               {gemalt && weltEnde && [0, 1].map((k) => {
                 const p = karte.plaetze[anzahl + k]
                 if (!p) return null
@@ -214,7 +233,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   </div>
                 )
               })}
-              {k === teile.length - 1 && (
+              {k === sicht.length - 1 && (
                 <div className="insel-perli">
                   <div className="map-bubble" role="status">{say}</div>
                 </div>
