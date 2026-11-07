@@ -74,9 +74,11 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   // Welt jeder Station (Spiele gehören zur Welt der Lektion davor)
   const weltVon = useMemo(() => { let w = 1; return nurStops.map((s) => (s.kind === 'unit' ? (w = s.world.n) : w)) }, [nurStops])
   // Es ist immer nur EINE Welt zu sehen: die aktuelle; geschaffte Welten über die Welt-Knöpfe oben
-  const [ansicht, setAnsicht] = useState(progress.world)
+  // null = die aktuelle Welt des Kindes (auch wenn der Fortschritt erst nach dem Öffnen aus der Cloud kommt)
+  const [ansicht, setAnsicht] = useState<number | null>(null)
   const welten = useMemo(() => [...new Set(weltVon)], [weltVon])
-  const zeigWelt = welten.includes(ansicht) ? ansicht : welten[welten.length - 1] ?? 1
+  const gewuenscht = ansicht ?? progress.world
+  const zeigWelt = welten.includes(gewuenscht) ? gewuenscht : welten[welten.length - 1] ?? 1
   // Bilder wie bisher über alle Welten verteilen (sie passen zu den Weltgrenzen), dann nur die Etappen dieser Welt
   const teile = useMemo(() => etappenNachWelt(weltVon).filter((t) => weltVon[t.start] === zeigWelt), [weltVon, zeigWelt])
   // Abenteuer-Karten (gemalt): jede Karte ist eine eigene Seite – der Weg endet oben an der Brücke mit dem Pfeil
