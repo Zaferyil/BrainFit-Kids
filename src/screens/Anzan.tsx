@@ -12,6 +12,7 @@ import { ALLES_OFFEN } from '../lib/testmodus'
 import { Keypad } from './stations/StationShell'
 import { Funkeln } from './Anmelden'
 import daten from '../../content/mathkids-levels.json'
+import { ANZAN_TEST_SAGEN } from '../data/anzanTest'
 
 // Anzan (Flash-Rechnen) wie in MathKids: Zahlen blitzen nacheinander auf, das Kind rechnet im Kopf
 // und tippt das Ergebnis. Aufgaben aus den 96 MathKids-Levels (content/mathkids-levels.json).
@@ -45,7 +46,9 @@ type Phase = 'wahl' | 'zeigen' | 'tippen' | 'fertig'
 export function Anzan({ kid }: { kid: Kid }) {
   const key = `bfk.anzan.${kid.id}`
   const [stand, setStand] = useState(() => load<{ level: number; tempo: number; frei: number; tempoFrei?: number; hoeren?: boolean }>(key, { level: 1, tempo: 0, frei: 1, tempoFrei: 2 }))
-  const hoeren = !!stand.hoeren
+  const [test] = useState(testLesen)
+  // Test: immer „Sehen“ (die Zahlen blitzen auf)
+  const hoeren = !test && !!stand.hoeren
   const tempoFrei = Math.max(stand.tempoFrei ?? 2, Math.min(stand.tempo, TEMPO.length - 1))
   const [neuesTempo, setNeuesTempo] = useState(false)
   const [phase, setPhase] = useState<Phase>('wahl')
@@ -56,13 +59,12 @@ export function Anzan({ kid }: { kid: Kid }) {
   const [ergebnis, setErgebnis] = useState<'richtig' | 'falsch' | null>(null)
   const [richtig, setRichtig] = useState(0)
   const timer = useRef<number>(0)
-  const [test] = useState(testLesen)
 
   useEffect(() => { save(key, stand) }, [key, stand])
   // Test: sofort mit den vorgegebenen Aufgaben starten (Tempo „Langsam“ bzw. das gewählte, Modus Sehen)
   useEffect(() => {
     if (!test) return
-    setAufgaben(test.aufgaben.slice(0, RUNDE)); setNr(0); setRichtig(0); naechste(); void speak(SAY.passAuf)
+    setAufgaben(test.aufgaben.slice(0, RUNDE)); setNr(0); setRichtig(0); naechste(); void speak(ANZAN_TEST_SAGEN[test.nr])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => () => window.clearTimeout(timer.current), [])
@@ -83,7 +85,7 @@ export function Anzan({ kid }: { kid: Kid }) {
       })
       return () => { aus = true; window.clearTimeout(timer.current) }
     }
-    timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? 3700 : ms)
+    timer.current = window.setTimeout(() => setSchritt((s) => s + 1), schritt < 0 ? (test && nr === 0 ? 6500 : 3700) : ms)
     return () => window.clearTimeout(timer.current)
   }, [phase, schritt, a, ms, hoeren])
 

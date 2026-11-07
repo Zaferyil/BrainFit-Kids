@@ -39,7 +39,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 
 ## Regel für alle neuen Welten (ab Welt 4)
 - Eigene Abenteuer-Karte als Seiten (je 6 Knöpfe), Nummern 1–24 je Welt.
-- Die letzten zwei Plätze (23, 24) sind Anzan-Tests: Test 1 Tempo „Normal“ (1,1 s), Test 2 „Schnell“ (0,8 s), 4 von 5 richtig zum Bestehen; Aufgaben aus den Wiederholungsseiten des Basic Books (src/data/anzanTest.ts).
+- Die letzten zwei Plätze (23, 24) sind Anzan-Tests mit einstelligen Zahlen und der Formel der Welt: Test 1 mit eigenem Abakus (sonst im Kopf), Test 2 nur im Kopf. Tempo Welt 4: 3,0 s / 2,6 s, jede weitere Welt 0,3 s schneller. 4 von 5 richtig (src/data/anzanTest.ts).
 
 ## Minus-Welten (in Arbeit)
 - [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen), Lernvideos Lektion 25–35 (Lisa/Lola), Abschlusstests; auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
