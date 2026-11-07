@@ -179,7 +179,7 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
         </div>
 
         <section className="adm-card">
-          <div className="adm-card-head"><h2>Lernweg · Welt {p.world}: {welt?.name.replace(/-/g, ' ')}</h2></div>
+          <div className="adm-card-head"><h2>Lernweg · Welt {p.world}: {welt?.name}</h2></div>
           <div className="eltern-weg">
             {welt?.units.map((name, i) => {
               const u = i + 1

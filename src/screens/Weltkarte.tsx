@@ -103,7 +103,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </a>
         <button type="button" className="nk-hello-text nk-hello-btn" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
           <strong>Hallo {kid.name}!</strong>
-          <span>Welt {zeigWelt} · {WORLDS[zeigWelt - 1]?.name.replace(/-/g, ' ')}</span>
+          <span>Welt {zeigWelt} · {WORLDS[zeigWelt - 1]?.name}</span>
         </button>
         <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
         <div className="path-tools">
