@@ -3094,3 +3094,8 @@ label .pw-feld { margin-top: 4px; }
 .insel.gemalt .path-node.current { box-shadow: 0 0 0 5px #FFE14D, 0 0 22px 8px rgba(255,225,77,.85); animation: path-pulse 2s ease-in-out infinite; }
 .insel.gemalt .path-stars { margin-top: -1.5cqw; }
 .insel.gemalt .ziel-label { font-size: 13px; }
+/* Webinar-Anmeldung */
+.chk-start input:not([type=checkbox]) { font: inherit; font-size: 17px; padding: 12px; border-radius: 14px; border: 2px solid #E2DDF2; background: #fff; color: #231A4F; width: 100%; box-sizing: border-box; }
+.chk-start .wb-ok { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; font-size: 14px; color: #4A4370; }
+.chk-start .wb-ok input { width: 20px; height: 20px; margin-top: 2px; flex: none; }
+.wb-fehler { color: #D9294A !important; font-weight: 800; }

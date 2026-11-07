@@ -15,6 +15,7 @@ import { AdminBestellungen } from './AdminBestellungen'
 import { AdminPush } from './AdminPush'
 import { AdminPartner } from './AdminPartner'
 import { AdminCheck } from './AdminCheck'
+import { AdminWebinare } from './AdminWebinare'
 import { AdminAuftraege, useKlassenDB } from './AdminAuftraege'
 import { AdminLehrkraefte } from './AdminLehrkraefte'
 import { alleArtikel, BELOHNUNG_NAME, belohnungsWert, konto, korrigieren, shopEinstellungen, speichereShopEinstellungen, type BelohnungsArt } from '../lib/wirtschaft'
@@ -27,7 +28,7 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 // Bis Supabase angebunden ist, zeigt er die Daten auf diesem Gerät.
 
 
-type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'auftraege' | 'lehrkraefte' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'partner' | 'einstellungen'
+type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'auftraege' | 'lehrkraefte' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'partner' | 'webinare' | 'einstellungen'
 const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
   { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
@@ -40,6 +41,7 @@ const TABS: { id: Tab; titel: string; icon: IconName }[] = [
   { id: 'website', titel: 'Website', icon: 'sparkle' },
   { id: 'nachrichten', titel: 'Nachrichten', icon: 'bell' },
   { id: 'partner', titel: 'Partner', icon: 'users' },
+  { id: 'webinare', titel: 'Webinare', icon: 'users' },
   { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
 ]
 
@@ -135,6 +137,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
         {tab === 'website' && <AdminWebsite />}
         {tab === 'nachrichten' && <AdminPush zeilen={zeilen} />}
         {tab === 'partner' && <AdminPartner />}
+        {tab === 'webinare' && <AdminWebinare />}
         {tab === 'einstellungen' && <Einstellungen />}
       </main>
     </div>

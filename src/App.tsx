@@ -4,6 +4,7 @@ import { Studio } from './studio/Studio'
 import { Placeholder } from './screens/Placeholder'
 import { Anmelden } from './screens/Anmelden'
 import { Weltkarte } from './screens/Weltkarte'
+import { Webinar } from './screens/Webinar'
 import { Admin } from './screens/Admin'
 import { Eltern } from './screens/Eltern'
 import { Zuhause } from './screens/Zuhause'
@@ -105,7 +106,7 @@ export default function App() {
       location.hash = data?.rolle === 'partner' ? '#/partner' : '#eltern'
     })()
   }} />
-  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><OfflineHinweis />{kidId && <LernzeitWaechter kidId={kidId} />}{route !== 'check' && <InstallHinweis />}</>
+  return <><Inhalt key={route} roh={route} /><BelohnungsAnzeige kidId={kidId} /><OfflineHinweis />{kidId && <LernzeitWaechter kidId={kidId} />}{route !== 'check' && !route.startsWith('webinar') && <InstallHinweis />}</>
 }
 
 function Inhalt({ roh }: { roh: string }) {
@@ -129,6 +130,7 @@ function Inhalt({ roh }: { roh: string }) {
   if (route === 'eltern') return <Eltern />
   if (route === 'partner') return <Partner />
   if (route === 'check') return <Check />
+  if (route === 'webinar' || route.startsWith('webinar?')) return <Webinar wahl={new URLSearchParams(route.split('?')[1] ?? '').get('w') ?? undefined} />
   if (route.startsWith('studio/')) return <Studio id={route.slice('studio/'.length).split('?')[0]} />
 
   if (KID_ROUTES.includes(route) || route.startsWith('spiel/')) {
