@@ -690,7 +690,106 @@ const LEKTION_33 = bigFriendMinusLektion(33, 1, 10, 20, 30)
 const LEKTION_34 = minusWiederholung(34, 'Alle Big Friends Minus', 'Hallo! Du kennst jetzt alle Big Friends beim Minus. Jetzt mischen wir sie!', [12, 9], [11, 7], [14, 5])
 const LEKTION_35 = minusWiederholung(35, 'Big Friends Minus Training', 'Hallo! Heute ist Training bei den Pyramiden. Alle Big Friends minus kommen gemischt!', [12, 8], [11, 3], [20, 6])
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24, LEKTION_25, LEKTION_26, LEKTION_27, LEKTION_28, LEKTION_29, LEKTION_30, LEKTION_31, LEKTION_32, LEKTION_33, LEKTION_34, LEKTION_35]
+// Welt 5, Lektion 36–39: Little Friends Minus – „−k = −5 + f“ (f = Little Friend, k + f = 5). Die Himmelsperle hilft.
+function littleFriendMinusLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const f = 5 - k
+  const perlen = f === 1 ? 'eine Erdperle' : `${f} Erdperlen`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Little Friend −${k}`,
+    world: 5,
+    sections: [
+      { title: 'Little Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Willkommen im Weltraum. Heute rechnen wir minus ${k}.` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Little Friends', lines: [{ text: `${k} und ${f} sind 5` }, { icon: 'daumen-hoch', text: `Der Little Friend von ${k} ist ${f}` }] },
+        say: `${k} und ${f} sind zusammen 5. Also ist ${f} der Little Friend von ${k}.`,
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} − ${k}`, say: `Wir haben ${a}. Jetzt rechnen wir minus ${k}. Unten sind nicht genug Erdperlen!` },
+      {
+        id: 'trick', kind: 'karte', min: 5,
+        card: { title: 'Der Trick', lines: [{ icon: 'zeige-hoch', text: '5 weg' }, { icon: 'daumen-hoch', text: `${f} dazu` }] },
+        say: `Der Trick: Minus ${k} heißt: 5 weg und ${f} dazu.`,
+      },
+      { id: 'fuenf-weg', cols: 2, value: a, badge: '− 5', moves: [{ at: 'Himmelsperle', to: a - 5 }], say: 'Zuerst die Himmelsperle hoch. Das sind 5 weg.' },
+      { id: 'dazu', badge: `+ ${f}`, moves: [{ at: 'hoch.', to: a - k }], say: `Dann schiebst du ${perlen} hoch. Das ${f === 1 ? 'ist' : 'sind'} ${f} dazu.` },
+      { id: 'ergebnis', badge: `${a} − ${k} = ${a - k}`, min: 3.5, say: `Fertig! ${a} minus ${k} ist ${a - k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} − ${k} = ${b - k}`, moves: [{ at: 'Himmelsperle', to: b - 5 }, { at: 'dazu.', to: b - k }],
+        say: `Noch einmal: ${b} minus ${k}. Die Himmelsperle hoch, ${f} dazu. Das ist ${b - k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c - k, say: `Jetzt du! Rechne ${c} minus ${k}. Fünf weg, ${WORT[f]} dazu.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Minus ${k} = 5 weg, ${f} dazu` }] },
+        say: `Merk dir: Minus ${k} ist 5 weg und ${f} dazu.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+// Welt 5, Lektion 40–46: gemischte Wiederholungen – zwei Beispiele, dann eine Aufgabe zum Mitmachen
+function mischLektion(number: number, title: string, hallo: string, karte: string[], b1: [number, number], b2: [number, number], c: [number, number], merk: string): Lesson {
+  const rech = (a: number, k: number) => `${a} ${k < 0 ? 'minus' : 'plus'} ${Math.abs(k)}`
+  const zeichen = (a: number, k: number) => `${a} ${k < 0 ? '−' : '+'} ${Math.abs(k)}`
+  // Welcher Weg auf dem Abakus? e = Einer, erd = Erdperlen oben, himmel = Himmelsperle unten
+  const hilfe = (a: number, k: number) => {
+    const n = Math.abs(k), e = a % 10, erd = e % 5, himmel = e >= 5
+    if (k < 0) {
+      if (e >= n && (n < 5 ? erd >= n : himmel && erd >= n - 5)) return 'Das geht direkt.'
+      if (e >= n && n < 5) return `Little Friend: 5 weg und ${5 - n} dazu.`
+      return `Big Friend: 10 weg und ${10 - n} dazu.`
+    }
+    if (e + n <= 9 && (n < 5 ? erd + n <= 4 : !himmel && erd + n - 5 <= 4)) return 'Das geht direkt.'
+    if (e + n <= 9 && n < 5) return `Little Friend: 5 dazu und ${5 - n} weg.`
+    return `Big Friend: 10 dazu und ${10 - n} weg.`
+  }
+  return {
+    id: `lektion-${number}`,
+    number,
+    title,
+    world: 5,
+    sections: [
+      { title: 'Wiederholung', start: 'titel' },
+      { title: 'Beispiele', start: 'beispiel-1' },
+      { title: 'Üben', start: 'aufgabe' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: hallo },
+      { id: 'freunde', kind: 'karte', min: 6, card: { title: 'Welcher Freund hilft?', lines: karte.map((text) => ({ text })) }, say: 'Schau immer zuerst: Geht es direkt? Sonst hilft ein Little Friend oder ein Big Friend.' },
+      { id: 'beispiel-1', cols: 2, value: b1[0], badge: `${zeichen(...b1)} = ${b1[0] + b1[1]}`, moves: [{ at: 0.75, to: b1[0] + b1[1], dur: 1.2 }], say: `Wir rechnen ${rech(...b1)}. ${hilfe(...b1)} Das ist ${b1[0] + b1[1]}.` },
+      { id: 'beispiel-2', cols: 2, value: b2[0], badge: `${zeichen(...b2)} = ${b2[0] + b2[1]}`, moves: [{ at: 0.75, to: b2[0] + b2[1], dur: 1.2 }], say: `Und jetzt ${rech(...b2)}. ${hilfe(...b2)} Das ist ${b2[0] + b2[1]}.` },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c[0], task: c[0] + c[1], say: `Jetzt du! Rechne ${rech(...c)}. Welcher Freund hilft?` },
+      { id: 'merksatz', kind: 'karte', min: 5, card: { title: 'Das merkst du dir', lines: [{ text: merk }] }, say: `Merk dir: ${merk}.` },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_36 = littleFriendMinusLektion(36, 4, 6, 8, 7)
+const LEKTION_37 = littleFriendMinusLektion(37, 3, 7, 5, 16)
+const LEKTION_38 = littleFriendMinusLektion(38, 2, 6, 5, 16)
+const LEKTION_39 = littleFriendMinusLektion(39, 1, 5, 15, 25)
+const LITTLE = ['−4 = −5 + 1 · −3 = −5 + 2', '−2 = −5 + 3 · −1 = −5 + 4']
+const LEKTION_40 = mischLektion(40, 'Little Friends Minus alle', 'Hallo! Du kennst jetzt alle Little Friends beim Minus. Jetzt mischen wir sie!', LITTLE, [6, -4], [7, -3], [8, -4], 'Minus mit Little Friend: 5 weg, Freund dazu')
+const LEKTION_41 = mischLektion(41, 'Little Friends Minus Training', 'Hallo! Heute ist Training im Weltraum. Alle Little Friends minus kommen gemischt!', LITTLE, [5, -2], [16, -3], [7, -4], 'Minus mit Little Friend: 5 weg, Freund dazu')
+const MIX = ['Little Friend: −5 + Freund', 'Big Friend: −10 + Freund']
+const LEKTION_42 = mischLektion(42, 'Big & Little Friends Minus', 'Hallo! Jetzt mischen wir Big und Little Friends beim Minus.', MIX, [12, -9], [6, -3], [11, -7], 'Erst schauen, dann den passenden Freund nehmen')
+const LEKTION_43 = mischLektion(43, 'Big Friends Plus & Minus', 'Hallo! Heute kommen Big Friends plus und minus gemischt.', ['Plus: 10 dazu, Freund weg', 'Minus: 10 weg, Freund dazu'], [7, 8], [13, -8], [6, 9], 'Plus: 10 dazu, Freund weg. Minus: 10 weg, Freund dazu')
+const LEKTION_44 = mischLektion(44, 'Little Friends Plus & Minus', 'Hallo! Heute kommen Little Friends plus und minus gemischt.', ['Plus: 5 dazu, Freund weg', 'Minus: 5 weg, Freund dazu'], [3, 4], [7, -4], [6, -3], 'Plus: 5 dazu, Freund weg. Minus: 5 weg, Freund dazu')
+const LEKTION_45 = mischLektion(45, 'Große Wiederholung', 'Hallo! Große Wiederholung im Weltraum. Alle Freunde kommen gemischt, plus und minus.', ['Direkt · Little Friend · Big Friend', 'Immer zuerst schauen!'], [8, 7], [6, -4], [12, -9], 'Immer zuerst den passenden Freund finden')
+const LEKTION_46 = mischLektion(46, 'Weltraum-Training', 'Hallo! Weltraum-Training! Zeig, was du kannst!', ['Direkt · Little Friend · Big Friend', 'Immer zuerst schauen!'], [9, 6], [13, -6], [7, -3], 'Immer zuerst den passenden Freund finden')
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24, LEKTION_25, LEKTION_26, LEKTION_27, LEKTION_28, LEKTION_29, LEKTION_30, LEKTION_31, LEKTION_32, LEKTION_33, LEKTION_34, LEKTION_35, LEKTION_36, LEKTION_37, LEKTION_38, LEKTION_39, LEKTION_40, LEKTION_41, LEKTION_42, LEKTION_43, LEKTION_44, LEKTION_45, LEKTION_46]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

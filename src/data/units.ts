@@ -41,7 +41,7 @@ export type UnitContent = {
   /** Gemischte Wiederholung (z. B. alle Big Friends): jede Aufgabe nimmt zufällig eines dieser „+k“ */
   adds?: number[]
   /** Welche Freunde: Big Friends (über 10) oder Little Friends (über 5) – bestimmt die passenden Startzahlen */
-  freunde?: 'big' | 'little' | 'best'
+  freunde?: 'big' | 'little' | 'best' | 'mix'
 }
 
 const UNITS: Record<string, UnitContent> = {
@@ -295,7 +295,12 @@ export function makeSum(content: UnitContent, prev?: number) {
     // gemischt: zuerst ein Big Friend, dann ein Einer, bei dem der Trick nötig ist
     const b = content.adds[Math.floor(Math.random() * content.adds.length)]
     // Little Friend +b: Einer 5−b … 4 (die Himmelsperle hilft); Big Friend +b: Einer 10−b … 9; Best Friend +b: Einer 5 … 14−b
-    const a = b < 0 ? randomIn([10, 9 - b], prev) : randomIn(content.freunde === 'little' ? [5 - b, 4] : content.freunde === 'best' ? [5, 14 - b] : [10 - b, 9], prev)
+    // Little Friend −k: Einer 5 … 4+k (Himmelsperle unten, zu wenige Erdperlen); Big Friend −k: 10 … 9+k
+    // „mix“: je Aufgabe zufällig Big oder Little Friend (Little nur bis 4)
+    const art = content.freunde === 'mix' ? (Math.abs(b) <= 4 && Math.random() < 0.5 ? 'little' : 'big') : content.freunde
+    const a = b < 0
+      ? randomIn(art === 'little' ? [5, 4 - b] : [10, 9 - b], prev)
+      : randomIn(art === 'little' ? [5 - b, 4] : art === 'best' ? [5, 14 - b] : [10 - b, 9], prev)
     return { a, b, n: a + b }
   }
   const a = randomIn(content.range, prev)
@@ -408,3 +413,78 @@ UNITS['4-8'] = bigFriendMinus(2, 11, 'Zwei und acht sind zusammen zehn. Jetzt re
 UNITS['4-9'] = bigFriendMinus(1, 10, 'Eins und neun sind zusammen zehn. Jetzt rechnen wir minus eins: zehn weg und neun dazu!')
 UNITS['4-2'] = bigFriendMinus(8, 12, 'Acht und zwei sind zusammen zehn. Jetzt rechnen wir minus acht: zehn weg und zwei dazu!')
 UNITS['4-1'] = bigFriendMinus(9, 12, 'Neun und eins sind zusammen zehn. Jetzt rechnen wir minus neun: zehn weg und eins dazu!')
+
+
+// ── Welt 5: Little Friends minus (−4 … −1) und gemischte Wiederholungen ──
+/** Little-Friend-Minus −k: „−k = −5 + (5−k)“. Startzahlen 5 … 4+k: die Himmelsperle ist unten, aber zu wenige Erdperlen. */
+const littleFriendMinus = (k: number, a: number): UnitContent => {
+  const f = 5 - k
+  return {
+    title: `Little Friend −${k}`,
+    lead: `Der Trick für −${k}: 5 weg und ${f} dazu.`,
+    rule: [`−${k} = −5 + ${f}`],
+    learn: [`${k} und ${f} sind zusammen 5`, `Minus ${k} heißt: Himmelsperle hoch, ${f} Erdperle${f > 1 ? 'n' : ''} dazu`, 'Mit dem Abakus und im Kopf rechnen'],
+    stationText: {
+      video: `Der Video-Tutor zeigt dir den Trick für −${k}.`,
+      entdecken: `Perli rechnet mit dir Schritt für Schritt −${k}.`,
+      ueben: `Du rechnest −${k} mit dem Abakus.`,
+      blitz: `Der Abakus blitzt auf. Rechne −${k}!`,
+      kopfrechnen: `Rechne −${k} im Kopf.`,
+      buch: 'Rechne im Buch und hake ab.',
+      boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+    },
+    cols: 2,
+    range: [5, 4 + k],
+    board: 'Zehner · Einer',
+    add: -k,
+    freunde: 'little',
+    discover: [
+      { text: `Little Friends: ${k} und ${f} sind 5.`, say: `${GROSS(ZAHLWORT[k])} und ${ZAHLWORT[f]} sind zusammen fünf. Jetzt rechnen wir minus ${ZAHLWORT[k]}: fünf weg und ${ZAHLWORT[f]} dazu!`, mood: 'happy', start: 0, goal: null },
+      { text: `Stelle zuerst die ${a} ein.`, say: `Stell zuerst die ${ZAHLWORT[a]} ein.`, mood: 'happy', start: 0, goal: a },
+      { text: 'Jetzt 5 weg: die Himmelsperle hoch.', say: 'Jetzt fünf weg: Schieb die Himmelsperle hoch.', mood: 'think', start: a, goal: a - 5 },
+      { text: `Und ${f} dazu: Erdperle${f > 1 ? 'n' : ''} hoch.`, say: `Und jetzt ${KLEIN[f]} dazu: Erdperle${f > 1 ? 'n' : ''} nach oben.`, mood: 'think', start: a - 5, goal: a - k },
+      { text: `Fertig! ${a} − ${k} = ${a - k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} minus ${ZAHLWORT[k]} ist ${ZAHLWORT[a - k]}.`, mood: 'cheer', start: a - k, goal: null },
+    ],
+  }
+}
+UNITS['5-1'] = littleFriendMinus(4, 6)
+UNITS['5-2'] = littleFriendMinus(3, 7)
+UNITS['5-3'] = littleFriendMinus(2, 6)
+UNITS['5-4'] = littleFriendMinus(1, 5)
+
+/** Gemischte Wiederholung in Welt 5 (Little Friends minus, Big & Little gemischt, Plus & Minus) */
+const mischung = (title: string, lead: string, adds: number[], freunde: UnitContent['freunde'], rule: string, beispiele: [number, number][], hallo: string): UnitContent => ({
+  title,
+  lead,
+  rule: [rule],
+  learn: ['Erst schauen: Welcher Freund hilft?', 'Plus und Minus mit Big und Little Friends', 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: 'Der Video-Tutor wiederholt die Freunde gemischt.',
+    entdecken: 'Perli rechnet mit dir zwei gemischte Aufgaben.',
+    ueben: 'Du rechnest gemischt mit dem Abakus.',
+    blitz: 'Der Abakus blitzt auf. Rechne weiter!',
+    kopfrechnen: 'Rechne gemischt im Kopf.',
+    buch: 'Rechne im Buch und hake ab.',
+    boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+  },
+  cols: 2,
+  range: [5, 18],
+  board: 'Zehner · Einer',
+  adds,
+  freunde,
+  discover: [
+    { text: lead, say: hallo, mood: 'happy', start: 0, goal: null },
+    ...beispiele.flatMap(([a, b]) => [
+      { text: `Stelle die ${a} ein.`, say: `Stell die ${ZAHLWORT[a]} ein.`, mood: 'happy' as const, start: 0, goal: a },
+      { text: `Rechne ${rechnung(a, b)}.`, say: `Jetzt ${opWort(b)} ${ZAHLWORT[Math.abs(b)]}. Welcher Freund hilft?`, mood: 'think' as const, start: a, goal: a + b },
+    ]),
+    { text: beispiele.map(([a, b]) => `${rechnung(a, b)} = ${a + b}`).join(' und '), say: 'Super gemacht!', mood: 'cheer', start: beispiele[beispiele.length - 1][0] + beispiele[beispiele.length - 1][1], goal: null },
+  ],
+})
+UNITS['5-5'] = mischung('Little Friends Minus alle', 'Alle Little Friends minus gemischt.', [-4, -3, -2, -1], 'little', '−k = −5 + Little Friend', [[6, -4], [7, -3]], 'Du kennst jetzt alle Little Friends beim Minus. Jetzt mischen wir sie!')
+UNITS['5-6'] = mischung('Little Friends Minus – Training', 'Training: alle Little Friends minus.', [-4, -3, -2, -1], 'little', '−k = −5 + Little Friend', [[5, -2], [8, -4]], 'Training! Alle Little Friends minus kommen gemischt.')
+UNITS['5-7'] = mischung('Big & Little Friends Minus', 'Big und Little Friends minus gemischt.', [-9, -8, -7, -6, -5, -4, -3, -2, -1], 'mix', 'Big: −10 + Freund · Little: −5 + Freund', [[12, -9], [6, -3]], 'Jetzt mischen wir Big und Little Friends beim Minus. Schau gut: Welcher Freund hilft?')
+UNITS['5-8'] = mischung('Big Friends Plus & Minus', 'Big Friends plus und minus gemischt.', [9, 8, 7, 6, -9, -8, -7, -6], 'big', '+k = +10 − Freund · −k = −10 + Freund', [[7, 8], [13, -8]], 'Jetzt kommen Big Friends plus und minus gemischt!')
+UNITS['5-9'] = mischung('Little Friends Plus & Minus', 'Little Friends plus und minus gemischt.', [4, 3, 2, 1, -4, -3, -2, -1], 'little', '+k = +5 − Freund · −k = −5 + Freund', [[3, 4], [7, -4]], 'Jetzt kommen Little Friends plus und minus gemischt!')
+UNITS['5-10'] = mischung('Große Wiederholung', 'Alle Freunde plus und minus gemischt.', [9, 7, 4, 3, -9, -7, -4, -3, -2], 'mix', 'Immer zuerst den passenden Freund finden', [[8, 7], [6, -4]], 'Große Wiederholung! Alle Freunde kommen gemischt, plus und minus.')
+UNITS['5-11'] = mischung('Weltraum-Training', 'Training: alle Freunde gemischt.', [8, 6, 3, 2, -8, -6, -3, -1], 'mix', 'Immer zuerst den passenden Freund finden', [[9, 6], [13, -6]], 'Weltraum-Training! Zeig, was du kannst!')

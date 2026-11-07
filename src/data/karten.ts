@@ -7,9 +7,14 @@ import aeg1 from '../assets/karte/insel-aegypten-1.webp'
 import aeg2 from '../assets/karte/insel-aegypten-2.webp'
 import aeg3 from '../assets/karte/insel-aegypten-3.webp'
 import aeg4 from '../assets/karte/insel-aegypten-4.webp'
+import raum1 from '../assets/karte/insel-weltraum-1.webp'
+import raum2 from '../assets/karte/insel-weltraum-2.webp'
+import raum3 from '../assets/karte/insel-weltraum-3.webp'
+import raum4 from '../assets/karte/insel-weltraum-4.webp'
 
 // Nummern-Knöpfe der Ägypten-Karte (1–24, freigestellt): knoepfe[n-1] = Knopf mit Nummer n
-const KNOPF_DATEIEN = import.meta.glob('../assets/karte/knopf/aeg-*.webp', { eager: true, import: 'default' }) as Record<string, string>
+const KNOPF_DATEIEN = import.meta.glob('../assets/karte/knopf/*.webp', { eager: true, import: 'default' }) as Record<string, string>
+const RAUM_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/raum-${i + 1}.webp`])
 const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
@@ -55,6 +60,12 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg2, w: 941, h: 1480, plaetze: [[260, 950], [620, 830], [300, 700], [640, 550], [360, 420], [700, 300]] },
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg3, w: 941, h: 1480, plaetze: [[260, 925], [570, 805], [300, 645], [600, 505], [360, 400], [720, 275]] },
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg4, w: 941, h: 1480, plaetze: [[270, 960], [560, 850], [320, 720], [640, 565], [380, 445], [605, 335]] },
+  ],
+  5: [
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum1, w: 941, h: 1672, plaetze: [[240, 1240], [450, 1190], [650, 1085], [800, 935], [785, 760], [560, 720]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum2, w: 941, h: 1672, plaetze: [[240, 1140], [460, 1060], [640, 965], [790, 830], [745, 705], [520, 735]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum3, w: 941, h: 1672, plaetze: [[370, 1235], [570, 1175], [725, 1080], [765, 905], [640, 810], [440, 735]] },
+    { gemalt: true, knoepfe: RAUM_KNOEPFE, bild: raum4, w: 941, h: 1672, plaetze: [[330, 1290], [545, 1195], [690, 1065], [520, 960], [255, 905], [480, 715]] },
   ],
 }
 
