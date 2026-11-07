@@ -38,5 +38,5 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - Dateien: src/assets/stimme/*.mp3, Text → Datei in src/assets/stimme/manifest.json.
 
 ## Minus-Welten (in Arbeit)
-- [~] Welt 4 Big-Friends-Eiswelt: Lektionen „Big Friend −9“ … „−1“ fertig (UNITS['4-1'] … ['4-9']); „alle“ und „Training“ folgen. Karte vorläufig.
+- [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen) auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
 - [ ] Welt 5 Little Friends (−), Welt 6 Best Friends (−). Kartenbilder: insel-eis / insel-wueste / insel-weltraum.

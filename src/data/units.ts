@@ -368,6 +368,37 @@ const bigFriendMinus = (k: number, a: number, say: string): UnitContent => ({
     { text: `Fertig! ${a} − ${k} = ${a - k}.`, say: `Super! ${GROSS(ZAHLWORT[a])} minus ${ZAHLWORT[k]} ist ${ZAHLWORT[a - k]}.`, mood: 'cheer', start: a - k, goal: null },
   ],
 })
+/** Wiederholung aller Big Friends Minus (−9 … −1 gemischt) */
+const alleBigFriendsMinus = (title: string, lead: string, b1: [number, number], b2: [number, number]): UnitContent => ({
+  title,
+  lead,
+  rule: ['−k = −10 + Big Friend'],
+  learn: ['Alle Big Friends: 9+1, 8+2, 7+3, 6+4, 5+5', 'Gemischt rechnen: 10 weg, Big Friend dazu', 'Mit dem Abakus und im Kopf rechnen'],
+  stationText: {
+    video: 'Der Video-Tutor wiederholt alle Big Friends Minus.',
+    entdecken: 'Perli rechnet mit dir zwei gemischte Aufgaben.',
+    ueben: 'Du rechnest alle Big Friends Minus gemischt.',
+    blitz: 'Der Abakus blitzt auf. Rechne minus!',
+    kopfrechnen: 'Rechne alle Big Friends Minus im Kopf.',
+    buch: 'Rechne im Buch und hake ab.',
+    boss: 'Bestehe den Test gegen Grummel – dann geht es zur nächsten Lektion!',
+  },
+  cols: 2,
+  range: [10, 18],
+  board: 'Zehner · Einer',
+  adds: [-9, -8, -7, -6, -5, -4, -3, -2, -1],
+  discover: [
+    { text: 'Alle Big Friends Minus: 10 weg, Big Friend dazu.', say: 'Du kennst jetzt alle Big Friends. Jetzt mischen wir minus!', mood: 'happy', start: 0, goal: null },
+    ...[b1, b2].flatMap(([a, k]) => [
+      { text: `Stelle die ${a} ein.`, say: `Stell die ${ZAHLWORT[a]} ein.`, mood: 'happy' as const, start: 0, goal: a },
+      { text: `−${k}: zuerst 10 weg.`, say: `Minus ${ZAHLWORT[k]}: Zuerst zehn weg, eine Perle bei den Zehnern runter.`, mood: 'think' as const, start: a, goal: a - 10 },
+      { text: `Dann ${10 - k} dazu.`, say: `Dann ${ZAHLWORT[10 - k]} dazu bei den Einern.`, mood: 'think' as const, start: a - 10, goal: a - k },
+    ]),
+    { text: `Fertig! ${b1[0]} − ${b1[1]} = ${b1[0] - b1[1]} und ${b2[0]} − ${b2[1]} = ${b2[0] - b2[1]}.`, say: 'Super! Du kannst alle Big Friends.', mood: 'cheer', start: b2[0] - b2[1], goal: null },
+  ],
+})
+UNITS['4-10'] = alleBigFriendsMinus('Big Friends Minus alle', 'Alle Big Friends Minus gemischt wiederholen.', [12, 9], [11, 7])
+UNITS['4-11'] = alleBigFriendsMinus('Big Friends Minus – Training', 'Training: alle Big Friends Minus gemischt.', [12, 8], [11, 3])
 UNITS['4-3'] = bigFriendMinus(7, 11, 'Sieben und drei sind zusammen zehn. Jetzt rechnen wir minus sieben: zehn weg und drei dazu!')
 UNITS['4-4'] = bigFriendMinus(6, 10, 'Sechs und vier sind zusammen zehn. Jetzt rechnen wir minus sechs: zehn weg und vier dazu!')
 UNITS['4-5'] = bigFriendMinus(5, 11, 'Fünf und fünf sind zusammen zehn. Jetzt rechnen wir minus fünf: zehn weg und fünf dazu!')

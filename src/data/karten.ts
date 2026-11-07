@@ -14,7 +14,7 @@ import aeg4 from '../assets/karte/insel-aegypten-4.webp'
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
 /** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number } }
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean }
 
 export const KARTEN: Karte[] = [
   {
@@ -43,13 +43,14 @@ export const KARTEN: Karte[] = [
 
 ]
 
-/** Eigene Karten je Welt (Welt 4: Ägypten-Abenteuer, je 6 Plätze, von unten nach oben) */
+/** Eigene Karten je Welt (Welt 4: Ägypten-Abenteuer, je 6 Plätze, von unten nach oben).
+ *  gemalt: die Nummern-Knöpfe sind im Bild – die App legt nur unsichtbare Knöpfe mit Zustand darüber. */
 export const WELT_KARTEN: Record<number, Karte[]> = {
   4: [
-    { bild: aeg1, w: 909, h: 1060, plaetze: [[304, 855], [594, 700], [309, 590], [609, 465], [399, 340], [704, 240]] },
-    { bild: aeg2, w: 909, h: 1060, plaetze: [[296, 815], [584, 685], [317, 580], [609, 435], [381, 315], [681, 228]] },
-    { bild: aeg3, w: 909, h: 1060, plaetze: [[339, 830], [532, 670], [319, 540], [594, 455], [389, 330], [679, 245]] },
-    { bild: aeg4, w: 909, h: 1060, plaetze: [[274, 875], [554, 755], [354, 615], [609, 490], [359, 405], [569, 273]] },
+    { gemalt: true, bild: aeg1, w: 909, h: 1060, plaetze: [[304, 855], [594, 700], [309, 590], [609, 465], [399, 340], [704, 240]] },
+    { gemalt: true, bild: aeg2, w: 909, h: 1060, plaetze: [[296, 815], [584, 685], [317, 580], [609, 435], [381, 315], [681, 228]] },
+    { gemalt: true, bild: aeg3, w: 909, h: 1060, plaetze: [[339, 830], [532, 670], [319, 540], [594, 455], [389, 330], [679, 245]] },
+    { gemalt: true, bild: aeg4, w: 909, h: 1060, plaetze: [[274, 875], [554, 755], [354, 615], [609, 490], [359, 405], [569, 273]] },
   ],
 }
 

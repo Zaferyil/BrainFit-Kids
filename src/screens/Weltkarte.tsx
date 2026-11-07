@@ -134,7 +134,10 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const ys = karte.plaetze.slice(0, anzahl).map(([, y]) => y)
             const oben = ys.length ? Math.min(...ys) : karte.h
             // Burg nach der letzten Station dieser Insel: Treppe endet kurz über der Station, Burg 82 % breit und ganz im Bild
-            const burg = burgNach.get(start + anzahl - 1) ?? null
+            // gemalte Karten (Welt 4): eigene Nummern im Bild, keine Burg – Platz 23 = Gürtel-Prüfung, 24 = Ziel
+            const gemalt = !!karte.gemalt
+            const weltEnde = burgNach.get(start + anzahl - 1) ?? null
+            const burg = gemalt ? null : weltEnde
             const bv = burg ? burgVon(burg.welt) : null
             // Burgbild mit eigenem Weg (z. B. Welt 3): es schließt unten an „weg“ der Insel an, das Bild
             // füllt fast die ganze Breite und die letzten Stationen liegen auf seinen Wegmünzen
@@ -150,7 +153,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             const platz = frei ? freiT - karte.w * 0.1 : burgUnten - hoch - karte.w * (letzte ? 0.015 : 0.12)
             // Mit Burg bekommt die Insel oben so viel Wasser dazu, wie die Burg braucht (negativer Schnitt);
             // die oberste Insel ohne Burg endet kurz über der letzten Station
-            const schnitt = burg ? Math.min(0, platz) : letzte ? Math.max(0, oben - karte.h * 0.21) : 0
+            const schnitt = gemalt ? 0 : burg ? Math.min(0, platz) : letzte ? Math.max(0, oben - karte.h * 0.21) : 0
             const hoehe = karte.h - schnitt
             const muenzen = frei ? bv!.stationen! : []
             const platzVon = (i: number): [number, number] => {
@@ -158,7 +161,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel'} style={{ zIndex: burg && !letzte && !frei ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '')} style={{ zIndex: burg && !letzte && !frei ? teile.length + 1 : teile.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
@@ -169,6 +172,22 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
                     <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} onLocked={(text) => setSay(text)} />
                     {s.state === 'current' && <a href="#/seza" className="stop-seza" aria-label="Mein SeZa"><SeZa kidId={kid.id} groesse={72} /></a>}
+                  </div>
+                )
+              })}
+              {gemalt && weltEnde && [0, 1].map((k) => {
+                const p = karte.plaetze[anzahl + k]
+                if (!p) return null
+                const pos = { left: `${(p[0] / karte.w) * 100}%`, top: `${(p[1] / hoehe) * 100}%` }
+                const offen = weltEnde.geschafft
+                return (
+                  <div key={`ziel-${k}`} className="insel-stop" style={pos}>
+                    <div className="path-stop">
+                      {k === 0
+                        ? (offen ? <a href={`#/pruefung/${weltEnde.welt}`} className="path-node unit done" aria-label="Gürtel-Prüfung" /> : <button type="button" className="path-node unit locked" aria-label="Gürtel-Prüfung (gesperrt)" onClick={() => setSay('Die Gürtel-Prüfung kommt, wenn du alle Lektionen dieser Welt geschafft hast.')} />)
+                        : <button type="button" className={`path-node unit ${offen ? 'done' : 'locked'}`} aria-label="Ziel der Welt" onClick={() => setSay(offen ? 'Super! Diese Welt hast du geschafft!' : 'Hier ist das Ziel dieser Welt.')} />}
+                      <div className="path-label ziel-label">{k === 0 ? '🥋 Gürtel-Prüfung' : '🏆 Ziel'}</div>
+                    </div>
                   </div>
                 )
               })}
