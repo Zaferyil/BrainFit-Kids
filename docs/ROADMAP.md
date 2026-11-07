@@ -38,5 +38,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - Dateien: src/assets/stimme/*.mp3, Text → Datei in src/assets/stimme/manifest.json.
 
 ## Minus-Welten (in Arbeit)
-- [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen) auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
+- [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen), Lernvideos Lektion 25–35 (Lisa/Lola), Abschlusstests; auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
 - [ ] Welt 5 Little Friends (−), Welt 6 Best Friends (−). Kartenbilder: insel-eis / insel-wueste / insel-weltraum.
+
+- Welt 4: Buch-Seiten für Minus fehlen in den Buchdaten (Seiten 41–70 nicht erfasst) – Buch-Station wird dort übersprungen.

@@ -591,7 +591,106 @@ const LEKTION_22 = bestFriendLektion(22, 9, 5, 15, 25)
 const LEKTION_23 = bestWiederholung(23, 'Alle Best Friends', 'Hallo! Du kennst jetzt alle Best Friends. Jetzt wiederholen wir sie gemischt!', [7, 6], [5, 9], [6, 7])
 const LEKTION_24 = bestWiederholung(24, 'Best Friends Training', 'Hallo! Heute ist Training am Best Friends Berg. Alle Best Friends kommen gemischt!', [6, 8], [8, 6], [5, 8])
 
-export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24]
+// Welt 4, Lektion 25–33: Big Friends Minus – „−k = −10 + f“ (f = Big Friend, k + f = 10).
+// Startzahlen so gewählt, dass „+ f“ bei den Einern direkt geht.
+function bigFriendMinusLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
+  const f = 10 - k
+  const dazu = f === 1 ? 'eine Perle' : `${f}`
+  return {
+    id: `lektion-${number}`,
+    number,
+    title: `Big Friend −${k}`,
+    world: 4,
+    sections: [
+      { title: 'Big Friends', start: 'titel' },
+      { title: 'Der Trick', start: 'trick' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: `Hallo! Willkommen bei den magischen Pyramiden. Heute rechnen wir minus ${k}.` },
+      {
+        id: 'freunde', kind: 'karte', min: 6,
+        card: { title: 'Big Friends', lines: [{ text: `${k} und ${f} sind 10` }, { icon: 'daumen-hoch', text: `Der Big Friend von ${k} ist ${f}` }] },
+        say: `${k} und ${f} sind zusammen 10. Also ist ${f} der Big Friend von ${k}.`,
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} − ${k}`, say: `Wir haben ${a}. Jetzt rechnen wir minus ${k}. Bei den Einern sind nicht genug Perlen da!` },
+      {
+        id: 'trick', kind: 'karte', min: 5,
+        card: { title: 'Der Trick', lines: [{ icon: 'zeige-runter', text: '10 weg' }, { icon: 'daumen-hoch', text: `${f} dazu` }] },
+        say: `Der Trick: Minus ${k} heißt: 10 weg und ${f} dazu.`,
+      },
+      { id: 'zehn-weg', cols: 2, value: a, badge: '− 10', moves: [{ at: 'bei den Zehnern', to: a - 10 }], say: 'Zuerst eine Perle bei den Zehnern runter. Das sind 10 weg.' },
+      { id: 'dazu', badge: `+ ${f}`, moves: [{ at: 'bei den Einern', to: a - k }], say: `Dann gibst du ${dazu} bei den Einern dazu. ${f === 1 ? 'Das ist' : 'Das sind'} ${f} dazu.` },
+      { id: 'ergebnis', badge: `${a} − ${k} = ${a - k}`, min: 3.5, say: `Fertig! ${a} minus ${k} ist ${a - k}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: b, badge: `${b} − ${k} = ${b - k}`, moves: [{ at: 'Zehnern runter', to: b - 10 }, { at: 'Einern dazu', to: b - k }],
+        say: `Noch einmal: ${b} minus ${k}. Eine Perle bei den Zehnern runter, ${f} bei den Einern dazu. Das ist ${b - k}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c, task: c - k, say: `Jetzt du! Rechne ${c} minus ${k}. Zehn weg, ${WORT[f] ?? f} dazu.` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: `Minus ${k} = 10 weg, ${f} dazu` }] },
+        say: `Merk dir: Minus ${k} ist 10 weg und ${f} dazu.`,
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+// Lektion 34–35: alle Big Friends minus gemischt
+function minusWiederholung(number: number, title: string, hallo: string, b1: [number, number], b2: [number, number], c: [number, number]): Lesson {
+  const [a1, k1] = b1
+  const [a2, k2] = b2
+  return {
+    id: `lektion-${number}`,
+    number,
+    title,
+    world: 4,
+    sections: [
+      { title: 'Alle Big Friends', start: 'titel' },
+      { title: 'Gemischt', start: 'aufgabe-zeigen' },
+      { title: 'Üben', start: 'beispiel-2' },
+    ],
+    scenes: [
+      { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
+      { id: 'hallo', say: hallo },
+      {
+        id: 'freunde', kind: 'karte', min: 7,
+        card: { title: 'Alle Big Friends', lines: [{ text: '9 + 1 · 8 + 2 · 7 + 3' }, { text: '6 + 4 · 5 + 5' }, { icon: 'zeige-runter', text: 'Minus: 10 weg, Big Friend dazu' }] },
+        say: 'Neun und eins, acht und zwei, sieben und drei, sechs und vier, fünf und fünf. Beim Minus heißt es: zehn weg und den Big Friend dazu!',
+      },
+      { id: 'aufgabe-zeigen', cols: 2, value: a1, badge: `${a1} − ${k1}`, say: `Wir haben ${a1}. Jetzt kommt minus ${k1}. Welcher Big Friend hilft? Die ${10 - k1}!` },
+      { id: 'zehn-weg', cols: 2, value: a1, badge: '− 10', moves: [{ at: 'bei den Zehnern', to: a1 - 10 }], say: 'Zuerst eine Perle bei den Zehnern runter. Das sind 10 weg.' },
+      { id: 'dazu', badge: `+ ${10 - k1}`, moves: [{ at: 'bei den Einern', to: a1 - k1 }], say: `Dann ${10 - k1} bei den Einern dazu. ${a1} minus ${k1} ist ${a1 - k1}.` },
+      {
+        id: 'beispiel-2', cols: 2, value: a2, badge: `${a2} − ${k2} = ${a2 - k2}`, moves: [{ at: 'Zehn weg', to: a2 - 10 }, { at: 'dazu.', to: a2 - k2 }],
+        say: `Und jetzt ${a2} minus ${k2}. Der Big Friend ist ${10 - k2}. Zehn weg, ${10 - k2} dazu. Das ist ${a2 - k2}!`,
+      },
+      { id: 'aufgabe', kind: 'aufgabe', cols: 2, value: c[0], task: c[0] - c[1], say: `Jetzt du! Rechne ${c[0]} minus ${c[1]}. Denk an den Big Friend!` },
+      {
+        id: 'merksatz', kind: 'karte', min: 5,
+        card: { title: 'Das merkst du dir', lines: [{ text: 'Erst den Big Friend finden' }, { text: 'Dann: 10 weg, Big Friend dazu' }] },
+        say: 'Merk dir: Erst den Big Friend finden. Dann zehn weg und den Big Friend dazu.',
+      },
+      { id: 'ende', kind: 'ende', min: 5, say: 'Super! Drück jetzt unten auf Weiter und übe den Trick. Los geht’s!' },
+    ],
+  }
+}
+
+const LEKTION_25 = bigFriendMinusLektion(25, 9, 12, 13, 17)
+const LEKTION_26 = bigFriendMinusLektion(26, 8, 12, 15, 11)
+const LEKTION_27 = bigFriendMinusLektion(27, 7, 11, 16, 10)
+const LEKTION_28 = bigFriendMinusLektion(28, 6, 10, 15, 25)
+const LEKTION_29 = bigFriendMinusLektion(29, 5, 11, 13, 14)
+const LEKTION_30 = bigFriendMinusLektion(30, 4, 12, 13, 21)
+const LEKTION_31 = bigFriendMinusLektion(31, 3, 11, 12, 20)
+const LEKTION_32 = bigFriendMinusLektion(32, 2, 11, 10, 21)
+const LEKTION_33 = bigFriendMinusLektion(33, 1, 10, 20, 30)
+const LEKTION_34 = minusWiederholung(34, 'Alle Big Friends Minus', 'Hallo! Du kennst jetzt alle Big Friends beim Minus. Jetzt mischen wir sie!', [12, 9], [11, 7], [14, 5])
+const LEKTION_35 = minusWiederholung(35, 'Big Friends Minus Training', 'Hallo! Heute ist Training bei den Pyramiden. Alle Big Friends minus kommen gemischt!', [12, 8], [11, 3], [20, 6])
+
+export const LESSONS: Lesson[] = [LEKTION_1, LEKTION_2, LEKTION_3, LEKTION_4, LEKTION_5, LEKTION_6, LEKTION_7, LEKTION_8, LEKTION_9, LEKTION_10, LEKTION_11, LEKTION_12, LEKTION_13, LEKTION_14, LEKTION_15, LEKTION_16, LEKTION_17, LEKTION_18, LEKTION_19, LEKTION_20, LEKTION_21, LEKTION_22, LEKTION_23, LEKTION_24, LEKTION_25, LEKTION_26, LEKTION_27, LEKTION_28, LEKTION_29, LEKTION_30, LEKTION_31, LEKTION_32, LEKTION_33, LEKTION_34, LEKTION_35]
 
 const WORDS = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun']
 /** Sprechtext: Ziffern als Wörter, damit die Stimme „Die 1“ nicht als „die Erste“ liest. Gleich lang wie

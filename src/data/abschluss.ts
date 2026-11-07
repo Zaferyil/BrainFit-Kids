@@ -28,4 +28,16 @@ export const ABSCHLUSS: Record<string, HoerAufgabe[]> = {
   '3-4': [{ zahlen: [25, 9, 5], antwort: 39 }, { zahlen: [65, 9, 15], antwort: 89 }, { zahlen: [24, -10, 6, 9], antwort: 29 }, { zahlen: [31, 12, 2, 9, 1], antwort: 55 }, { zahlen: [14, 35, 6, 9, 1], antwort: 65 }],
   '3-5': [{ zahlen: [16, 6, 5, 6], antwort: 33 }, { zahlen: [19, 6, 7, 3], antwort: 35 }, { zahlen: [74, 5, 6, 8], antwort: 93 }, { zahlen: [63, 5, 6, 1, 5], antwort: 80 }, { zahlen: [11, 15, 8, 1], antwort: 35 }],
   '3-6': [{ zahlen: [61, 19, 6, 7], antwort: 93 }, { zahlen: [24, 7, 6, 3], antwort: 40 }, { zahlen: [31, 5, 6, 2, 7], antwort: 51 }, { zahlen: [15, 8, 12, -25], antwort: 10 }, { zahlen: [23, 15, 7, 9], antwort: 54 }],
+  // Welt 4 (Big Friends minus): −k = −10 + Big Friend; nur Aufgaben, bei denen die Schritte direkt gehen
+  '4-1': [{ zahlen: [26, -9], antwort: 17 }, { zahlen: [22, -9, 10], antwort: 23 }, { zahlen: [17, -9, 20, -9], antwort: 19 }, { zahlen: [15, -9, 10, -9, 10], antwort: 17 }, { zahlen: [12, -9, 10, -9, 5, 10], antwort: 19 }],
+  '4-2': [{ zahlen: [20, -8], antwort: 12 }, { zahlen: [11, -8, 20], antwort: 23 }, { zahlen: [25, -8, 2, 10], antwort: 29 }, { zahlen: [33, -8, 1, -8, 20], antwort: 38 }, { zahlen: [32, -8, 20, -8, 3, 20], antwort: 59 }],
+  '4-3': [{ zahlen: [24, -7], antwort: 17 }, { zahlen: [10, -7, 1], antwort: 4 }, { zahlen: [21, -7, 10, -7], antwort: 17 }, { zahlen: [20, -7, 5, 10, 1], antwort: 29 }, { zahlen: [13, -7, 2, 20, 20, 20], antwort: 68 }],
+  '4-4': [{ zahlen: [10, -6], antwort: 4 }, { zahlen: [15, -6, 10], antwort: 19 }, { zahlen: [25, -6, 10, 20], antwort: 49 }, { zahlen: [22, -6, 20, 1, 10], antwort: 47 }, { zahlen: [14, -6, 20, 1, 20, 20], antwort: 69 }],
+  '4-5': [{ zahlen: [12, -5], antwort: 7 }, { zahlen: [32, -5, 20], antwort: 47 }, { zahlen: [32, -5, 20, 2], antwort: 49 }, { zahlen: [20, -5, 4, 10, 10], antwort: 39 }, { zahlen: [30, -5, 4, 10, 10, 10], antwort: 59 }],
+  '4-6': [{ zahlen: [20, -4], antwort: 16 }, { zahlen: [12, -4, 1], antwort: 9 }, { zahlen: [30, -4, 10, 3], antwort: 39 }, { zahlen: [31, -4, 10, 10, 1], antwort: 48 }, { zahlen: [13, -4, 10, 10, 10, 10], antwort: 49 }],
+  '4-7': [{ zahlen: [32, -3], antwort: 29 }, { zahlen: [31, -3, 10], antwort: 38 }, { zahlen: [32, -3, 20, 20], antwort: 69 }, { zahlen: [21, -3, 10, 10, 10], antwort: 48 }, { zahlen: [11, -3, 20, 1, 10, 20], antwort: 59 }],
+  '4-8': [{ zahlen: [31, -2], antwort: 29 }, { zahlen: [10, -2, 10], antwort: 18 }, { zahlen: [30, -2, 20, 20], antwort: 68 }, { zahlen: [21, -2, 10, 10, 10], antwort: 49 }, { zahlen: [21, -2, 10, 10, 20, 10], antwort: 69 }],
+  '4-9': [{ zahlen: [10, -1], antwort: 9 }, { zahlen: [30, -1, 10], antwort: 39 }, { zahlen: [20, -1, 20, 20], antwort: 59 }, { zahlen: [20, -1, 20, 10, 10], antwort: 59 }, { zahlen: [10, -1, 20, 20, 10, 10], antwort: 69 }],
+  '4-10': [{ zahlen: [20, -7], antwort: 13 }, { zahlen: [10, -3, 1], antwort: 8 }, { zahlen: [30, -5, 2, 1], antwort: 28 }, { zahlen: [21, -7, 10, -5, 20], antwort: 39 }, { zahlen: [12, -5, 1, 1, 10, 20], antwort: 39 }],
+  '4-11': [{ zahlen: [34, -9], antwort: 25 }, { zahlen: [32, -6, 10], antwort: 36 }, { zahlen: [33, -9, 10, -5], antwort: 29 }, { zahlen: [22, 20, -4, 10, 1], antwort: 49 }, { zahlen: [11, -2, 10, 10, 10, 10], antwort: 49 }],
 }
