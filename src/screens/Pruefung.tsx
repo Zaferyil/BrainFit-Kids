@@ -1,3 +1,4 @@
+import { AufgabeText } from '../components/Senkrecht'
 import { merkeAntwort } from '../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../components/Icon'
@@ -159,7 +160,7 @@ export function Pruefung({ kid, welt }: { kid: Kid; welt: number }) {
           <section className="pr-spiel">
             <div className="az-info"><span>Aufgabe {i + 1} / {aufg.length}</span><span className={rest <= 30 ? 'pr-knapp' : ''}>⏱️ {mm}:{String(ss).padStart(2, '0')}</span></div>
             <div className={`az-tafel ${fb === 'ok' ? 'richtig' : fb === 'falsch' ? 'falsch' : ''}`}>
-              <div className="pr-aufgabe">{aufg[i].text} =</div>
+              <div className="pr-aufgabe"><AufgabeText text={aufg[i].text} /></div>
               <b className="az-eingabe">{eingabe || '?'}</b>
             </div>
             <Keypad onKey={taste} disabled={!!fb} />

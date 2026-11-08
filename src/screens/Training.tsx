@@ -1,3 +1,4 @@
+import { AufgabeText } from '../components/Senkrecht'
 import { useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Abakus } from '../components/Abakus'
@@ -93,7 +94,7 @@ export function Training({ kid }: { kid: Kid }) {
             <div className="az-info"><span>Aufwärm-Training</span><span>{i + 1} / {aufg.length}</span></div>
             {a.abakus && <Fit className="tr-abakus"><Abakus key={i} value={a.abakus.n} cols={a.abakus.cols} colw={80} interactive={false} /></Fit>}
             <div className={`az-tafel ${fb === 'ok' ? 'richtig' : fb === 'falsch' ? 'falsch' : ''}`}>
-              <div className="pr-aufgabe" style={a.abakus ? { fontSize: 20 } : undefined}>{a.abakus ? a.text : `${a.text} =`}</div>
+              <div className="pr-aufgabe" style={a.abakus ? { fontSize: 20 } : undefined}>{a.abakus ? a.text : <AufgabeText text={a.text} />}</div>
               <b className="az-eingabe">{fb === 'falsch' ? a.loesung : eingabe || '?'}</b>
             </div>
             <Keypad onKey={taste} disabled={!!fb} />

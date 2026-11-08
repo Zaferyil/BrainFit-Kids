@@ -1,3 +1,4 @@
+import { AufgabeText, Senkrecht } from '../../components/Senkrecht'
 import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState } from 'react'
 import { Icon } from '../../components/Icon'
@@ -148,7 +149,7 @@ export function SchnellStation({ kidId, content, platz, art }: Props) {
             <span className="ue-zaehler"><b className="gruen">{richtig}</b> richtig · <b className="rot">{falsch}</b> falsch</span>
           </div>
           <div className="ue-tempo" aria-label="Tempo"><div style={{ width: `${tempo * 100}%` }} /><span>Tempo</span></div>
-          <div className="ue-aufgabe">{rechnung(aufgabe.a, aufgabe.b)} = ?</div>
+          <div className="ue-aufgabe"><Senkrecht a={aufgabe.a} b={aufgabe.b} /></div>
           <div className={`ue-antwort ${blink}`}>{input || '?'}</div>
         </div>
         <Keypad onKey={onKey} disabled={!s.started || rest <= 0} />
@@ -207,7 +208,7 @@ export function MemoryStation({ kidId, content, platz, art }: Props) {
             const zu = !offen.includes(k.id) && !gefunden.includes(k.paar)
             return (
               <button key={k.id} type="button" className={`ue-mkarte ${zu ? 'zu' : ''} ${gefunden.includes(k.paar) ? 'gefunden' : ''}`} onClick={() => tippen(k.id)} aria-label={zu ? 'Karte' : k.text}>
-                {zu ? '?' : k.text}
+                {zu ? '?' : <AufgabeText text={k.text} />}
               </button>
             )
           })}
@@ -265,7 +266,7 @@ export function VergleichStation({ kidId, content, platz, art }: Props) {
             <button key={i} type="button" disabled={gewaehlt !== null}
               className={gewaehlt === null ? 'ue-vkarte' : i === groesser ? 'ue-vkarte right' : i === gewaehlt ? 'ue-vkarte wrong' : 'ue-vkarte dim'}
               onClick={() => waehlen(i)}>
-              <span>{rechnung(p.a, p.b)}</span>
+              <span><Senkrecht a={p.a} b={p.b} /></span>
               {gewaehlt !== null && <small>= {p.n}</small>}
             </button>
           ))}

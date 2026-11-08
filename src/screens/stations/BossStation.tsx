@@ -1,3 +1,4 @@
+import { Senkrecht } from '../../components/Senkrecht'
 import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Fit } from '../../components/Fit'
@@ -7,7 +8,7 @@ import { Grummel } from '../../components/Grummel'
 import { Icon } from '../../components/Icon'
 import { Stage } from '../../components/Stage'
 import { WORLDS } from '../../data/curriculum'
-import { describeNumber, makeSum, randomIn, rechnet, type UnitContent, rechnung, opWort } from '../../data/units'
+import { describeNumber, makeSum, randomIn, rechnet, type UnitContent, opWort } from '../../data/units'
 import { ABSCHLUSS, type HoerAufgabe } from '../../data/abschluss'
 import { typeDigit } from '../../lib/typeDigit'
 import { completeUnit, finishStation } from '../../lib/progress'
@@ -232,7 +233,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
                 </button>
               </>
             ) : q.art === 'kopf' ? (
-              <div className="boss-q-text">{rechnung(q.a ?? 0, q.b ?? 0)} = ?</div>
+              <div className="boss-q-text"><Senkrecht a={q.a ?? 0} b={q.b ?? 0} /></div>
             ) : q.art === 'beschreiben' ? (
               <div className="boss-q-text">{describeNumber(q.n)[0].toUpperCase() + describeNumber(q.n).slice(1)} = ?</div>
             ) : q.art === 'blitz' && !zeigen ? (
@@ -240,7 +241,7 @@ export function BossStation({ kidId, content, world, unit }: { kidId: string; co
             ) : (
               <div className="boss-q-read">
                 <Abakus3D key={`${hits}-${lives}`} value={q.a ?? q.n} cols={content.cols} colw={content.cols > 1 ? 40 : 46} />
-                <span>{q.art === 'abakus' ? `${rechnung(q.a ?? 0, q.b ?? 0)} = ?` : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
+                <span>{q.art === 'abakus' ? <Senkrecht a={q.a ?? 0} b={q.b ?? 0} /> : q.art === 'blitz' ? 'Schau genau!' : 'Welche Zahl?'}</span>
               </div>
             )}
           </div>

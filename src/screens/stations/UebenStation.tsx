@@ -1,3 +1,4 @@
+import { Senkrecht } from '../../components/Senkrecht'
 import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
 import { Abakus } from '../../components/Abakus'
@@ -124,10 +125,7 @@ export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { 
             <>
               <div className="task-ask">{task.kind === 'set' ? 'Rechne mit dem Abakus:' : 'Rechne:'}</div>
               {/* untereinander wie im Buch: oben die Zahl, darunter „−9“ und ein Strich */}
-              <div className="task-number senkrecht" aria-label={sum}>
-                <span>{task.a}</span>
-                <span className="op">{(task.b ?? 0) < 0 ? '−' : '+'}{Math.abs(task.b ?? 0)}</span>
-              </div>
+              <div className="task-number"><Senkrecht a={task.a ?? 0} b={task.b ?? 0} /></div>
               {task.kind === 'read' && <div className={`task-answer ${feedback?.type ?? ''} ${input ? 'filled' : ''}`}>{input || '?'}</div>}
             </>
           ) : task.kind === 'set' ? (
