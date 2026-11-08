@@ -123,7 +123,11 @@ export function UebenStation({ kidId, content, modus = 'mix', label, intro }: { 
           {sum ? (
             <>
               <div className="task-ask">{task.kind === 'set' ? 'Rechne mit dem Abakus:' : 'Rechne:'}</div>
-              <div className="task-number">{sum}</div>
+              {/* untereinander wie im Buch: oben die Zahl, darunter „−9“ und ein Strich */}
+              <div className="task-number senkrecht" aria-label={sum}>
+                <span>{task.a}</span>
+                <span className="op">{(task.b ?? 0) < 0 ? '−' : '+'}{Math.abs(task.b ?? 0)}</span>
+              </div>
               {task.kind === 'read' && <div className={`task-answer ${feedback?.type ?? ''} ${input ? 'filled' : ''}`}>{input || '?'}</div>}
             </>
           ) : task.kind === 'set' ? (
