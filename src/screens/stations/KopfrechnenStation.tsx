@@ -120,7 +120,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
           <Keypad onKey={onKey} disabled={state !== 'ask'} />
         </section>
       </div>
-      {done && <StationDone stars={done.stars} perlen={done.perlen} text={wechsel > 0 ? `Super! Nächste Kopf-Abakus-Stufe: ${KOPF_STUFEN[stufe + 1].name}. ${KOPF_STUFEN[stufe + 1].text}` : wechsel < 0 ? 'Wir üben noch einmal mit mehr Hilfe vom Abakus.' : stufe === 3 ? 'Der Abakus ist jetzt ganz in deinem Kopf!' : 'Noch eine Runde ohne Fehler, dann wird der Abakus noch blasser.'} />}
+      {done && <StationDone stars={done.stars} perlen={done.perlen} text={wechsel > 0 ? `Super! Nächste Kopf-Abakus-Stufe: ${KOPF_STUFEN[stufe + 1].name}. ${KOPF_STUFEN[stufe + 1].text}` : wechsel < 0 ? 'Wir üben noch einmal mit mehr Hilfe vom Abakus.' : stufe === 3 ? 'Der Abakus ist jetzt ganz in deinem Kopf!' : 'Noch eine Runde ohne Fehler, dann wird der Abakus noch blasser.'} say={['Geschafft!', ...(wechsel > 0 ? ['Super! Nächste Kopf-Abakus-Stufe.', KOPF_STUFEN[stufe + 1].text] : [wechsel < 0 ? 'Wir üben noch einmal mit mehr Hilfe vom Abakus.' : stufe === 3 ? 'Der Abakus ist jetzt ganz in deinem Kopf!' : 'Noch eine Runde ohne Fehler, dann wird der Abakus noch blasser.'])]} />}
     </StationShell>
   )
 }

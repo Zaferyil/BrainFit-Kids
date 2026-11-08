@@ -39,24 +39,6 @@ function playClip(url: string, id: number) {
   })
 }
 
-function browserSpeak(text: string, id: number) {
-  return new Promise<void>((resolve) => {
-    try {
-      const synth = window.speechSynthesis
-      if (!synth || id !== run) return resolve()
-      const u = new SpeechSynthesisUtterance(text)
-      u.lang = 'de-AT'
-      u.rate = 0.95
-      const voice = synth.getVoices().find((v) => v.lang.startsWith('de'))
-      if (voice) u.voice = voice
-      u.onend = () => resolve()
-      u.onerror = () => resolve()
-      synth.speak(u)
-    } catch {
-      resolve()
-    }
-  })
-}
 
 /** Spricht einen Satz oder eine Folge von Bausteinen. Ein neuer Aufruf unterbricht den alten.
  *  Das Promise endet, wenn fertig gesprochen (oder unterbrochen) wurde. */
@@ -67,12 +49,12 @@ export async function speak(say: string | string[]) {
   const id = run
   const parts = (Array.isArray(say) ? say : [say]).map((p) => p.trim()).filter(Boolean)
   const urls = parts.map(clipUrl)
-  if (urls.every(Boolean)) {
-    for (const url of urls) {
-      if (id !== run) return
-      await playClip(url!, id)
-    }
-    return
+  // Nur unsere Stimme (Lola): fehlt für einen Baustein die Aufnahme, wird er übersprungen – keine Browserstimme mehr
+  const fehlt = parts.filter((_, i) => !urls[i])
+  if (fehlt.length) { console.warn('Ohne Aufnahme:', fehlt); try { (window as unknown as { __fehlt?: string[] }).__fehlt?.push(...fehlt) } catch { /* nur Test */ } }
+  for (const url of urls) {
+    if (!url) continue
+    if (id !== run) return
+    await playClip(url, id)
   }
-  await browserSpeak(parts.join(' '), id)
 }

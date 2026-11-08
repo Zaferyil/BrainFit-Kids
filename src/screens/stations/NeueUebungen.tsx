@@ -153,7 +153,7 @@ export function SchnellStation({ kidId, content, platz, art }: Props) {
         </div>
         <Keypad onKey={onKey} disabled={!s.started || rest <= 0} />
       </div>
-      {done && <StationDone stars={done.stars} perlen={done.perlen} text={`${richtig} Aufgaben in einer Minute!`} />}
+      {done && <StationDone stars={done.stars} perlen={done.perlen} text={`${richtig} Aufgaben in einer Minute!`} say={['Geschafft!', String(richtig), 'Aufgaben in einer Minute!']} />}
     </StationShell>
   )
 }
