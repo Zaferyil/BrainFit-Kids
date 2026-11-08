@@ -1,4 +1,3 @@
-import { Senkrecht } from '../../components/Senkrecht'
 import { merkeAntwort } from '../../lib/lernspur'
 import { useEffect, useState } from 'react'
 import { Fit } from '../../components/Fit'
@@ -111,7 +110,7 @@ export function KopfrechnenStation({ kidId, content }: { kidId: string; content:
         <section className="mental-task">
           <div className="mental-q">
             <div className="eyebrow">AUFGABE {index + 1} VON {COUNT} · {sum ? 'RECHNE IM KOPF' : 'STELL DIR VOR'}</div>
-            <div className="mental-phrase">{sum ? <Senkrecht a={a} b={add} /> : phrase[0].toUpperCase() + phrase.slice(1)}</div>
+            <div className="mental-phrase">{phrase[0].toUpperCase() + phrase.slice(1)}</div>
             <div className="mental-eq">
               <div className={`task-answer ${state === 'ask' ? '' : state} ${input ? 'filled' : ''}`}>{input || '?'}</div>
             </div>

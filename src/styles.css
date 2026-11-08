@@ -3121,5 +3121,5 @@ label .pw-feld { margin-top: 4px; }
 .welt-wahl { flex-wrap: wrap !important; overflow: visible !important; }
 .welt-wahl button.zu { background: rgba(255,255,255,.45); color: rgba(35,26,79,.55); box-shadow: none; }
 /* Aufgabe untereinander: 15 / −9 / Strich (wie im Buch) */
-.senkrecht { display: inline-grid; justify-items: end; justify-self: center; line-height: .95; font-variant-numeric: tabular-nums; }
-.senkrecht .op { padding: 0 .05em .08em .25em; border-bottom: .07em solid currentColor; min-width: 2.2ch; text-align: right; }
+.task-number.senkrecht { display: inline-grid; justify-items: end; justify-self: center; line-height: .95; font-variant-numeric: tabular-nums; }
+.task-number.senkrecht .op { padding: 0 .05em .08em .25em; border-bottom: .07em solid currentColor; min-width: 2.2ch; text-align: right; }
