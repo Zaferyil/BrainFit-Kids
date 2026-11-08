@@ -1,3 +1,4 @@
+import { SAY } from '../data/sprache'
 import { useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Stage } from '../components/Stage'
@@ -49,7 +50,7 @@ export function Wiederholen({ kid }: { kid: Kid }) {
     const ok = Number(eingabe) === a.loesung
     merkeAntwort(kid.id, ok, { regel: a.regel, wiederholung: true })
     const r = richtig + (ok ? 1 : 0); setRichtig(r); setFb(ok ? 'ok' : 'falsch')
-    if (ok) tonRichtig(r); else { tonFalsch(); void speak(['Fast! Das ist', String(a.loesung)]) }
+    if (ok) tonRichtig(r); else { tonFalsch(); void speak([SAY.fastDasIst, String(a.loesung)]) }
     window.setTimeout(() => {
       setFb(null); setEingabe('')
       if (i + 1 >= aufg.length) { rewardGame(kid.id, r * 2, 'wiederholen'); setFertig(true) } else setI(i + 1)

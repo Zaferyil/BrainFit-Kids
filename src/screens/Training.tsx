@@ -1,3 +1,4 @@
+import { SAY } from '../data/sprache'
 import { useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Abakus } from '../components/Abakus'
@@ -75,7 +76,7 @@ export function Training({ kid }: { kid: Kid }) {
     const ok = Number(eingabe) === a.loesung
     merkeAntwort(kid.id, ok, { regel: a.regel, wiederholung: a.teil === 'Wiederholen' })
     const r = richtig + (ok ? 1 : 0); setRichtig(r); setFb(ok ? 'ok' : 'falsch')
-    if (ok) tonRichtig(r); else { tonFalsch(); void speak(['Fast! Das ist', String(a.loesung)]) }
+    if (ok) tonRichtig(r); else { tonFalsch(); void speak([SAY.fastDasIst, String(a.loesung)]) }
     window.setTimeout(() => {
       setFb(null); setEingabe('')
       if (i + 1 >= aufg.length) { rewardGame(kid.id, schonHeute ? r : r * 2, 'training'); save(tagKey(kid.id), heute()); setFertig(true) } else setI(i + 1)

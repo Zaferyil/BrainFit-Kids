@@ -99,7 +99,7 @@ export function Pruefung({ kid, welt }: { kid: Kid; welt: number }) {
     if (r >= PRUEFUNG.bestehen) {
       pruefungBestanden(kid.id, welt, b); rewardGame(kid.id, 20, `pruefung-${welt}`)
       void urkundeZeichnen(kid.name, guertel, w.color, b).then(setBild); tonRichtig(5)
-      void speak(`Herzlichen Glückwunsch! Du hast die Prüfung für den ${guertel}en Gürtel bestanden!`)
+      void speak('Herzlichen Glückwunsch! Du hast die Prüfung bestanden!')
     } else { tonFalsch(); void speak('Fast geschafft! Übe noch ein bisschen und versuch es dann noch einmal.') }
   }
 
