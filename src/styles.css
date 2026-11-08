@@ -3113,3 +3113,8 @@ label .pw-feld { margin-top: 4px; }
 .karten-seiten { display: flex; justify-content: center; gap: 8px; padding: 2px 12px 6px; position: relative; z-index: 30; }
 .karten-seiten button { width: 30px; height: 30px; border-radius: 50%; border: 0; font: 900 14px Nunito, sans-serif; background: rgba(255,255,255,.8); color: #4B2FC2; cursor: pointer; }
 .karten-seiten button.on { background: #FFC531; color: #231A4F; box-shadow: 0 3px 0 #D99A00; }
+/* Neue Abenteuer-Karte: gleitet von rechts herein, kurzes Funkeln */
+.insel.karte-neu { animation: karte-rein .9s cubic-bezier(.2,.8,.2,1) both; }
+.insel.karte-neu::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 9; background: radial-gradient(circle at 50% 70%, rgba(255,240,170,.75), rgba(255,240,170,0) 60%); animation: karte-funkeln 1.4s ease-out both; }
+@keyframes karte-rein { from { transform: translateX(60%) scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes karte-funkeln { 0% { opacity: 0; } 35% { opacity: 1; } 100% { opacity: 0; } }

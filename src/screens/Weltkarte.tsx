@@ -88,7 +88,20 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const [seiteWahl, setSeiteWahl] = useState<{ welt: number; i: number } | null>(null)
   const seite = seiteWahl?.welt === zeigWelt ? seiteWahl.i : (teile.some((t) => nurStops.slice(t.start, t.start + t.anzahl).some((x) => x.state === 'current')) ? seiteMitAktuell : 0)
   const sicht = seitenModus ? teile.slice(seite, seite + 1) : teile
-  const blaettern = (i: number) => { setSeiteWahl({ welt: zeigWelt, i }); window.scrollTo({ top: 0 }) }
+  const blaettern = (i: number) => { setNeuSeite(false); setSeiteWahl({ welt: zeigWelt, i }); window.scrollTo({ top: 0 }) }
+  // Automatisch weiter: ist die nächste Station auf einer neuen Karte, öffnet die Karte dort (eigene Auswahl wird verworfen)
+  // und die neue Karte gleitet mit einem kleinen Funkeln herein.
+  const aktuellId = nurStops.find((x) => x.state === 'current')?.id ?? ''
+  useEffect(() => { setSeiteWahl(null) }, [aktuellId])
+  const [neuSeite, setNeuSeite] = useState(false)
+  useEffect(() => {
+    if (!seitenModus || seiteWahl) return
+    const key = `bfk.karte-seite.${kid.id}.${zeigWelt}`
+    let alt = -1
+    try { alt = Number(localStorage.getItem(key) ?? -1) } catch { /* egal */ }
+    if (alt >= 0 && seite > alt) { setNeuSeite(true); window.setTimeout(() => setNeuSeite(false), 1600) }
+    try { localStorage.setItem(key, String(seite)) } catch { /* egal */ }
+  }, [seite, seitenModus, seiteWahl, kid.id, zeigWelt])
   // Nummern beginnen in jeder Welt bei 1 (passt auch zu den gemalten Knöpfen der Abenteuer-Karten)
   const nummer = useMemo(() => {
     const m = new Map<string, number>(); const z = new Map<number, number>()
@@ -201,7 +214,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
