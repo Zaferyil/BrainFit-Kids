@@ -166,11 +166,17 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         )}
       </header>
 
-      {welten.length > 1 && (
+      {(welten.length > 1 || WORLDS.length > welten.length) && (
         <nav className="welt-wahl" aria-label="Welt wählen">
           {welten.map((w) => (
             <button key={w} type="button" className={w === zeigWelt ? 'on' : ''} aria-pressed={w === zeigWelt} title={`Welt ${w} – ${WORLDS[w - 1]?.name ?? ''}`} onClick={() => setAnsicht(w)}>
               {WELT_KURZ[w] ?? `Welt ${w}`}
+            </button>
+          ))}
+          {/* noch nicht erreichte Welten: sichtbar, aber gesperrt */}
+          {WORLDS.filter((x) => !welten.includes(x.n)).map((x) => (
+            <button key={x.n} type="button" className="zu" title={`Welt ${x.n} – ${x.name}`} onClick={() => setSay(`${x.name} öffnet sich, wenn du Welt ${x.n - 1} geschafft hast.`)}>
+              🔒 {(WELT_KURZ[x.n] ?? `Welt ${x.n}`).replace(/^\S+\s/, '')}
             </button>
           ))}
         </nav>
