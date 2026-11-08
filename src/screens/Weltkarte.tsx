@@ -319,7 +319,7 @@ function Node({ stop, n, kid, bild, onLocked }: { stop: Stop; n: number; kid: Ki
           {inner}
         </button>
       ) : (
-        <a href={href} className={cls} aria-label={label} onClick={() => { if (stop.kind === 'game' && current) startStop(stop.id); if (stop.kind === 'unit') setReplay(kid.id, current ? null : { world: stop.world.n, unit: stop.unit }) }}>
+        <a href={href} className={cls} aria-label={label} onClick={() => { if (stop.kind === 'game') startStop(stop.id); if (stop.kind === 'unit') setReplay(kid.id, current ? null : { world: stop.world.n, unit: stop.unit }) }}>
           {inner}
         </a>
       )}

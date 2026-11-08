@@ -61,7 +61,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
   const [result, setResult] = useState<Result | null>(null)
   // Von der Karte gestartet: danach zurück zur Karte, die Station gilt als geschafft
   const [fromMap] = useState(cameFromMap)
-  const back = fromMap ? '#/karte' : '#/denkpark'
+  const back = fromMap ? '#/inseln' : '#/denkpark'
   const Game = COMPONENTS[game.id]
   const area = AREAS.find((a) => a.id === game.area)!
   // beim ersten Öffnen eines Spiels erklärt Lisa es kurz (danach nur über den Lautsprecher-Knopf)
