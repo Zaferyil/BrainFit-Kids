@@ -27,6 +27,7 @@ import { BelohnungsAnzeige } from './components/BelohnungsAnzeige'
 import { einstellungenAnwenden, kindEinstellungen } from './lib/wirtschaft'
 import { BuchStation } from './screens/stations/BuchStation'
 import { KigaBuchStation } from './screens/stations/KigaBuchStation'
+import { kigaAuftrag } from './data/kigaBuch'
 import { buchAuftrag, workbookAuftrag } from './data/buch'
 import { alleHausaufgaben, hausaufgabeKey } from './lib/hausaufgaben'
 import { UEBUNGEN, uebungsArt, type UebungsPlatz } from './data/uebungen'
@@ -188,7 +189,9 @@ function Inhalt({ roh }: { roh: string }) {
       // Arbeitsbuch: Seite und Spalte je Lektion; bei jeder Wiederholung die nächste Spalte
       if (id === 'buch') {
         // Kindergarten: eigenes Kiga-Buch (Lektion 1–10, ab Seite 23)
-        if (klasseVon(kid.id).name === 'Kiga') return <KigaBuchStation kidId={kid.id} lektion={WORLDS.slice(0, progress.world - 1).reduce((n, w) => n + w.units.length, 0) + progress.unit} />
+        // Kindergarten: Lektion 1–10 das Kiga-Buch; danach (Kiga-Buch fertig) wie alle anderen das Basic Book / Work Book
+        const kigaLektion = WORLDS.slice(0, progress.world - 1).reduce((n, w) => n + w.units.length, 0) + progress.unit
+        if (klasseVon(kid.id).name === 'Kiga' && kigaAuftrag(kigaLektion)) return <KigaBuchStation kidId={kid.id} lektion={kigaLektion} />
         // Nächste Runde erst, wenn der Wissenscheck der ersten geschafft ist (selbst bestätigt reicht nicht);
         // ältere Stände ohne Hausaufgaben-Eintrag zählen wie bisher über die Sterne
         const erste = alleHausaufgaben(kid.id)[hausaufgabeKey(progress.world, progress.unit, 0)]
