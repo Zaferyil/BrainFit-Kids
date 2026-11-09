@@ -2,7 +2,7 @@
 import { supabase } from './supabase'
 
 export type Countdown = { an: boolean; ende: string; titel: string; fuss: string; balken: number }
-export type Popup = { an: boolean; titel: string; text: string; knopf: string; code: string; ab: string; bis: string; sekunden: number; bildAn: boolean; bild: string; uhrAn: boolean; uhrEnde: string }
+export type Popup = { an: boolean; titel: string; text: string; knopf: string; link?: string; code: string; ab: string; bis: string; sekunden: number; bildAn: boolean; bild: string; uhrAn: boolean; uhrEnde: string }
 export type Preis = { monat: number; jahr: number; altMonat: number; altJahr: number; hinweis: string; linkMonat: string; linkJahr: string }
 export type PaketKey = 'basic' | 'plus' | 'premium'
 export type WebsiteDaten = { countdown: Countdown; popup: Popup; preise: Record<PaketKey, Preis> }

@@ -64,6 +64,7 @@ export function AdminWebsite() {
           <label className="breit">Text<textarea rows={3} value={d.popup.text} onChange={(e) => pp('text', e.target.value)} maxLength={300} /></label>
           <label>Gutscheincode<input value={d.popup.code} onChange={(e) => pp('code', e.target.value.toUpperCase())} maxLength={30} placeholder="leer = kein Code" /></label>
           <label>Button-Text<input value={d.popup.knopf} onChange={(e) => pp('knopf', e.target.value)} maxLength={30} /></label>
+          <label>Button-Link<input value={d.popup.link ?? ''} onChange={(e) => pp('link', e.target.value)} placeholder="leer = zu den Paketen · z. B. https://brainfitkids.mentalmath.at/webinar oder #preise" /></label>
           <label>Sichtbar ab<input type="datetime-local" value={d.popup.ab} onChange={(e) => pp('ab', e.target.value)} /></label>
           <label>Sichtbar bis<input type="datetime-local" value={d.popup.bis} onChange={(e) => pp('bis', e.target.value)} /></label>
           <label>Erscheint nach (Sekunden)<input type="number" min={0} max={120} value={d.popup.sekunden} onChange={(e) => pp('sekunden', Math.max(0, Math.min(120, Number(e.target.value) || 0)))} /></label>
