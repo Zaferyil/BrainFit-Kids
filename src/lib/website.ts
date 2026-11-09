@@ -32,7 +32,7 @@ export async function bildHochladen(datei: File): Promise<string> {
   const endung = (datei.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '')
   const pfad = `popup/${Date.now()}.${endung}`
   const { error } = await supabase.storage.from('website').upload(pfad, datei, { contentType: datei.type, upsert: false })
-  if (error) throw error
+  if (error) throw new Error(/row-level security/i.test(error.message) ? 'Keine Berechtigung zum Hochladen: Bitte supabase/update-5-bilder.sql in Supabase (SQL Editor) ausführen.' : error.message)
   return supabase.storage.from('website').getPublicUrl(pfad).data.publicUrl
 }
 
