@@ -34,7 +34,7 @@ function aufgabenFuer(welt: number): Aufgabe[] {
 }
 
 /** Doktorhut (Absolventen-Kappe), selbst gezeichnet */
-function kappe(g: CanvasRenderingContext2D, x: number, y: number, s: number, winkel: number) {
+export function kappe(g: CanvasRenderingContext2D, x: number, y: number, s: number, winkel: number) {
   g.save(); g.translate(x, y); g.rotate(winkel); g.scale(s, s)
   g.fillStyle = '#2B2257'
   g.beginPath(); g.moveTo(-60, 10); g.lineTo(60, 10); g.lineTo(52, 62); g.quadraticCurveTo(0, 80, -52, 62); g.closePath(); g.fill()
@@ -47,7 +47,7 @@ function kappe(g: CanvasRenderingContext2D, x: number, y: number, s: number, win
   g.restore()
 }
 
-const bildLaden = (src: string) => new Promise<HTMLImageElement | null>((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src })
+export const bildLaden = (src: string) => new Promise<HTMLImageElement | null>((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src })
 
 /** Urkunde als PNG zeichnen */
 async function urkundeZeichnen(name: string, guertel: string, farbe: string, b: Bestanden): Promise<string> {

@@ -42,6 +42,7 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - Die letzten zwei Plätze (23, 24) sind Anzan-Tests mit einstelligen Zahlen und der Formel der Welt: Test 1 mit eigenem Abakus (sonst im Kopf), Test 2 nur im Kopf. Tempo Welt 4: 3,0 s / 2,6 s, jede weitere Welt 0,3 s schneller. 4 von 5 richtig (src/data/anzanTest.ts).
 
 - Anzan-Tests gibt es in allen Welten (Welt 1–3: Knöpfe über der Karte). Nach bestandenem Test 2 wird die Gürtel-Prüfung angeboten.
+- Abschluss-Zertifikat (PDF, src/lib/zertifikat.ts) im Popup; Online-Konten: E-Mail mit PDF an die Eltern über Edge Function „zertifikat“ (muss in Supabase deployt werden).
 - Letzte Welt geschafft: progress.fertig = true, Abschluss-Popup (Fortgeschrittenen-Ausbildung Multiplikation/Division); kommt eine neue Welt dazu, geht das Kind dort weiter.
 
 ## Minus-Welten (in Arbeit)

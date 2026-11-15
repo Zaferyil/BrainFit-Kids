@@ -14,6 +14,7 @@ import { anzanTestAufgaben, anzanTestTempo } from '../data/anzanTest'
 import { load, save } from '../lib/storage'
 import { speak } from '../lib/speak'
 import { FINALE_SAGEN } from '../data/anzanTest'
+import { canvasZuPdf, pdfSpeichern, zertifikatSenden, zertifikatVersandt, zertifikatZeichnen, type Versand } from '../lib/zertifikat'
 import { ALLES_OFFEN } from '../lib/testmodus'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
@@ -47,6 +48,20 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const [questsOpen, setQuestsOpen] = useState(false)
   const [finaleZu, setFinaleZu] = useState(() => load<boolean>(`bfk.finale.${kid.id}`, false))
   useEffect(() => { if (progress.fertig && !finaleZu) void speak(FINALE_SAGEN) }, [progress.fertig, finaleZu])
+  // Zertifikat zeichnen und (einmal) an die Eltern schicken
+  const [zert, setZert] = useState<{ bild: string; pdf: Uint8Array } | null>(null)
+  const [versand, setVersand] = useState<Versand | 'senden' | null>(() => (zertifikatVersandt(kid.id) ? 'gesendet' : null))
+  useEffect(() => {
+    if (!progress.fertig || finaleZu) return
+    let aus = false
+    void zertifikatZeichnen(kid.name).then((c) => {
+      if (aus) return
+      const pdf = canvasZuPdf(c)
+      setZert({ bild: c.toDataURL('image/jpeg', 0.85), pdf })
+      if (!zertifikatVersandt(kid.id)) { setVersand('senden'); void zertifikatSenden(kid.id, pdf).then((v) => { if (!aus) setVersand(v) }) }
+    })
+    return () => { aus = true }
+  }, [progress.fertig, finaleZu, kid.id, kid.name])
   const [menu, setMenu] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
@@ -207,7 +222,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             <h2>🎓 Herzlichen Glückwunsch, {kid.name}!</h2>
             <p>Du hast <b>alle {WORLDS.length} Welten</b> geschafft – Plus und Minus mit allen Freunden!</p>
             <p className="finale-recht">Du darfst jetzt an der <b>Mental-Arithmetik-Ausbildung für Fortgeschrittene</b> teilnehmen: <b>Multiplikation und Division</b>.</p>
-            <p>Sag es gleich deinen Eltern! 🎉</p>
+            {zert && <img className="finale-zert" src={zert.bild} alt={`Zertifikat für ${kid.name}`} />}
+            {zert && <button type="button" className="btn-outline dark" onClick={() => pdfSpeichern(zert.pdf, kid.name)}>📄 Zertifikat speichern (PDF)</button>}
+            <p className="finale-mail">{versand === 'gesendet' ? '✉️ Das Zertifikat wurde an deine Eltern geschickt!' : versand === 'senden' ? '✉️ Zertifikat wird an deine Eltern geschickt …' : 'Zeig dein Zertifikat gleich deinen Eltern! 🎉'}</p>
             <button type="button" className="btn-primary" onClick={() => { save(`bfk.finale.${kid.id}`, true); setFinaleZu(true) }}>Super!</button>
           </div>
         </div>

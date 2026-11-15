@@ -3132,3 +3132,6 @@ label .pw-feld { margin-top: 4px; }
 .lz-karte.finale h2 { font-size: 26px; }
 .lz-karte.finale .finale-recht { background: #FFF4CC; border-radius: 18px; padding: 12px 14px; color: #231A4F; }
 a.az-start { text-decoration: none; display: inline-flex; justify-content: center; }
+.lz-karte.finale { max-height: 92vh; overflow-y: auto; }
+.lz-karte.finale .finale-zert { width: 100%; border-radius: 14px; box-shadow: 0 8px 20px rgba(35,26,79,.25); margin: 4px 0; }
+.lz-karte.finale .finale-mail { font-weight: 800; color: #4B2FC2; }
