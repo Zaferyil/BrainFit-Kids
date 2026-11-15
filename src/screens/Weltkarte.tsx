@@ -6,12 +6,14 @@ import { Icon, type IconName } from '../components/Icon'
 import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
-import { setReplay, type Progress } from '../lib/progress'
+import { setReplay, weltGeschafft, type Progress } from '../lib/progress'
 import { getDaily } from '../lib/daily'
 import { etappenNachWelt } from '../data/karten'
 import { anzanTestKey, anzanTestStarten } from './Anzan'
 import { anzanTestAufgaben, anzanTestTempo } from '../data/anzanTest'
-import { load } from '../lib/storage'
+import { load, save } from '../lib/storage'
+import { speak } from '../lib/speak'
+import { FINALE_SAGEN } from '../data/anzanTest'
 import { ALLES_OFFEN } from '../lib/testmodus'
 import { WORLDS } from '../data/curriculum'
 import burgBild from '../assets/karte/erfolgsburg.webp'
@@ -43,6 +45,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const current = path.find((s) => s.state === 'current')
   const [say, setSay] = useState(() => greeting(current))
   const [questsOpen, setQuestsOpen] = useState(false)
+  const [finaleZu, setFinaleZu] = useState(() => load<boolean>(`bfk.finale.${kid.id}`, false))
+  useEffect(() => { if (progress.fertig && !finaleZu) void speak(FINALE_SAGEN) }, [progress.fertig, finaleZu])
   const [menu, setMenu] = useState(false)
   const scroller = useRef<HTMLDivElement>(null)
 
@@ -180,6 +184,33 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             </button>
           ))}
         </nav>
+      )}
+      {/* Welten ohne Abenteuer-Karten (1–3): die zwei Anzan-Tests als Knöpfe über der Karte */}
+      {!seitenModus && (() => {
+        const fertig = ALLES_OFFEN || weltGeschafft(progress, zeigWelt)
+        const t1 = load<boolean>(anzanTestKey(kid.id, zeigWelt, 1), false), t2 = load<boolean>(anzanTestKey(kid.id, zeigWelt, 2), false)
+        return (
+          <div className="anzan-tests">
+            {[1, 2].map((n) => {
+              const offen = fertig && (n === 1 || t1 || ALLES_OFFEN), ok = n === 1 ? t1 : t2
+              return offen
+                ? <a key={n} href="#/anzan" className={ok ? 'ok' : 'neu'} onClick={() => anzanTestStarten({ welt: zeigWelt, nr: n as 1 | 2, aufgaben: anzanTestAufgaben(zeigWelt, n), ms: anzanTestTempo(zeigWelt, n) })}>⚡ Anzan-Test {n}{ok ? ' ✓' : ''}</a>
+                : <button key={n} type="button" className="zu" onClick={() => setSay(n === 1 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>🔒 Anzan-Test {n}</button>
+            })}
+          </div>
+        )
+      })()}
+      {progress.fertig && !finaleZu && (
+        <div className="lz-overlay" role="dialog" aria-modal="true">
+          <div className="lz-karte popin finale">
+            <SeZa kidId={kid.id} groesse={150} jubel />
+            <h2>🎓 Herzlichen Glückwunsch, {kid.name}!</h2>
+            <p>Du hast <b>alle {WORLDS.length} Welten</b> geschafft – Plus und Minus mit allen Freunden!</p>
+            <p className="finale-recht">Du darfst jetzt an der <b>Mental-Arithmetik-Ausbildung für Fortgeschrittene</b> teilnehmen: <b>Multiplikation und Division</b>.</p>
+            <p>Sag es gleich deinen Eltern! 🎉</p>
+            <button type="button" className="btn-primary" onClick={() => { save(`bfk.finale.${kid.id}`, true); setFinaleZu(true) }}>Super!</button>
+          </div>
+        </div>
       )}
       {seitenModus && teile.length > 1 && (
         <div className="karten-seiten" aria-label="Karte wählen">

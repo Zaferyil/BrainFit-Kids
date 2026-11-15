@@ -12,7 +12,7 @@ import { ALLES_OFFEN } from '../lib/testmodus'
 import { Keypad } from './stations/StationShell'
 import { Funkeln } from './Anmelden'
 import daten from '../../content/mathkids-levels.json'
-import { ANZAN_TEST_SAGEN } from '../data/anzanTest'
+import { ANZAN_TEST_SAGEN, PRUEFUNG_SAGEN } from '../data/anzanTest'
 
 // Anzan (Flash-Rechnen) wie in MathKids: Zahlen blitzen nacheinander auf, das Kind rechnet im Kopf
 // und tippt das Ergebnis. Aufgaben aus den 96 MathKids-Levels (content/mathkids-levels.json).
@@ -111,6 +111,8 @@ export function Anzan({ kid }: { kid: Kid }) {
         const r = richtig + (ok ? 1 : 0)
         if (test) {
           if (r >= 4) save(anzanTestKey(kid.id, test.welt, test.nr), true)
+          // Test 2 bestanden: gleich die Gürtel-Prüfung anbieten
+          if (r >= 4 && test.nr === 2) window.setTimeout(() => void speak(PRUEFUNG_SAGEN), 400)
           rewardGame(kid.id, r * 2)
           setPhase('fertig'); return
         }
@@ -208,7 +210,11 @@ export function Anzan({ kid }: { kid: Kid }) {
             <h2>{richtig} von {RUNDE} richtig!</h2>
             <p>+{richtig * 2} Perlen</p>
             {test && <p className="az-neu">{richtig >= 4 ? `🏅 Anzan-Test ${test.nr} bestanden!` : 'Für den Test brauchst du 4 richtige. Versuch es nochmal!'}</p>}
-            {test && <a className="az-start" href="#/inseln">Zur Karte</a>}
+            {test && test.nr === 2 && richtig >= 4 && <>
+              <p className="az-neu">🥋 Jetzt kannst du die Gürtel-Prüfung machen!</p>
+              <a className="az-start" href={`#/pruefung/${test.welt}`}>🥋 Zur Gürtel-Prüfung</a>
+            </>}
+            {test && <a className={test.nr === 2 && richtig >= 4 ? 'az-zurueck' : 'az-start'} href="#/inseln">Zur Karte</a>}
             {!test && neuesTempo && <p className="az-neu">⚡ Neues Tempo frei: {TEMPO[tempoFrei].name} ({(TEMPO[tempoFrei].ms / 1000).toLocaleString('de-AT')} s)!</p>}
             {test ? <button type="button" className="az-zurueck" onClick={() => { setAufgaben(test.aufgaben.slice(0, RUNDE)); setNr(0); setRichtig(0); naechste() }}>Nochmal</button> : <>
             <button type="button" className="az-start" onClick={starten}>Nochmal</button>

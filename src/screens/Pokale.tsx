@@ -15,6 +15,7 @@ import type { Progress } from '../lib/progress'
 import { load } from '../lib/storage'
 import { Funkeln } from './Anmelden'
 import { pruefungen } from '../lib/pruefung'
+import { weltGeschafft } from '../lib/progress'
 import { spracheMoeglich } from '../lib/sprachEingabe'
 import { RanglisteInhalt } from './Rangliste'
 
@@ -55,7 +56,7 @@ export function Pokale({ kid, progress }: { kid: Kid; progress: Progress }) {
           <h2>Gürtel</h2>
           <div className="pk-guertel">
             {WORLDS.map((w) => {
-              const has = w.n < progress.world
+              const has = weltGeschafft(progress, w.n)
               const ok = pruefungen(kid.id)[w.n]
               const Tag = has ? 'a' : 'div'
               return (

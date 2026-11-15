@@ -3123,3 +3123,12 @@ label .pw-feld { margin-top: 4px; }
 /* Aufgabe untereinander: 15 / −9 / Strich (wie im Buch) */
 .task-number.senkrecht { display: inline-grid; justify-items: end; justify-self: center; line-height: .95; font-variant-numeric: tabular-nums; }
 .task-number.senkrecht .op { padding: 0 .05em .08em .25em; border-bottom: .07em solid currentColor; min-width: 2.2ch; text-align: right; }
+/* Anzan-Tests über der Karte (Welt 1–3) und Abschluss-Popup */
+.anzan-tests { position: relative; z-index: 30; display: flex; justify-content: center; gap: 8px; padding: 2px 12px 8px; }
+.anzan-tests a, .anzan-tests button { border: 0; border-radius: 999px; padding: 7px 14px; font: 900 13px Nunito, sans-serif; text-decoration: none; cursor: pointer; background: #fff; color: #4B2FC2; box-shadow: 0 3px 0 rgba(35,26,79,.25); }
+.anzan-tests .neu { background: #FFC531; color: #231A4F; box-shadow: 0 3px 0 #D99A00; animation: path-pulse 2s ease-in-out infinite; }
+.anzan-tests .ok { background: #DFF7E6; color: #17803D; }
+.anzan-tests .zu { background: rgba(255,255,255,.45); color: rgba(35,26,79,.55); box-shadow: none; }
+.lz-karte.finale h2 { font-size: 26px; }
+.lz-karte.finale .finale-recht { background: #FFF4CC; border-radius: 18px; padding: 12px 14px; color: #231A4F; }
+a.az-start { text-decoration: none; display: inline-flex; justify-content: center; }

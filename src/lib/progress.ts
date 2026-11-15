@@ -1,3 +1,4 @@
+import { WORLDS } from '../data/curriculum'
 import { auftragMelden } from './auftraege'
 import { load, save } from './storage'
 import { STATIONS, type StationId } from '../data/units'
@@ -25,6 +26,8 @@ export type Progress = {
   streak: number
   /** Kind hat kein Arbeitsbuch: die Buch-Station wird übersprungen */
   ohneBuch?: boolean
+  /** letzte Welt komplett geschafft (der Weg ist zu Ende) */
+  fertig?: boolean
 }
 
 const fresh = (): Progress => ({ world: 1, unit: 1, worldStars: {}, stationStars: {}, level: 1, xp: 0, perlen: 0, gems: 0, streak: 0 })
@@ -33,10 +36,14 @@ const key = (kidId: string) => `bfk.progress.${kidId}`
 
 export function getProgress(kidId: string): Progress {
   const p = { ...fresh(), ...load<Partial<Progress>>(key(kidId), {}) }
+  // Es gibt inzwischen eine neue Welt: wer „fertig“ war, geht dort weiter
+  if (p.fertig && p.world < WORLDS.length) { p.world += 1; p.unit = 1; p.fertig = false; save(key(kidId), p) }
   // Demo-Konto „lena“: einmalig 20 Diamanten zum Ausprobieren des Shops
   if (kidId === 'lena' && !load<boolean>('bfk.demo-dia.lena', false)) { p.gems += 20; save(key(kidId), p); save('bfk.demo-dia.lena', true) }
   return p
 }
+/** Welt n komplett geschafft? */
+export const weltGeschafft = (p: Progress, n: number) => n < p.world || (!!p.fertig && n === p.world)
 export const saveProgress = (kidId: string, p: Progress) => save(key(kidId), p)
 
 export const unitKey = (p: Progress) => `${p.world}-${p.unit}`
@@ -127,6 +134,11 @@ export function completeUnit(kidId: string, unitsInWorld: number, lastWorld: num
   if (p.unit < unitsInWorld) {
     saveProgress(kidId, { ...p, unit: p.unit + 1 })
     return { worldDone: false }
+  }
+  // letzte Welt: nicht wieder bei Lektion 1 anfangen – der Weg ist geschafft
+  if (p.world >= lastWorld) {
+    saveProgress(kidId, { ...p, fertig: true, worldStars: { ...p.worldStars, [p.world]: avg }, gems: p.fertig ? p.gems : p.gems + 1 })
+    return { worldDone: true }
   }
   const world = Math.min(p.world + 1, lastWorld)
   saveProgress(kidId, { ...p, world, unit: 1, worldStars: { ...p.worldStars, [p.world]: avg }, gems: p.gems + 1 })

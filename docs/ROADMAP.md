@@ -41,6 +41,9 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 - Eigene Abenteuer-Karte als Seiten (je 6 Knöpfe), Nummern 1–24 je Welt.
 - Die letzten zwei Plätze (23, 24) sind Anzan-Tests mit einstelligen Zahlen und der Formel der Welt: Test 1 mit eigenem Abakus (sonst im Kopf), Test 2 nur im Kopf. Tempo Welt 4: 3,0 s / 2,6 s, jede weitere Welt 0,3 s schneller. 4 von 5 richtig (src/data/anzanTest.ts).
 
+- Anzan-Tests gibt es in allen Welten (Welt 1–3: Knöpfe über der Karte). Nach bestandenem Test 2 wird die Gürtel-Prüfung angeboten.
+- Letzte Welt geschafft: progress.fertig = true, Abschluss-Popup (Fortgeschrittenen-Ausbildung Multiplikation/Division); kommt eine neue Welt dazu, geht das Kind dort weiter.
+
 ## Minus-Welten (in Arbeit)
 - [x] Welt 4 Big Friends (−): Lektionen −9 … −1, „alle“, „Training“ (22 Stationen), Lernvideos Lektion 25–35 (Lisa/Lola), Abschlusstests; auf der Ägypten-Karte (Originalbilder, gemalte Knöpfe; 23 = Gürtel-Prüfung, 24 = Ziel)
 - [x] Welt 5 Weltraum-Abenteuer: Little Friends −4…−1, alle, Training + 5 gemischte Wiederholungen (11 Lektionen, 22 Stationen), Karte, Buch S. 61–70, Workbook S. 57–64, Abschlusstests, Anzan-Tests 2,7/2,3 s. Lernvideos 36–46 und alle Entdecken-Sätze mit Lola vertont.

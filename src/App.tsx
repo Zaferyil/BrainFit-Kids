@@ -53,7 +53,7 @@ import { findGame } from './games/registry'
 import { tierFor, tierRank } from './games/engine'
 import { findKid } from './data/demo'
 import { getSession, saveSession } from './lib/session'
-import { currentStation, getProgress, viewProgress } from './lib/progress'
+import { currentStation, getProgress, viewProgress, weltGeschafft } from './lib/progress'
 import { Bericht } from './screens/Bericht'
 import { SchnupperVorbei } from './screens/SchnupperVorbei'
 import { load } from './lib/storage'
@@ -158,7 +158,7 @@ function Inhalt({ roh }: { roh: string }) {
     if (route === 'auftraege') return <Auftraege kid={kid} />
     if (route.startsWith('pruefung/')) {
       const welt = Number(route.slice(9))
-      if (welt < progress.world || ALLES_OFFEN) return <Pruefung kid={kid} welt={welt} />
+      if (weltGeschafft(progress, welt) || ALLES_OFFEN) return <Pruefung kid={kid} welt={welt} />
       return <Pokale kid={kid} progress={progress} />
     }
     if (route === 'einstufung') return <Einstufung kid={kid} />

@@ -60,6 +60,7 @@ export function buildPath(kid: Kid, progress: Progress): MapStop[] {
   const isDone = (s: Raw) => {
     if (s.kind === 'start') return getPlacement(kid.id) !== null
     if (s.kind === 'world') return s.world.n < progress.world
+    if (progress.fertig && s.kind !== 'start') return true
     if (s.kind === 'unit') return s.world.n < progress.world || (s.world.n === progress.world && s.unit < progress.unit)
     // Spiel nach Lektion i: als geschafft zählen, wenn das Kind schon über die nächste Lektion hinaus ist
     // (sonst bliebe ein übersprungenes Spiel einer früheren Welt für immer die „aktuelle“ Station)
