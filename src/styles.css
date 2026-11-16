@@ -3087,10 +3087,12 @@ label .pw-feld { margin-top: 4px; }
 }
 /* Gemalte Karten (Welt 4 Ägypten): Nummern-Knöpfe sind im Bild, darüber nur unsichtbare Knöpfe mit Zustand */
 .insel.gemalt .path-node { width: 17cqw !important; height: 12.8cqw !important; aspect-ratio: auto; margin: 0 !important; padding: 0 !important; flex: none !important; box-sizing: border-box; backdrop-filter: none !important; border-radius: 50%; background: transparent !important; box-shadow: none; animation: none; }
-.insel.gemalt.rund .path-node { width: 14cqw !important; height: 14cqw !important; }
+.insel.gemalt.rund .path-node { width: 11cqw !important; height: 11cqw !important; }
+.insel.gemalt.rund .path-stars { margin-top: -2.6cqw; }
+.insel.gemalt.rund .sterne-bild { width: 10cqw; }
 /* Welt 1: Anzan-Tests (Knopf 25/26) mit Blitz-Abzeichen statt langer Beschriftung */
 .insel.gemalt.rund .ziel-label { display: none; }
-.insel.gemalt.rund .path-node.anzan::after { content: '⚡'; position: absolute; top: -1.2cqw; right: -1.2cqw; width: 5.4cqw; height: 5.4cqw; display: grid; place-items: center; font-size: 3.4cqw; border-radius: 50%; background: #FFC531; border: 0.6cqw solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,.25); }
+.insel.gemalt.rund .path-node.anzan::after { content: '⚡'; position: absolute; top: -1cqw; right: -1cqw; width: 4.4cqw; height: 4.4cqw; display: grid; place-items: center; font-size: 2.8cqw; border-radius: 50%; background: #FFC531; border: 0.6cqw solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,.25); }
 .insel.gemalt .path-num, .insel.gemalt .path-gehirn { display: none; }
 .insel.gemalt .path-node.locked { background: transparent !important; box-shadow: none; backdrop-filter: none !important; }
 .insel.gemalt .knopf-bild { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(60,30,0,.35)); }

@@ -275,7 +275,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                 const [x, y] = platzVon(i)
                 const s = nurStops[start + i]
                 const pos = { left: `${(x / karte.w) * 100}%`, top: `${((y - schnitt) / hoehe) * 100}%` }
-                if (!s) return null
+                if (!s || i >= anzahl) return null
                 return (
                   <div key={s.id} className={`insel-stop ${edge(x / karte.w)}`} style={pos}>
                     <Node stop={s} n={nummer.get(s.id) ?? 0} kid={kid} bild={karte.knoepfe?.[(nummer.get(s.id) ?? 1) - 1]} onLocked={(text) => setSay(text)} />
