@@ -4,7 +4,9 @@ import { klasseVon } from './klasse'
 // Lernzeit: zählt, wie lange das Kind heute aktiv lernt (nur wenn die App sichtbar ist).
 // Daraus: Pausen-Vorschlag nach einer Weile am Stück und ein Tageslimit, das die Eltern einstellen.
 
-type Zeit = { tag: string; sek: number; amStueck: number; pauseBis?: number; extraMin?: number }
+type Zeit = { tag: string; sek: number; amStueck: number; pauseBis?: number; extraMin?: number; zuletzt?: number }
+/** Wer so lange nicht gelernt hat (App zu oder untätig), hat schon eine Pause gemacht */
+const PAUSE_LUECKE_MS = 5 * 60 * 1000
 const key = (kid: string) => `bfk.lernzeit.${kid}`
 const heute = () => new Date().toISOString().slice(0, 10)
 
@@ -13,7 +15,10 @@ export function lernzeit(kid: string): Zeit {
   return z.tag === heute() ? z : { tag: heute(), sek: 0, amStueck: 0 }
 }
 export function zaehle(kid: string, sek: number) {
-  const z = lernzeit(kid); z.sek += sek; z.amStueck += sek; save(key(kid), z); return z
+  const z = lernzeit(kid), jetzt = Date.now()
+  // längere Lücke (App geschlossen, Kind weg): „am Stück“ beginnt neu
+  if (!z.zuletzt || jetzt - z.zuletzt > PAUSE_LUECKE_MS) z.amStueck = 0
+  z.sek += sek; z.amStueck += sek; z.zuletzt = jetzt; save(key(kid), z); return z
 }
 /** nach einer Pause wieder bei 0 anfangen */
 export function pauseGemacht(kid: string) { const z = lernzeit(kid); z.amStueck = 0; save(key(kid), z) }

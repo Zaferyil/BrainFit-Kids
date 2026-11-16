@@ -9,6 +9,11 @@ import { speak } from '../lib/speak'
 export const PAUSE_SAGEN = 'Super gelernt! Jetzt ist Zeit für eine kleine Pause. Steh auf, streck dich und trink einen Schluck Wasser!'
 export const LIMIT_SAGEN = 'Für heute hast du genug gelernt. Toll gemacht! Morgen geht es weiter.'
 const TAKT = 15
+/** nur zählen, wenn das Kind gerade wirklich etwas tut (Tippen in den letzten 2 Minuten oder ein Video/Ton läuft) */
+const AKTIV_MS = 2 * 60 * 1000
+let letzteEingabe = Date.now()
+const merkeEingabe = () => { letzteEingabe = Date.now() }
+const laeuftMedien = () => [...document.querySelectorAll('video, audio')].some((m) => !(m as HTMLMediaElement).paused)
 
 /** Rechenfrage für Erwachsene, damit Kinder das Limit nicht selbst aufheben */
 export function ElternFrage({ onOk, onAbbruch }: { onOk: () => void; onAbbruch: () => void }) {
@@ -29,8 +34,15 @@ export function LernzeitWaechter({ kidId }: { kidId: string }) {
   const [eltern, setEltern] = useState(false)
 
   useEffect(() => {
+    const ev = ['pointerdown', 'keydown', 'touchstart'] as const
+    ev.forEach((e) => window.addEventListener(e, merkeEingabe, { passive: true }))
+    return () => ev.forEach((e) => window.removeEventListener(e, merkeEingabe))
+  }, [])
+
+  useEffect(() => {
     const t = window.setInterval(() => {
       if (document.visibilityState !== 'visible' || modus !== 'aus') return
+      if (Date.now() - letzteEingabe > AKTIV_MS && !laeuftMedien()) return
       const e = kindEinstellungen(kidId)
       const z = zaehle(kidId, TAKT)
       if (e.limitMin && z.sek >= (e.limitMin + (z.extraMin ?? 0)) * 60) { setModus('limit'); void speak(LIMIT_SAGEN); return }
