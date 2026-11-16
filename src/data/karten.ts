@@ -71,7 +71,7 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur1, w: 1024, h: 1536, plaetze: [[457, 1136], [371, 864], [284, 580], [571, 464], [514, 307], [700, 207]] },
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur2, w: 1024, h: 1536, plaetze: [[130, 985], [270, 860], [335, 715], [500, 605], [690, 505], [880, 425]] },
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur3, w: 1024, h: 1536, plaetze: [[300, 1110], [225, 915], [262, 720], [435, 585], [630, 435], [818, 375]] },
-    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur4, w: 1024, h: 1536, plaetze: [[85, 1175], [100, 1010], [220, 885], [385, 840], [550, 790], [705, 715], [545, 590], [710, 470]] },
+    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur4, w: 1024, h: 1536, plaetze: [[85, 1175], [100, 1010], [220, 885], [385, 840], [550, 790], [705, 725], [585, 645], [840, 640]] },
   ],
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
