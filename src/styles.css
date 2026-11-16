@@ -1116,8 +1116,6 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-stop .path-start { top: -44px; }
 .insel-stop .path-me { left: auto; right: -6px; top: -14px; }
 .path-stars { display: flex; margin-top: -4.2cqw; z-index: 1; filter: drop-shadow(0 2px 1px rgba(0,0,0,.3)); }
-.star3d { width: max(18px, 6cqw); height: max(18px, 6cqw); margin: 0 -.6cqw; }
-.star3d:nth-child(2) { translate: 0 .9cqw; }
 .insel-coin { position: absolute; translate: -50% -50%; width: 6cqw; height: 6cqw; min-width: 30px; min-height: 30px; border-radius: 50%; display: grid; place-items: center;
   background: radial-gradient(circle at 35% 30%, #FFE27A, #F2A900 70%); box-shadow: 0 0 0 3px #FFFFFF, 0 3px 0 3px rgba(0,0,0,.18); z-index: 1; }
 .insel-perli { position: absolute; right: 51%; top: 96%; translate: 0 -100%; z-index: 2; display: flex; align-items: flex-end; gap: 2px; pointer-events: none; }
@@ -2035,7 +2033,7 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 .insel-stop .path-node.current { box-shadow: 0 0 0 4px #FFFFFF, 0 0 0 9px rgba(255,197,49,.9), 0 10px 22px rgba(10,40,100,.4); }
 .path-stars { margin-top: -3.4cqw; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
 .path-stars:not(.done) { display: none; }
-.star3d { width: max(15px, 4.6cqw); height: max(15px, 4.6cqw); }
+.sterne-bild { display: block; width: max(52px, 17cqw); height: auto; }
 .path-gehirn { width: 40%; top: -10%; right: -10%; background: #FFFFFF !important; border: 0 !important; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
 .path-gehirn svg { stroke: #6A3DE8; }
 .path-gehirn svg * { stroke: #6A3DE8; }
