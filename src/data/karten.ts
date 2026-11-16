@@ -79,11 +79,11 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur3, w: 1024, h: 1536, plaetze: [[300, 1110], [225, 915], [262, 720], [435, 585], [630, 435], [818, 375]] },
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur4, w: 1024, h: 1536, plaetze: [[85, 1175], [100, 1010], [220, 885], [385, 840], [550, 790], [705, 725], [585, 645], [840, 640]] },
   ],
-  // Welt 2: Unterwasser-Atlantis – 3 Querformat-Karten je 4 Stationen, übereinander; auf der letzten Platz 5 und 6 = Anzan-Tests
+  // Welt 2: Unterwasser-Atlantis – 3 Karten je 4 Stationen; auf der letzten Platz 5 und 6 = Anzan-Tests vor dem Palast
   2: [
-    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl1, w: 1024, h: 560, plaetze: [[335, 418], [445, 265], [668, 180], [830, 55]] },
-    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl2, w: 1024, h: 464, plaetze: [[240, 385], [435, 262], [660, 180], [835, 100]] },
-    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl3, w: 1024, h: 498, plaetze: [[262, 418], [430, 350], [607, 298], [730, 222], [590, 195], [875, 215]] },
+    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl1, w: 1024, h: 1536, plaetze: [[360, 1240], [655, 828], [525, 455], [760, 188]] },
+    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl2, w: 1024, h: 1536, plaetze: [[330, 1130], [655, 825], [355, 580], [745, 290]] },
+    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl3, w: 1024, h: 1536, plaetze: [[330, 1305], [500, 1080], [370, 860], [605, 670], [575, 465], [770, 465]] },
   ],
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
