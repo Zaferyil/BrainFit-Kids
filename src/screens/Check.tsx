@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from 'react'
 import { Abakus3D } from '../components/Abakus3D'
+import { speak, stopSpeaking } from '../lib/speak'
 import { abakusStellen, BEREICHE, berichtAnfordern, blitzStellen, optionen, punkte, rechenaufgabe, speichernUndVergleichen, STUFEN, stufeVonAlter, zahlMitStellen, zeitLimit, type Bereich, type Variante, type Vergleich, type Werte } from '../lib/check'
 
 // Gratis Kopfrechnen-Check: Alter + Schulstufe → 5 kurze Spiele → Ergebnis im Vergleich mit Gleichaltrigen → Bericht per E-Mail.
 
 const BASE = import.meta.env.BASE_URL
 const SITE = '/'
+const CHECK_HALLO = 'Hallo! Wir spielen jetzt fünf kurze Spiele. Hör gut zu!'
 type Phase = { typ: 'start' } | { typ: 'info'; schritt: number } | { typ: 'spiel'; schritt: number } | { typ: 'rechnet' } | { typ: 'ergebnis' }
 type Spiel = { id: Bereich; titel: string; info: string; Comp: (p: SpielProps) => ReactElement }
 /** Spiele je Variante – A: Vorschule (nur Bilder), B: kennt Zahlen (Auswahl statt Tippen), C: Schulkind */
@@ -51,6 +53,14 @@ export function Check() {
   const [ergebnis, setErgebnis] = useState<{ id: string; vergleich: Vergleich } | null>(null)
   const startZeit = useRef(0)
   useEffect(() => { document.title = 'Gratis Kopfrechnen-Check für Kinder | BrainFit Kids' }, [])
+  // Lola liest jede Spielanleitung vor (auch für Kinder, die noch nicht lesen); am Ende ein Lob
+  const sprechSchritt = phase.typ === 'info' ? phase.schritt : -1
+  useEffect(() => {
+    if (sprechSchritt >= 0) { const info = SPIELE[sprechSchritt]?.info; if (info) void speak(sprechSchritt === 0 ? [CHECK_HALLO, info] : info) }
+    else if (phase.typ === 'rechnet') void speak('Super gemacht!')
+    else stopSpeaking()
+  }, [sprechSchritt, phase.typ, SPIELE])
+  useEffect(() => () => stopSpeaking(), [])
 
   const fertig = (b: Bereich, wert: number) => {
     const neu = { ...werte, [b]: Math.round(Math.max(0, Math.min(100, wert))) }
