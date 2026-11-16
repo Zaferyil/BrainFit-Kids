@@ -3135,3 +3135,4 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 .lz-karte.finale { max-height: 92vh; overflow-y: auto; }
 .lz-karte.finale .finale-zert { width: 100%; border-radius: 14px; box-shadow: 0 8px 20px rgba(35,26,79,.25); margin: 4px 0; }
 .lz-karte.finale .finale-mail { font-weight: 800; color: #4B2FC2; }
+.eltern-schalter { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; } .eltern-schalter input { width: 20px; height: 20px; margin-top: 2px; flex: none; }

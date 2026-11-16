@@ -8,6 +8,7 @@ import { alleKinder, type Kid } from '../data/demo'
 import { SeZaKopf } from '../components/SeZa'
 import { adminAbmelden, elternAnmelden, elternKinder, elternPasswortVergessen } from '../lib/adminCloud'
 import { WORLDS } from '../data/curriculum'
+import { supabase } from '../lib/supabase'
 import { STATIONS } from '../data/units'
 import { buchAuftrag, workbookAuftrag } from '../data/buch'
 import { getProgress, stationSkipped, stationStars } from '../lib/progress'
@@ -127,6 +128,7 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
           <div className="adm-card adm-kpi"><span>Serie</span><b>{p.streak} <small>Tage</small></b><small>am Stück geübt</small></div>
         </div>
 
+        <WochenberichtKarte />
         <div className="eltern-grid">
           <section className="adm-card">
             <div className="adm-card-head"><h2>Heute</h2><span className="adm-muted">Ziel: {TAGESZIEL} Minuten</span></div>
@@ -202,5 +204,33 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
         </section>
       </main>
     </div>
+  )
+}
+
+/** Eltern: Wochenbericht per E-Mail an- oder abbestellen (Tabelle eltern_einstellungen, update-21) */
+function WochenberichtKarte() {
+  const [uid, setUid] = useState<string | null>(null)
+  const [an, setAn] = useState(true)
+  const [info, setInfo] = useState('')
+  useEffect(() => {
+    void supabase.auth.getUser().then(async ({ data }) => {
+      const id = data.user?.id; if (!id) return
+      setUid(id)
+      const { data: e } = await supabase.from('eltern_einstellungen').select('wochenbericht').eq('eltern', id).maybeSingle()
+      if (e) setAn(e.wochenbericht)
+    })
+  }, [])
+  if (!uid) return null
+  const setzen = async (v: boolean) => {
+    setAn(v)
+    const { error } = await supabase.from('eltern_einstellungen').upsert({ eltern: uid, wochenbericht: v, geaendert: new Date().toISOString() })
+    setInfo(error ? 'Speichern hat nicht geklappt.' : v ? 'Sie bekommen jeden Sonntag den Wochenbericht.' : 'Wochenbericht abbestellt.')
+  }
+  return (
+    <section className="adm-card">
+      <div className="adm-card-head"><h2>📧 Wochenbericht per E-Mail</h2></div>
+      <label className="eltern-schalter"><input type="checkbox" checked={an} onChange={(e) => void setzen(e.target.checked)} /> Jeden Sonntag eine kurze Zusammenfassung der Lernwoche (Lernzeit, Lerntage, geschaffte Lektionen)</label>
+      {info && <p className="adm-muted">{info}</p>}
+    </section>
   )
 }

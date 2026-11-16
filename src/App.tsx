@@ -56,7 +56,7 @@ import { getSession, saveSession } from './lib/session'
 import { currentStation, getProgress, viewProgress, weltGeschafft } from './lib/progress'
 import { Bericht } from './screens/Bericht'
 import { SchnupperVorbei } from './screens/SchnupperVorbei'
-import { load } from './lib/storage'
+import { load, save } from './lib/storage'
 import { berichtAktualisieren } from './lib/bericht'
 
 // Fähigkeiten einmal pro App-Start speichern (für Monatsverlauf und Vergleich)
@@ -140,6 +140,12 @@ function Inhalt({ roh }: { roh: string }) {
     if (!kid) return <Anmelden />
     const logout = () => { saveSession(null); window.location.hash = '#/anmelden' }
     const progress = getProgress(kid.id)
+    // Stand für den Wochenbericht an die Eltern (Welt, Lektion), nur bei Änderung speichern
+    {
+      const w = WORLDS[progress.world - 1], nr = WORLDS.slice(0, progress.world - 1).reduce((n, x) => n + x.units.length, 0) + progress.unit
+      const stand = { welt: progress.world, weltName: w?.name ?? '', lektion: nr, lektionName: w?.units[progress.unit - 1] ?? '', gesamt: WORLDS.reduce((n, x) => n + x.units.length, 0), fertig: !!progress.fertig }
+      if (JSON.stringify(load(`bfk.stand.${kid.id}`, null)) !== JSON.stringify(stand)) save(`bfk.stand.${kid.id}`, stand)
+    }
     if (route === 'karte') return <Zuhause kid={kid} progress={progress} onLogout={logout} />
     if (route === 'inseln') return <Weltkarte kid={kid} progress={progress} onLogout={logout} />
     if (route === 'pokale') return <Pokale kid={kid} progress={progress} />

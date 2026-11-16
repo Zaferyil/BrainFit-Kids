@@ -29,6 +29,14 @@ export function addDaily(kidId: string, add: Partial<Omit<Daily, 'date'>>) {
   const m = v[monat] ?? { minuten: 0, aufgaben: 0, stationen: 0, spiele: 0, tage: [] }
   save(vk, { ...v, [monat]: { ...m, minuten: m.minuten + (add.minutes ?? 0), aufgaben: m.aufgaben + (add.tasks ?? 0),
     stationen: m.stationen + (add.stations ?? 0), spiele: m.spiele + (add.games ?? 0), tage: m.tage.includes(today()) ? m.tage : [...m.tage, today()] } })
+  // Lerntage der letzten Wochen (für den Wochenbericht an die Eltern)
+  const tk = `bfk.tage.${kidId}`, tage = load<Record<string, [number, number, number, number]>>(tk, {})
+  const t = tage[today()] ?? [0, 0, 0, 0]
+  tage[today()] = [t[0] + (add.minutes ?? 0), t[1] + (add.tasks ?? 0), t[2] + (add.stations ?? 0), t[3] + (add.games ?? 0)]
+  const grenze = new Date(Date.now() - 35 * 864e5).toISOString().slice(0, 10)
+  save(tk, Object.fromEntries(Object.entries(tage).filter(([d]) => d >= grenze)))
+  // Tagesserie: erster Lernschritt des Tages zählt
+  if ((add.tasks ?? 0) + (add.stations ?? 0) + (add.games ?? 0) > 0) void import('./serie').then((x) => x.serieZaehlen(kidId))
   // Tagesziel: 20 Aufgaben am Tag
   if (d.tasks < 20 && d.tasks + (add.tasks ?? 0) >= 20) void import('./wirtschaft').then((w) => w.tageszielBelohnung(kidId))
 }

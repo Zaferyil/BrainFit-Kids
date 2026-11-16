@@ -17,10 +17,10 @@ Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufga
 
 ## 3. Motivation
 - [ ] 3.1 Wöchentliches Klassen-Turnier / Duell (gleiche Flash-Anzan-Aufgabe gleichzeitig)
-- [ ] 3.2 Serien-Belohnungen (7 Tage am Stück → Perlen-Bonus + SeZa-Kostüm)
+- [x] 3.2 Serien-Belohnungen (7 Tage am Stück → Perlen-Bonus + SeZa-Kostüm)
 
 ## 4. Eltern und Lehrkräfte
-- [ ] 4.1 Wöchentliche Eltern-Zusammenfassung per E-Mail (Resend)
+- [x] 4.1 Wöchentliche Eltern-Zusammenfassung per E-Mail (Resend)
 - [~] 4.2 (vorerst ausgeschaltet: HAUSAUFGABEN_AKTIV in src/lib/auftraege.ts) Lehrkräfte vergeben Hausaufgaben an die Klasse (Admin → „Aufträge & Blätter“; Kind: #/auftraege + Knopf auf der Startseite; SQL: supabase/update-16-auftraege.sql einspielen!)
 - [x] 4.3 Druckbare Arbeitsblätter (PDF) (Admin → „Aufträge & Blätter“: Lektion, Abakus ablesen, Anzan-Ketten, mit Lösungsseite)
 

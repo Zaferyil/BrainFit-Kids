@@ -17,14 +17,14 @@ export type Ausstattung = Partial<Record<Slot, string>>
 type Konto = { sterne: number; besitz: string[]; an: Ausstattung; buchungen: Buchung[] }
 
 /** Belohnungen, von der Lehrkraft änderbar */
-export type BelohnungsArt = 'uebung' | 'lektion' | 'test' | 'buch' | 'tagesziel' | 'spiel' | 'testPerfekt' | 'welt'
+export type BelohnungsArt = 'uebung' | 'lektion' | 'test' | 'buch' | 'tagesziel' | 'spiel' | 'testPerfekt' | 'welt' | 'serie'
 export const BELOHNUNG_NAME: Record<BelohnungsArt, string> = {
   uebung: 'Übung geschafft', lektion: 'Lektion geschafft', test: 'Test bestanden', buch: 'Wissenscheck Buch', tagesziel: 'Tagesziel erreicht',
-  spiel: 'Denkspiel oder Anzan geschafft (1 × am Tag je Spiel)', testPerfekt: 'Test mit 3 Sternen', welt: 'Welt geschafft',
+  spiel: 'Denkspiel oder Anzan geschafft (1 × am Tag je Spiel)', testPerfekt: 'Test mit 3 Sternen', welt: 'Welt geschafft', serie: '7 Tage am Stück gelernt',
 }
 export const STANDARD_BELOHNUNG: Record<BelohnungsArt, { sterne: number; diamanten: number }> = {
   uebung: { sterne: 10, diamanten: 0 }, lektion: { sterne: 25, diamanten: 0 }, test: { sterne: 30, diamanten: 0 }, buch: { sterne: 15, diamanten: 0 },
-  tagesziel: { sterne: 10, diamanten: 0 }, spiel: { sterne: 5, diamanten: 0 }, testPerfekt: { sterne: 0, diamanten: 1 }, welt: { sterne: 50, diamanten: 3 },
+  tagesziel: { sterne: 10, diamanten: 0 }, spiel: { sterne: 5, diamanten: 0 }, testPerfekt: { sterne: 0, diamanten: 1 }, welt: { sterne: 50, diamanten: 3 }, serie: { sterne: 100, diamanten: 2 },
 }
 
 type Einstellungen = { artikel: Record<string, { preis?: number; aktiv?: boolean }>; eigene: Artikel[]; belohnungen: Partial<Record<BelohnungsArt, { sterne: number; diamanten: number }>> }

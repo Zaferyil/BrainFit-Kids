@@ -36,6 +36,9 @@ const key = (kidId: string) => `bfk.progress.${kidId}`
 
 export function getProgress(kidId: string): Progress {
   const p = { ...fresh(), ...load<Partial<Progress>>(key(kidId), {}) }
+  // Tagesserie: war der letzte Lerntag vor gestern, ist die Serie gerissen
+  const se = load<{ letzter: string; tage: number } | null>(`bfk.serie.${kidId}`, null)
+  if (se) { const t = (d: number) => new Date(Date.now() - d * 864e5 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); p.streak = se.letzter === t(0) || se.letzter === t(1) ? se.tage : 0 }
   // Es gibt inzwischen eine neue Welt: wer „fertig“ war, geht dort weiter
   if (p.fertig && p.world < WORLDS.length) { p.world += 1; p.unit = 1; p.fertig = false; save(key(kidId), p) }
   // Demo-Konto „lena“: einmalig 20 Diamanten zum Ausprobieren des Shops

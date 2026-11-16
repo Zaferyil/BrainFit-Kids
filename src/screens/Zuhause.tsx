@@ -36,7 +36,7 @@ export function Zuhause({ kid, progress, onLogout }: Props) {
           </button>
           <button type="button" className="nk-hello-text nk-hello-btn" aria-label="Mein Menü" aria-expanded={menu} onClick={() => setMenu(!menu)}>
             <strong>Hallo {kid.name}!</strong>
-            <span>Gürtel: {world.belt.replace(/en$/, '')} · Level {progress.level}</span>
+            <span>Gürtel: {world.belt.replace(/en$/, '')} · Level {progress.level}{progress.streak > 0 ? ` · 🔥 ${progress.streak} ${progress.streak === 1 ? 'Tag' : 'Tage'}` : ''}</span>
           </button>
           <a href="#/seza" className="nk-chip" aria-label="Sterne – zu Mein SeZa"><Icon name="star" color="#E0A100" fill="#FFC531" size={20} />{konto(kid.id).sterne}</a>
           {menu && (
