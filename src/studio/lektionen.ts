@@ -418,7 +418,7 @@ function littleFriendLektion(number: number, k: number, a: number, b: number, c:
     ],
     scenes: [
       { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
-      { id: 'hallo', say: `Hallo! Willkommen im Little Friends Wald. Heute rechnen wir plus ${k}.` },
+      { id: 'hallo', say: `Hallo! Willkommen in Atlantis. Heute rechnen wir plus ${k}.` },
       {
         id: 'freunde', kind: 'karte', min: 6,
         card: { title: 'Little Friends', lines: [{ text: `${k} und ${f} sind 5` }, { icon: 'daumen-hoch', text: `Der Little Friend von ${k} ist ${f}` }] },
@@ -493,7 +493,7 @@ const LEKTION_14 = littleFriendLektion(14, 3, 3, 4, 2)
 const LEKTION_15 = littleFriendLektion(15, 2, 3, 4, 13)
 const LEKTION_16 = littleFriendLektion(16, 1, 4, 14, 24)
 const LEKTION_17 = littleWiederholung(17, 'Alle Little Friends', 'Hallo! Du kennst jetzt alle Little Friends. Jetzt wiederholen wir sie gemischt!', [3, 4], [2, 3], [4, 3])
-const LEKTION_18 = littleWiederholung(18, 'Little Friends Training', 'Hallo! Heute ist Training im Little Friends Wald. Alle Little Friends kommen gemischt!', [4, 2], [1, 4], [3, 2])
+const LEKTION_18 = littleWiederholung(18, 'Little Friends Training', 'Hallo! Heute ist Training in Atlantis. Alle Little Friends kommen gemischt!', [4, 2], [1, 4], [3, 2])
 
 // Welt 3: Best Friends +6 … +9 = Erdperlen dazu, Himmelsperle weg, 10 dazu
 function bestFriendLektion(number: number, k: number, a: number, b: number, c: number): Lesson {
@@ -512,7 +512,7 @@ function bestFriendLektion(number: number, k: number, a: number, b: number, c: n
     ],
     scenes: [
       { id: 'titel', kind: 'titel', min: 4, cols: 2, value: 0 },
-      { id: 'hallo', say: `Hallo! Willkommen am Best Friends Berg. Heute rechnen wir plus ${k}.` },
+      { id: 'hallo', say: `Hallo! Willkommen auf der Piraten-Insel. Heute rechnen wir plus ${k}.` },
       { id: 'aufgabe-zeigen', cols: 2, value: a, badge: `${a} + ${k}`, say: `Wir haben ${a}. Plus ${k} heißt: 10 dazu und ${f} weg. Aber ${f} weg geht hier nicht direkt!` },
       {
         id: 'freunde', kind: 'karte', min: 6,
@@ -589,7 +589,7 @@ const LEKTION_20 = bestFriendLektion(20, 7, 6, 5, 7)
 const LEKTION_21 = bestFriendLektion(21, 8, 5, 6, 15)
 const LEKTION_22 = bestFriendLektion(22, 9, 5, 15, 25)
 const LEKTION_23 = bestWiederholung(23, 'Alle Best Friends', 'Hallo! Du kennst jetzt alle Best Friends. Jetzt wiederholen wir sie gemischt!', [7, 6], [5, 9], [6, 7])
-const LEKTION_24 = bestWiederholung(24, 'Best Friends Training', 'Hallo! Heute ist Training am Best Friends Berg. Alle Best Friends kommen gemischt!', [6, 8], [8, 6], [5, 8])
+const LEKTION_24 = bestWiederholung(24, 'Best Friends Training', 'Hallo! Heute ist Training auf der Piraten-Insel. Alle Best Friends kommen gemischt!', [6, 8], [8, 6], [5, 8])
 
 // Welt 4, Lektion 25–33: Big Friends Minus – „−k = −10 + f“ (f = Big Friend, k + f = 10).
 // Startzahlen so gewählt, dass „+ f“ bei den Einern direkt geht.
