@@ -39,17 +39,17 @@ function erstellen(kid: string): Aufgabe[] {
   const out: Aufgabe[] = []
   // Aufwärmen: 3 Aufgaben aus der vorigen Lektion (oder der aktuellen am Anfang)
   const v = lektionVor(p.world, p.unit, 1)
-  const cw = unitContent(v.welt, v.einheit) ?? unitContent(p.world, p.unit)
+  const cw = unitContent(v.welt, v.einheit, kid) ?? unitContent(p.world, p.unit, kid)
   if (cw) for (let i = 0; i < 3; i++) out.push(aufgabe(cw, 'Aufwärmen', `${v.welt}-${v.einheit}`))
   // Neu: 4 Aufgaben aus der aktuellen Lektion
-  const cn = unitContent(p.world, p.unit)
+  const cn = unitContent(p.world, p.unit, kid)
   if (cn) for (let i = 0; i < 4; i++) out.push(aufgabe(cn, 'Neu', `${p.world}-${p.unit}`))
   // Wiederholen: 3 Aufgaben aus fälligen Regeln, sonst aus älteren Lektionen
   const f = faelligeRegeln(kid).slice(0, 3)
   for (let i = 0; i < 3; i++) {
     const r = f[i % Math.max(1, f.length)]
     const [w, u] = r ? r.key.split('-').map(Number) : (() => { const x = lektionVor(p.world, p.unit, 2 + i); return [x.welt, x.einheit] })()
-    const c = unitContent(w, u)
+    const c = unitContent(w, u, kid)
     if (c) out.push(aufgabe(c, 'Wiederholen', `${w}-${u}`))
   }
   return out

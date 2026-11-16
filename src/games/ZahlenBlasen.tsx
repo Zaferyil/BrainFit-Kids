@@ -46,8 +46,9 @@ function startFeld(max: number): Blase[][] {
 const FARBEN = ['#FF4D6D', '#FF8A1F', '#FFC531', '#3DBE5B', '#2CC5E8', '#3BA7FF', '#7B5CFF', '#C24DFF', '#FF5CB8', '#8D6E63']
 const farbe = (n: number) => FARBEN[n % FARBEN.length]
 
-export function ZahlenBlasen({ level, onFinish }: GameProps) {
-  const st = stufe(level)
+export function ZahlenBlasen({ level, onFinish, einstellig = false }: GameProps) {
+  const roh = stufe(level)
+  const st = einstellig ? { ...roh, min: Math.min(roh.min, 4), max: Math.min(roh.max, 9) } : roh
   const [spalten, setSpalten] = useState<Blase[][]>(() => startFeld(st.max))
   const [ziel, setZiel] = useState(() => neuesZiel(spalten, st.min, st.max).ziel)
   const partner = useRef<number | null>(null)

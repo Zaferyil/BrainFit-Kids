@@ -464,7 +464,7 @@ const zahlOptionen = (richtig: number, min: number, max: number) => {
 /** A: Wo sind mehr Perlen? (Mengen vergleichen) */
 function MengenVergleich(p: SpielProps) {
   return <Auswahl<number> {...p} n={8} titel="Runde" spalten={2}
-    erzeugen={() => { const a = zz(1, 9); let b = zz(1, 10); while (b === a) b = zz(1, 10); return { aufgabe: <p className="chk-frage">Wo sind mehr Perlen?</p>, optionen: [a, b], richtig: Math.max(a, b) } }}
+    erzeugen={() => { const a = zz(1, 9); let b = zz(1, 9); while (b === a) b = zz(1, 9); return { aufgabe: <p className="chk-frage">Wo sind mehr Perlen?</p>, optionen: [a, b], richtig: Math.max(a, b) } }}
     antwort={(o) => <Punkte n={o} farbe={o % 2 ? '#FF8A1F' : '#3BA7FF'} />} />
 }
 
@@ -491,7 +491,7 @@ function Kurz({ ms, children }: { ms: number; children: ReactNode }) {
 
 /** B: Zählen – wie viele Perlen? Zahl wählen */
 function Zaehlen(p: SpielProps) {
-  const max = p.stufe === 0 ? 10 : 16
+  const max = p.stufe <= 1 ? 9 : 16
   return <Auswahl<number> {...p} n={6} titel="Zählen"
     erzeugen={() => { const z = zz(3, max); return { aufgabe: z <= 16 ? <Punkte n={z} farbe="#FF8A1F" /> : null, optionen: zahlOptionen(z, 1, max), richtig: z } }}
     antwort={(o) => <b className="chk-zahl">{o}</b>} />
@@ -500,15 +500,15 @@ function Zaehlen(p: SpielProps) {
 /** B: Rechnen mit Antwort-Auswahl */
 function RechnenAuswahl(p: SpielProps) {
   return <Auswahl<number> {...p} n={8} titel="Aufgabe"
-    erzeugen={() => { const a = rechenaufgabe(p.stufe); return { aufgabe: <div className="chk-aufgabe">{a.text} = ?</div>, optionen: zahlOptionen(a.loesung, 0, 999), richtig: a.loesung } }}
+    erzeugen={() => { const a = rechenaufgabe(p.stufe); return { aufgabe: <div className="chk-aufgabe">{a.text} = ?</div>, optionen: zahlOptionen(a.loesung, 0, p.stufe <= 1 ? 9 : 999), richtig: a.loesung } }}
     antwort={(o) => <b className="chk-zahl">{o}</b>} />
 }
 
 /** B/C ohne Abakus: Mengen erkennen (Punktebild, Zehnerstangen, Hunderterplatten) */
 function MengeZahl(p: SpielProps) {
-  const [min, max] = p.stufe === 0 ? [3, 10] : p.stufe <= 1 ? [8, 20] : p.stufe === 2 ? [21, 99] : [110, 399]
+  const [min, max] = p.stufe <= 1 ? [3, 9] : p.stufe === 2 ? [21, 99] : [110, 399]
   return <Auswahl<number> {...p} n={4} titel="Bild"
-    erzeugen={() => { const z = zz(min, max); return { aufgabe: z <= 10 ? <Punkte n={z} geordnet farbe="#5B47D6" /> : <Stellenbild n={z} />, optionen: zahlOptionen(z, 1, 999), richtig: z } }}
+    erzeugen={() => { const z = zz(min, max); return { aufgabe: z <= 10 ? <Punkte n={z} geordnet farbe="#5B47D6" /> : <Stellenbild n={z} />, optionen: zahlOptionen(z, 1, p.stufe <= 1 ? 9 : 999), richtig: z } }}
     antwort={(o) => <b className="chk-zahl">{o}</b>} />
 }
 

@@ -180,7 +180,7 @@ function Inhalt({ roh }: { roh: string }) {
     if (route.startsWith('station/')) {
       const progress = unitView
       const id = route.slice(8)
-      const content = unitContent(progress.world, progress.unit)
+      const content = unitContent(progress.world, progress.unit, kid.id)
       const index = STATIONS.findIndex((s) => s.id === id)
       // gesperrte Stationen führen zurück zur Einheit
       if (index > currentStation(progress)) return <Einheit progress={progress} />

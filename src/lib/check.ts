@@ -21,9 +21,10 @@ export function rechenaufgabe(stufe: number): { text: string; loesung: number } 
   const plus = Math.random() < 0.6
   let a: number, b: number
   switch (stufe) {
-    case 0: a = zufall(1, 5); b = zufall(0, 10 - a); return { text: `${a} + ${b}`, loesung: a + b }
-    case 1: if (plus) { a = zufall(2, 12); b = zufall(1, 20 - a); return { text: `${a} + ${b}`, loesung: a + b } }
-      a = zufall(5, 20); b = zufall(1, a); return { text: `${a} − ${b}`, loesung: a - b }
+    // Kindergarten und 1. Klasse: nur einstellige Zahlen, auch das Ergebnis bleibt bei höchstens 9
+    case 0: a = zufall(1, 5); b = zufall(1, 9 - a); return { text: `${a} + ${b}`, loesung: a + b }
+    case 1: if (plus) { a = zufall(2, 7); b = zufall(1, 9 - a); return { text: `${a} + ${b}`, loesung: a + b } }
+      a = zufall(3, 9); b = zufall(1, a - 1); return { text: `${a} − ${b}`, loesung: a - b }
     case 2: if (plus) { a = zufall(12, 89); b = zufall(2, 9); return { text: `${a} + ${b}`, loesung: a + b } }
       a = zufall(20, 99); b = zufall(2, 9); return { text: `${a} − ${b}`, loesung: a - b }
     case 3: if (plus) { a = zufall(12, 69); b = zufall(11, 99 - a); return { text: `${a} + ${b}`, loesung: a + b } }
@@ -36,8 +37,8 @@ export function rechenaufgabe(stufe: number): { text: string; loesung: number } 
 }
 
 /** Stellen für Abakus und Blitzzahlen */
-export const abakusStellen = (stufe: number) => (stufe === 0 ? 1 : stufe <= 2 ? 2 : 3)
-export const blitzStellen = (stufe: number) => (stufe === 0 ? 1 : stufe <= 2 ? 2 : stufe <= 4 ? 3 : 4)
+export const abakusStellen = (stufe: number) => (stufe <= 1 ? 1 : stufe === 2 ? 2 : 3)
+export const blitzStellen = (stufe: number) => (stufe <= 1 ? 1 : stufe === 2 ? 2 : stufe <= 4 ? 3 : 4)
 export const zahlMitStellen = (n: number) => (n === 1 ? zufall(1, 9) : zufall(10 ** (n - 1), 10 ** n - 1))
 export const zeitLimit = (stufe: number) => (stufe === 0 ? 25 : stufe <= 2 ? 20 : 15)
 

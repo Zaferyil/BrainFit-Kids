@@ -19,7 +19,7 @@ function aufgabenErstellen(kid: string): Aufgabe[] {
   const out: Aufgabe[] = []
   for (const r of faelligeRegeln(kid).slice(0, 4)) {
     const [w, u] = r.key.split('-').map(Number)
-    const c = unitContent(w, u)
+    const c = unitContent(w, u, kid)
     if (!c) continue
     let prev: number | undefined
     for (let i = 0; i < 3; i++) {

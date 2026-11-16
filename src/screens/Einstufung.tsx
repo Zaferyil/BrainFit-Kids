@@ -1,3 +1,4 @@
+import { stufeNr } from '../lib/klasse'
 import { useState } from 'react'
 import { Fit } from '../components/Fit'
 import { Icon } from '../components/Icon'
@@ -73,7 +74,7 @@ export function Einstufung({ kid }: { kid: Kid }) {
           <>
             <div className="game-intro"><Perli mood="happy" size={64} /><span>{cur.say}</span></div>
             <div className="game-area">
-              <Fit className="game-fit" max={1.5}><cur.Game key={step} level={start} rounds={cur.rounds} onFinish={finish} /></Fit>
+              <Fit className="game-fit" max={1.5}><cur.Game key={step} level={start} rounds={cur.rounds} einstellig={stufeNr(kid.id) <= 1} onFinish={finish} /></Fit>
             </div>
           </>
         )}

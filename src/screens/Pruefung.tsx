@@ -18,9 +18,9 @@ import { Funkeln } from './Anmelden'
 type Aufgabe = { text: string; loesung: number }
 const guertelName = (belt: string) => (belt === 'orangen' ? 'orange' : belt.replace(/en$/, ''))
 
-function aufgabenFuer(welt: number): Aufgabe[] {
+function aufgabenFuer(welt: number, kidId: string): Aufgabe[] {
   const w = WORLDS[welt - 1]
-  const inhalte = w.units.map((_, i) => unitContent(welt, i + 1)).filter((c): c is UnitContent => !!c)
+  const inhalte = w.units.map((_, i) => unitContent(welt, i + 1, kidId)).filter((c): c is UnitContent => !!c)
   const rechnen = inhalte.filter(rechnet)
   const pool = rechnen.length ? rechnen : inhalte
   const out: Aufgabe[] = []
@@ -110,7 +110,7 @@ export function Pruefung({ kid, welt }: { kid: Kid; welt: number }) {
   }, [phase])
   useEffect(() => { if (phase === 'laeuft' && rest <= 0) beenden(richtig) })
 
-  const starten = () => { setAufg(aufgabenFuer(welt)); setI(0); setRichtig(0); setRest(PRUEFUNG.sekunden); setEingabe(''); setFb(null); t0.current = Date.now(); setPhase('laeuft') }
+  const starten = () => { setAufg(aufgabenFuer(welt, kid.id)); setI(0); setRichtig(0); setRest(PRUEFUNG.sekunden); setEingabe(''); setFb(null); t0.current = Date.now(); setPhase('laeuft') }
 
   const taste = (k: string) => {
     if (fb) return

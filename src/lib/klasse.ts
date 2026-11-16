@@ -29,6 +29,18 @@ export const KLASSEN: KlassenStufe[] = [
   { name: '6. Klasse', eineStange: false, takt: 2, blitzMs: 800, aufgaben: 10, tipp: false, testSek: 6 },
 ]
 
+/** Gewählte Klassenstufe als Zahl (0 = Kiga … 6); ohne Angabe 2. Klasse */
+export function stufeNr(kidId: string): number {
+  return load<number | null>(`bfk.stufe.${kidId}`, null) ?? 2
+}
+
+/** Größte Zahl bei Anzan-Tests: Kiga und 1. Klasse in Welt 2 (nur Little Friends) einstellig,
+ *  sonst Welt 1–3 bis 29 und Welt 4–6 bis 99; ab der 2. Klasse ohne Grenze */
+export function anzanGrenze(kidId: string, welt: number): number {
+  if (stufeNr(kidId) > 1) return Infinity
+  return welt === 2 ? 9 : welt <= 3 ? 29 : 99
+}
+
 /** Einstellungen für die Klasse des Kindes; ohne Angabe wie 2. Klasse (entspricht dem Levelplan: 3 Sekunden) */
 export function klasseVon(kidId: string): KlassenStufe {
   const n = load<number | null>(`bfk.stufe.${kidId}`, null)

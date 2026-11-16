@@ -9,16 +9,16 @@ import { randInt, shuffle, type GameProps } from './types'
 
 const ROUNDS = 8
 
-function setup(level: number) {
-  const cols = level <= 10 ? 1 : level <= 17 ? 2 : 3
+function setup(level: number, einstellig = false) {
+  const cols = einstellig || level <= 10 ? 1 : level <= 17 ? 2 : 3
   const anzahl = level >= 16 ? 3 : 2
   const kleiner = level >= 6 && Math.random() < 0.5
   const minAbstand = level <= 5 ? 3 : 1
   return { cols, anzahl, kleiner, minAbstand }
 }
 
-function aufgabe(level: number) {
-  const { cols, anzahl, kleiner, minAbstand } = setup(level)
+function aufgabe(level: number, einstellig = false) {
+  const { cols, anzahl, kleiner, minAbstand } = setup(level, einstellig)
   const max = 10 ** cols - 1
   const nah = level % 5 >= 3 // knifflig: Zahlen liegen nah beieinander
   const basis = randInt(cols === 1 ? 0 : 10 ** (cols - 1), max)
@@ -32,9 +32,9 @@ function aufgabe(level: number) {
   return { liste, ziel, kleiner, cols }
 }
 
-export function ZahlenVergleichen({ level, onFinish, rounds = ROUNDS }: GameProps) {
+export function ZahlenVergleichen({ level, onFinish, rounds = ROUNDS, einstellig = false }: GameProps) {
   const [round, setRound] = useState(0)
-  const [task, setTask] = useState(() => aufgabe(level))
+  const [task, setTask] = useState(() => aufgabe(level, einstellig))
   const [correct, setCorrect] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
   const frage = task.liste.length > 2 ? (task.kleiner ? 'Welche Zahl ist am kleinsten?' : 'Welche Zahl ist am größten?') : task.kleiner ? 'Welche Zahl ist kleiner?' : 'Welche Zahl ist größer?'
@@ -51,7 +51,7 @@ export function ZahlenVergleichen({ level, onFinish, rounds = ROUNDS }: GameProp
     window.setTimeout(() => {
       setPicked(null)
       if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} richtig verglichen`)
-      else { setRound(round + 1); setTask(aufgabe(level)) }
+      else { setRound(round + 1); setTask(aufgabe(level, einstellig)) }
     }, ok ? 900 : 1800)
   }
 

@@ -2,6 +2,8 @@ export type GameProps = {
   level: number
   /** kürzere Runde, z. B. für die Einstufung */
   rounds?: number
+  /** Kindergarten und 1. Klasse: nur Zahlen 0–9 (Aufgaben und Ergebnisse) */
+  einstellig?: boolean
   /** score 0–1 (Leistung), summary kurzer Satz fürs Ergebnis */
   onFinish: (score: number, summary: string) => void
 }

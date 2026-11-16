@@ -1,3 +1,4 @@
+import { stufeNr } from '../lib/klasse'
 import { SpiegelPerlen } from '../games/SpiegelPerlen'
 import { PerlenTangram } from '../games/PerlenTangram'
 import { LabyrinthPlaner } from '../games/LabyrinthPlaner'
@@ -114,7 +115,7 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
           <span>{INTRO[game.id]}</span>
         </div>
         <div className="game-area">
-          <Fit className="game-fit" max={1.5}><Game key={`${run}-${level}`} level={level} onFinish={finish} /></Fit>
+          <Fit className="game-fit" max={1.5}><Game key={`${run}-${level}`} level={level} einstellig={stufeNr(kid.id) <= 1} onFinish={finish} /></Fit>
         </div>
       </div>
       {result && (

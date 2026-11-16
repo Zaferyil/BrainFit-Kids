@@ -41,18 +41,18 @@ function formelSchritte(welt: number, v: number): number[] {
 const zufall = (n: number) => Math.floor(Math.random() * n)
 
 /** 5 Aufgaben mit einstelligen Zahlen; jede Aufgabe hat mindestens zwei Schritte mit der Formel der Welt */
-export function anzanTestAufgaben(welt: number, nr: number): { numbers: number[]; answer: number }[] {
+export function anzanTestAufgaben(welt: number, nr: number, max = Infinity): { numbers: number[]; answer: number }[] {
   const laenge = nr === 1 ? 5 : 6
   const plusWelt = welt <= 3
   const out: { numbers: number[]; answer: number }[] = []
   for (let versuch = 0; out.length < 5 && versuch < 8000; versuch++) {
-    const z = [1 + zufall(9)]
+    const z = [1 + zufall(Math.min(9, max))]
     let v = z[0], formel = 0
     for (let i = 1; i < laenge; i++) {
       // abwechselnd: ein Schritt mit der Formel der Welt, dann ein Schritt in die andere Richtung
       const s = formelSchritte(welt, v)
-      if (s.length && (i % 2 === 0 || formel === 0)) { const k = s[zufall(s.length)]; z.push(k); v += k; formel++; continue }
-      const f = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => (plusWelt ? v - d >= 0 : v + d <= 29))
+      if (s.length && (i % 2 === 0 || formel === 0)) { const s2 = s.filter((k) => v + k <= max); if (s2.length) { const k = s2[zufall(s2.length)]; z.push(k); v += k; formel++; continue } }
+      const f = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => (plusWelt ? v - d >= 0 : v + d <= Math.min(29, max)))
       if (!f.length) break
       const d = f[zufall(f.length)] * (plusWelt ? -1 : 1); z.push(d); v += d
     }

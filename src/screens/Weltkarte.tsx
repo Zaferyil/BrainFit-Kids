@@ -16,6 +16,7 @@ import { speak } from '../lib/speak'
 import { FINALE_SAGEN } from '../data/anzanTest'
 import { canvasZuPdf, pdfSpeichern, zertifikatSenden, zertifikatVersandt, zertifikatZeichnen, type Versand } from '../lib/zertifikat'
 import { ALLES_OFFEN } from '../lib/testmodus'
+import { anzanGrenze } from '../lib/klasse'
 import { WORLDS } from '../data/curriculum'
 import sterneBild from '../assets/karte/sterne-3.webp'
 import burgBild from '../assets/karte/erfolgsburg.webp'
@@ -211,7 +212,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
             {[1, 2].map((n) => {
               const offen = fertig && (n === 1 || t1 || ALLES_OFFEN), ok = n === 1 ? t1 : t2
               return offen
-                ? <a key={n} href="#/anzan" className={ok ? 'ok' : 'neu'} onClick={() => anzanTestStarten({ welt: zeigWelt, nr: n as 1 | 2, aufgaben: anzanTestAufgaben(zeigWelt, n), ms: anzanTestTempo(zeigWelt, n) })}>⚡ Anzan-Test {n}{ok ? ' ✓' : ''}</a>
+                ? <a key={n} href="#/anzan" className={ok ? 'ok' : 'neu'} onClick={() => anzanTestStarten({ welt: zeigWelt, nr: n as 1 | 2, aufgaben: anzanTestAufgaben(zeigWelt, n, anzanGrenze(kid.id, zeigWelt)), ms: anzanTestTempo(zeigWelt, n) })}>⚡ Anzan-Test {n}{ok ? ' ✓' : ''}</a>
                 : <button key={n} type="button" className="zu" onClick={() => setSay(n === 1 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>🔒 Anzan-Test {n}</button>
             })}
           </div>
@@ -310,7 +311,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                     <div className="path-stop">
                       {offen
                         ? <a href="#/anzan" className={`path-node unit anzan ${fertig ? 'done' : aktuell ? 'current' : 'offen'}`} aria-label={label}
-                            onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1), ms: anzanTestTempo(weltEnde.welt, k + 1) })}>{knopfBild}</a>
+                            onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1, anzanGrenze(kid.id, weltEnde.welt)), ms: anzanTestTempo(weltEnde.welt, k + 1) })}>{knopfBild}</a>
                         : <button type="button" className="path-node unit anzan locked" aria-label={`${label} (gesperrt)`} onClick={() => setSay(k === 0 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>{knopfBild}</button>}
                       <div className="path-label ziel-label">⚡ {label}</div>
                     </div>

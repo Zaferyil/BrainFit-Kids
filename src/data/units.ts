@@ -1,4 +1,5 @@
 import type { IconName } from '../components/Icon'
+import { stufeNr } from '../lib/klasse'
 
 // Inhalte je Einheit. Bisher nur Welt 1 · Einheit 1, die übrigen folgen mit curriculum.json.
 
@@ -42,6 +43,8 @@ export type UnitContent = {
   adds?: number[]
   /** Welche Freunde: Big Friends (über 10) oder Little Friends (über 5) – bestimmt die passenden Startzahlen */
   freunde?: 'big' | 'little' | 'best' | 'mix'
+  /** Größte erlaubte Zahl (Aufgabe, Zwischenstand, Ergebnis) – gesetzt für Kiga und 1. Klasse */
+  max?: number
 }
 
 const UNITS: Record<string, UnitContent> = {
@@ -289,8 +292,17 @@ const alleBestFriends = (title: string, lead: string, b1: [number, number], b2: 
 UNITS['3-5'] = alleBestFriends('Best Friends alle', 'Alle Best Friends gemischt wiederholen.', [7, 6], [5, 9])
 UNITS['3-6'] = alleBestFriends('Best Friends alle – Training', 'Training: alle Best Friends gemischt.', [6, 8], [8, 6])
 
-/** Rechenaufgabe für eine Big-Friend-Einheit: a (Einer, bei denen der Trick nötig ist) + add. */
+/** Rechenaufgabe; mit Grenze (Kiga, 1. Klasse) nur Aufgaben, deren Zahlen und Ergebnis höchstens max sind */
 export function makeSum(content: UnitContent, prev?: number) {
+  const max = content.max
+  let s = makeSumFrei(content, prev)
+  if (max === undefined) return s
+  for (let i = 0; i < 80 && (Math.abs(s.a) > max || Math.abs(s.b) > max || s.n > max || s.n < 0); i++) s = makeSumFrei(content, i < 40 ? prev : undefined)
+  return s
+}
+
+/** Rechenaufgabe für eine Big-Friend-Einheit: a (Einer, bei denen der Trick nötig ist) + add. */
+function makeSumFrei(content: UnitContent, prev?: number) {
   if (content.adds?.length) {
     // gemischt: zuerst ein Big Friend, dann ein Einer, bei dem der Trick nötig ist
     const b = content.adds[Math.floor(Math.random() * content.adds.length)]
@@ -312,7 +324,25 @@ export function makeSum(content: UnitContent, prev?: number) {
 /** Rechnet die Einheit „a + b“ (ein fester Big Friend oder gemischt)? */
 export const rechnet = (content: UnitContent) => !!content.add || !!content.adds?.length
 
-export const unitContent = (world: number, unit: number) => UNITS[`${world}-${unit}`] ?? null
+/** Inhalt einer Lektion; mit kidId an die Klasse angepasst (Kiga und 1. Klasse: Zahlengrenze) */
+export function unitContent(world: number, unit: number, kidId?: string): UnitContent | null {
+  const c = UNITS[`${world}-${unit}`] ?? null
+  return c && kidId ? fuerStufe(c, world, stufeNr(kidId)) : c
+}
+
+/** Kiga und 1. Klasse: einstellig, wo es geht (Zahlen kennenlernen, Little Friends);
+ *  Big und Best Friends gehen über 10 – dort Welt 1–3 höchstens 29, Welt 4–6 höchstens 99 */
+export function zahlGrenze(c: UnitContent, world: number, stufe: number): number | undefined {
+  if (stufe > 1) return undefined
+  const einstellig = !rechnet(c) || c.freunde === 'little'
+  return einstellig ? 9 : world <= 3 ? 29 : 99
+}
+
+export function fuerStufe(c: UnitContent, world: number, stufe: number): UnitContent {
+  const max = zahlGrenze(c, world, stufe)
+  if (max === undefined) return c
+  return { ...c, max, range: [Math.min(c.range[0], max), Math.min(c.range[1], max)] }
+}
 
 /** Beschreibt eine Zahl 0–9 in Perlen, z. B. für Tipps. */
 export function describeDigit(n: number) {

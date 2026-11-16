@@ -12,28 +12,28 @@ const FARBEN: { id: BeadColor; name: string }[] = [
   { id: 'yellow', name: 'gelbe' }, { id: 'green', name: 'grüne' }, { id: 'blue', name: 'blaue' }, { id: 'pink', name: 'rosa' }, { id: 'orange', name: 'orange' },
 ]
 
-function setup(level: number) {
-  const felder = Math.min(20, 6 + level)
+function setup(level: number, einstellig = false) {
+  const felder = Math.min(einstellig ? 9 : 20, 6 + level)
   const farben = level <= 5 ? 2 : level <= 12 ? 3 : 4
   const sekunden = Math.max(1.5, 4.5 - level * 0.15)
   return { felder, farben, sekunden }
 }
 
-function aufgabe(level: number) {
-  const { felder, farben } = setup(level)
+function aufgabe(level: number, einstellig = false) {
+  const { felder, farben } = setup(level, einstellig)
   const palette = shuffle(FARBEN).slice(0, farben)
   const ziel = palette[0]
   const perlen = Array.from({ length: felder }, () => palette[randInt(0, farben - 1)].id)
   const anzahl = perlen.filter((p) => p === ziel.id).length
   const optionen = new Set([anzahl])
-  for (const d of shuffle([-2, -1, 1, 2, 3])) if (optionen.size < 4 && anzahl + d >= 0) optionen.add(anzahl + d)
+  for (const d of shuffle([-2, -1, 1, 2, 3, -3])) if (optionen.size < 4 && anzahl + d >= 0 && (!einstellig || anzahl + d <= 9)) optionen.add(anzahl + d)
   return { perlen, ziel, anzahl, optionen: [...optionen].sort((a, b) => a - b) }
 }
 
-export function SchnellZaehlen({ level, onFinish, rounds = ROUNDS }: GameProps) {
-  const { sekunden } = setup(level)
+export function SchnellZaehlen({ level, onFinish, rounds = ROUNDS, einstellig = false }: GameProps) {
+  const { sekunden } = setup(level, einstellig)
   const [round, setRound] = useState(0)
-  const [task, setTask] = useState(() => aufgabe(level))
+  const [task, setTask] = useState(() => aufgabe(level, einstellig))
   const [phase, setPhase] = useState<'zeigen' | 'antworten'>('zeigen')
   const [correct, setCorrect] = useState(0)
   const [picked, setPicked] = useState<number | null>(null)
@@ -55,7 +55,7 @@ export function SchnellZaehlen({ level, onFinish, rounds = ROUNDS }: GameProps) 
     window.setTimeout(() => {
       setPicked(null)
       if (round + 1 >= rounds) onFinish(c / rounds, `${c} von ${rounds} richtig gezählt`)
-      else { setRound(round + 1); setTask(aufgabe(level)); setPhase('zeigen') }
+      else { setRound(round + 1); setTask(aufgabe(level, einstellig)); setPhase('zeigen') }
     }, ok ? 900 : 2200)
   }
 

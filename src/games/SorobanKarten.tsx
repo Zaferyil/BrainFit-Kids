@@ -25,7 +25,7 @@ function aufgabe(stellen: number) {
   return { z, optionen: ablenker(z, stellen), umgekehrt: Math.random() < 0.5 }
 }
 
-export function SorobanKarten({ level, onFinish, rounds = ROUNDS }: GameProps) {
+export function SorobanKarten({ level, onFinish, rounds = ROUNDS, einstellig = false }: GameProps) {
   const [stellen, setStellen] = useState<number | null>(null)
   const [round, setRound] = useState(0)
   const [task, setTask] = useState(() => aufgabe(1))
@@ -46,7 +46,7 @@ export function SorobanKarten({ level, onFinish, rounds = ROUNDS }: GameProps) {
     <div className="sk-wahl">
       <div className="game-hint">Wie viele Stellen möchtest du üben?</div>
       <div className="sk-wahl-reihe">
-        {[1, 2, 3].map((s) => (
+        {(einstellig ? [1] : [1, 2, 3]).map((s) => (
           <button key={s} type="button" className="sk-wahl-knopf" onClick={() => starten(s)}>
             <b>{s}</b><span>{s === 1 ? 'Stelle' : 'Stellen'}</span><small>{s === 1 ? '0 – 9' : s === 2 ? '10 – 99' : '100 – 999'}</small>
           </button>

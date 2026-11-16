@@ -62,7 +62,7 @@ export function kette(content: UnitContent, laenge: number) {
   const zahlen = [a, b]
   let wert = a + b
   while (zahlen.length < laenge) {
-    const moeglich = [1, 2, 3, 4, -1, -2, -3, -4].filter((d) => wert + d >= 0 && direkt(wert, d))
+    const moeglich = [1, 2, 3, 4, -1, -2, -3, -4].filter((d) => wert + d >= 0 && wert + d <= (content.max ?? Infinity) && direkt(wert, d))
     if (!moeglich.length) break
     const d = moeglich[Math.floor(Math.random() * moeglich.length)]
     zahlen.push(d)
