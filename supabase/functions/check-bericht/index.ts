@@ -1,4 +1,4 @@
-// Supabase Edge Function „check-bericht“: schickt Eltern den ausführlichen Bericht zum Gratis Kopfrechen-Check.
+// Supabase Edge Function „check-bericht“: schickt Eltern den ausführlichen Bericht zum Gratis Kopfrechnen-Check.
 // Speichert die E-Mail beim anonymen Ergebnis (nur mit Zustimmung). Secret: RESEND_API_KEY.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     }
     const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F">
       <p style="text-align:center;margin:0 0 8px"><img src="${APP}/logo.png" alt="BrainFit Kids" width="220" style="max-width:220px;height:auto"></p>
-      <h1 style="color:#5B47D6;margin:0 0 6px">Ihr ausführlicher Kopfrechen-Bericht</h1>
+      <h1 style="color:#5B47D6;margin:0 0 6px">Ihr ausführlicher Kopfrechnen-Bericht</h1>
       <p style="color:#6B648F;margin:0 0 16px">${r.alter_jahre} Jahre · ${STUFEN[r.stufe]}</p>
       <div style="background:#5B47D6;color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px">
         ${pg >= 10 ? `<b style="font-size:28px">${pg} %</b><br>Ihr Kind liegt insgesamt vor ${echt ? '' : 'etwa '}${pg} % der ${gruppe}.` : '<b style="font-size:20px">Ein guter Startpunkt 🌱</b><br>Ihr Kind steht noch am Anfang – genau jetzt bringt regelmäßiges Üben am meisten.'}
@@ -75,7 +75,7 @@ Deno.serve(async (req) => {
     if (!Deno.env.get('RESEND_API_KEY')) return antwort({ fehler: 'E-Mail-Versand ist gerade nicht verfügbar.' }, 503)
     const s = await fetch('https://api.resend.com/emails', {
       method: 'POST', headers: { Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>', reply_to: 'info@mentalmath.at', to: [m], subject: 'Ihr Kopfrechen-Bericht von BrainFit Kids', html }),
+      body: JSON.stringify({ from: Deno.env.get('MAIL_FROM') ?? 'BrainFit Kids <noreply@mentalmath.at>', reply_to: 'info@mentalmath.at', to: [m], subject: 'Ihr Kopfrechnen-Bericht von BrainFit Kids', html }),
     })
     if (!s.ok) { console.error('Mail:', await s.text()); return antwort({ fehler: 'Die E-Mail konnte nicht gesendet werden. Bitte später erneut versuchen.' }, 502) }
     await db.from('check_ergebnisse').update({ mail: m, newsletter: !!newsletter, bericht_gesendet: new Date().toISOString() }).eq('id', id)

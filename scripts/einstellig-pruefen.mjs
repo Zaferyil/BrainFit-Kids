@@ -56,9 +56,9 @@ try {
     // Gratis-Check der Website
     let m = 0, bsp = ''
     for (let n = 0; n < N; n++) { const r = check.rechenaufgabe(stufe); const z = Math.max(r.loesung, ...r.text.split(/[+−]/).map((x) => Number(x))); if (z > m) { m = z; bsp = `${r.text}=${r.loesung}` } }
-    if (m > 9) fehler.push({ stufe: name, lektion: 'Kopfrechen-Check: Rechnen', maxZahl: m, beispiel: bsp })
-    if (check.abakusStellen(stufe) > 1) fehler.push({ stufe: name, lektion: 'Kopfrechen-Check: Abakus', maxZahl: 10 ** check.abakusStellen(stufe) - 1 })
-    if (check.blitzStellen(stufe) > 1) fehler.push({ stufe: name, lektion: 'Kopfrechen-Check: Blitzzahlen', maxZahl: 10 ** check.blitzStellen(stufe) - 1 })
+    if (m > 9) fehler.push({ stufe: name, lektion: 'Kopfrechnen-Check: Rechnen', maxZahl: m, beispiel: bsp })
+    if (check.abakusStellen(stufe) > 1) fehler.push({ stufe: name, lektion: 'Kopfrechnen-Check: Abakus', maxZahl: 10 ** check.abakusStellen(stufe) - 1 })
+    if (check.blitzStellen(stufe) > 1) fehler.push({ stufe: name, lektion: 'Kopfrechnen-Check: Blitzzahlen', maxZahl: 10 ** check.blitzStellen(stufe) - 1 })
   }
 } finally {
   await server.close()

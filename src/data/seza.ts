@@ -112,7 +112,7 @@ export const RAENGE = [
   { ab: 300, name: 'Abakus-Lehrling', icon: '🧮' },
   { ab: 1000, name: 'Rechen-Entdecker', icon: '🔍' },
   { ab: 2500, name: 'Rechen-Profi', icon: '🚀' },
-  { ab: 5000, name: 'Kopfrechen-Meister', icon: '🏅' },
+  { ab: 5000, name: 'Kopfrechnen-Meister', icon: '🏅' },
   { ab: 10000, name: 'Abakus-Legende', icon: '👑' },
 ]
 export function rangVon(perlen: number) {

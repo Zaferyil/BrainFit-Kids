@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactElement
 import { Abakus3D } from '../components/Abakus3D'
 import { abakusStellen, BEREICHE, berichtAnfordern, blitzStellen, optionen, punkte, rechenaufgabe, speichernUndVergleichen, STUFEN, stufeVonAlter, zahlMitStellen, zeitLimit, type Bereich, type Variante, type Vergleich, type Werte } from '../lib/check'
 
-// Gratis Kopfrechen-Check: Alter + Schulstufe → 5 kurze Spiele → Ergebnis im Vergleich mit Gleichaltrigen → Bericht per E-Mail.
+// Gratis Kopfrechnen-Check: Alter + Schulstufe → 5 kurze Spiele → Ergebnis im Vergleich mit Gleichaltrigen → Bericht per E-Mail.
 
 const BASE = import.meta.env.BASE_URL
 const SITE = '/'
@@ -50,7 +50,7 @@ export function Check() {
   const [werte, setWerte] = useState<Partial<Werte>>({})
   const [ergebnis, setErgebnis] = useState<{ id: string; vergleich: Vergleich } | null>(null)
   const startZeit = useRef(0)
-  useEffect(() => { document.title = 'Gratis Kopfrechen-Check für Kinder | BrainFit Kids' }, [])
+  useEffect(() => { document.title = 'Gratis Kopfrechnen-Check für Kinder | BrainFit Kids' }, [])
 
   const fertig = (b: Bereich, wert: number) => {
     const neu = { ...werte, [b]: Math.round(Math.max(0, Math.min(100, wert))) }
@@ -72,7 +72,7 @@ export function Check() {
         {phase.typ === 'start' && (
           <section className="chk-karte chk-start">
             <span className="chk-eyebrow">Gratis · ohne Anmeldung · ca. 4 Minuten</span>
-            <h1>Kopfrechen-Check 🎯</h1>
+            <h1>Kopfrechnen-Check 🎯</h1>
             <p>5 kurze Spiele zeigen, wo Ihr Kind beim Kopfrechnen, Zahlenverständnis, Gedächtnis und bei der Konzentration steht – im Vergleich mit Gleichaltrigen.</p>
             <form onSubmit={(e: FormEvent) => { e.preventDefault(); startZeit.current = Date.now(); setPhase({ typ: 'info', schritt: 0 }) }}>
               <label>Wie alt ist Ihr Kind?

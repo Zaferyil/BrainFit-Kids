@@ -12,7 +12,7 @@ import { speak } from '../lib/speak'
 import { Keypad } from './stations/StationShell'
 import { Funkeln } from './Anmelden'
 
-// Gürtel-Prüfung: 10 Kopfrechen-Aufgaben aus allen Einheiten der Welt, 4 Minuten Zeit, 8 richtig = bestanden.
+// Gürtel-Prüfung: 10 Kopfrechnen-Aufgaben aus allen Einheiten der Welt, 4 Minuten Zeit, 8 richtig = bestanden.
 // Danach gibt es eine Urkunde als Bild zum Speichern oder Teilen.
 
 type Aufgabe = { text: string; loesung: number }

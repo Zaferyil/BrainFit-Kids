@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { STUFEN } from '../lib/check'
 
-// Admin-Übersicht: Statistik zum Gratis Kopfrechen-Check (Anzahl je Schulstufe, E-Mail-Anfragen, Durchschnitt)
+// Admin-Übersicht: Statistik zum Gratis Kopfrechnen-Check (Anzahl je Schulstufe, E-Mail-Anfragen, Durchschnitt)
 type Zeile = { stufe: number; anzahl: number; mit_mail: number; schnitt_gesamt: number }
 type Test = { id: string; erstellt: string; alter_jahre: number; stufe: number; variante: string; abakus_bekannt: boolean; gesamt: number; rechnen: number; abakus: number; blitz: number; merken: number; konzentration: number; dauer_sek: number | null; mail: string | null; newsletter: boolean; bericht_gesendet: string | null }
 const VARIANTE: Record<string, string> = { A: 'Vorschule', B: 'kennt Zahlen', C: 'Schulkind' }
@@ -20,7 +20,7 @@ export function AdminCheck() {
   const summe = z.reduce((a, x) => a + x.anzahl, 0), mails = z.reduce((a, x) => a + x.mit_mail, 0)
   return (
     <section className="adm-card adm-tabelle-wrap">
-      <div className="adm-card-head"><h2>🎯 Gratis Kopfrechen-Check</h2><a className="adm-btn" href="/check" target="_blank" rel="noopener">Check öffnen</a></div>
+      <div className="adm-card-head"><h2>🎯 Gratis Kopfrechnen-Check</h2><a className="adm-btn" href="/check" target="_blank" rel="noopener">Check öffnen</a></div>
       <div className="push-stat"><span><b>{summe}</b> Tests</span><span><b>{mails}</b> Berichte angefordert{summe ? ` (${Math.round((mails / summe) * 100)} %)` : ''}</span></div>
       {z.length ? (
         <table className="adm-tabelle"><thead><tr><th>Schulstufe</th><th>Tests</th><th>Mit E-Mail</th><th>Ø Gesamt</th></tr></thead>

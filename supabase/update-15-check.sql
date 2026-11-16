@@ -1,4 +1,4 @@
--- Update 15: Gratis Kopfrechen-Check (Website) – anonyme Ergebnisse für den Vergleich mit Gleichaltrigen
+-- Update 15: Gratis Kopfrechnen-Check (Website) – anonyme Ergebnisse für den Vergleich mit Gleichaltrigen
 
 create table if not exists public.check_ergebnisse (
   id uuid primary key default gen_random_uuid(),

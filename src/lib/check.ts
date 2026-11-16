@@ -1,6 +1,6 @@
 import { supabase } from './supabase'
 
-// Gratis Kopfrechen-Check (Website): Aufgaben je Schulstufe, Bewertung 0–100 und Vergleich mit Gleichaltrigen.
+// Gratis Kopfrechnen-Check (Website): Aufgaben je Schulstufe, Bewertung 0–100 und Vergleich mit Gleichaltrigen.
 
 export type Bereich = 'rechnen' | 'abakus' | 'blitz' | 'merken' | 'konzentration'
 export type Werte = Record<Bereich, number>
