@@ -11,6 +11,10 @@ import dino1 from '../assets/karte/insel-dino-1.webp'
 import dino2 from '../assets/karte/insel-dino-2.webp'
 import dino3 from '../assets/karte/insel-dino-3.webp'
 import dino4 from '../assets/karte/insel-dino-4.webp'
+import natur1 from '../assets/karte/insel-natur-1.webp'
+import natur2 from '../assets/karte/insel-natur-2.webp'
+import natur3 from '../assets/karte/insel-natur-3.webp'
+import natur4 from '../assets/karte/insel-natur-4.webp'
 import raum1 from '../assets/karte/insel-weltraum-1.webp'
 import raum2 from '../assets/karte/insel-weltraum-2.webp'
 import raum3 from '../assets/karte/insel-weltraum-3.webp'
@@ -20,6 +24,8 @@ import raum4 from '../assets/karte/insel-weltraum-4.webp'
 const KNOPF_DATEIEN = import.meta.glob('../assets/karte/knopf/*.webp', { eager: true, import: 'default' }) as Record<string, string>
 const RAUM_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/raum-${i + 1}.webp`])
 const DINO_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/dino-${i + 1}.webp`])
+// Welt 1: runde Knöpfe (blau = Lektion, lila = Denkspiel), 25 und 26 = Anzan-Tests
+const NATUR_KNOEPFE = Array.from({ length: 26 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/natur-${i + 1}.webp`])
 const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
@@ -28,7 +34,7 @@ const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../asset
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
 /** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[] }
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[]; rund?: boolean }
 
 export const KARTEN: Karte[] = [
   {
@@ -60,6 +66,13 @@ export const KARTEN: Karte[] = [
 /** Eigene Karten je Welt (Welt 4: Ägypten-Abenteuer, je 6 Plätze, von unten nach oben).
  *  gemalt: die Nummern-Knöpfe sind im Bild – die App legt nur unsichtbare Knöpfe mit Zustand darüber. */
 export const WELT_KARTEN: Record<number, Karte[]> = {
+  // Welt 1: Naturpark – 4 Karten je 6 Stationen; auf der letzten Karte Platz 7 und 8 = Anzan-Tests vor der Burg
+  1: [
+    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur1, w: 1024, h: 1536, plaetze: [[457, 1136], [371, 864], [284, 580], [571, 464], [514, 307], [700, 207]] },
+    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur2, w: 1024, h: 1536, plaetze: [[130, 985], [270, 860], [335, 715], [500, 605], [690, 505], [880, 425]] },
+    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur3, w: 1024, h: 1536, plaetze: [[300, 1110], [225, 915], [262, 720], [435, 585], [630, 435], [818, 375]] },
+    { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur4, w: 1024, h: 1536, plaetze: [[75, 1135], [110, 985], [230, 880], [390, 845], [545, 800], [690, 720], [560, 575], [705, 470]] },
+  ],
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg2, w: 941, h: 1480, plaetze: [[260, 950], [620, 830], [300, 700], [640, 550], [360, 420], [700, 300]] },

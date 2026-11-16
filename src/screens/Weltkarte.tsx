@@ -268,7 +268,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (karte.rund ? ' rund' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
@@ -307,9 +307,9 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
                   <div key={`ziel-${k}`} className="insel-stop" style={pos}>
                     <div className="path-stop">
                       {offen
-                        ? <a href="#/anzan" className={`path-node unit ${fertig ? 'done' : aktuell ? 'current' : 'offen'}`} aria-label={label}
+                        ? <a href="#/anzan" className={`path-node unit anzan ${fertig ? 'done' : aktuell ? 'current' : 'offen'}`} aria-label={label}
                             onClick={() => anzanTestStarten({ welt: weltEnde.welt, nr: (k + 1) as 1 | 2, aufgaben: anzanTestAufgaben(weltEnde.welt, k + 1), ms: anzanTestTempo(weltEnde.welt, k + 1) })}>{knopfBild}</a>
-                        : <button type="button" className="path-node unit locked" aria-label={`${label} (gesperrt)`} onClick={() => setSay(k === 0 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>{knopfBild}</button>}
+                        : <button type="button" className="path-node unit anzan locked" aria-label={`${label} (gesperrt)`} onClick={() => setSay(k === 0 ? 'Der Anzan-Test kommt, wenn du alle Stationen dieser Welt geschafft hast.' : 'Erst Anzan-Test 1 schaffen!')}>{knopfBild}</button>}
                       <div className="path-label ziel-label">⚡ {label}</div>
                     </div>
                   </div>
