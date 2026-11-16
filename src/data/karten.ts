@@ -15,6 +15,9 @@ import natur1 from '../assets/karte/insel-natur-1.webp'
 import natur2 from '../assets/karte/insel-natur-2.webp'
 import natur3 from '../assets/karte/insel-natur-3.webp'
 import natur4 from '../assets/karte/insel-natur-4.webp'
+import atl1 from '../assets/karte/insel-atlantis-1.webp'
+import atl2 from '../assets/karte/insel-atlantis-2.webp'
+import atl3 from '../assets/karte/insel-atlantis-3.webp'
 import raum1 from '../assets/karte/insel-weltraum-1.webp'
 import raum2 from '../assets/karte/insel-weltraum-2.webp'
 import raum3 from '../assets/karte/insel-weltraum-3.webp'
@@ -26,6 +29,8 @@ const RAUM_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../asse
 const DINO_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/dino-${i + 1}.webp`])
 // Welt 1: runde Knöpfe (blau = Lektion, lila = Denkspiel), 25 und 26 = Anzan-Tests
 const NATUR_KNOEPFE = Array.from({ length: 26 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/natur-${i + 1}.webp`])
+// Welt 2: runde Knöpfe mit Goldrand, 13 und 14 = Anzan-Tests
+const ATLANTIS_KNOEPFE = Array.from({ length: 14 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/atlantis-${i + 1}.webp`])
 const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
@@ -33,8 +38,9 @@ const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../asset
 // beginnen die Bilder wieder von vorn.
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
+/** stapel: gemalte Querformat-Karten werden übereinander auf einer Seite gezeigt (statt Seite für Seite) */
 /** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[]; rund?: boolean }
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[]; rund?: boolean; stapel?: boolean }
 
 export const KARTEN: Karte[] = [
   {
@@ -72,6 +78,12 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur2, w: 1024, h: 1536, plaetze: [[130, 985], [270, 860], [335, 715], [500, 605], [690, 505], [880, 425]] },
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur3, w: 1024, h: 1536, plaetze: [[300, 1110], [225, 915], [262, 720], [435, 585], [630, 435], [818, 375]] },
     { gemalt: true, rund: true, knoepfe: NATUR_KNOEPFE, bild: natur4, w: 1024, h: 1536, plaetze: [[85, 1175], [100, 1010], [220, 885], [385, 840], [550, 790], [705, 725], [585, 645], [840, 640]] },
+  ],
+  // Welt 2: Unterwasser-Atlantis – 3 Querformat-Karten je 4 Stationen, übereinander; auf der letzten Platz 5 und 6 = Anzan-Tests
+  2: [
+    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl1, w: 1024, h: 560, plaetze: [[335, 418], [445, 265], [668, 180], [830, 55]] },
+    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl2, w: 1024, h: 464, plaetze: [[240, 385], [435, 262], [660, 180], [835, 100]] },
+    { gemalt: true, rund: true, stapel: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl3, w: 1024, h: 498, plaetze: [[262, 418], [430, 350], [607, 298], [730, 222], [590, 195], [875, 215]] },
   ],
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },

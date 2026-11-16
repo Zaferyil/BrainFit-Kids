@@ -1131,6 +1131,10 @@ insel-banner { position: absolute; left: 50%; top: 2.5cqw; z-index: 3; }
 /* Übergang zwischen zwei Inseln (obere Insel liegt höher, siehe zIndex in Weltkarte): die untere schiebt sich unter die obere, deren Wasser blendet weich
    in den Himmel der unteren über; kleine Wolken lockern die Kante auf. */
 .inseln > .insel:not(:last-child) { margin-bottom: -10cqw; }
+/* Welt 2: gemalte Querformat-Karten stoßen ohne Überlappung aneinander */
+.inseln > .insel.stapel:not(:last-child) { margin-bottom: 0; }
+.inseln > .insel.stapel:not(:last-child) .insel-bg { mask-image: none !important; }
+.inseln > .insel.stapel:not(:last-child)::after { display: none; }
 .inseln > .insel:not(:last-child) .insel-bg { mask-image: linear-gradient(to top, transparent, #000 10cqw); }
 .inseln > .insel .insel-stop { z-index: 4; }
 .inseln > .insel:not(:last-child)::after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 12cqw; translate: 0 30%; pointer-events: none;

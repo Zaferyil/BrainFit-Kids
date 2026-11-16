@@ -33,7 +33,7 @@ const burgVon = (welt: number): BurgArt => BURGEN[welt] ?? { bild: burgBild, hoc
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 /** Kurzname je Welt für die Welt-Knöpfe über der Karte */
-const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '👑 Königreich', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum', 6: '🦖 Dino' }
+const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🌊 Atlantis', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum', 6: '🦖 Dino' }
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
@@ -103,7 +103,8 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
   const teile = useMemo(() => etappenNachWelt(weltVon).filter((t) => weltVon[t.start] === zeigWelt), [weltVon, zeigWelt])
   // Abenteuer-Karten (gemalt): jede Karte ist eine eigene Seite – der Weg endet oben an der Brücke mit dem Pfeil
   // und geht auf der nächsten Karte unten an der Brücke weiter. Übereinander gestapelt passen die Ränder nicht.
-  const seitenModus = teile.length > 0 && teile.every((t) => t.karte.gemalt)
+  const alleGemalt = teile.length > 0 && teile.every((t) => t.karte.gemalt)
+  const seitenModus = alleGemalt && !teile.some((t) => t.karte.stapel)
   const seiteMitAktuell = Math.max(0, teile.findIndex((t) => nurStops.slice(t.start, t.start + t.anzahl).some((x) => x.state === 'current')))
   const [seiteWahl, setSeiteWahl] = useState<{ welt: number; i: number } | null>(null)
   const seite = seiteWahl?.welt === zeigWelt ? seiteWahl.i : (teile.some((t) => nurStops.slice(t.start, t.start + t.anzahl).some((x) => x.state === 'current')) ? seiteMitAktuell : 0)
@@ -202,7 +203,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
         </nav>
       )}
       {/* Welten ohne Abenteuer-Karten (1–3): die zwei Anzan-Tests als Knöpfe über der Karte */}
-      {!seitenModus && (() => {
+      {!alleGemalt && (() => {
         const fertig = ALLES_OFFEN || weltGeschafft(progress, zeigWelt)
         const t1 = load<boolean>(anzanTestKey(kid.id, zeigWelt, 1), false), t2 = load<boolean>(anzanTestKey(kid.id, zeigWelt, 2), false)
         return (
@@ -269,7 +270,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (karte.rund ? ' rund' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (karte.rund ? ' rund' : '') + (karte.stapel ? ' stapel' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)
