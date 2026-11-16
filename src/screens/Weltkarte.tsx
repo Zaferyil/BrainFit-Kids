@@ -33,7 +33,7 @@ const burgVon = (welt: number): BurgArt => BURGEN[welt] ?? { bild: burgBild, hoc
 import { buildPath, startStop, type MapStop } from '../lib/mapPath'
 
 /** Kurzname je Welt für die Welt-Knöpfe über der Karte */
-const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🌊 Atlantis', 3: '❄️ Eiszauber', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum', 6: '🦖 Dino' }
+const WELT_KURZ: Record<number, string> = { 1: '🌳 Naturpark', 2: '🌊 Atlantis', 3: '🏴‍☠️ Piraten', 4: '🏜️ Pyramiden', 5: '🪐 Weltraum', 6: '🦖 Dino' }
 
 type Props = { kid: Kid; progress: Progress; onLogout: () => void }
 
@@ -270,7 +270,7 @@ export function Weltkarte({ kid, progress, onLogout }: Props) {
               return m >= 0 && m < muenzen.length ? [freiL + muenzen[m][0] * breite, freiT + muenzen[m][1] * hoch] : karte.plaetze[i]
             }
             return (
-            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (karte.rund ? ' rund' : '') + (karte.stapel ? ' stapel' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
+            <section key={start} className={(schnitt > 0 ? 'insel ende' : schnitt < 0 ? 'insel ende-wasser' : 'insel') + (gemalt ? ' gemalt' : '') + (karte.rund ? ' rund' : '') + (karte.stapel ? ' stapel' : '') + (gemalt && neuSeite ? ' karte-neu' : '')} style={{ zIndex: burg && !letzte && !frei ? sicht.length + 1 : sicht.length - k, aspectRatio: `${karte.w} / ${hoehe}`, ...(karte.knopf ? { ['--knopf' as string]: `${karte.knopf}cqw` } : {}), ...(burg && !letzte && !frei ? { marginTop: '-22cqw', pointerEvents: 'none' } : {}) }}>
               <img className="insel-bg" src={karte.bild} alt="" draggable={false} style={{ marginTop: `${(-schnitt / karte.w) * 100}cqw` }} />
               {karte.plaetze.map((_, i) => {
                 const [x, y] = platzVon(i)

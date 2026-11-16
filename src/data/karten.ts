@@ -18,6 +18,9 @@ import natur4 from '../assets/karte/insel-natur-4.webp'
 import atl1 from '../assets/karte/insel-atlantis-1.webp'
 import atl2 from '../assets/karte/insel-atlantis-2.webp'
 import atl3 from '../assets/karte/insel-atlantis-3.webp'
+import pir1 from '../assets/karte/insel-piraten-1.webp'
+import pir2 from '../assets/karte/insel-piraten-2.webp'
+import pir3 from '../assets/karte/insel-piraten-3.webp'
 import raum1 from '../assets/karte/insel-weltraum-1.webp'
 import raum2 from '../assets/karte/insel-weltraum-2.webp'
 import raum3 from '../assets/karte/insel-weltraum-3.webp'
@@ -31,6 +34,8 @@ const DINO_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../asse
 const NATUR_KNOEPFE = Array.from({ length: 26 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/natur-${i + 1}.webp`])
 // Welt 2: runde Knöpfe mit Goldrand, 13 und 14 = Anzan-Tests
 const ATLANTIS_KNOEPFE = Array.from({ length: 14 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/atlantis-${i + 1}.webp`])
+// Welt 3: Bullaugen-Knöpfe der Piraten, 13 und 14 = Anzan-Tests
+const PIRATEN_KNOEPFE = Array.from({ length: 14 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/piraten-${i + 1}.webp`])
 const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../assets/karte/knopf/aeg-${i + 1}.webp`])
 
 // Die Karte besteht aus Etappen: je ein Inselbild ohne Stationen (siehe scripts/karte-bild.py)
@@ -38,9 +43,10 @@ const AEG_KNOEPFE = Array.from({ length: 24 }, (_, i) => KNOPF_DATEIEN[`../asset
 // beginnen die Bilder wieder von vorn.
 
 /** weg: dort schließt ein Burgbild mit eigenem Weg an; die letzten Plätze liegen dann auf dessen Weg */
+/** knopf: Größe der runden Knöpfe in Prozent der Kartenbreite (Standard 9.5) */
 /** stapel: gemalte Querformat-Karten werden übereinander auf einer Seite gezeigt (statt Seite für Seite) */
 /** burg: die Burg ersetzt genau die kleine Burg im Bild (Mitte x, Unterkante, Breite als Anteil) */
-export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[]; rund?: boolean; stapel?: boolean }
+export type Karte = { bild: string; w: number; h: number; plaetze: [number, number][]; weg?: [number, number]; burg?: { x: number; unten: number; breite: number }; gemalt?: boolean; knoepfe?: string[]; rund?: boolean; stapel?: boolean; knopf?: number }
 
 export const KARTEN: Karte[] = [
   {
@@ -81,9 +87,15 @@ export const WELT_KARTEN: Record<number, Karte[]> = {
   ],
   // Welt 2: Unterwasser-Atlantis – 3 Karten je 4 Stationen; auf der letzten Platz 5 und 6 = Anzan-Tests vor dem Palast
   2: [
-    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl1, w: 1024, h: 1536, plaetze: [[360, 1240], [655, 828], [525, 455], [760, 188]] },
-    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl2, w: 1024, h: 1536, plaetze: [[330, 1130], [655, 825], [355, 580], [745, 290]] },
-    { gemalt: true, rund: true, knoepfe: ATLANTIS_KNOEPFE, bild: atl3, w: 1024, h: 1536, plaetze: [[330, 1305], [500, 1080], [370, 860], [605, 670], [575, 465], [770, 465]] },
+    { gemalt: true, rund: true, knopf: 13, knoepfe: ATLANTIS_KNOEPFE, bild: atl1, w: 1024, h: 1536, plaetze: [[360, 1240], [655, 828], [525, 455], [760, 188]] },
+    { gemalt: true, rund: true, knopf: 13, knoepfe: ATLANTIS_KNOEPFE, bild: atl2, w: 1024, h: 1536, plaetze: [[330, 1130], [655, 825], [355, 580], [745, 290]] },
+    { gemalt: true, rund: true, knopf: 13, knoepfe: ATLANTIS_KNOEPFE, bild: atl3, w: 1024, h: 1536, plaetze: [[330, 1305], [500, 1080], [370, 860], [605, 670], [575, 465], [770, 465]] },
+  ],
+  // Welt 3: Piraten-Insel – 3 Karten je 4 Stationen; auf der letzten Platz 5 und 6 = Anzan-Tests vor der Piratenburg
+  3: [
+    { gemalt: true, rund: true, knopf: 16, knoepfe: PIRATEN_KNOEPFE, bild: pir1, w: 1024, h: 1536, plaetze: [[630, 955], [402, 710], [700, 450], [570, 162]] },
+    { gemalt: true, rund: true, knopf: 16, knoepfe: PIRATEN_KNOEPFE, bild: pir2, w: 1024, h: 1536, plaetze: [[458, 1205], [312, 830], [594, 600], [776, 340]] },
+    { gemalt: true, rund: true, knopf: 16, knoepfe: PIRATEN_KNOEPFE, bild: pir3, w: 1024, h: 1536, plaetze: [[495, 1310], [374, 1022], [503, 812], [695, 640], [542, 452], [780, 452]] },
   ],
   4: [
     { gemalt: true, knoepfe: AEG_KNOEPFE, bild: aeg1, w: 941, h: 1672, plaetze: [[330, 1245], [610, 1135], [370, 965], [630, 800], [370, 650], [680, 470]] },
