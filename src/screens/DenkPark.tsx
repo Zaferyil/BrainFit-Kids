@@ -3,13 +3,42 @@ import { NavBar } from '../components/NavBar'
 import { Stage } from '../components/Stage'
 import type { Kid } from '../data/demo'
 import { getLevel, getPlacement, tierFor, tierRank, TIERS } from '../games/engine'
-import { useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { GAMES, KATEGORIEN, kategorieVon, type Kategorie } from '../games/registry'
 import { echteWerte } from '../lib/rangliste'
 import { getDaily } from '../lib/daily'
 import type { Progress } from '../lib/progress'
 import { Funkeln } from './Anmelden'
 import { SpielBild } from '../components/SpielBild'
+
+/** Wischbare Spiele-Reihe: Finger wischen, mit der Maus ziehen oder die Pfeile antippen. */
+function Reihe({ alle, children }: { alle: boolean; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [rand, setRand] = useState({ links: false, rechts: false })
+  const zug = useRef<{ x: number; start: number; bewegt: boolean } | null>(null)
+  const pruefe = () => {
+    const r = ref.current
+    if (!r || alle) { setRand({ links: false, rechts: false }); return }
+    setRand({ links: r.scrollLeft > 4, rechts: r.scrollLeft + r.clientWidth < r.scrollWidth - 4 })
+  }
+  useEffect(() => { pruefe(); window.addEventListener('resize', pruefe); return () => window.removeEventListener('resize', pruefe) })
+  const schiebe = (richtung: number) => ref.current?.scrollBy({ left: richtung * ref.current.clientWidth * 0.8, behavior: 'smooth' })
+  return (
+    <div className={'dp-reihe-rahmen' + (rand.links ? ' mehr-links' : '') + (rand.rechts ? ' mehr-rechts' : '')}>
+      <div ref={ref} className={alle ? 'dp-reihe alle' : 'dp-reihe'} onScroll={pruefe}
+        // Maus: zum Verschieben ziehen (am Handy übernimmt der Browser das Wischen)
+        onPointerDown={(e) => { if (e.pointerType === 'mouse' && ref.current) zug.current = { x: e.clientX, start: ref.current.scrollLeft, bewegt: false } }}
+        onPointerMove={(e) => { const z = zug.current; if (!z || !ref.current) return; const d = e.clientX - z.x; if (Math.abs(d) > 5) { z.bewegt = true; ref.current.classList.add('zieht') } ref.current.scrollLeft = z.start - d }}
+        onPointerUp={() => { ref.current?.classList.remove('zieht'); window.setTimeout(() => { zug.current = null }, 0) }}
+        onPointerLeave={() => { ref.current?.classList.remove('zieht'); zug.current = null }}
+        onClickCapture={(e) => { if (zug.current?.bewegt) { e.preventDefault(); e.stopPropagation() } }}>
+        {children}
+      </div>
+      {rand.links && <button type="button" className="dp-pfeil links" onClick={() => schiebe(-1)} aria-label="Nach links">‹</button>}
+      {rand.rechts && <button type="button" className="dp-pfeil rechts" onClick={() => schiebe(1)} aria-label="Nach rechts">›</button>}
+    </div>
+  )
+}
 
 // Spiele mit echtem Vorschaubild (Bildschirmfoto aus dem Spiel, public/spiele)
 const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich', 'sortieren', 'blasen', 'spiegel', 'regel', 'tangram', 'labyrinth', 'ballons', 'rakete', 'blitzabakus', 'detektiv', 'stopp', 'sudoku', 'waage', 'wuerfel', 'sortierer', 'symbol', 'rennen'])
@@ -75,12 +104,12 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
                 {kat.bericht && offen.length > 0 && <span className="dp-kat-wert" title="Dein Wert in dieser Kategorie (0–100, fließt in den Lernbericht)">Wert {werte[kat.id as Exclude<Kategorie, 'raum' | 'flex'>] ?? 0}</span>}
                 {offen.length > 2 && <button type="button" className="dp-kat-alle" onClick={() => setAlleOffen(alle ? null : kat.id)}>{alle ? 'Weniger' : 'Alle ansehen'} ›</button>}
               </header>
-              <div className={alle ? 'dp-reihe alle' : 'dp-reihe'}>
+              <Reihe alle={alle}>
                 {offen.map((g) => {
                   const st = getLevel(kid.id, g.id, tier)
                   return (
                     <a key={g.id} href={`#/spiel/${g.id}`} className="dp-karte">
-                      <span className="dp-karte-bild">{BILDER.has(g.id) ? <img src={`${import.meta.env.BASE_URL}spiele/${g.id}.webp`} alt="" loading="lazy" /> : <SpielBild id={g.id} fallback={SYMBOL[g.id] ?? kat.icon} />}</span>
+                      <span className="dp-karte-bild">{BILDER.has(g.id) ? <img src={`${import.meta.env.BASE_URL}spiele/${g.id}.webp`} alt="" loading="lazy" draggable={false} /> : <SpielBild id={g.id} fallback={SYMBOL[g.id] ?? kat.icon} />}</span>
                       <strong>{g.name}</strong>
                       <span className="dp-karte-stufe"><b>Stufe {st}</b><small>{st}/20</small><i><em style={{ width: `${Math.min(100, (st / 20) * 100)}%` }} /></i></span>
                     </a>
@@ -93,7 +122,7 @@ export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () =
                     <span className="dp-karte-text">kommt bald</span>
                   </div>
                 ))}
-              </div>
+              </Reihe>
             </section>
           )
         })}

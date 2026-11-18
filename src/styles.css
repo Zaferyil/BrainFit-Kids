@@ -3270,3 +3270,17 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 .zr-feld { display: grid; gap: 7px; }
 .zr-zelle { aspect-ratio: 1; border: 0; border-radius: 16px; background: #fff; color: #4B2FC2; font: 900 28px 'Baloo 2', Fredoka, sans-serif; box-shadow: 0 4px 0 rgba(35,26,79,.18); cursor: pointer; }
 .zr-zelle.weg { background: #DDF8EC; color: #9FD9BE; box-shadow: none; } .zr-zelle.falsch { background: #FF4D6D; color: #fff; animation: bal-wackeln .35s; }
+
+/* Denkpark: wischbare Spiele-Reihen (Finger, Maus ziehen, Pfeile) */
+.dp-reihe-rahmen { position: relative; }
+.dp-reihe { scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; touch-action: pan-x pan-y; cursor: grab; scroll-padding-inline: 2px; }
+.dp-reihe.zieht { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.dp-reihe.zieht .dp-karte { pointer-events: none; }
+.dp-reihe.alle { cursor: auto; }
+.dp-karte img { -webkit-user-drag: none; user-select: none; }
+.dp-reihe-rahmen.mehr-rechts .dp-reihe { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 46px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 46px), transparent); }
+.dp-reihe-rahmen.mehr-links.mehr-rechts .dp-reihe { -webkit-mask-image: linear-gradient(90deg, transparent, #000 46px, #000 calc(100% - 46px), transparent); mask-image: linear-gradient(90deg, transparent, #000 46px, #000 calc(100% - 46px), transparent); }
+.dp-reihe-rahmen.mehr-links:not(.mehr-rechts) .dp-reihe { -webkit-mask-image: linear-gradient(90deg, transparent, #000 46px); mask-image: linear-gradient(90deg, transparent, #000 46px); }
+.dp-pfeil { position: absolute; top: calc(50% - 30px); z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #fff; color: #4B2FC2; font: 900 30px/1 Nunito, sans-serif; box-shadow: 0 4px 0 rgba(35,26,79,.25), 0 6px 14px rgba(20,10,60,.25); cursor: pointer; display: grid; place-items: center; padding-bottom: 4px; }
+.dp-pfeil.links { left: -6px; } .dp-pfeil.rechts { right: -6px; }
+.dp-pfeil:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(35,26,79,.25); }
