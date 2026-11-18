@@ -3201,3 +3201,72 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 .rak-rakete.zurueck { animation: bal-wackeln .45s; }
 @media (max-width: 480px) { .rak-planet { width: 78px; height: 78px; margin: -39px 0 0 -39px; } .rak-planet b { font-size: 30px; } .rak-rakete { font-size: 46px; } }
 @media (prefers-reduced-motion: reduce) { .rak-planet { animation: none; } }
+
+/* Gemeinsame Teile der neuen Denkspiele (Blitz-Abakus, Fehler-Detektiv, Stopp-Perle, Sudoku, Waage, Würfel, Sortierer, Symbol-Blitz, Zahlen-Rennen) */
+.sp { display: grid; gap: 12px; width: min(560px, 100%); margin: 0 auto; }
+.sp-auftrag { text-align: center; padding: 10px 14px; border-radius: 18px; background: rgba(255,255,255,.92); color: #231A4F; font: 800 17px Nunito, sans-serif; box-shadow: 0 4px 0 rgba(35,26,79,.18); }
+.sp-auftrag b { color: #4B2FC2; } .sp-auftrag small { display: block; font-size: 13px; opacity: .75; }
+.sp-auftrag.blink { animation: sp-blink .6s 2; background: #FFF1C4; }
+@keyframes sp-blink { 50% { transform: scale(1.04); } }
+.sp-buehne { position: relative; display: grid; place-items: center; min-height: 220px; border-radius: 26px; background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(235,229,255,.95)); box-shadow: inset 0 0 0 3px rgba(255,255,255,.7), 0 6px 0 rgba(35,26,79,.12); overflow: hidden; }
+.sp-perle { display: inline-block; flex: none; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.75) 0 12%, transparent 13%), radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--f) 65%, #fff), var(--f) 60%, color-mix(in srgb, var(--f) 70%, #000)); box-shadow: inset -3px -4px 6px rgba(0,0,0,.18), 0 3px 4px rgba(35,26,79,.2); }
+.sp-perle.gross { position: absolute; width: 120px; height: 120px; translate: -50% -50%; animation: sp-auf .18s ease-out; }
+@keyframes sp-auf { from { scale: .3; } }
+.sp-optionen { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; } .sp-optionen.drei { grid-template-columns: repeat(3, 1fr); }
+.sp-option { padding: 14px 8px; border: 0; border-radius: 20px; background: #fff; color: #4B2FC2; font: 900 30px 'Baloo 2', Fredoka, sans-serif; box-shadow: 0 5px 0 rgba(35,26,79,.2); cursor: pointer; }
+.sp-option.klein { font: 900 18px Nunito, sans-serif; }
+.sp-option.richtig { background: #2ECC8F; color: #fff; } .sp-option.falsch { background: #FF4D6D; color: #fff; animation: bal-wackeln .45s; }
+.sp-option:disabled { cursor: default; }
+/* Blitz-Abakus */
+.ba-buehne { min-height: 260px; } .ba-abakus.blitz { animation: sp-auf .2s ease-out; } .ba-frage { font: 900 110px 'Baloo 2', Fredoka, sans-serif; color: #C9BEF5; }
+/* Fehler-Detektiv */
+.fd-paar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fd-bild { display: grid; gap: 4px; padding: 8px; border-radius: 18px; background: #fff; box-shadow: 0 4px 0 rgba(35,26,79,.15); }
+.fd-bild.rechts { background: #FFF8E1; }
+.fd-zelle { aspect-ratio: 1; display: grid; place-items: center; border: 0; padding: 0; border-radius: 10px; background: #F3F0FF; cursor: pointer; }
+.fd-zelle i { width: 76%; height: 76%; border-radius: 50%; box-shadow: inset -2px -3px 5px rgba(0,0,0,.2); }
+.fd-zelle.gefunden { box-shadow: 0 0 0 4px #2ECC8F; background: #DDF8EC; } .fd-zelle.falsch { box-shadow: 0 0 0 4px #FF4D6D; animation: bal-wackeln .35s; }
+/* Stopp-Perle */
+.sp-flaeche { width: 100%; min-height: 320px; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.sp-flaeche.gut { background: linear-gradient(180deg, #E5FBF1, #C8F3DF); } .sp-flaeche.schlecht { background: linear-gradient(180deg, #FFE5EA, #FFC9D3); }
+.sp-bereit { font: 800 20px Nunito, sans-serif; color: #4B2FC2; } .sp-zeichen { font: 900 90px 'Baloo 2', Fredoka, sans-serif; color: #2ECC8F; } .sp-zeichen.nein { color: #FF4D6D; }
+/* Perlen-Sudoku */
+.su-feld { display: grid; gap: 0; padding: 8px; border-radius: 20px; background: #fff; box-shadow: 0 5px 0 rgba(35,26,79,.15); width: min(100%, 420px); margin: 0 auto; }
+.su-zelle { aspect-ratio: 1; display: grid; place-items: center; border: 1px solid #E2DDF2; background: #FBFAFF; padding: 0; cursor: pointer; }
+.su-zelle .sp-perle { width: 72%; height: 72%; } .su-zelle:disabled { cursor: default; }
+.su-zelle.re { border-right: 3px solid #4B2FC2; } .su-zelle.un { border-bottom: 3px solid #4B2FC2; }
+.su-zelle.wahl { background: #FFF1C4; box-shadow: inset 0 0 0 3px #FFC531; } .su-zelle.falsch { background: #FFD9E0; animation: bal-wackeln .4s; } .su-zelle.neu .sp-perle { animation: sp-auf .25s ease-out; }
+.su-farben { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.su-farbe { width: 58px; height: 58px; display: grid; place-items: center; border: 0; border-radius: 16px; background: #fff; box-shadow: 0 4px 0 rgba(35,26,79,.2); cursor: pointer; }
+.su-farbe:disabled { opacity: .45; cursor: default; }
+/* Waage-Rätsel */
+.wa-regeln { display: grid; gap: 6px; } .wa-regel { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 8px 12px; border-radius: 16px; background: #FFF8E1; font: 800 15px Nunito, sans-serif; color: #231A4F; }
+.wa-buehne { min-height: 260px; align-content: center; }
+.wa-balken { display: flex; justify-content: space-between; gap: 30px; width: 88%; padding-bottom: 8px; border-bottom: 10px solid #8D6E63; border-radius: 6px; transition: transform .6s cubic-bezier(.3,1.4,.5,1); }
+.wa-schale { flex: 1; display: grid; justify-items: center; }
+.wa-perlen { display: flex; flex-wrap: wrap-reverse; justify-content: center; gap: 3px; min-height: 70px; align-content: flex-start; padding: 0 4px; }
+.wa-teller { width: 100%; height: 14px; border-radius: 0 0 50% 50%; background: #FFC531; box-shadow: 0 3px 0 #C78F00; }
+.wa-fuss { width: 0; height: 0; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 50px solid #8D6E63; margin-top: -2px; }
+/* Würfel-Welt */
+.ww-buehne { min-height: 280px; padding: 14px; } .ww-svg { width: min(100%, 320px); height: auto; }
+/* Schnell-Sortierer */
+.so-buehne { min-height: 240px; } .so-ding { display: grid; place-items: center; transition: transform .22s ease-in, opacity .22s; }
+.so-ding b { display: grid; place-items: center; width: 120px; height: 120px; border-radius: 30px; background: #4B2FC2; color: #fff; font: 900 60px 'Baloo 2', Fredoka, sans-serif; box-shadow: 0 6px 0 #2E1B85; }
+.so-ding.weg-links { transform: translateX(-160%) rotate(-20deg); opacity: 0; } .so-ding.weg-rechts { transform: translateX(160%) rotate(20deg); opacity: 0; }
+.so-ding.falsch { transform: none; opacity: 1; animation: bal-wackeln .45s; }
+.so-koerbe { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.so-korb { padding: 20px 8px; border: 0; border-radius: 22px; background: #fff; color: #4B2FC2; font: 900 18px Nunito, sans-serif; box-shadow: 0 6px 0 rgba(35,26,79,.22); cursor: pointer; }
+.so-korb:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(35,26,79,.22); }
+/* Symbol-Blitz */
+.sy-vorbild { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; padding: 10px; border-radius: 20px; background: #fff; font: 800 18px Nunito, sans-serif; color: #231A4F; box-shadow: 0 4px 0 rgba(35,26,79,.15); }
+.sy-vorbild b { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 18px; background: #FFF1C4; font-size: 48px; line-height: 1; color: #4B2FC2; }
+.sy-vorbild b.weg { color: #C9BEF5; } .sy-vorbild small { flex-basis: 100%; text-align: center; font-size: 13px; opacity: .7; }
+.sy-feld { display: grid; gap: 8px; }
+.sy-zelle { aspect-ratio: 1; border: 0; border-radius: 18px; background: #fff; font-size: 40px; line-height: 1; color: #231A4F; box-shadow: 0 4px 0 rgba(35,26,79,.18); cursor: pointer; }
+.sy-zelle.richtig { background: #2ECC8F; color: #fff; } .sy-zelle.falsch { background: #FF4D6D; color: #fff; animation: bal-wackeln .35s; }
+/* Zahlen-Rennen */
+.zr-naechste { display: inline-grid; place-items: center; min-width: 40px; padding: 0 8px; border-radius: 12px; background: #FFC531; color: #231A4F !important; font: 900 22px 'Baloo 2', Fredoka, sans-serif; }
+.zr-uhr { margin-left: 8px; opacity: .7; font-size: 14px; }
+.zr-feld { display: grid; gap: 7px; }
+.zr-zelle { aspect-ratio: 1; border: 0; border-radius: 16px; background: #fff; color: #4B2FC2; font: 900 28px 'Baloo 2', Fredoka, sans-serif; box-shadow: 0 4px 0 rgba(35,26,79,.18); cursor: pointer; }
+.zr-zelle.weg { background: #DDF8EC; color: #9FD9BE; box-shadow: none; } .zr-zelle.falsch { background: #FF4D6D; color: #fff; animation: bal-wackeln .35s; }

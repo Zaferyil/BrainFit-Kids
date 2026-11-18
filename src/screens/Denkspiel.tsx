@@ -1,5 +1,14 @@
 import { stufeNr } from '../lib/klasse'
 import { BallonReihe } from '../games/BallonReihe'
+import { BlitzAbakus } from '../games/BlitzAbakus'
+import { FehlerDetektiv } from '../games/FehlerDetektiv'
+import { StoppPerle } from '../games/StoppPerle'
+import { PerlenSudoku } from '../games/PerlenSudoku'
+import { WaageRaetsel } from '../games/WaageRaetsel'
+import { WuerfelWelt } from '../games/WuerfelWelt'
+import { SchnellSortierer } from '../games/SchnellSortierer'
+import { SymbolBlitz } from '../games/SymbolBlitz'
+import { ZahlenRennen } from '../games/ZahlenRennen'
 import { RaketenFlug } from '../games/RaketenFlug'
 import { SpiegelPerlen } from '../games/SpiegelPerlen'
 import { PerlenTangram } from '../games/PerlenTangram'
@@ -54,6 +63,15 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   labyrinth: LabyrinthPlaner,
   ballons: BallonReihe,
   rakete: RaketenFlug,
+  blitzabakus: BlitzAbakus,
+  detektiv: FehlerDetektiv,
+  stopp: StoppPerle,
+  sudoku: PerlenSudoku,
+  waage: WaageRaetsel,
+  wuerfel: WuerfelWelt,
+  sortierer: SchnellSortierer,
+  symbol: SymbolBlitz,
+  rennen: ZahlenRennen,
 }
 
 
