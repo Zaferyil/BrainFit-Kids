@@ -12,7 +12,7 @@ import { Funkeln } from './Anmelden'
 import { SpielBild } from '../components/SpielBild'
 
 // Spiele mit echtem Vorschaubild (Bildschirmfoto aus dem Spiel, public/spiele)
-const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich', 'sortieren', 'blasen', 'spiegel', 'regel', 'tangram', 'labyrinth'])
+const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich', 'sortieren', 'blasen', 'spiegel', 'regel', 'tangram', 'labyrinth', 'ballons', 'rakete', 'blitzabakus', 'detektiv', 'stopp', 'sudoku', 'waage', 'wuerfel', 'sortierer', 'symbol', 'rennen'])
 
 // kräftige Farben je Kategorie (wie die früheren Kacheln): Verlauf, Rand-Schatten, Schrift
 const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
