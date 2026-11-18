@@ -41,7 +41,7 @@ function Reihe({ alle, children }: { alle: boolean; children: ReactNode }) {
 }
 
 // Spiele mit echtem Vorschaubild (Bildschirmfoto aus dem Spiel, public/spiele)
-const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich', 'sortieren', 'blasen', 'spiegel', 'regel', 'tangram', 'labyrinth', 'ballons', 'rakete', 'blitzabakus', 'detektiv', 'stopp', 'sudoku', 'waage', 'wuerfel', 'sortierer', 'symbol', 'rennen'])
+const BILDER = new Set(['abakusrechnen', 'sorobankarten', 'schnellzaehlen', 'memory', 'kette', 'bildermerken', 'zahlenmerken', 'jagd', 'farbwort', 'muster', 'vergleich', 'sortieren', 'blasen', 'spiegel', 'regel', 'tangram', 'labyrinth', 'ballons', 'rakete', 'blitzabakus', 'detektiv', 'stopp', 'sudoku', 'waage', 'wuerfel', 'sortierer', 'symbol', 'rennen', 'drehen', 'bauplan', 'pfeile', 'tagnacht', 'schalter'])
 
 // kräftige Farben je Kategorie (wie die früheren Kacheln): Verlauf, Rand-Schatten, Schrift
 const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
@@ -56,7 +56,7 @@ const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
 
 // Denkspiele: oben das Spiel des Tages, darunter die Spiele nach Kategorien (= Bereiche im Lernbericht).
 
-const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff', bildermerken: 'image', abakusrechnen: 'plus', sorobankarten: 'bolt', ballons: 'target', rakete: 'bolt', blitzabakus: 'bolt', detektiv: 'search', stopp: 'target', sudoku: 'bulb', waage: 'bars', wuerfel: 'image', sortierer: 'refresh', symbol: 'eyeoff', rennen: 'clock' }
+const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff', bildermerken: 'image', abakusrechnen: 'plus', sorobankarten: 'bolt', ballons: 'target', rakete: 'bolt', blitzabakus: 'bolt', detektiv: 'search', stopp: 'target', sudoku: 'bulb', waage: 'bars', wuerfel: 'image', sortierer: 'refresh', symbol: 'eyeoff', rennen: 'clock', drehen: 'refresh', bauplan: 'image', pfeile: 'refresh', tagnacht: 'sparkle', schalter: 'bars' }
 
 
 export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () => void }) {

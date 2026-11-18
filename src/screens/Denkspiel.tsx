@@ -1,5 +1,10 @@
 import { stufeNr } from '../lib/klasse'
 import { BallonReihe } from '../games/BallonReihe'
+import { DrehMeister } from '../games/DrehMeister'
+import { MusterKopierer } from '../games/MusterKopierer'
+import { PfeilChaos } from '../games/PfeilChaos'
+import { TagNacht } from '../games/TagNacht'
+import { ZahlenSchalter } from '../games/ZahlenSchalter'
 import { BlitzAbakus } from '../games/BlitzAbakus'
 import { FehlerDetektiv } from '../games/FehlerDetektiv'
 import { StoppPerle } from '../games/StoppPerle'
@@ -72,6 +77,11 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   sortierer: SchnellSortierer,
   symbol: SymbolBlitz,
   rennen: ZahlenRennen,
+  drehen: DrehMeister,
+  bauplan: MusterKopierer,
+  pfeile: PfeilChaos,
+  tagnacht: TagNacht,
+  schalter: ZahlenSchalter,
 }
 
 

@@ -30,7 +30,8 @@ const KATEGORIE_VON: Record<string, Kategorie> = {
   abakusrechnen: 'rechnen', blasen: 'rechnen', ballons: 'rechnen', rakete: 'rechnen',
   sorobankarten: 'tempo', schnellzaehlen: 'tempo', sortierer: 'tempo', symbol: 'tempo', rennen: 'tempo',
   tangram: 'raum', spiegel: 'raum', wuerfel: 'raum',
-  regel: 'flex', labyrinth: 'flex',
+  regel: 'flex', labyrinth: 'flex', pfeile: 'flex', tagnacht: 'flex', schalter: 'flex',
+  drehen: 'raum', bauplan: 'raum',
 }
 export const kategorieVon = (spielId: string): Kategorie => KATEGORIE_VON[spielId] ?? 'aufmerksamkeit'
 /** frühere Aktivitäts-Schlüssel (alte Bereiche) auf die neuen Kategorien abbilden */
@@ -68,6 +69,11 @@ export const GAMES: GameMeta[] = [
   { id: 'farbwort', name: 'Farb-Wort', area: 'flex', minTier: 'B', text: 'Tippe die Farbe, nicht das Wort', ready: true },
   { id: 'labyrinth', name: 'Labyrinth-Planer', area: 'flex', minTier: 'A', text: 'Plane den Weg', ready: true },
   { id: 'ballons', name: 'Ballon-Reihe', area: 'logik', minTier: 'A', text: 'Zahlen der Reihe nach platzen lassen', ready: true },
+  { id: 'drehen', name: 'Dreh-Meister', area: 'raum', minTier: 'A', text: 'Welche Form ist nur gedreht?', ready: true },
+  { id: 'bauplan', name: 'Muster-Kopierer', area: 'raum', minTier: 'A', text: 'Baue den Plan genau nach', ready: true },
+  { id: 'pfeile', name: 'Pfeil-Chaos', area: 'flex', minTier: 'A', text: 'Grün gleich, Rot andersrum', ready: true },
+  { id: 'tagnacht', name: 'Tag und Nacht', area: 'flex', minTier: 'A', text: 'Tippe das Gegenteil', ready: true },
+  { id: 'schalter', name: 'Zahlen-Schalter', area: 'flex', minTier: 'A', text: 'Die Farbe sagt die Frage', ready: true },
   { id: 'rakete', name: 'Raketen-Flug', area: 'logik', minTier: 'A', text: 'Zuhören und zum richtigen Planeten fliegen', ready: true },
 ]
 
