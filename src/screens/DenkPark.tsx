@@ -27,7 +27,7 @@ const FARBE: Record<string, { bg: string; rand: string; ink: string }> = {
 
 // Denkspiele: oben das Spiel des Tages, darunter die Spiele nach Kategorien (= Bereiche im Lernbericht).
 
-const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff', bildermerken: 'image', abakusrechnen: 'plus', sorobankarten: 'bolt', ballons: 'target' }
+const SYMBOL: Record<string, IconName> = { memory: 'brain', kette: 'pearl', jagd: 'search', muster: 'bulb', zahlenmerken: 'clock', vergleich: 'bars', schnellzaehlen: 'bolt', farbwort: 'eyeoff', bildermerken: 'image', abakusrechnen: 'plus', sorobankarten: 'bolt', ballons: 'target', rakete: 'bolt' }
 
 
 export function DenkPark({ kid }: { kid: Kid; progress: Progress; onLogout: () => void }) {

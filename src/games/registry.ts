@@ -27,7 +27,7 @@ const KATEGORIE_VON: Record<string, Kategorie> = {
   memory: 'gedaechtnis', kette: 'gedaechtnis', bildermerken: 'gedaechtnis', zahlenmerken: 'gedaechtnis', blitzabakus: 'gedaechtnis',
   jagd: 'konzentration', detektiv: 'konzentration', stopp: 'konzentration', farbwort: 'konzentration',
   muster: 'aufmerksamkeit', sortieren: 'aufmerksamkeit', sudoku: 'aufmerksamkeit', waage: 'aufmerksamkeit', vergleich: 'aufmerksamkeit',
-  abakusrechnen: 'rechnen', blasen: 'rechnen', ballons: 'rechnen',
+  abakusrechnen: 'rechnen', blasen: 'rechnen', ballons: 'rechnen', rakete: 'rechnen',
   sorobankarten: 'tempo', schnellzaehlen: 'tempo', sortierer: 'tempo', symbol: 'tempo', rennen: 'tempo',
   tangram: 'raum', spiegel: 'raum', wuerfel: 'raum',
   regel: 'flex', labyrinth: 'flex',
@@ -68,6 +68,7 @@ export const GAMES: GameMeta[] = [
   { id: 'farbwort', name: 'Farb-Wort', area: 'flex', minTier: 'B', text: 'Tippe die Farbe, nicht das Wort', ready: true },
   { id: 'labyrinth', name: 'Labyrinth-Planer', area: 'flex', minTier: 'A', text: 'Plane den Weg', ready: true },
   { id: 'ballons', name: 'Ballon-Reihe', area: 'logik', minTier: 'A', text: 'Zahlen der Reihe nach platzen lassen', ready: true },
+  { id: 'rakete', name: 'Raketen-Flug', area: 'logik', minTier: 'A', text: 'Zuhören und zum richtigen Planeten fliegen', ready: true },
 ]
 
 export const findGame = (id: string) => GAMES.find((g) => g.id === id)

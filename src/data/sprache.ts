@@ -102,6 +102,7 @@ export const GAME_INTRO: Record<string, string> = {
   sorobankarten: 'Lies die Zahl auf der Karte und finde schnell den Soroban, der genau diese Zahl zeigt!',
   bildermerken: 'Schau dir die Karten genau an und merke sie dir. Danach tippst du auf die Karte, die du gesehen hast!',
   blasen: 'Tippe zwei Blasen, die zusammen die Zielzahl ergeben – schnell, bevor sie oben ankommen!',
+  rakete: 'Hör gut zu! Ich sage dir eine Zahl oder eine Aufgabe. Tippe den richtigen Planeten an – dann fliegt deine Rakete hin.',
   ballons: 'Lass die Ballons der Reihe nach platzen – von der kleinsten zur größten Zahl. Lies genau: manchmal geht es von groß nach klein!',
   spiegel: 'Lege auf der anderen Seite das Spiegelbild. Tippe die Felder an!',
   tangram: 'Fülle die graue Form mit allen Teilen!',

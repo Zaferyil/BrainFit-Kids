@@ -1,5 +1,6 @@
 import { stufeNr } from '../lib/klasse'
 import { BallonReihe } from '../games/BallonReihe'
+import { RaketenFlug } from '../games/RaketenFlug'
 import { SpiegelPerlen } from '../games/SpiegelPerlen'
 import { PerlenTangram } from '../games/PerlenTangram'
 import { LabyrinthPlaner } from '../games/LabyrinthPlaner'
@@ -52,6 +53,7 @@ const COMPONENTS: Record<string, (p: GameProps) => React.ReactElement> = {
   tangram: PerlenTangram,
   labyrinth: LabyrinthPlaner,
   ballons: BallonReihe,
+  rakete: RaketenFlug,
 }
 
 
