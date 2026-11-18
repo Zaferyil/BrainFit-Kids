@@ -3212,7 +3212,7 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 .sp-perle { display: inline-block; flex: none; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.75) 0 12%, transparent 13%), radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--f) 65%, #fff), var(--f) 60%, color-mix(in srgb, var(--f) 70%, #000)); box-shadow: inset -3px -4px 6px rgba(0,0,0,.18), 0 3px 4px rgba(35,26,79,.2); }
 .sp-perle.gross { position: absolute; width: 120px; height: 120px; translate: -50% -50%; animation: sp-auf .18s ease-out; }
 @keyframes sp-auf { from { scale: .3; } }
-.sp-optionen { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; } .sp-optionen.drei { grid-template-columns: repeat(3, 1fr); }
+.sp-optionen { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; } .sp-optionen.drei { grid-template-columns: repeat(3, 1fr); } .sp-optionen.zwei { grid-template-columns: repeat(2, minmax(0, 200px)); justify-content: center; }
 .sp-option { padding: 14px 8px; border: 0; border-radius: 20px; background: #fff; color: #4B2FC2; font: 900 30px 'Baloo 2', Fredoka, sans-serif; box-shadow: 0 5px 0 rgba(35,26,79,.2); cursor: pointer; }
 .sp-option.klein { font: 900 18px Nunito, sans-serif; }
 .sp-option.richtig { background: #2ECC8F; color: #fff; } .sp-option.falsch { background: #FF4D6D; color: #fff; animation: bal-wackeln .45s; }

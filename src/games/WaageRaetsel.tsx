@@ -87,7 +87,7 @@ export function WaageRaetsel({ level, onFinish, rounds = RUNDEN }: GameProps) {
         </div>
         <div className="wa-fuss" />
       </div>
-      <div className="sp-optionen drei">
+      <div className={'sp-optionen ' + (stufe >= 8 ? 'drei' : 'zwei')}>
         {([['links', '⬅️ Links'], ['gleich', '⚖️ Gleich'], ['rechts', 'Rechts ➡️']] as const).filter(([w]) => w !== 'gleich' || stufe >= 8).map(([w, t]) => (
           <button key={w} type="button" disabled={!!wahl} onClick={() => antworte(w)}
             className={'sp-option klein' + (wahl && w === a.loesung ? ' richtig' : wahl === w ? ' falsch' : '')}>{t}</button>
