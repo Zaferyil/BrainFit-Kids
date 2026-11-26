@@ -16,7 +16,7 @@ const STUFEN = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klass
 const ART: Record<string, string> = { voranmeldung: 'Voranmeldung (Interesse)', schnupper: 'Schnupperstunde', anmeldung: 'Kursanmeldung' }
 const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €'
 
-type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string }
+type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string; mindest: number }
 
 async function mail(to: string, subject: string, html: string, replyTo = 'info@mentalmath.at') {
   const r = await fetch('https://api.resend.com/emails', {
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
 
     // Preise und Stripe-Links aus den Website-Einstellungen (Admin → Website)
     const { data: w } = await db.from('website').select('daten').eq('id', 1).maybeSingle()
-    const v = { monat: 249, jahr: 0, schnupper: 49, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '', ...((w?.daten as { vorort?: Partial<VorOrt> } | null)?.vorort ?? {}) } as VorOrt
+    const v = { monat: 249, jahr: 0, schnupper: 49, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '', mindest: 12, ...((w?.daten as { vorort?: Partial<VorOrt> } | null)?.vorort ?? {}) } as VorOrt
     if (a.takt === 'jahr' && !(v.jahr > 0)) a.takt = 'monat'
     const betrag = art === 'schnupper' ? v.schnupper : art === 'anmeldung' ? (a.takt === 'jahr' ? v.jahr : v.monat) : null
 
@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
 
     const stufe = a.kind_stufe !== null ? STUFEN[a.kind_stufe] : '–'
     const geburt = a.kind_geburt ? new Date(a.kind_geburt).toLocaleDateString('de-AT') : '–'
-    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat – wird jeden Monat automatisch abgebucht`) : ''
+    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat${v.mindest > 0 ? ` (Mindestlaufzeit ${v.mindest} Monate)` : ''} – wird jeden Monat automatisch abgebucht`) : ''
     const knopf = (href: string, text: string) => `<a href="${href}" style="background:#5B47D6;color:#fff;text-decoration:none;font-weight:bold;padding:13px 26px;border-radius:30px;display:inline-block">${text}</a>`
     const kopf = `<p style="text-align:center;margin:0 0 8px"><img src="${APP}/logo.png" alt="BrainFit Kids" width="200" style="max-width:200px;height:auto"></p>`
     const titel = art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : art === 'schnupper' ? 'Ihre Schnupperstunde ist vorgemerkt! 🎉' : 'Ihre Anmeldung ist eingegangen! 🎉'

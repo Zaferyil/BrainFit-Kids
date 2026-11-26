@@ -128,6 +128,7 @@ export function AdminWebsite() {
           <label>Preis / Monat (€)<input inputMode="decimal" value={d.vorort.monat} onChange={(x) => vo('monat', zahl(x.target.value))} /></label>
           <label>Preis / Jahr (€)<input inputMode="decimal" value={d.vorort.jahr || ''} placeholder="0 = aus" onChange={(x) => vo('jahr', zahl(x.target.value))} /></label>
           <label>Schnupperstunde (€)<input inputMode="decimal" value={d.vorort.schnupper || ''} placeholder="0" onChange={(x) => vo('schnupper', zahl(x.target.value))} /></label>
+          <label>Mindestlaufzeit (Monate)<input inputMode="numeric" value={d.vorort.mindest || ''} placeholder="0 = keine" onChange={(x) => vo('mindest', Math.round(zahl(x.target.value)))} /></label>
         </div>
         <label>Stripe-Link monatlich (Abo)<input value={d.vorort.linkMonat} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkMonat', x.target.value.trim())} /></label>
         <label>Stripe-Link jährlich<input value={d.vorort.linkJahr} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkJahr', x.target.value.trim())} /></label>
