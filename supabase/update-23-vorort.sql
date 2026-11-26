@@ -17,6 +17,7 @@ create table if not exists public.vorort_anmeldungen (
   wunschzeiten text,
   nachricht text,
   takt text check (takt in ('monat', 'jahr')),
+  wo text check (wo in ('vorort', 'online')),
   betrag numeric,
   status text not null default 'neu',
   notiz text,

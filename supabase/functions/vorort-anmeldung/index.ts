@@ -41,6 +41,7 @@ Deno.serve(async (req) => {
       kind_stufe: Number.isInteger(b.kind_stufe) && b.kind_stufe >= 0 && b.kind_stufe <= 6 ? b.kind_stufe : null,
       wunschzeiten: txt(b.wunschzeiten, 300) || null, nachricht: txt(b.nachricht, 1000) || null,
       takt: art === 'anmeldung' ? (b.takt === 'jahr' ? 'jahr' : 'monat') : null,
+      wo: art === 'schnupper' ? (b.wo === 'online' ? 'online' : 'vorort') : null,
     }
     if (!a.eltern_vorname || !a.eltern_nachname) return antwort({ fehler: 'Bitte Vor- und Nachnamen eingeben.' }, 400)
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(a.mail)) return antwort({ fehler: 'Bitte eine gültige E-Mail-Adresse eingeben.' }, 400)
@@ -72,16 +73,17 @@ Deno.serve(async (req) => {
     const text = art === 'voranmeldung'
       ? `<p>wir haben Ihre Voranmeldung für den <b>BrainFit Kids Vor-Ort-Kurs in Linz</b> erhalten. Sobald ein Kurstermin für ${esc(a.kind_vorname)} feststeht, melden wir uns persönlich bei Ihnen.</p>`
       : art === 'schnupper'
-        ? `<p>wir haben Ihre Anmeldung zur <b>Schnupperstunde</b> für ${esc(a.kind_vorname)} erhalten. Wir melden uns mit dem genauen Termin bei Ihnen.</p>${zahlung ? `<p>Falls Sie die Schnupperstunde noch nicht bezahlt haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}`
+        ? `<p>wir haben Ihre Anmeldung zur <b>Schnupperstunde</b> (${a.wo === 'online' ? 'online' : 'vor Ort in ' + esc(v.adresse || 'Linz')}) für ${esc(a.kind_vorname)} erhalten. Wir melden uns mit dem genauen Termin${a.wo === 'online' ? ' und dem Link zum Videoanruf' : ''} bei Ihnen.</p>${zahlung ? `<p>Falls Sie die Schnupperstunde noch nicht bezahlt haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}`
         : `<p>vielen Dank für die Anmeldung von <b>${esc(a.kind_vorname)} ${esc(a.kind_nachname)}</b> zum <b>Vor-Ort-Kurs in Linz</b>!</p><p>Gewählte Zahlungsweise: <b>${esc(preisText)}</b>.</p>${zahlung ? `<p>Falls Sie die Zahlung noch nicht abgeschlossen haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Zahlung abschließen')}</p>` : '<p>Wir schicken Ihnen die Zahlungsinformationen in Kürze.</p>'}<p>Wir melden uns mit dem Kursbeginn und allen Details.</p>`
     const elternHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F;line-height:1.55">${kopf}
       <h1 style="color:#5B47D6;text-align:center;margin:0 0 14px;font-size:24px">${titel}</h1>
       <p>Hallo ${esc(a.eltern_vorname)},</p>${text}
-      ${v.adresse || v.zeiten ? `<div style="background:#F3F0FF;border-radius:16px;padding:14px 18px;margin:16px 0">${v.adresse ? `📍 <b>Kursort:</b> ${esc(v.adresse)}<br>` : ''}${v.zeiten ? `🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}</div>` : ''}
+      ${(v.adresse || v.zeiten) && a.wo !== 'online' ? `<div style="background:#F3F0FF;border-radius:16px;padding:14px 18px;margin:16px 0">${v.adresse ? `📍 <b>Kursort:</b> ${esc(v.adresse)}<br>` : ''}${v.zeiten ? `🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}</div>` : ''}
       <p>Fragen? Antworten Sie einfach auf diese E-Mail.</p>
       <p>Herzliche Grüße<br><b>Ihr BrainFit Kids Team</b></p></div>`
     const zeilen: [string, string][] = [['Art', ART[art]], ['Eltern', `${a.eltern_vorname} ${a.eltern_nachname}`], ['E-Mail', a.mail], ['Telefon', a.telefon],
       ...(a.strasse ? [['Adresse', `${a.strasse}, ${a.plz} ${a.ort}`] as [string, string]] : []),
+      ...(a.wo ? [['Schnupperstunde', a.wo === 'online' ? 'Online' : 'Vor Ort'] as [string, string]] : []),
       ['Kind', `${a.kind_vorname}${a.kind_nachname ? ' ' + a.kind_nachname : ''}`], ['Geburtsdatum', geburt], ['Schulstufe', stufe],
       ...(preisText ? [['Zahlung', preisText] as [string, string]] : []), ...(a.wunschzeiten ? [['Wunschzeiten', a.wunschzeiten] as [string, string]] : []), ...(a.nachricht ? [['Nachricht', a.nachricht] as [string, string]] : [])]
     const adminHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;color:#231A4F;line-height:1.5"><h2 style="color:#5B47D6">📝 Neue ${esc(ART[art])} – Vor-Ort-Kurs Linz</h2>

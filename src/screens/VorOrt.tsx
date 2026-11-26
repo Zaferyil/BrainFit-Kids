@@ -12,7 +12,7 @@ const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n
 
 const ARTEN: { id: Art; emoji: string; titel: string; text: string }[] = [
   { id: 'voranmeldung', emoji: '💌', titel: 'Voranmeldung', text: 'Unverbindlich Interesse anmelden – wir melden uns, sobald ein Kurs startet.' },
-  { id: 'schnupper', emoji: '🧮', titel: 'Schnupperstunde', text: 'Eine Probestunde vor Ort: Ihr Kind lernt den Abakus kennen.' },
+  { id: 'schnupper', emoji: '🧮', titel: 'Schnupperstunde', text: 'Eine Probestunde vor Ort oder online: Ihr Kind lernt den Abakus kennen.' },
   { id: 'anmeldung', emoji: '🎓', titel: 'Kursanmeldung', text: 'Verbindlich zum Vor-Ort-Kurs anmelden – monatlich oder jährlich zahlen.' },
 ]
 
@@ -21,6 +21,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
   const [v, setV] = useState<VorOrtDaten>(STANDARD.vorort)
   const [f, setF] = useState({ eltern_vorname: '', eltern_nachname: '', mail: '', telefon: '', strasse: '', plz: '', ort: '', kind_vorname: '', kind_nachname: '', kind_geburt: '', kind_stufe: '', wunschzeiten: '', nachricht: '' })
   const [takt, setTakt] = useState<'monat' | 'jahr'>('monat')
+  const [wo, setWo] = useState<'vorort' | 'online'>('vorort')
   const [ok, setOk] = useState(false)
   const [agb, setAgb] = useState(false)
   const [status, setStatus] = useState<'' | 'senden' | 'fertig'>('')
@@ -34,7 +35,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
     e.preventDefault(); if (!art) return
     setFehler(''); setStatus('senden')
     const { data, error } = await supabase.functions.invoke('vorort-anmeldung', {
-      body: { art, ...f, kind_stufe: f.kind_stufe === '' ? null : Number(f.kind_stufe), takt, zustimmung: ok, agb },
+      body: { art, ...f, kind_stufe: f.kind_stufe === '' ? null : Number(f.kind_stufe), takt, wo: art === 'schnupper' ? wo : null, zustimmung: ok, agb },
     })
     if (error || data?.fehler) { setFehler(data?.fehler ?? 'Das hat leider nicht geklappt. Bitte später erneut versuchen.'); setStatus(''); return }
     setZahlung(data?.zahlung ?? null); setStatus('fertig')
@@ -109,6 +110,12 @@ export function VorOrt({ wahl }: { wahl?: string }) {
                   <span><b>Monatlich · {euro(v.monat)} / Monat</b><small>Wird jeden Monat automatisch von Ihrer Karte bzw. Ihrem Konto abgebucht (SEPA-Lastschrift oder Karte).</small></span></label>
                 {jahrMoeglich && <label className={'vo-takt' + (takt === 'jahr' ? ' on' : '')}><input type="radio" name="takt" checked={takt === 'jahr'} onChange={() => setTakt('jahr')} />
                   <span><b>Jährlich · {euro(v.jahr)} / Jahr</b><small>Einmal im Jahr bezahlen{v.jahr < v.monat * 12 ? ` – Sie sparen ${euro(v.monat * 12 - v.jahr)}` : ''}.</small></span></label>}
+              </fieldset>}
+              {art === 'schnupper' && <fieldset className="vo-gruppe"><legend>Wo soll die Schnupperstunde stattfinden?</legend>
+                <label className={'vo-takt' + (wo === 'vorort' ? ' on' : '')}><input type="radio" name="wo" checked={wo === 'vorort'} onChange={() => setWo('vorort')} />
+                  <span><b>📍 Vor Ort in {v.adresse || 'Linz'}</b><small>Ihr Kind kommt zu uns in den Kurs.</small></span></label>
+                <label className={'vo-takt' + (wo === 'online' ? ' on' : '')}><input type="radio" name="wo" checked={wo === 'online'} onChange={() => setWo('online')} />
+                  <span><b>💻 Online</b><small>Per Videoanruf von zu Hause – den Link bekommen Sie per E-Mail.</small></span></label>
               </fieldset>}
               {art === 'schnupper' && v.schnupper > 0 && <p className="vo-preis">Schnupperstunde: <b>{euro(v.schnupper)}</b> (einmalig) – Zahlung im nächsten Schritt.</p>}
 

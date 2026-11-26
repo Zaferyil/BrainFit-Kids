@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabase'
 type A = {
   id: string; art: 'voranmeldung' | 'schnupper' | 'anmeldung'; eltern_vorname: string; eltern_nachname: string; mail: string; telefon: string | null
   strasse: string | null; plz: string | null; ort: string | null; kind_vorname: string; kind_nachname: string | null; kind_geburt: string | null; kind_stufe: number | null
-  wunschzeiten: string | null; nachricht: string | null; takt: 'monat' | 'jahr' | null; betrag: number | null; status: string; notiz: string | null; erstellt: string
+  wunschzeiten: string | null; nachricht: string | null; takt: 'monat' | 'jahr' | null; wo: 'vorort' | 'online' | null; betrag: number | null; status: string; notiz: string | null; erstellt: string
 }
 const SITE = 'https://brainfitkids.mentalmath.at'
 const ART: Record<A['art'], string> = { voranmeldung: '💌 Voranmeldung', schnupper: '🧮 Schnupperstunde', anmeldung: '🎓 Anmeldung' }
@@ -65,7 +65,7 @@ export function AdminVorOrt() {
             <tbody>{gezeigt.map((a) => [
               <tr key={a.id}>
                 <td><button type="button" className="adm-link" onClick={() => setOffen(offen === a.id ? null : a.id)}>{datum(a.erstellt)} {offen === a.id ? '▲' : '▼'}</button></td>
-                <td>{ART[a.art]}</td>
+                <td>{ART[a.art]}{a.wo ? (a.wo === 'online' ? ' · 💻 online' : ' · 📍 vor Ort') : ''}</td>
                 <td><b>{a.kind_vorname} {a.kind_nachname ?? ''}</b>{a.kind_stufe !== null ? ` · ${STUFEN[a.kind_stufe]}` : ''}</td>
                 <td>{a.eltern_vorname} {a.eltern_nachname}<br /><a href={`mailto:${a.mail}`}>{a.mail}</a>{a.telefon ? <> · <a href={`tel:${a.telefon}`}>{a.telefon}</a></> : null}</td>
                 <td>{a.takt ? `${a.betrag ?? '–'} € / ${a.takt === 'jahr' ? 'Jahr' : 'Monat'}` : a.betrag ? `${a.betrag} €` : '–'}</td>
