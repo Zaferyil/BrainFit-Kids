@@ -5,11 +5,14 @@ export type Countdown = { an: boolean; ende: string; titel: string; fuss: string
 export type Popup = { an: boolean; titel: string; text: string; knopf: string; link?: string; code: string; ab: string; bis: string; sekunden: number; bildAn: boolean; bild: string; uhrAn: boolean; uhrEnde: string }
 export type Preis = { monat: number; jahr: number; altMonat: number; altJahr: number; hinweis: string; linkMonat: string; linkJahr: string }
 export type PaketKey = 'basic' | 'plus' | 'premium'
-export type WebsiteDaten = { countdown: Countdown; popup: Popup; preise: Record<PaketKey, Preis> }
+/** Vor-Ort-Kurs (Linz): Preise und Stripe-Links für Schnupperkurs und Anmeldung. Monatlich = Stripe-Abo mit automatischer Abbuchung. */
+export type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string }
+export type WebsiteDaten = { countdown: Countdown; popup: Popup; preise: Record<PaketKey, Preis>; vorort: VorOrt }
 
 export const STANDARD: WebsiteDaten = {
   countdown: { an: true, ende: '2026-11-30T23:59', titel: 'Jetzt Einführungspreis sichern – nur noch kurze Zeit!', fuss: 'Nur für die ersten 50 Familien · noch 37 Plätze', balken: 26 },
   popup: { an: false, titel: '', text: '', knopf: 'Zu den Paketen', code: '', ab: '', bis: '', sekunden: 8, bildAn: false, bild: '', uhrAn: false, uhrEnde: '' },
+  vorort: { monat: 249, jahr: 0, schnupper: 0, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '' },
   preise: {
     basic: { monat: 49, jahr: 490, altMonat: 79, altJahr: 790, hinweis: 'Mindestlaufzeit 12 Monate · Aktionspreis für die ersten 50', linkMonat: 'https://buy.stripe.com/00w7sMafb8SUa6Z9WX9oc00', linkJahr: 'https://buy.stripe.com/aFafZi873glm3IB1qr9oc01' },
     plus: { monat: 79, jahr: 790, altMonat: 109, altJahr: 1090, hinweis: 'Mindestlaufzeit 12 Monate', linkMonat: 'https://buy.stripe.com/8x2dRa1IFfhienfgll9oc02', linkJahr: 'https://buy.stripe.com/dRmcN61IF3yAfrj0mn9oc03' },
@@ -23,7 +26,7 @@ export async function websiteLaden(): Promise<WebsiteDaten> {
   const d = (data?.daten ?? {}) as Partial<WebsiteDaten>
   const preise = { ...STANDARD.preise }
   for (const k of ['basic', 'plus', 'premium'] as PaketKey[]) preise[k] = { ...STANDARD.preise[k], ...d.preise?.[k] }
-  return { countdown: { ...STANDARD.countdown, ...d.countdown }, popup: { ...STANDARD.popup, ...d.popup }, preise }
+  return { countdown: { ...STANDARD.countdown, ...d.countdown }, popup: { ...STANDARD.popup, ...d.popup }, preise, vorort: { ...STANDARD.vorort, ...d.vorort } }
 }
 
 // Bild für das Popup hochladen (Supabase Storage „website“), liefert die öffentliche Adresse

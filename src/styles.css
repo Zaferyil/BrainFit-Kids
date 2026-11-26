@@ -3307,3 +3307,23 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 /* Zahlen-Schalter */
 .zs-buehne { min-height: 210px; } .zs-zahl { display: grid; place-items: center; width: 140px; height: 140px; border-radius: 34px; border: 8px solid; background: #fff; color: #231A4F; font: 900 76px 'Baloo 2', Fredoka, sans-serif; animation: sp-auf .18s ease-out; }
 .so-korb.richtig { background: #2ECC8F; color: #fff !important; } .so-korb.falsch { background: #FF4D6D; color: #fff !important; }
+
+/* Vor-Ort-Kurs: Formulare (/vorort) */
+.vo-info { padding: 10px 14px; border-radius: 14px; background: #F3F0FF; font-weight: 700; }
+.vo-arten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 6px 0 14px; }
+@media (max-width: 640px) { .vo-arten { grid-template-columns: 1fr; } }
+.vo-art { display: grid; gap: 4px; justify-items: start; text-align: left; padding: 14px; border: 0; border-radius: 18px; background: #fff; color: #231A4F; font: inherit; box-shadow: inset 0 0 0 2px #E2DDF2, 0 4px 0 rgba(35,26,79,.12); cursor: pointer; }
+.vo-art b { font-size: 17px; } .vo-art small { color: #6B648F; line-height: 1.35; } .vo-art em { font-style: normal; font-weight: 900; color: #5B47D6; }
+.vo-art.on { box-shadow: inset 0 0 0 3px #5B47D6, 0 4px 0 rgba(91,71,214,.35); background: #F7F5FF; }
+.vo-emoji { font-size: 30px; line-height: 1; }
+.vo-teil { margin: 6px 0 4px; }
+.vo-gruppe { display: grid; gap: 10px; border: 0; margin: 0 0 12px; padding: 14px; border-radius: 18px; background: #FAF9FF; box-shadow: inset 0 0 0 1.5px #E2DDF2; }
+.vo-gruppe legend { padding: 0 6px; font-weight: 900; color: #5B47D6; }
+.vo-gruppe label { display: grid; gap: 4px; font-weight: 700; }
+.vo-gruppe input, .vo-gruppe select, .vo-gruppe textarea { font: inherit; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #D9D3F0; background: #fff; color: #231A4F; width: 100%; box-sizing: border-box; }
+.vo-zwei { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 520px) { .vo-zwei { grid-template-columns: 1fr; } }
+.vo-takt { display: flex !important; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1.5px #E2DDF2; cursor: pointer; }
+.vo-takt input { width: 20px !important; height: 20px; margin-top: 2px; flex: none; }
+.vo-takt span { display: grid; gap: 2px; } .vo-takt small { font-weight: 600; color: #6B648F; }
+.vo-takt.on { box-shadow: inset 0 0 0 2.5px #5B47D6; background: #F7F5FF; }
+.vo-preis { padding: 10px 14px; border-radius: 14px; background: #FFF8E1; }
