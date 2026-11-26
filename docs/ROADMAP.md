@@ -1,9 +1,9 @@
-# BrainFit Kids – Roadmap (Mentale Arithmetik)
+# BrainFit Kids – Roadmap (Mental Arithmetik)
 
 Status-Legende: [ ] offen · [~] in Arbeit · [x] fertig
 Regel: Immer die erste offene Aufgabe von oben nehmen. Nach jeder fertigen Aufgabe hier abhaken und committen.
 
-## 1. Kern der Mentalen Arithmetik (höchste Priorität)
+## 1. Kern der Mental Arithmetik (höchste Priorität)
 - [x] 1.1 Abakus ausblenden – Übergang vom echten zum Kopf-Abakus (voll → blass → nur Rahmen → kein Abakus), automatisch nach Stufe (Station „Kopfrechnen“, src/lib/kopfAbakus.ts: 2× fehlerfrei → weiter, 3+ Fehler → zurück)
 - [x] 1.2 Flash-Anzan-Modus – Zahlen blitzen nacheinander auf, Kind nennt die Summe; Tempo (1,5 s → 0,3 s) und Stellenzahl einstellbar (Seite „Anzan“: 96 Level + 5 Tempi, schnelleres Tempo öffnet sich bei 5/5)
 - [x] 1.3 Gürtel-Prüfung + Urkunde – offizielle Prüfung mit Zeitlimit pro Gürtel, bei Bestehen PDF-Urkunde zum Teilen (#/pruefung/<welt> über Pokale → Gürtel; 10 Aufgaben, 4 min, 8 richtig; Urkunde als PNG – PDF-Variante noch offen)

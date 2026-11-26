@@ -59,7 +59,7 @@ async function urkundeZeichnen(name: string, guertel: string, farbe: string, b: 
   g.strokeStyle = '#FFC531'; g.lineWidth = 6; g.strokeRect(80, 80, 1440, 970)
   g.textAlign = 'center'; g.fillStyle = '#4B2FC2'
   g.font = '900 110px "Baloo 2", "Fredoka", sans-serif'; g.fillText('URKUNDE', 800, 250)
-  g.fillStyle = '#2B2257'; g.font = '600 44px "Nunito", sans-serif'; g.fillText('BrainFit Kids · Mentale Arithmetik mit dem Soroban', 800, 320)
+  g.fillStyle = '#2B2257'; g.font = '600 44px "Nunito", sans-serif'; g.fillText('BrainFit Kids · Mental Arithmetik mit dem Soroban', 800, 320)
   g.font = '600 46px "Nunito", sans-serif'; g.fillText('Hiermit wird bestätigt, dass', 800, 440)
   g.fillStyle = '#FF4D6D'; g.font = '900 120px "Baloo 2", "Fredoka", sans-serif'; g.fillText(name, 800, 580)
   g.fillStyle = '#2B2257'; g.font = '600 46px "Nunito", sans-serif'; g.fillText('die Gürtel-Prüfung bestanden hat:', 800, 670)

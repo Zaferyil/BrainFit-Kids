@@ -65,7 +65,7 @@ export function arbeitsblattDrucken(o: BlattOptionen & { name?: string; mitLoesu
   }
   const seite = (loesung: boolean) => `<section class="seite"><header><div><h1>${loesung ? 'Lösungen' : 'Arbeitsblatt'}</h1><p>${titel}</p></div><div class="kopf">Name: ${o.name ? `<b>${o.name}</b>` : '________________'}<br>Datum: ____________</div></header>
 <div class="raster" style="grid-template-columns:repeat(${cols},1fr)">${liste.map((a, i) => zelle(a, i, loesung)).join('')}</div>
-<footer>BrainFit Kids · Mentale Arithmetik mit dem Soroban · brainfitkids.mentalmath.at</footer></section>`
+<footer>BrainFit Kids · Mental Arithmetik mit dem Soroban · brainfitkids.mentalmath.at</footer></section>`
   const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Arbeitsblatt – ${titel}</title><style>
 @page { size: A4; margin: 14mm; } body { font-family: Nunito, Arial, sans-serif; color: #1B1446; margin: 0; }
 .seite { page-break-after: always; } .seite:last-child { page-break-after: auto; }

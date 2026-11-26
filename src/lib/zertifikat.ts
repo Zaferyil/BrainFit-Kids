@@ -19,7 +19,7 @@ export async function zertifikatZeichnen(name: string, datum = new Date()): Prom
   g.strokeStyle = '#FFC531'; g.lineWidth = 7; g.strokeRect(88, 88, B - 176, H - 176)
   g.textAlign = 'center'
   g.fillStyle = '#4B2FC2'; g.font = '900 120px "Baloo 2", "Fredoka", sans-serif'; g.fillText('ZERTIFIKAT', B / 2, 270)
-  g.fillStyle = '#2B2257'; g.font = '700 46px "Nunito", sans-serif'; g.fillText('BrainFit Kids · Mentale Arithmetik mit dem Soroban', B / 2, 345)
+  g.fillStyle = '#2B2257'; g.font = '700 46px "Nunito", sans-serif'; g.fillText('BrainFit Kids · Mental Arithmetik mit dem Soroban', B / 2, 345)
   g.font = '600 48px "Nunito", sans-serif'; g.fillText('Hiermit wird bestätigt, dass', B / 2, 470)
   g.fillStyle = '#FF4D6D'; g.font = '900 140px "Baloo 2", "Fredoka", sans-serif'; g.fillText(name, B / 2, 625)
   g.fillStyle = '#2B2257'; g.font = '700 50px "Nunito", sans-serif'

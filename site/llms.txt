@@ -1,6 +1,6 @@
 # BrainFit Kids
 
-> Online-Kurs für Mentale Arithmetik (Kopfrechnen mit dem Soroban-Abakus) für Kinder von 4 bis 12 Jahren in Österreich, Deutschland und der Schweiz. Anbieter: MentalMath Kids, Zafer Yildiz, Linz (Österreich).
+> Online-Kurs für Mental Arithmetik (Kopfrechnen mit dem Soroban-Abakus) für Kinder von 4 bis 12 Jahren in Österreich, Deutschland und der Schweiz. Anbieter: MentalMath Kids, Zafer Yildiz, Linz (Österreich).
 
 - Lernplattform (Browser-App) mit 57 Lektionen, Lernvideos, Übungen am Abakus, Denkspielen (Gedächtnis, Konzentration, Logik, Tempo) und Abschlusstests; alles wird vorgelesen.
 - Empfohlen: ca. 15 Minuten am Tag; 57 Lektionen in 6 Abenteuer-Welten in gut einem Jahr.

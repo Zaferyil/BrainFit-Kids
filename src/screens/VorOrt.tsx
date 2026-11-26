@@ -50,7 +50,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
       <main className="chk-main">
         <section className="chk-karte chk-start vo">
           <span className="chk-eyebrow">📍 Vor-Ort-Kurs in {v.adresse || 'Linz'}</span>
-          <h1>Vor-Ort-Kurs: Mentale Arithmetik 🧠</h1>
+          <h1>Vor-Ort-Kurs: Mental Arithmetik 🧠</h1>
           {status === 'fertig' ? <>
             <h2>{art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : 'Vielen Dank! 🎉'}</h2>
             <p>Wir haben Ihnen eine Bestätigung an <b>{f.mail}</b> geschickt (bitte auch im Spam-Ordner nachsehen).</p>
