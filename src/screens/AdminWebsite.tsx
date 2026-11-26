@@ -124,6 +124,7 @@ export function AdminWebsite() {
       <section className="adm-card">
         <div className="adm-web-kopf"><h2>📍 Vor-Ort-Kurs (Linz)</h2></div>
         <p className="adm-muted">Formulare für Eltern: <b>/vorort</b> (Voranmeldung, Schnupperstunde, Anmeldung). Für die <b>monatliche</b> Zahlung in Stripe einen Zahlungslink mit einem <b>wiederkehrenden Preis (monatlich)</b> anlegen – dann bucht Stripe jeden Monat automatisch ab. Jahrespreis 0 = keine jährliche Zahlung anbieten.</p>
+        <div className="adm-preis-karte vo-admin">
         <div className="adm-preis-reihe">
           <label>Preis / Monat (€)<input inputMode="decimal" value={d.vorort.monat} onChange={(x) => vo('monat', zahl(x.target.value))} /></label>
           <label>Preis / Jahr (€)<input inputMode="decimal" value={d.vorort.jahr || ''} placeholder="0 = aus" onChange={(x) => vo('jahr', zahl(x.target.value))} /></label>
@@ -135,6 +136,7 @@ export function AdminWebsite() {
         <label>Stripe-Link Schnupperstunde (einmalig)<input value={d.vorort.linkSchnupper} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkSchnupper', x.target.value.trim())} /></label>
         <label>Kursort / Adresse<input value={d.vorort.adresse} maxLength={120} onChange={(x) => vo('adresse', x.target.value)} /></label>
         <label>Kurszeiten (optional)<input value={d.vorort.zeiten} maxLength={160} placeholder="z. B. Mo und Mi 15–16 Uhr" onChange={(x) => vo('zeiten', x.target.value)} /></label>
+        </div>
       </section>
 
       <div className="adm-web-fuss">
