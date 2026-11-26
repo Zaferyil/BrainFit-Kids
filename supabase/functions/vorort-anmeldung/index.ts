@@ -15,6 +15,7 @@ const txt = (v: unknown, max = 120) => String(v ?? '').trim().slice(0, max)
 const STUFEN = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klasse', '5. Klasse', '6. Klasse']
 const ART: Record<string, string> = { voranmeldung: 'Voranmeldung (Interesse)', schnupper: 'Schnupperstunde', anmeldung: 'Kursanmeldung' }
 const gen = (n: string) => /[sßxz]$/i.test(n) ? n + '’' : n + 's'
+const TAKT = '🗓️ <b>Kurs:</b> 1 × pro Woche, 90 Minuten · In den Schulferien (auch in den Sommerferien) findet kein Kurs statt.'
 const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €'
 
 type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string; mindest: number }
@@ -88,13 +89,14 @@ Deno.serve(async (req) => {
          <p>Mit dem Abakus lernt <b>${kind}</b>, Zahlen im Kopf zu „sehen“. Das stärkt nicht nur das Rechnen, sondern auch <b>Konzentration, Gedächtnis und Selbstvertrauen</b>. Viele Kinder erleben bei uns zum ersten Mal: <i>„Mathe kann ich – und es macht sogar Spaß!“</i></p>
          ${schritte(['✅ Wir haben Ihre Voranmeldung erhalten.', '📞 Sobald ein Kurstermin feststeht, melden wir uns persönlich bei Ihnen.', `🧮 Tipp: Mit einer <b>Schnupperstunde</b> kann ${kind} den Abakus schon vorher kennenlernen.`])}
          <p style="text-align:center;margin:20px 0">${knopf(`${APP}/vorort?art=schnupper`, '🧮 Schnupperstunde buchen')}</p>
-         <p>📍 <b>Kursort:</b> ${ort}${v.zeiten ? `<br>🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}</p>
+         <p>📍 <b>Kursort:</b> ${ort}${v.zeiten ? `<br>🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}<br>${TAKT}</p>
          <p>Wir freuen uns darauf, ${kind} kennenzulernen!</p>`
       : art === 'schnupper'
         ? `<p>vielen Dank für Ihre Anmeldung zur <b>Schnupperstunde</b> (${a.wo === 'online' ? 'online' : 'vor Ort in ' + ort})!</p>
            <p>In dieser Stunde lernt ${kind} den Abakus spielerisch kennen und löst schon die ersten Aufgaben – Sie werden staunen, wie schnell Kinder dabei Erfolgserlebnisse haben. Genau diese kleinen Erfolge machen Kinder stark und neugierig auf mehr.</p>
            ${schritte([...(zahlung ? [`💳 Falls noch nicht erledigt: Schnupperstunde bezahlen (${euro(v.schnupper)}) – Knopf unten.`] : []), `📅 Wir melden uns in Kürze mit dem genauen Termin${a.wo === 'online' ? ' und dem Link zum Videoanruf' : ''}.`, '😊 Ihr Kind braucht nichts mitzubringen – nur gute Laune!'])}
            ${zahlung ? `<p style="text-align:center;margin:20px 0">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}
+           <p style="color:#6B648F;font-size:14px">🗓️ Gut zu wissen: Der Vor-Ort-Kurs findet 1 × pro Woche für 90 Minuten statt – in den Schulferien (auch in den Sommerferien) ist kein Kurs.</p>
            ${angaben}
            <p style="margin-top:20px">Bis bald!</p>`
         : `<p>herzlichen Glückwunsch – <b>${kindVoll}</b> ist jetzt für den Vor-Ort-Kurs in ${ort} angemeldet! Sie haben eine tolle Entscheidung für die Zukunft Ihres Kindes getroffen.</p>
@@ -102,6 +104,7 @@ Deno.serve(async (req) => {
            ${schritte([...(zahlung ? ['💳 Falls noch nicht erledigt: Zahlung abschließen – Knopf unten.'] : ['💳 Die Zahlungsinformationen schicken wir Ihnen in Kürze.']), '📅 Wir melden uns mit dem Kursbeginn, der Gruppe und allen Details.', `📚 Zum Kursstart bekommt ${kind} alles, was dafür nötig ist.`])}
            ${zahlung ? `<p style="text-align:center;margin:20px 0">${knopf(zahlung, '💳 Zahlung abschließen')}</p>` : ''}
            <p><b>Zahlungsweise:</b> ${esc(preisText)}</p>
+           <p>📍 <b>Kursort:</b> ${ort}${v.zeiten ? `<br>🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}<br>${TAKT}</p>
            ${angaben}
            <p style="margin-top:20px">Wir freuen uns sehr auf ${kind}!</p>`
     const elternHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F;line-height:1.55">${kopf}

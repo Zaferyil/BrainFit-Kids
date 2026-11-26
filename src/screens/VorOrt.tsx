@@ -13,7 +13,7 @@ const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n
 const ARTEN: { id: Art; emoji: string; titel: string; text: string }[] = [
   { id: 'voranmeldung', emoji: '💌', titel: 'Voranmeldung', text: 'Unverbindlich Interesse anmelden – wir melden uns, sobald ein Kurs startet.' },
   { id: 'schnupper', emoji: '🧮', titel: 'Schnupperstunde', text: 'Eine Probestunde vor Ort oder online: Ihr Kind lernt den Abakus kennen.' },
-  { id: 'anmeldung', emoji: '🎓', titel: 'Kursanmeldung', text: 'Verbindlich zum Vor-Ort-Kurs anmelden – monatlich oder jährlich zahlen.' },
+  { id: 'anmeldung', emoji: '🎓', titel: 'Kursanmeldung', text: 'Verbindlich zum Vor-Ort-Kurs anmelden – 1 × pro Woche 90 Minuten, monatlich oder jährlich zahlen.' },
 ]
 
 export function VorOrt({ wahl }: { wahl?: string }) {
@@ -53,6 +53,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
             <span className="vo-held-ort">📍 {v.adresse || 'Linz'}</span>
             <h1>Vor-Ort-Kurs:<br />Mental Arithmetik</h1>
             <p>Kopfrechnen mit dem Abakus – für Kinder von 4 bis 12</p>
+            <p className="vo-held-takt">🗓️ <b>1 × pro Woche · 90 Minuten</b><br /><small>In den Schulferien (auch in den Sommerferien) findet kein Kurs statt.</small></p>
             <div className="vo-held-chips">{ARTEN.map((x) => <button key={x.id} type="button" onClick={() => { setArt(x.id); setStatus(''); window.setTimeout(() => document.getElementById('vo-form')?.scrollIntoView({ behavior: 'smooth' }), 50) }}>{x.emoji} {x.titel === 'Kursanmeldung' ? 'Anmeldung' : x.titel}</button>)}</div>
           </div>
           <div className="vo-held-bild"><img src={`${BASE}vorort-bild.webp`} alt="Kind rechnet mit dem Abakus" /></div>
@@ -71,7 +72,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
             <div className="vo-arten">
               {ARTEN.map((x) => (
                 <button key={x.id} type="button" className={'vo-art' + (art === x.id ? ' on' : '')} onClick={() => setArt(x.id)} aria-pressed={art === x.id}>
-                  <span className="vo-emoji">{x.emoji}</span><b>{x.titel}</b><small>{x.id === 'anmeldung' && !jahrMoeglich ? 'Verbindlich zum Vor-Ort-Kurs anmelden – bequem monatlich zahlen.' : x.text}</small>
+                  <span className="vo-emoji">{x.emoji}</span><b>{x.titel}</b><small>{x.id === 'anmeldung' && !jahrMoeglich ? 'Verbindlich zum Vor-Ort-Kurs anmelden – 1 × pro Woche 90 Minuten, bequem monatlich zahlen.' : x.text}</small>
                   {x.id === 'schnupper' && v.schnupper > 0 && <em>{euro(v.schnupper)}</em>}
                   {x.id === 'anmeldung' && <em>{euro(v.monat)} / Monat{v.mindest > 0 ? ` · mind. ${v.mindest} Monate` : ''}</em>}
                 </button>

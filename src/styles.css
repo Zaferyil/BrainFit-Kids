@@ -3398,3 +3398,5 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
   .vo-held-logo img { height: 70px; }
   .vo-held-bild { aspect-ratio: 16 / 10; max-height: none; }
 }
+.vo-held .vo-held-takt { font-size: 17px; font-weight: 700; color: #fff; background: rgba(255,255,255,.1); border-radius: 16px; padding: 10px 14px; margin: 0 0 16px; }
+.vo-held .vo-held-takt small { color: #D8D0FF; font-size: 14px; font-weight: 600; }
