@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
 
     const stufe = a.kind_stufe !== null ? STUFEN[a.kind_stufe] : '–'
     const geburt = a.kind_geburt ? new Date(a.kind_geburt).toLocaleDateString('de-AT') : '–'
-    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat${v.mindest > 0 ? ` · Mindestlaufzeit ${v.mindest} Monate` : ''} · wird monatlich automatisch abgebucht`) : ''
+    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat${v.mindest > 0 ? ` · Mindestlaufzeit ${v.mindest} Monate` : ''} · wird monatlich automatisch abgebucht (auch in den Ferien und Sommerferien)`) : ''
     const knopf = (href: string, text: string) => `<a href="${href}" style="background:#5B47D6;color:#fff;text-decoration:none;font-weight:bold;padding:13px 26px;border-radius:30px;display:inline-block">${text}</a>`
     const kopf = `<p style="text-align:center;margin:0 0 8px"><img src="${APP}/logo.png" alt="BrainFit Kids" width="200" style="max-width:200px;height:auto"></p>`
     const kind = esc(a.kind_vorname)

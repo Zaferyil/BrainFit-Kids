@@ -113,7 +113,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
 
               {art === 'anmeldung' && <fieldset className="vo-gruppe"><legend>Zahlungsweise</legend>
                 <label className={'vo-takt' + (takt === 'monat' ? ' on' : '')}><input type="radio" name="takt" checked={takt === 'monat'} onChange={() => setTakt('monat')} />
-                  <span><b>Monatlich · {euro(v.monat)} / Monat</b><small>{v.mindest > 0 && <><b>Mindestlaufzeit {v.mindest} Monate.</b> </>}Der Beitrag wird jeden Monat automatisch abgebucht.</small></span></label>
+                  <span><b>Monatlich · {euro(v.monat)} / Monat</b><small>{v.mindest > 0 && <><b>Mindestlaufzeit {v.mindest} Monate.</b> </>}Der Beitrag wird jeden Monat automatisch abgebucht – auch in den Ferien und Sommerferien.</small></span></label>
                 {jahrMoeglich && <label className={'vo-takt' + (takt === 'jahr' ? ' on' : '')}><input type="radio" name="takt" checked={takt === 'jahr'} onChange={() => setTakt('jahr')} />
                   <span><b>Jährlich · {euro(v.jahr)} / Jahr</b><small>Einmal im Jahr bezahlen{v.jahr < v.monat * 12 ? ` – Sie sparen ${euro(v.monat * 12 - v.jahr)}` : ''}.</small></span></label>}
               </fieldset>}
@@ -126,7 +126,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
               {art === 'schnupper' && v.schnupper > 0 && <p className="vo-preis">Schnupperstunde: <b>{euro(v.schnupper)}</b> (einmalig) – Zahlung im nächsten Schritt.</p>}
 
               {art === 'anmeldung' && <label className="wb-ok"><input type="checkbox" required checked={agb} onChange={(e) => setAgb(e.target.checked)} />
-                <span>Ich melde mein Kind verbindlich an{takt === 'monat' && v.mindest > 0 ? ` (Mindestlaufzeit ${v.mindest} Monate)` : ''} und akzeptiere die <a href="/agb" target="_blank" rel="noopener">AGB</a>.</span></label>}
+                <span>Ich melde mein Kind verbindlich an{takt === 'monat' && v.mindest > 0 ? ` (Mindestlaufzeit ${v.mindest} Monate)` : ''} und akzeptiere die <a href="/agb" target="_blank" rel="noopener">AGB</a>.{takt === 'monat' ? ' Der Monatsbeitrag wird jeden Monat gezahlt – auch in den Ferien und Sommerferien.' : ''}</span></label>}
               <label className="wb-ok"><input type="checkbox" required checked={ok} onChange={(e) => setOk(e.target.checked)} />
                 <span>Ich bin einverstanden, dass BrainFit Kids meine Angaben für diese Anmeldung speichert und mich dazu kontaktiert (<a href="/datenschutz" target="_blank" rel="noopener">Datenschutz</a>).</span></label>
               {fehler && <p className="wb-fehler">{fehler}</p>}
