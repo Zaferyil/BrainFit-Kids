@@ -14,6 +14,7 @@ const esc = (t: unknown) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&
 const txt = (v: unknown, max = 120) => String(v ?? '').trim().slice(0, max)
 const STUFEN = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klasse', '5. Klasse', '6. Klasse']
 const ART: Record<string, string> = { voranmeldung: 'Voranmeldung (Interesse)', schnupper: 'Schnupperstunde', anmeldung: 'Kursanmeldung' }
+const gen = (n: string) => /[sßxz]$/i.test(n) ? n + '’' : n + 's'
 const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €'
 
 type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string; mindest: number }
@@ -66,33 +67,56 @@ Deno.serve(async (req) => {
 
     const stufe = a.kind_stufe !== null ? STUFEN[a.kind_stufe] : '–'
     const geburt = a.kind_geburt ? new Date(a.kind_geburt).toLocaleDateString('de-AT') : '–'
-    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat${v.mindest > 0 ? ` (Mindestlaufzeit ${v.mindest} Monate)` : ''} – wird jeden Monat automatisch abgebucht`) : ''
+    const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat${v.mindest > 0 ? ` · Mindestlaufzeit ${v.mindest} Monate` : ''} · wird monatlich automatisch abgebucht`) : ''
     const knopf = (href: string, text: string) => `<a href="${href}" style="background:#5B47D6;color:#fff;text-decoration:none;font-weight:bold;padding:13px 26px;border-radius:30px;display:inline-block">${text}</a>`
     const kopf = `<p style="text-align:center;margin:0 0 8px"><img src="${APP}/logo.png" alt="BrainFit Kids" width="200" style="max-width:200px;height:auto"></p>`
-    const titel = art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : art === 'schnupper' ? 'Ihre Schnupperstunde ist vorgemerkt! 🎉' : 'Ihre Anmeldung ist eingegangen! 🎉'
-    const text = art === 'voranmeldung'
-      ? `<p>wir haben Ihre Voranmeldung für den <b>BrainFit Kids Vor-Ort-Kurs in Linz</b> erhalten. Sobald ein Kurstermin für ${esc(a.kind_vorname)} feststeht, melden wir uns persönlich bei Ihnen.</p>`
-      : art === 'schnupper'
-        ? `<p>wir haben Ihre Anmeldung zur <b>Schnupperstunde</b> (${a.wo === 'online' ? 'online' : 'vor Ort in ' + esc(v.adresse || 'Linz')}) für ${esc(a.kind_vorname)} erhalten. Wir melden uns mit dem genauen Termin${a.wo === 'online' ? ' und dem Link zum Videoanruf' : ''} bei Ihnen.</p>${zahlung ? `<p>Falls Sie die Schnupperstunde noch nicht bezahlt haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}`
-        : `<p>vielen Dank für die Anmeldung von <b>${esc(a.kind_vorname)} ${esc(a.kind_nachname)}</b> zum <b>Vor-Ort-Kurs in Linz</b>!</p><p>Gewählte Zahlungsweise: <b>${esc(preisText)}</b>.</p>${zahlung ? `<p>Falls Sie die Zahlung noch nicht abgeschlossen haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Zahlung abschließen')}</p>` : '<p>Wir schicken Ihnen die Zahlungsinformationen in Kürze.</p>'}<p>Wir melden uns mit dem Kursbeginn und allen Details.</p>`
-    const elternHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F;line-height:1.55">${kopf}
-      <h1 style="color:#5B47D6;text-align:center;margin:0 0 14px;font-size:24px">${titel}</h1>
-      <p>Hallo ${esc(a.eltern_vorname)},</p>${text}
-      ${(v.adresse || v.zeiten) && a.wo !== 'online' ? `<div style="background:#F3F0FF;border-radius:16px;padding:14px 18px;margin:16px 0">${v.adresse ? `📍 <b>Kursort:</b> ${esc(v.adresse)}<br>` : ''}${v.zeiten ? `🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}</div>` : ''}
-      <p>Fragen? Antworten Sie einfach auf diese E-Mail.</p>
-      <p>Herzliche Grüße<br><b>Ihr BrainFit Kids Team</b></p></div>`
-    const zeilen: [string, string][] = [['Art', ART[art]], ['Eltern', `${a.eltern_vorname} ${a.eltern_nachname}`], ['E-Mail', a.mail], ['Telefon', a.telefon],
+    const kind = esc(a.kind_vorname)
+    const kindVoll = esc(a.kind_vorname + (a.kind_nachname ? ' ' + a.kind_nachname : ''))
+    const titel = art === 'voranmeldung' ? 'Herzlich willkommen bei BrainFit Kids! 💜' : art === 'schnupper' ? `Bald geht’s los, ${kind}! 🎉` : 'Willkommen in der BrainFit Kids Familie! 🎓'
+    const schritte = (z: string[]) => `<p style="margin:18px 0 6px"><b>So geht es weiter:</b></p><div style="background:#F3F0FF;border-radius:16px;padding:12px 18px">${z.map((x) => `<p style="margin:6px 0">${x}</p>`).join('')}</div>`
+    const angabenZeilen: [string, string][] = [['Eltern', `${a.eltern_vorname} ${a.eltern_nachname}`],
       ...(a.strasse ? [['Adresse', `${a.strasse}, ${a.plz} ${a.ort}`] as [string, string]] : []),
-      ...(a.wo ? [['Schnupperstunde', a.wo === 'online' ? 'Online' : 'Vor Ort'] as [string, string]] : []),
+      ['E-Mail', a.mail], ['Telefon', a.telefon],
       ['Kind', `${a.kind_vorname}${a.kind_nachname ? ' ' + a.kind_nachname : ''}`], ['Geburtsdatum', geburt], ['Schulstufe', stufe],
-      ...(preisText ? [['Zahlung', preisText] as [string, string]] : []), ...(a.wunschzeiten ? [['Wunschzeiten', a.wunschzeiten] as [string, string]] : []), ...(a.nachricht ? [['Nachricht', a.nachricht] as [string, string]] : [])]
+      ...(a.wo ? [['Schnupperstunde', a.wo === 'online' ? 'Online' : `Vor Ort in ${v.adresse || 'Linz'}`] as [string, string]] : []),
+      ...(a.wunschzeiten ? [['Wunschzeiten', a.wunschzeiten] as [string, string]] : []), ...(a.nachricht ? [['Nachricht', a.nachricht] as [string, string]] : []),
+      ...(preisText && art === 'schnupper' ? [['Preis', preisText] as [string, string]] : [])]
+    const angaben = `<p style="margin:22px 0 6px"><b>Ihre Angaben</b></p><table style="border-collapse:collapse;width:100%;font-size:14px">${angabenZeilen.map(([k, x]) => `<tr><td style="padding:5px 12px 5px 0;color:#6B648F;vertical-align:top;border-bottom:1px solid #EEEAF8;white-space:nowrap">${esc(k)}</td><td style="padding:5px 0;border-bottom:1px solid #EEEAF8">${esc(x)}</td></tr>`).join('')}</table>`
+    const ort = esc(v.adresse || 'Linz')
+    const text = art === 'voranmeldung'
+      ? `<p>wie schön, dass Sie sich für unseren Vor-Ort-Kurs in Linz interessieren! Mit Ihrer Voranmeldung haben Sie den ersten Schritt gemacht – und der ist oft der wichtigste.</p>
+         <p>Mit dem Abakus lernt <b>${kind}</b>, Zahlen im Kopf zu „sehen“. Das stärkt nicht nur das Rechnen, sondern auch <b>Konzentration, Gedächtnis und Selbstvertrauen</b>. Viele Kinder erleben bei uns zum ersten Mal: <i>„Mathe kann ich – und es macht sogar Spaß!“</i></p>
+         ${schritte(['✅ Wir haben Ihre Voranmeldung erhalten.', '📞 Sobald ein Kurstermin feststeht, melden wir uns persönlich bei Ihnen.', `🧮 Tipp: Mit einer <b>Schnupperstunde</b> kann ${kind} den Abakus schon vorher kennenlernen.`])}
+         <p style="text-align:center;margin:20px 0">${knopf(`${APP}/vorort?art=schnupper`, '🧮 Schnupperstunde buchen')}</p>
+         <p>📍 <b>Kursort:</b> ${ort}${v.zeiten ? `<br>🕒 <b>Kurszeiten:</b> ${esc(v.zeiten)}` : ''}</p>
+         <p>Wir freuen uns darauf, ${kind} kennenzulernen!</p>`
+      : art === 'schnupper'
+        ? `<p>vielen Dank für Ihre Anmeldung zur <b>Schnupperstunde</b> (${a.wo === 'online' ? 'online' : 'vor Ort in ' + ort})!</p>
+           <p>In dieser Stunde lernt ${kind} den Abakus spielerisch kennen und löst schon die ersten Aufgaben – Sie werden staunen, wie schnell Kinder dabei Erfolgserlebnisse haben. Genau diese kleinen Erfolge machen Kinder stark und neugierig auf mehr.</p>
+           ${schritte([...(zahlung ? [`💳 Falls noch nicht erledigt: Schnupperstunde bezahlen (${euro(v.schnupper)}) – Knopf unten.`] : []), `📅 Wir melden uns in Kürze mit dem genauen Termin${a.wo === 'online' ? ' und dem Link zum Videoanruf' : ''}.`, '😊 Ihr Kind braucht nichts mitzubringen – nur gute Laune!'])}
+           ${zahlung ? `<p style="text-align:center;margin:20px 0">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}
+           ${angaben}
+           <p style="margin-top:20px">Bis bald!</p>`
+        : `<p>herzlichen Glückwunsch – <b>${kindVoll}</b> ist jetzt für den Vor-Ort-Kurs in ${ort} angemeldet! Sie haben eine tolle Entscheidung für die Zukunft Ihres Kindes getroffen.</p>
+           <p>In den kommenden Monaten lernt ${kind} Schritt für Schritt, auch große Aufgaben blitzschnell im Kopf zu rechnen. Dabei wachsen <b>Konzentration, Gedächtnis und Selbstvertrauen</b> mit – Fähigkeiten, die ${kind} in der Schule und im Leben weiterbringen. Wir begleiten ${kind} mit viel Freude auf diesem Weg.</p>
+           ${schritte([...(zahlung ? ['💳 Falls noch nicht erledigt: Zahlung abschließen – Knopf unten.'] : ['💳 Die Zahlungsinformationen schicken wir Ihnen in Kürze.']), '📅 Wir melden uns mit dem Kursbeginn, der Gruppe und allen Details.', `📚 Zum Kursstart bekommt ${kind} alles, was dafür nötig ist.`])}
+           ${zahlung ? `<p style="text-align:center;margin:20px 0">${knopf(zahlung, '💳 Zahlung abschließen')}</p>` : ''}
+           <p><b>Zahlungsweise:</b> ${esc(preisText)}</p>
+           ${angaben}
+           <p style="margin-top:20px">Wir freuen uns sehr auf ${kind}!</p>`
+    const elternHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F;line-height:1.55">${kopf}
+      <h1 style="color:#5B47D6;text-align:center;margin:0 0 16px;font-size:24px">${titel}</h1>
+      <p>Hallo ${esc(a.eltern_vorname)},</p>${text}
+      <p>Herzliche Grüße<br><b>Ihr BrainFit Kids Team</b></p>
+      <p style="color:#8A84A8;font-size:12px;margin-top:24px">Fragen? Antworten Sie einfach auf diese E-Mail.</p></div>`
+    const zeilen: [string, string][] = [['Art', ART[art]], ...angabenZeilen, ...(preisText && art === 'anmeldung' ? [['Zahlung', preisText] as [string, string]] : [])]
     const adminHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;color:#231A4F;line-height:1.5"><h2 style="color:#5B47D6">📝 Neue ${esc(ART[art])} – Vor-Ort-Kurs Linz</h2>
       <table style="border-collapse:collapse">${zeilen.map(([k, x]) => `<tr><td style="padding:4px 12px 4px 0;color:#6B648F;vertical-align:top">${esc(k)}</td><td style="padding:4px 0"><b>${esc(x)}</b></td></tr>`).join('')}</table>
       <p style="color:#6B648F;font-size:13px">${zahlung ? 'Die Eltern wurden zur Stripe-Zahlung weitergeleitet – den Zahlungsstatus sehen Sie in Stripe (Referenz: vorort-' + esc(art) + '-' + esc(neu.id) + ').' : art === 'voranmeldung' ? 'Keine Zahlung (Voranmeldung).' : 'Achtung: Kein Stripe-Link hinterlegt (Admin → Website → Vor-Ort-Kurs).'}</p>
       <p><a href="${APP}/app/#admin">Zum Admin-Bereich → Vor-Ort</a></p></div>`
 
     const [ok] = await Promise.all([
-      mail(a.mail, art === 'voranmeldung' ? 'Ihre Voranmeldung bei BrainFit Kids' : art === 'schnupper' ? 'Ihre Schnupperstunde bei BrainFit Kids' : 'Ihre Anmeldung zum Vor-Ort-Kurs bei BrainFit Kids', elternHtml),
+      mail(a.mail, art === 'voranmeldung' ? `💜 Schön, dass Sie dabei sind – ${gen(a.kind_vorname)} Weg zum Rechen-Profi beginnt!` : art === 'schnupper' ? `🎉 ${gen(a.kind_vorname)} Schnupperstunde ist gebucht – wir freuen uns!` : `🎓 Willkommen im Vor-Ort-Kurs – ${a.kind_vorname} ist dabei!`, elternHtml),
       mail(ADMIN, `Neue ${ART[art]}: ${a.kind_vorname} (${a.eltern_vorname} ${a.eltern_nachname})`, adminHtml, a.mail),
     ])
     if (ok) await db.from('vorort_anmeldungen').update({ mail_gesendet: new Date().toISOString() }).eq('id', neu.id)
