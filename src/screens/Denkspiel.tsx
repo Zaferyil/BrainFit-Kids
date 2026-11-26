@@ -100,10 +100,11 @@ export function Denkspiel({ kid, game }: { kid: Kid; game: GameMeta }) {
   // beim ersten Öffnen eines Spiels erklärt Lisa es kurz (danach nur über den Lautsprecher-Knopf)
   useEffect(() => {
     const k = `bfk.erklaert.${game.id}`
-    try { if (localStorage.getItem(k)) return; localStorage.setItem(k, '1') } catch { /* egal */ }
+    try { if (localStorage.getItem(k)) return } catch { /* egal */ }
     const text = GAME_ERKLAERUNG[game.id] ?? INTRO[game.id]
     if (!text) return
-    const t = window.setTimeout(() => speak(text), 500)
+    // erst als „erklärt“ merken, wenn Lola wirklich spricht (sonst bliebe sie nach einem schnellen Neuaufbau für immer stumm)
+    const t = window.setTimeout(() => { try { localStorage.setItem(k, '1') } catch { /* egal */ } void speak(text) }, 500)
     return () => window.clearTimeout(t)
   }, [game.id])
 

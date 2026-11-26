@@ -68,7 +68,13 @@ export function RaketenFlug({ level, onFinish, rounds, einstellig = false }: Gam
   const fertig = useRef(false)
 
   // jede neue Aufgabe vorlesen
-  useEffect(() => { const t = window.setTimeout(() => void speak(r.sag), 500); return () => window.clearTimeout(t) }, [r])
+  // beim allerersten Spiel erklärt Lola zuerst das Spiel – die erste Zahl kommt erst danach
+  const [ersteVerzoegerung] = useState(() => { try { return localStorage.getItem('bfk.erklaert.rakete') ? 500 : 9500 } catch { return 500 } })
+  const ersteAufgabe = useRef(r)
+  useEffect(() => {
+    const t = window.setTimeout(() => void speak(r.sag), r === ersteAufgabe.current ? ersteVerzoegerung : 500)
+    return () => window.clearTimeout(t)
+  }, [r])
 
   const beenden = (runden: number, f: number) => {
     if (fertig.current) return
