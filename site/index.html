@@ -553,6 +553,20 @@ body::before{background:#100A30}
 .dk-vorteile span{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:color-mix(in srgb,var(--c) 22%,transparent)}
 .dk-vorteile h3{font-size:19px;color:#fff}
 .dk-vorteile p{color:#CFC7F5;font-size:15px}
+.vo-linz{border-radius:36px;padding:40px 28px;background:linear-gradient(160deg,rgba(255,197,49,.16),rgba(108,75,255,.22));box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.vo-linz-text{color:#CFC7F5;font-size:18px;max-width:60ch;margin:0}
+.vo-linz-text b{color:#fff}
+.vo-linz-raster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.vo-linz-raster{grid-template-columns:1fr}}
+.vo-linz-karte{display:grid;gap:8px;align-content:start;padding:22px;border-radius:24px;background:rgba(16,10,48,.5);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.12);color:#fff;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.vo-linz-karte:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 2px #FFC531}
+.vo-linz-karte.hervor{background:linear-gradient(160deg,rgba(108,75,255,.55),rgba(255,79,163,.35));box-shadow:inset 0 0 0 2px rgba(255,214,92,.7)}
+.vo-linz-karte b{font-size:30px}
+.vo-linz-karte h3{color:#fff;font-size:21px;margin:0}
+.vo-linz-karte p{color:#CFC7F5;font-size:15px;margin:0}
+.vo-linz-karte em{font-style:normal;font-weight:900;font-size:22px;color:#FFD65C}
+.vo-linz-karte small{color:#CFC7F5;font-size:13px;margin-top:-6px}
+.vo-linz-los{margin-top:6px;justify-self:start;background:#FFC531;color:#231A4F;font-weight:900;padding:9px 16px;border-radius:999px}
 .dk-eltern{display:grid;gap:26px;border-radius:36px;padding:40px 28px;background:linear-gradient(160deg,rgba(108,75,255,.25),rgba(255,79,163,.12));box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 .dk-eltern-raster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 @media (max-width:900px){.dk-eltern-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -716,7 +730,7 @@ body::before{background:#100A30}
 
 <header class="top"><div class="top-in">
   <button class="marke" type="button" data-ansicht="start"><img class="marke-logo" src="logo-klein.webp" alt="BrainFit Kids" width="360" height="211" fetchpriority="high"></button>
-  <nav class="links" aria-label="Seite"><a href="#konzept" data-ziel="konzept">Konzept</a><a href="#inhalt" data-ziel="inhalt">Kurs</a><a href="#so" data-ziel="so">Lektionen</a><a href="#denkspiele" data-ziel="denkspiele">Denkspiele</a><a href="#lernplan" data-ziel="lernplan">Lernplan</a><a href="#preise" data-ziel="preise">Pakete</a><a href="#faq" data-ziel="faq">Fragen</a></nav>
+  <nav class="links" aria-label="Seite"><a href="#konzept" data-ziel="konzept">Konzept</a><a href="#inhalt" data-ziel="inhalt">Kurs</a><a href="#so" data-ziel="so">Lektionen</a><a href="#denkspiele" data-ziel="denkspiele">Denkspiele</a><a href="#lernplan" data-ziel="lernplan">Lernplan</a><a href="#preise" data-ziel="preise">Pakete</a><a href="#vorort" data-ziel="vorort">Vor Ort</a><a href="#faq" data-ziel="faq">Fragen</a></nav>
   <div class="rechts">
     <button class="knopf" type="button" id="login-knopf"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Login</button>
     <button class="knopf voll" type="button" id="korb-knopf" aria-label="Warenkorb"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span class="korb-wort">Warenkorb</span> <span class="korb-zahl" id="korb-zahl" data-n="0">0</span></button>
@@ -970,6 +984,17 @@ body::before{background:#100A30}
     <p class="dk-klein" id="takt-klein">Alle Preise inkl. MwSt. · Mindestlaufzeit 12 Monate, danach monatlich kündbar. „Monatlich zahlen“ heißt: 12 Monatsraten, nicht monatlich kündbar.</p>
   </section>
 
+  <!-- Vor-Ort-Kurs in Linz -->
+  <section class="dk-block vo-linz" id="vorort">
+    <div class="dk-kopf"><span class="dk-eyebrow">📍 Vor-Ort-Kurs in Linz</span><h2>Lieber gemeinsam in der Gruppe?</h2>
+      <p class="vo-linz-text">Neben der App unterrichten wir Mental Arithmetik auch <b>vor Ort in Linz</b> – in kleinen Gruppen, mit Abakus und viel Spaß. Wählen Sie, wie Sie starten möchten:</p></div>
+    <div class="vo-linz-raster">
+      <a class="vo-linz-karte" href="/vorort?art=voranmeldung"><b>💌</b><h3>Voranmeldung</h3><p>Unverbindlich Interesse anmelden – wir melden uns, sobald ein Kurs startet.</p><em>Kostenlos</em><span class="vo-linz-los">Voranmelden →</span></a>
+      <a class="vo-linz-karte" href="/vorort?art=schnupper"><b>🧮</b><h3>Schnupperstunde</h3><p>Eine Probestunde vor Ort oder online: Ihr Kind lernt den Abakus kennen.</p><em id="vo-preis-schnupper">49 €</em><span class="vo-linz-los">Stunde buchen →</span></a>
+      <a class="vo-linz-karte hervor" href="/vorort?art=anmeldung"><b>🎓</b><h3>Kursanmeldung</h3><p>Verbindlich zum Vor-Ort-Kurs anmelden – bequem monatlich zahlen.</p><em id="vo-preis-monat">249 € / Monat</em><small id="vo-preis-mindest">Mindestlaufzeit 12 Monate</small><span class="vo-linz-los">Jetzt anmelden →</span></a>
+    </div>
+  </section>
+
   <!-- Elternstimmen: BEISPIELTEXTE – vor dem Start durch echte, freigegebene Stimmen ersetzen (STIMMEN unten im Skript) -->
   <section class="dk-block gruender" id="ueber-uns">
     <div class="gr-karte">
@@ -1182,6 +1207,7 @@ function uhr(){const r=Math.max(0,AKTION_ENDE-Date.now());if(!r){const a=$('#ang
 uhr();setInterval(uhr,1000);
 // Website-Einstellungen aus dem Admin-Bereich (Countdown, Kampagnen-Popup); ohne Antwort bleibt alles wie oben
 setTimeout(async()=>{let w;try{const r=await fetch(SUPA+'/rest/v1/website?select=daten&id=eq.1',{headers:{apikey:ANON,Authorization:'Bearer '+ANON}});if(!r.ok)return;w=(await r.json())[0]?.daten}catch{return}if(!w)return;
+  const vo=w.vorort;if(vo){const eu=n=>Number(n).toLocaleString('de-AT',{maximumFractionDigits:2})+' €';if(vo.schnupper>0)$('#vo-preis-schnupper').textContent=eu(vo.schnupper);if(vo.monat>0)$('#vo-preis-monat').textContent=eu(vo.monat)+' / Monat';const m=$('#vo-preis-mindest');if(m){if(vo.mindest>0)m.textContent='Mindestlaufzeit '+vo.mindest+' Monate';else m.remove()}}
   const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const c=w.countdown;if(c){const a=$('#angebot');
     if(!c.an){a.hidden=true}else{if(c.ende){const t=new Date(c.ende).getTime();if(t)AKTION_ENDE=t}if(c.titel)$('#angebot-titel').textContent=c.titel;
