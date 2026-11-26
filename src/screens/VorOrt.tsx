@@ -46,11 +46,18 @@ export function VorOrt({ wahl }: { wahl?: string }) {
   const a = ARTEN.find((x) => x.id === art)
   return (
     <div className="chk">
-      <header className="chk-kopf"><a href="/"><img src={`${BASE}logo.webp`} alt="BrainFit Kids" /></a></header>
       <main className="chk-main vo-main">
-        <section className="chk-karte chk-start vo">
-          <span className="chk-eyebrow">📍 Vor-Ort-Kurs in {v.adresse || 'Linz'}</span>
-          <h1>Vor-Ort-Kurs: Mental Arithmetik 🧠</h1>
+        <section className="vo-held">
+          <div className="vo-held-text">
+            <a href="/" className="vo-held-logo"><img src={`${BASE}logo.webp`} alt="BrainFit Kids" /></a>
+            <span className="vo-held-ort">📍 {v.adresse || 'Linz'}</span>
+            <h1>Vor-Ort-Kurs:<br />Mental Arithmetik</h1>
+            <p>Kopfrechnen mit dem Abakus – für Kinder von 4 bis 12</p>
+            <div className="vo-held-chips">{ARTEN.map((x) => <button key={x.id} type="button" onClick={() => { setArt(x.id); setStatus(''); window.setTimeout(() => document.getElementById('vo-form')?.scrollIntoView({ behavior: 'smooth' }), 50) }}>{x.emoji} {x.titel === 'Kursanmeldung' ? 'Anmeldung' : x.titel}</button>)}</div>
+          </div>
+          <div className="vo-held-bild"><img src={`${BASE}vorort-bild.webp`} alt="Kind rechnet mit dem Abakus" /></div>
+        </section>
+        <section className="chk-karte chk-start vo" id="vo-form">
           {status === 'fertig' ? <>
             <h2>{art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : 'Vielen Dank! 🎉'}</h2>
             <p>Wir haben Ihnen eine Bestätigung an <b>{f.mail}</b> geschickt (bitte auch im Spam-Ordner nachsehen).</p>
@@ -59,7 +66,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
               <a className="chk-knopf" href={zahlung}>💳 Weiter zur Zahlung</a>
             </> : <p>Wir melden uns in Kürze persönlich bei Ihnen.</p>}
           </> : <>
-            {(v.zeiten || v.adresse) && <p className="vo-info">{v.adresse && <>📍 {v.adresse}<br /></>}{v.zeiten && <>🕒 {v.zeiten}</>}</p>}
+            {v.zeiten && <p className="vo-info">🕒 {v.zeiten}</p>}
             <p><b>Wofür möchten Sie sich anmelden?</b></p>
             <div className="vo-arten">
               {ARTEN.map((x) => (

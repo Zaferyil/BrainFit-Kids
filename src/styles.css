@@ -3382,3 +3382,19 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
 .ber-eingebettet .ber { height: auto; min-height: 0; border-radius: 22px; }
 .eltern-konto { display: grid; gap: 10px; justify-items: start; }
 .adm-side-logo .avatar, .adm-side-logo > * { max-width: 32px; max-height: 32px; }
+/* Vor-Ort: Kopfbereich wie das Vorschaubild */
+.vo-held { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 32px; align-items: center; padding: 22px 6px 8px; color: #fff; }
+.vo-held-logo img { height: 92px; display: block; }
+.vo-held-ort { display: inline-block; margin-top: 14px; background: #FFC531; color: #231A4F; font-weight: 900; font-size: 18px; padding: 6px 16px; border-radius: 999px; }
+.vo-held h1 { font-family: 'Baloo 2', sans-serif; font-size: clamp(34px, 5.4vw, 58px); line-height: 1.02; margin: 14px 0 10px; color: #fff; }
+.vo-held p { font-size: clamp(17px, 2.2vw, 22px); font-weight: 700; color: #E7E1FF; margin: 0 0 18px; }
+.vo-held-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.vo-held-chips button { font: inherit; font-weight: 800; font-size: 16px; color: #fff; background: rgba(255,255,255,.14); border: 2px solid rgba(255,255,255,.3); padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.vo-held-chips button:hover { background: rgba(255,255,255,.24); }
+.vo-held-bild { border-radius: 28px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.4); aspect-ratio: 4 / 5; max-height: 520px; justify-self: end; width: 100%; }
+.vo-held-bild img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+@media (max-width: 760px) {
+  .vo-held { grid-template-columns: 1fr; gap: 18px; padding-top: 14px; }
+  .vo-held-logo img { height: 70px; }
+  .vo-held-bild { aspect-ratio: 16 / 10; max-height: none; }
+}
