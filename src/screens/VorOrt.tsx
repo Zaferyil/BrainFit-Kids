@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase'
 import { STANDARD, websiteLaden, type VorOrt as VorOrtDaten } from '../lib/website'
 
 // Öffentliche Formulare für den Vor-Ort-Kurs in Linz (#/vorort, Website /vorort):
-// Voranmeldung (Interesse), Schnupperkurs (bezahlt) und Kursanmeldung (monatlich als Stripe-Abo oder jährlich).
+// Voranmeldung (Interesse), Schnupperstunde (bezahlt) und Kursanmeldung (monatlich als Stripe-Abo oder jährlich).
 // Link mit Vorauswahl: /vorort?art=voranmeldung | schnupper | anmeldung
 const BASE = import.meta.env.BASE_URL
 type Art = 'voranmeldung' | 'schnupper' | 'anmeldung'
@@ -12,7 +12,7 @@ const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n
 
 const ARTEN: { id: Art; emoji: string; titel: string; text: string }[] = [
   { id: 'voranmeldung', emoji: '💌', titel: 'Voranmeldung', text: 'Unverbindlich Interesse anmelden – wir melden uns, sobald ein Kurs startet.' },
-  { id: 'schnupper', emoji: '🧮', titel: 'Schnupperkurs', text: 'Eine Probestunde vor Ort: Ihr Kind lernt den Abakus kennen.' },
+  { id: 'schnupper', emoji: '🧮', titel: 'Schnupperstunde', text: 'Eine Probestunde vor Ort: Ihr Kind lernt den Abakus kennen.' },
   { id: 'anmeldung', emoji: '🎓', titel: 'Kursanmeldung', text: 'Verbindlich zum Vor-Ort-Kurs anmelden – monatlich oder jährlich zahlen.' },
 ]
 
@@ -49,7 +49,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
       <main className="chk-main">
         <section className="chk-karte chk-start vo">
           <span className="chk-eyebrow">📍 Vor-Ort-Kurs in {v.adresse || 'Linz'}</span>
-          <h1>Mentale Arithmetik vor Ort 🧠</h1>
+          <h1>Vor-Ort-Kurs: Mentale Arithmetik 🧠</h1>
           {status === 'fertig' ? <>
             <h2>{art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : 'Vielen Dank! 🎉'}</h2>
             <p>Wir haben Ihnen eine Bestätigung an <b>{f.mail}</b> geschickt (bitte auch im Spam-Ordner nachsehen).</p>
@@ -110,7 +110,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
                 {jahrMoeglich && <label className={'vo-takt' + (takt === 'jahr' ? ' on' : '')}><input type="radio" name="takt" checked={takt === 'jahr'} onChange={() => setTakt('jahr')} />
                   <span><b>Jährlich · {euro(v.jahr)} / Jahr</b><small>Einmal im Jahr bezahlen{v.jahr < v.monat * 12 ? ` – Sie sparen ${euro(v.monat * 12 - v.jahr)}` : ''}.</small></span></label>}
               </fieldset>}
-              {art === 'schnupper' && v.schnupper > 0 && <p className="vo-preis">Schnupperkurs: <b>{euro(v.schnupper)}</b> (einmalig) – Zahlung im nächsten Schritt.</p>}
+              {art === 'schnupper' && v.schnupper > 0 && <p className="vo-preis">Schnupperstunde: <b>{euro(v.schnupper)}</b> (einmalig) – Zahlung im nächsten Schritt.</p>}
 
               {art === 'anmeldung' && <label className="wb-ok"><input type="checkbox" required checked={agb} onChange={(e) => setAgb(e.target.checked)} />
                 <span>Ich melde mein Kind verbindlich an und akzeptiere die <a href="/agb" target="_blank" rel="noopener">AGB</a>.</span></label>}

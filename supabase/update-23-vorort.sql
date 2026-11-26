@@ -1,4 +1,4 @@
--- Update 23: Vor-Ort-Kurs (Linz) – Voranmeldung, Schnupperkurs und Anmeldung über /vorort
+-- Update 23: Vor-Ort-Kurs (Linz) – Voranmeldung, Schnupperstunde und Anmeldung über /vorort
 -- Die Edge Function „vorort-anmeldung“ speichert die Formulare (Service-Rolle) und schickt E-Mails an Eltern und Admin.
 create table if not exists public.vorort_anmeldungen (
   id uuid primary key default gen_random_uuid(),

@@ -12,7 +12,7 @@ export type WebsiteDaten = { countdown: Countdown; popup: Popup; preise: Record<
 export const STANDARD: WebsiteDaten = {
   countdown: { an: true, ende: '2026-11-30T23:59', titel: 'Jetzt Einführungspreis sichern – nur noch kurze Zeit!', fuss: 'Nur für die ersten 50 Familien · noch 37 Plätze', balken: 26 },
   popup: { an: false, titel: '', text: '', knopf: 'Zu den Paketen', code: '', ab: '', bis: '', sekunden: 8, bildAn: false, bild: '', uhrAn: false, uhrEnde: '' },
-  vorort: { monat: 249, jahr: 0, schnupper: 0, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '' },
+  vorort: { monat: 249, jahr: 0, schnupper: 49, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '' },
   preise: {
     basic: { monat: 49, jahr: 490, altMonat: 79, altJahr: 790, hinweis: 'Mindestlaufzeit 12 Monate · Aktionspreis für die ersten 50', linkMonat: 'https://buy.stripe.com/00w7sMafb8SUa6Z9WX9oc00', linkJahr: 'https://buy.stripe.com/aFafZi873glm3IB1qr9oc01' },
     plus: { monat: 79, jahr: 790, altMonat: 109, altJahr: 1090, hinweis: 'Mindestlaufzeit 12 Monate', linkMonat: 'https://buy.stripe.com/8x2dRa1IFfhienfgll9oc02', linkJahr: 'https://buy.stripe.com/dRmcN61IF3yAfrj0mn9oc03' },

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-// Admin: Anmeldungen zum Vor-Ort-Kurs (Voranmeldung, Schnupperkurs, Kursanmeldung) ansehen und abarbeiten.
+// Admin: Anmeldungen zum Vor-Ort-Kurs (Voranmeldung, Schnupperstunde, Kursanmeldung) ansehen und abarbeiten.
 type A = {
   id: string; art: 'voranmeldung' | 'schnupper' | 'anmeldung'; eltern_vorname: string; eltern_nachname: string; mail: string; telefon: string | null
   strasse: string | null; plz: string | null; ort: string | null; kind_vorname: string; kind_nachname: string | null; kind_geburt: string | null; kind_stufe: number | null
   wunschzeiten: string | null; nachricht: string | null; takt: 'monat' | 'jahr' | null; betrag: number | null; status: string; notiz: string | null; erstellt: string
 }
 const SITE = 'https://brainfitkids.mentalmath.at'
-const ART: Record<A['art'], string> = { voranmeldung: '💌 Voranmeldung', schnupper: '🧮 Schnupperkurs', anmeldung: '🎓 Anmeldung' }
+const ART: Record<A['art'], string> = { voranmeldung: '💌 Voranmeldung', schnupper: '🧮 Schnupperstunde', anmeldung: '🎓 Anmeldung' }
 const STATUS = ['neu', 'kontaktiert', 'bezahlt', 'aktiv', 'abgesagt']
 const STUFEN = ['Kiga', '1. Kl.', '2. Kl.', '3. Kl.', '4. Kl.', '5. Kl.', '6. Kl.']
 const datum = (d: string) => new Date(d).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
@@ -43,7 +43,7 @@ export function AdminVorOrt() {
         <p>
           <button type="button" className="adm-link" onClick={() => kopieren(`${SITE}/vorort`)}>Alle drei Formulare</button>{' · '}
           <button type="button" className="adm-link" onClick={() => kopieren(`${SITE}/vorort?art=voranmeldung`)}>Voranmeldung</button>{' · '}
-          <button type="button" className="adm-link" onClick={() => kopieren(`${SITE}/vorort?art=schnupper`)}>Schnupperkurs</button>{' · '}
+          <button type="button" className="adm-link" onClick={() => kopieren(`${SITE}/vorort?art=schnupper`)}>Schnupperstunde</button>{' · '}
           <button type="button" className="adm-link" onClick={() => kopieren(`${SITE}/vorort?art=anmeldung`)}>Anmeldung</button>
         </p>
         <p className="adm-muted">Preise und Stripe-Zahlungslinks: Tab „Website“ → „Vor-Ort-Kurs“. Ob eine Zahlung eingegangen ist, sehen Sie in Stripe (Referenz beginnt mit „vorort-“).</p>
@@ -54,7 +54,7 @@ export function AdminVorOrt() {
           <h2>Anmeldungen ({gezeigt.length})</h2>
           <span>
             <select value={filter} onChange={(e) => setFilter(e.target.value as '' | A['art'])}>
-              <option value="">Alle</option><option value="voranmeldung">Voranmeldungen</option><option value="schnupper">Schnupperkurse</option><option value="anmeldung">Anmeldungen</option>
+              <option value="">Alle</option><option value="voranmeldung">Voranmeldungen</option><option value="schnupper">Schnupperstunden</option><option value="anmeldung">Anmeldungen</option>
             </select>{' '}
             <button type="button" className="adm-btn" onClick={csv} disabled={!gezeigt.length}>CSV</button>
           </span>

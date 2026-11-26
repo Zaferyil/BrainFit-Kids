@@ -123,15 +123,15 @@ export function AdminWebsite() {
 
       <section className="adm-card">
         <div className="adm-web-kopf"><h2>📍 Vor-Ort-Kurs (Linz)</h2></div>
-        <p className="adm-muted">Formulare für Eltern: <b>/vorort</b> (Voranmeldung, Schnupperkurs, Anmeldung). Für die <b>monatliche</b> Zahlung in Stripe einen Zahlungslink mit einem <b>wiederkehrenden Preis (monatlich)</b> anlegen – dann bucht Stripe jeden Monat automatisch ab. Jahrespreis 0 = keine jährliche Zahlung anbieten.</p>
+        <p className="adm-muted">Formulare für Eltern: <b>/vorort</b> (Voranmeldung, Schnupperstunde, Anmeldung). Für die <b>monatliche</b> Zahlung in Stripe einen Zahlungslink mit einem <b>wiederkehrenden Preis (monatlich)</b> anlegen – dann bucht Stripe jeden Monat automatisch ab. Jahrespreis 0 = keine jährliche Zahlung anbieten.</p>
         <div className="adm-preis-reihe">
           <label>Preis / Monat (€)<input inputMode="decimal" value={d.vorort.monat} onChange={(x) => vo('monat', zahl(x.target.value))} /></label>
           <label>Preis / Jahr (€)<input inputMode="decimal" value={d.vorort.jahr || ''} placeholder="0 = aus" onChange={(x) => vo('jahr', zahl(x.target.value))} /></label>
-          <label>Schnupperkurs (€)<input inputMode="decimal" value={d.vorort.schnupper || ''} placeholder="0" onChange={(x) => vo('schnupper', zahl(x.target.value))} /></label>
+          <label>Schnupperstunde (€)<input inputMode="decimal" value={d.vorort.schnupper || ''} placeholder="0" onChange={(x) => vo('schnupper', zahl(x.target.value))} /></label>
         </div>
         <label>Stripe-Link monatlich (Abo)<input value={d.vorort.linkMonat} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkMonat', x.target.value.trim())} /></label>
         <label>Stripe-Link jährlich<input value={d.vorort.linkJahr} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkJahr', x.target.value.trim())} /></label>
-        <label>Stripe-Link Schnupperkurs (einmalig)<input value={d.vorort.linkSchnupper} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkSchnupper', x.target.value.trim())} /></label>
+        <label>Stripe-Link Schnupperstunde (einmalig)<input value={d.vorort.linkSchnupper} placeholder="https://buy.stripe.com/…" onChange={(x) => vo('linkSchnupper', x.target.value.trim())} /></label>
         <label>Kursort / Adresse<input value={d.vorort.adresse} maxLength={120} onChange={(x) => vo('adresse', x.target.value)} /></label>
         <label>Kurszeiten (optional)<input value={d.vorort.zeiten} maxLength={160} placeholder="z. B. Mo und Mi 15–16 Uhr" onChange={(x) => vo('zeiten', x.target.value)} /></label>
       </section>

@@ -1,7 +1,7 @@
 // Supabase Edge Function „vorort-anmeldung“: Formulare für den Vor-Ort-Kurs in Linz (Website /vorort).
-// Arten: voranmeldung (Interesse), schnupper (Schnupperkurs, bezahlt), anmeldung (Kursanmeldung mit monatlicher oder jährlicher Zahlung).
+// Arten: voranmeldung (Interesse), schnupper (Schnupperstunde, bezahlt), anmeldung (Kursanmeldung mit monatlicher oder jährlicher Zahlung).
 // Speichert die Angaben, schickt eine Bestätigung an die Eltern und eine Benachrichtigung an den Admin,
-// und gibt bei Schnupperkurs/Anmeldung den Stripe-Zahlungslink zurück (monatlich = Stripe-Abo, wird automatisch abgebucht).
+// und gibt bei Schnupperstunde/Anmeldung den Stripe-Zahlungslink zurück (monatlich = Stripe-Abo, wird automatisch abgebucht).
 // Secrets: RESEND_API_KEY (vorhanden). Optional: ADMIN_MAIL (sonst info@mentalmath.at).
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
@@ -13,7 +13,7 @@ const ADMIN = Deno.env.get('ADMIN_MAIL') ?? 'info@mentalmath.at'
 const esc = (t: unknown) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
 const txt = (v: unknown, max = 120) => String(v ?? '').trim().slice(0, max)
 const STUFEN = ['Kindergarten', '1. Klasse', '2. Klasse', '3. Klasse', '4. Klasse', '5. Klasse', '6. Klasse']
-const ART: Record<string, string> = { voranmeldung: 'Voranmeldung (Interesse)', schnupper: 'Schnupperkurs', anmeldung: 'Kursanmeldung' }
+const ART: Record<string, string> = { voranmeldung: 'Voranmeldung (Interesse)', schnupper: 'Schnupperstunde', anmeldung: 'Kursanmeldung' }
 const euro = (n: number) => n.toLocaleString('de-AT', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €'
 
 type VorOrt = { monat: number; jahr: number; schnupper: number; linkMonat: string; linkJahr: string; linkSchnupper: string; adresse: string; zeiten: string }
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
 
     // Preise und Stripe-Links aus den Website-Einstellungen (Admin → Website)
     const { data: w } = await db.from('website').select('daten').eq('id', 1).maybeSingle()
-    const v = { monat: 249, jahr: 0, schnupper: 0, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '', ...((w?.daten as { vorort?: Partial<VorOrt> } | null)?.vorort ?? {}) } as VorOrt
+    const v = { monat: 249, jahr: 0, schnupper: 49, linkMonat: '', linkJahr: '', linkSchnupper: '', adresse: 'Linz', zeiten: '', ...((w?.daten as { vorort?: Partial<VorOrt> } | null)?.vorort ?? {}) } as VorOrt
     if (a.takt === 'jahr' && !(v.jahr > 0)) a.takt = 'monat'
     const betrag = art === 'schnupper' ? v.schnupper : art === 'anmeldung' ? (a.takt === 'jahr' ? v.jahr : v.monat) : null
 
@@ -68,11 +68,11 @@ Deno.serve(async (req) => {
     const preisText = art === 'schnupper' ? (v.schnupper > 0 ? `${euro(v.schnupper)} (einmalig)` : '') : art === 'anmeldung' ? (a.takt === 'jahr' ? `${euro(v.jahr)} pro Jahr` : `${euro(v.monat)} pro Monat – wird jeden Monat automatisch abgebucht`) : ''
     const knopf = (href: string, text: string) => `<a href="${href}" style="background:#5B47D6;color:#fff;text-decoration:none;font-weight:bold;padding:13px 26px;border-radius:30px;display:inline-block">${text}</a>`
     const kopf = `<p style="text-align:center;margin:0 0 8px"><img src="${APP}/logo.png" alt="BrainFit Kids" width="200" style="max-width:200px;height:auto"></p>`
-    const titel = art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : art === 'schnupper' ? 'Ihr Schnupperkurs ist vorgemerkt! 🎉' : 'Ihre Anmeldung ist eingegangen! 🎉'
+    const titel = art === 'voranmeldung' ? 'Danke für Ihr Interesse! 💜' : art === 'schnupper' ? 'Ihre Schnupperstunde ist vorgemerkt! 🎉' : 'Ihre Anmeldung ist eingegangen! 🎉'
     const text = art === 'voranmeldung'
       ? `<p>wir haben Ihre Voranmeldung für den <b>BrainFit Kids Vor-Ort-Kurs in Linz</b> erhalten. Sobald ein Kurstermin für ${esc(a.kind_vorname)} feststeht, melden wir uns persönlich bei Ihnen.</p>`
       : art === 'schnupper'
-        ? `<p>wir haben Ihre Anmeldung zum <b>Schnupperkurs</b> für ${esc(a.kind_vorname)} erhalten. Wir melden uns mit dem genauen Termin bei Ihnen.</p>${zahlung ? `<p>Falls Sie den Schnupperkurs noch nicht bezahlt haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Schnupperkurs bezahlen')}</p>` : ''}`
+        ? `<p>wir haben Ihre Anmeldung zur <b>Schnupperstunde</b> für ${esc(a.kind_vorname)} erhalten. Wir melden uns mit dem genauen Termin bei Ihnen.</p>${zahlung ? `<p>Falls Sie die Schnupperstunde noch nicht bezahlt haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Schnupperstunde bezahlen')}</p>` : ''}`
         : `<p>vielen Dank für die Anmeldung von <b>${esc(a.kind_vorname)} ${esc(a.kind_nachname)}</b> zum <b>Vor-Ort-Kurs in Linz</b>!</p><p>Gewählte Zahlungsweise: <b>${esc(preisText)}</b>.</p>${zahlung ? `<p>Falls Sie die Zahlung noch nicht abgeschlossen haben, können Sie das hier erledigen:</p><p style="text-align:center">${knopf(zahlung, '💳 Zahlung abschließen')}</p>` : '<p>Wir schicken Ihnen die Zahlungsinformationen in Kürze.</p>'}<p>Wir melden uns mit dem Kursbeginn und allen Details.</p>`
     const elternHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#231A4F;line-height:1.55">${kopf}
       <h1 style="color:#5B47D6;text-align:center;margin:0 0 14px;font-size:24px">${titel}</h1>
@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
       <p><a href="${APP}/app/#admin">Zum Admin-Bereich → Vor-Ort</a></p></div>`
 
     const [ok] = await Promise.all([
-      mail(a.mail, art === 'voranmeldung' ? 'Ihre Voranmeldung bei BrainFit Kids' : art === 'schnupper' ? 'Ihr Schnupperkurs bei BrainFit Kids' : 'Ihre Anmeldung zum Vor-Ort-Kurs bei BrainFit Kids', elternHtml),
+      mail(a.mail, art === 'voranmeldung' ? 'Ihre Voranmeldung bei BrainFit Kids' : art === 'schnupper' ? 'Ihre Schnupperstunde bei BrainFit Kids' : 'Ihre Anmeldung zum Vor-Ort-Kurs bei BrainFit Kids', elternHtml),
       mail(ADMIN, `Neue ${ART[art]}: ${a.kind_vorname} (${a.eltern_vorname} ${a.eltern_nachname})`, adminHtml, a.mail),
     ])
     if (ok) await db.from('vorort_anmeldungen').update({ mail_gesendet: new Date().toISOString() }).eq('id', neu.id)
