@@ -1,5 +1,6 @@
 import { PasswortFeld } from '../components/PasswortFeld'
 import { Fragment, useEffect, useMemo, useState, type FormEvent } from 'react'
+import { supabase } from '../lib/supabase'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
 import { KLASSEN } from '../lib/klasse'
@@ -30,22 +31,23 @@ import { alleHausaufgaben, lehrkraftEntscheidet, setWorkbookLoesung, STATUS_TEXT
 
 
 type Tab = 'uebersicht' | 'bestellungen' | 'kinder' | 'hausaufgaben' | 'auftraege' | 'lehrkraefte' | 'shop' | 'lektionen' | 'website' | 'nachrichten' | 'partner' | 'webinare' | 'vorort' | 'einstellungen'
-const TABS: { id: Tab; titel: string; icon: IconName }[] = [
-  { id: 'uebersicht', titel: 'Übersicht', icon: 'chart' },
-  { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag' },
-  { id: 'kinder', titel: 'Kinder', icon: 'users' },
-  { id: 'auftraege', titel: HAUSAUFGABEN_AKTIV ? 'Hausaufgaben & Blätter' : 'Arbeitsblätter', icon: 'print' },
-  { id: 'hausaufgaben', titel: 'Buch-Kontrolle', icon: 'check' },
-  { id: 'lehrkraefte', titel: 'Lehrkräfte', icon: 'users' },
-  { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt' },
-  { id: 'lektionen', titel: 'Lektionen', icon: 'book' },
-  { id: 'website', titel: 'Website', icon: 'sparkle' },
-  { id: 'nachrichten', titel: 'Nachrichten', icon: 'bell' },
-  { id: 'partner', titel: 'Partner', icon: 'users' },
-  { id: 'webinare', titel: 'Webinare', icon: 'users' },
-  { id: 'vorort', titel: 'Vor-Ort-Kurs', icon: 'users' },
-  { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings' },
+const TABS: { id: Tab; titel: string; icon: IconName; gruppe: string; info: string }[] = [
+  { id: 'uebersicht', titel: 'Dashboard', icon: 'chart', gruppe: '', info: 'Lernstand und wichtige Kennzahlen auf einen Blick' },
+  { id: 'bestellungen', titel: 'Bestellungen', icon: 'bag', gruppe: '', info: 'Abos, Zahlungen und Zugänge der Eltern' },
+  { id: 'kinder', titel: 'Kinder', icon: 'users', gruppe: 'Unterricht', info: 'Kinder, Klassen und Zugangsdaten verwalten' },
+  { id: 'auftraege', titel: HAUSAUFGABEN_AKTIV ? 'Hausaufgaben & Blätter' : 'Arbeitsblätter', icon: 'print', gruppe: 'Unterricht', info: 'Aufgaben verteilen und Arbeitsblätter drucken' },
+  { id: 'hausaufgaben', titel: 'Buch-Kontrolle', icon: 'check', gruppe: 'Unterricht', info: 'Übungsbuch-Seiten der Kinder kontrollieren' },
+  { id: 'lektionen', titel: 'Lektionen', icon: 'book', gruppe: 'Unterricht', info: 'Lektionen und Freischaltungen' },
+  { id: 'lehrkraefte', titel: 'Lehrkräfte', icon: 'user', gruppe: 'Team', info: 'Lehrkräfte einladen und Klassen zuteilen' },
+  { id: 'partner', titel: 'Partner', icon: 'heart', gruppe: 'Team', info: 'Partner und Empfehlungen' },
+  { id: 'vorort', titel: 'Vor-Ort-Kurs', icon: 'map', gruppe: 'Marketing', info: 'Voranmeldungen, Schnupperstunden und Anmeldungen (Linz)' },
+  { id: 'webinare', titel: 'Webinare', icon: 'video', gruppe: 'Marketing', info: 'Webinar-Termine und Anmeldungen' },
+  { id: 'nachrichten', titel: 'Nachrichten', icon: 'bell', gruppe: 'Marketing', info: 'Push-Nachrichten an Kinder und Eltern' },
+  { id: 'website', titel: 'Website', icon: 'sparkle', gruppe: 'Marketing', info: 'Preise, Countdown, Popup und Vor-Ort-Kurs-Einstellungen' },
+  { id: 'shop', titel: 'SeZa-Shop', icon: 'shirt', gruppe: 'Shop', info: 'Belohnungs-Shop der Kinder' },
+  { id: 'einstellungen', titel: 'Einstellungen', icon: 'settings', gruppe: 'System', info: 'Allgemeine Einstellungen' },
 ]
+const TAB_KEY = 'bf-admin-tab'
 
 // Anmeldung mit E-Mail und Passwort (Supabase); nur Konten mit der Rolle Admin oder Lehrkraft
 export function Admin() {
@@ -95,8 +97,23 @@ function AdminLogin({ onOk }: { onOk: () => void }) {
 const LEHRKRAFT_TABS: Tab[] = ['uebersicht', 'kinder', 'auftraege']
 
 function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis?: string; rolle: 'admin' | 'lehrkraft' }) {
-  const [tab, setTab] = useState<Tab>('uebersicht')
   const tabs = rolle === 'admin' ? TABS : TABS.filter((t) => LEHRKRAFT_TABS.includes(t.id))
+  const [tab, setTabRoh] = useState<Tab>(() => {
+    let t: string | null = null
+    try { t = sessionStorage.getItem(TAB_KEY) } catch { /* ohne Speicher */ }
+    return tabs.some((x) => x.id === t) ? (t as Tab) : 'uebersicht'
+  })
+  const [menue, setMenue] = useState(false)
+  const [schmal, setSchmal] = useState(() => { try { return localStorage.getItem('bf-admin-schmal') === '1' } catch { return false } })
+  const setTab = (t: Tab) => { setTabRoh(t); setMenue(false); try { sessionStorage.setItem(TAB_KEY, t) } catch { /* egal */ }; window.scrollTo(0, 0) }
+  const umschalten = () => setSchmal((v) => { try { localStorage.setItem('bf-admin-schmal', v ? '0' : '1') } catch { /* egal */ }; return !v })
+  const [neueVorOrt, setNeueVorOrt] = useState(0)
+  useEffect(() => {
+    if (rolle !== 'admin') return
+    void supabase.from('vorort_anmeldungen').select('id', { count: 'exact', head: true }).eq('status', 'neu').then(({ count }) => setNeueVorOrt(count ?? 0))
+  }, [rolle, tab])
+  const aktiv = tabs.find((t) => t.id === tab) ?? tabs[0]
+  const gruppen = [...new Set(tabs.map((t) => t.gruppe))]
   const [version, setVersion] = useState(0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const alle = useMemo(() => kidZeilen(), [version])
@@ -109,25 +126,48 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
   const neu = () => setVersion((v) => v + 1)
 
   return (
-    <div className="adm">
-      <header className="adm-head">
-        <div className="adm-brand"><span className="adm-logo small"><Icon name="chart" size={20} color="#5B47D6" /></span><b>BrainFit Kids</b><span>{rolle === 'admin' ? 'Admin' : 'Lehrkraft'}</span></div>
-        <nav className="adm-tabs" aria-label="Bereiche">
-          {tabs.map((t) => (
-            <button key={t.id} type="button" className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>
-              <Icon name={t.icon} size={18} color="currentColor" /> {t.titel}
-            </button>
+    <div className={'adm adm-wp' + (schmal ? ' schmal' : '') + (menue ? ' menue-offen' : '')}>
+      <aside className="adm-side" aria-label="Bereiche">
+        <div className="adm-side-brand">
+          <span className="adm-side-logo"><Icon name="brain" size={20} color="#FFC531" /></span>
+          <span className="adm-side-name"><b>BrainFit Kids</b><small>{rolle === 'admin' ? 'Administrator' : 'Lehrkraft'}</small></span>
+        </div>
+        <nav className="adm-side-nav">
+          {gruppen.map((g) => (
+            <div key={g || 'start'} className="adm-side-gruppe">
+              {g && <span className="adm-side-titel">{g}</span>}
+              {tabs.filter((t) => t.gruppe === g).map((t) => (
+                <button key={t.id} type="button" className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)} title={t.titel} aria-current={tab === t.id ? 'page' : undefined}>
+                  <Icon name={t.icon} size={19} color="currentColor" /><span>{t.titel}</span>
+                  {t.id === 'vorort' && neueVorOrt > 0 && <em className="adm-side-zahl">{neueVorOrt}</em>}
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
-        <div className="adm-head-r">
-          {ALLES_OFFEN && <span className="adm-badge warn">Testmodus an</span>}
-          <a href="#/" className="adm-btn">Zur App</a>
-          <button type="button" className="adm-btn" onClick={onLogout}><Icon name="logout" size={16} color="currentColor" /> Abmelden</button>
+        <div className="adm-side-fuss">
+          <a href="#/" title="Zur App"><Icon name="home" size={18} color="currentColor" /><span>Zur App</span></a>
+          <button type="button" onClick={onLogout} title="Abmelden"><Icon name="logout" size={18} color="currentColor" /><span>Abmelden</span></button>
+          <button type="button" className="adm-side-klein" onClick={umschalten} title={schmal ? 'Menü ausklappen' : 'Menü einklappen'}><Icon name={schmal ? 'right' : 'left'} size={18} color="currentColor" /><span>Menü einklappen</span></button>
         </div>
-      </header>
+      </aside>
+      {menue && <button type="button" className="adm-side-schleier" aria-label="Menü schließen" onClick={() => setMenue(false)} />}
+      <div className="adm-wp-rechts">
+        <header className="adm-top">
+          <button type="button" className="adm-top-menue" onClick={() => setMenue(true)} aria-label="Menü öffnen"><Icon name="bars" size={20} color="currentColor" /></button>
+          <div className="adm-top-titel">
+            <small>{aktiv.gruppe || 'Start'} / {aktiv.titel}</small>
+            <h1>{aktiv.titel}</h1>
+          </div>
+          <div className="adm-head-r">
+            {ALLES_OFFEN && <span className="adm-badge warn">Testmodus an</span>}
+            <a href="/" className="adm-btn" target="_blank" rel="noopener">Website ansehen</a>
+          </div>
+        </header>
       <main className="adm-main">
-        <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
-          <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>
+        <p className="adm-top-info">{aktiv.info}</p>
+        {(hinweis || ['uebersicht', 'kinder', 'hausaufgaben', 'auftraege', 'shop', 'lektionen'].includes(tab)) && <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
+          <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>}
         {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />{rolle === 'admin' && <AdminCheck />}</>}
         {tab === 'bestellungen' && <AdminBestellungen />}
         {tab === 'kinder' && <Kinder zeilen={zeilen} onChange={neu} rolle={rolle} dbKlassen={meine} />}
@@ -143,6 +183,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
         {tab === 'vorort' && <AdminVorOrt />}
         {tab === 'einstellungen' && <Einstellungen />}
       </main>
+      </div>
     </div>
   )
 }
