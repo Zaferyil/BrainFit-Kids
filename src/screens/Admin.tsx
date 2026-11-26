@@ -124,7 +124,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
   return (
     <PanelLayout<Tab> speicherKey="bf-admin" marke={<Icon name="brain" size={20} color="#FFC531" />} name="BrainFit Kids" rolle={rolle === 'admin' ? 'Administrator' : 'Lehrkraft'}
       punkte={tabs.map((t) => ({ ...t, zahl: t.id === 'vorort' ? neueVorOrt : 0 }))} aktiv={tab} onWahl={setTab}
-      fuss={[{ titel: 'Zur App', icon: 'home', href: '#/' }, { titel: 'Abmelden', icon: 'logout', onClick: onLogout }]}
+      fuss={[{ titel: 'Zur Lernplattform', icon: 'home', href: '#/' }, { titel: 'Abmelden', icon: 'logout', onClick: onLogout }]}
       kopfRechts={<>{ALLES_OFFEN && <span className="adm-badge warn">Testmodus an</span>}<a href="/" className="adm-btn" target="_blank" rel="noopener">Website ansehen</a></>}>
         {(hinweis || ['uebersicht', 'kinder', 'hausaufgaben', 'auftraege', 'shop', 'lektionen'].includes(tab)) && <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>}

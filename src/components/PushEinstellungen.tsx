@@ -38,7 +38,7 @@ export function PushKarte({ kidId, name }: { kidId: string; name: string }) {
       <label className="push-zeile"><input type="checkbox" checked={e.serie_an} disabled={!e.kind_an} onChange={(x) => void aendern({ serie_an: x.target.checked })} />
         <span><b>Serien-Warnung um 19:30</b><small>„Deine Serie ist in Gefahr!“ – nur bei mind. 2 Tagen am Stück</small></span>
       </label>
-      {e.kind_an && <p className="adm-muted">{name} schaltet die Erinnerungen dann einmal in der App auf dem eigenen Gerät ein (Knopf auf der Inselkarte).</p>}
+      {e.kind_an && <p className="adm-muted">{name} schaltet die Erinnerungen dann einmal in der Lernplattform auf dem eigenen Gerät ein (Knopf auf der Inselkarte).</p>}
 
       <h3>Für Sie</h3>
       <label className="push-zeile"><input type="checkbox" checked={e.eltern_woche} onChange={(x) => void aendern({ eltern_woche: x.target.checked })} />
