@@ -64,7 +64,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
             <div className="vo-arten">
               {ARTEN.map((x) => (
                 <button key={x.id} type="button" className={'vo-art' + (art === x.id ? ' on' : '')} onClick={() => setArt(x.id)} aria-pressed={art === x.id}>
-                  <span className="vo-emoji">{x.emoji}</span><b>{x.titel}</b><small>{x.text}</small>
+                  <span className="vo-emoji">{x.emoji}</span><b>{x.titel}</b><small>{x.id === 'anmeldung' && !jahrMoeglich ? 'Verbindlich zum Vor-Ort-Kurs anmelden – bequem monatlich zahlen.' : x.text}</small>
                   {x.id === 'schnupper' && v.schnupper > 0 && <em>{euro(v.schnupper)}</em>}
                   {x.id === 'anmeldung' && <em>{euro(v.monat)} / Monat{v.mindest > 0 ? ` · mind. ${v.mindest} Monate` : ''}</em>}
                 </button>
