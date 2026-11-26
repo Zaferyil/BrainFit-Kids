@@ -47,7 +47,7 @@ export function VorOrt({ wahl }: { wahl?: string }) {
   return (
     <div className="chk">
       <header className="chk-kopf"><a href="/"><img src={`${BASE}logo.webp`} alt="BrainFit Kids" /></a></header>
-      <main className="chk-main">
+      <main className="chk-main vo-main">
         <section className="chk-karte chk-start vo">
           <span className="chk-eyebrow">📍 Vor-Ort-Kurs in {v.adresse || 'Linz'}</span>
           <h1>Vor-Ort-Kurs: Mental Arithmetik 🧠</h1>
@@ -90,11 +90,9 @@ export function VorOrt({ wahl }: { wahl?: string }) {
                 </>}
               </fieldset>
               <fieldset className="vo-gruppe"><legend>Kind</legend>
-                <div className="vo-zwei">
+                <div className="vo-raster">
                   <label>Vorname<input required value={f.kind_vorname} onChange={set('kind_vorname')} /></label>
                   {art === 'anmeldung' && <label>Nachname<input required value={f.kind_nachname} onChange={set('kind_nachname')} /></label>}
-                </div>
-                <div className="vo-zwei">
                   <label>Geburtsdatum<input type="date" required={art === 'anmeldung'} value={f.kind_geburt} onChange={set('kind_geburt')} /></label>
                   <label>Schulstufe<select required value={f.kind_stufe} onChange={set('kind_stufe')}>
                     <option value="" disabled>Bitte wählen</option>
