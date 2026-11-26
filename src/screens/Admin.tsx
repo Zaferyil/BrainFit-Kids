@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
 import { Avatar } from '../components/Avatar'
 import { Icon, type IconName } from '../components/Icon'
+import { PanelLayout } from '../components/PanelLayout'
 import { KLASSEN } from '../lib/klasse'
 import { ALLE_LEKTIONEN, archivieren, archivierteKinder, inhaltStatus, kidZeilen, klasseAnlegen, klasseWechseln, klassenCodes, lektionNr, resetKid, setLektion, setStufe, wiederherstellen, type KidZeile } from '../lib/admin'
 import { benutzerVon, passwortVon } from '../data/demo'
@@ -103,17 +104,12 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
     try { t = sessionStorage.getItem(TAB_KEY) } catch { /* ohne Speicher */ }
     return tabs.some((x) => x.id === t) ? (t as Tab) : 'uebersicht'
   })
-  const [menue, setMenue] = useState(false)
-  const [schmal, setSchmal] = useState(() => { try { return localStorage.getItem('bf-admin-schmal') === '1' } catch { return false } })
-  const setTab = (t: Tab) => { setTabRoh(t); setMenue(false); try { sessionStorage.setItem(TAB_KEY, t) } catch { /* egal */ }; window.scrollTo(0, 0) }
-  const umschalten = () => setSchmal((v) => { try { localStorage.setItem('bf-admin-schmal', v ? '0' : '1') } catch { /* egal */ }; return !v })
+  const setTab = (t: Tab) => { setTabRoh(t); try { sessionStorage.setItem(TAB_KEY, t) } catch { /* egal */ } }
   const [neueVorOrt, setNeueVorOrt] = useState(0)
   useEffect(() => {
     if (rolle !== 'admin') return
     void supabase.from('vorort_anmeldungen').select('id', { count: 'exact', head: true }).eq('status', 'neu').then(({ count }) => setNeueVorOrt(count ?? 0))
   }, [rolle, tab])
-  const aktiv = tabs.find((t) => t.id === tab) ?? tabs[0]
-  const gruppen = [...new Set(tabs.map((t) => t.gruppe))]
   const [version, setVersion] = useState(0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const alle = useMemo(() => kidZeilen(), [version])
@@ -126,46 +122,10 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
   const neu = () => setVersion((v) => v + 1)
 
   return (
-    <div className={'adm adm-wp' + (schmal ? ' schmal' : '') + (menue ? ' menue-offen' : '')}>
-      <aside className="adm-side" aria-label="Bereiche">
-        <div className="adm-side-brand">
-          <span className="adm-side-logo"><Icon name="brain" size={20} color="#FFC531" /></span>
-          <span className="adm-side-name"><b>BrainFit Kids</b><small>{rolle === 'admin' ? 'Administrator' : 'Lehrkraft'}</small></span>
-        </div>
-        <nav className="adm-side-nav">
-          {gruppen.map((g) => (
-            <div key={g || 'start'} className="adm-side-gruppe">
-              {g && <span className="adm-side-titel">{g}</span>}
-              {tabs.filter((t) => t.gruppe === g).map((t) => (
-                <button key={t.id} type="button" className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)} title={t.titel} aria-current={tab === t.id ? 'page' : undefined}>
-                  <Icon name={t.icon} size={19} color="currentColor" /><span>{t.titel}</span>
-                  {t.id === 'vorort' && neueVorOrt > 0 && <em className="adm-side-zahl">{neueVorOrt}</em>}
-                </button>
-              ))}
-            </div>
-          ))}
-        </nav>
-        <div className="adm-side-fuss">
-          <a href="#/" title="Zur App"><Icon name="home" size={18} color="currentColor" /><span>Zur App</span></a>
-          <button type="button" onClick={onLogout} title="Abmelden"><Icon name="logout" size={18} color="currentColor" /><span>Abmelden</span></button>
-          <button type="button" className="adm-side-klein" onClick={umschalten} title={schmal ? 'Menü ausklappen' : 'Menü einklappen'}><Icon name={schmal ? 'right' : 'left'} size={18} color="currentColor" /><span>Menü einklappen</span></button>
-        </div>
-      </aside>
-      {menue && <button type="button" className="adm-side-schleier" aria-label="Menü schließen" onClick={() => setMenue(false)} />}
-      <div className="adm-wp-rechts">
-        <header className="adm-top">
-          <button type="button" className="adm-top-menue" onClick={() => setMenue(true)} aria-label="Menü öffnen"><Icon name="bars" size={20} color="currentColor" /></button>
-          <div className="adm-top-titel">
-            <small>{aktiv.gruppe || 'Start'} / {aktiv.titel}</small>
-            <h1>{aktiv.titel}</h1>
-          </div>
-          <div className="adm-head-r">
-            {ALLES_OFFEN && <span className="adm-badge warn">Testmodus an</span>}
-            <a href="/" className="adm-btn" target="_blank" rel="noopener">Website ansehen</a>
-          </div>
-        </header>
-      <main className="adm-main">
-        <p className="adm-top-info">{aktiv.info}</p>
+    <PanelLayout<Tab> speicherKey="bf-admin" marke={<Icon name="brain" size={20} color="#FFC531" />} name="BrainFit Kids" rolle={rolle === 'admin' ? 'Administrator' : 'Lehrkraft'}
+      punkte={tabs.map((t) => ({ ...t, zahl: t.id === 'vorort' ? neueVorOrt : 0 }))} aktiv={tab} onWahl={setTab}
+      fuss={[{ titel: 'Zur App', icon: 'home', href: '#/' }, { titel: 'Abmelden', icon: 'logout', onClick: onLogout }]}
+      kopfRechts={<>{ALLES_OFFEN && <span className="adm-badge warn">Testmodus an</span>}<a href="/" className="adm-btn" target="_blank" rel="noopener">Website ansehen</a></>}>
         {(hinweis || ['uebersicht', 'kinder', 'hausaufgaben', 'auftraege', 'shop', 'lektionen'].includes(tab)) && <div className="adm-hinweis"><Icon name="alert" size={18} color="#8A5A00" /> {hinweis ? `Daten konnten nicht vollständig geladen werden: ${hinweis}` : 'Daten aus der Datenbank.'}
           <label className="adm-beispiele"><input type="checkbox" checked={beispiele} onChange={(e) => setBeispiele(e.target.checked)} /> Beispielkinder dieses Geräts zeigen</label></div>}
         {tab === 'uebersicht' && <><Uebersicht zeilen={zeilen} onKind={() => setTab('kinder')} />{rolle === 'admin' && <AdminCheck />}</>}
@@ -182,9 +142,7 @@ function Dashboard({ onLogout, hinweis, rolle }: { onLogout: () => void; hinweis
         {tab === 'webinare' && <AdminWebinare />}
         {tab === 'vorort' && <AdminVorOrt />}
         {tab === 'einstellungen' && <Einstellungen />}
-      </main>
-      </div>
-    </div>
+    </PanelLayout>
   )
 }
 

@@ -3379,3 +3379,6 @@ a.az-start { text-decoration: none; display: inline-flex; justify-content: cente
   .adm-top .adm-btn { display: none; }
   .adm-wp .adm-main { padding: 16px; }
 }
+.ber-eingebettet .ber { height: auto; min-height: 0; border-radius: 22px; }
+.eltern-konto { display: grid; gap: 10px; justify-items: start; }
+.adm-side-logo .avatar, .adm-side-logo > * { max-width: 32px; max-height: 32px; }

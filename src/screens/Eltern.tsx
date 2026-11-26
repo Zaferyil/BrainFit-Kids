@@ -4,6 +4,7 @@ import { Bericht } from './Bericht'
 import { PushKarte } from '../components/PushEinstellungen'
 import { Avatar } from '../components/Avatar'
 import { Icon } from '../components/Icon'
+import { PanelLayout, type PanelFuss, type PanelPunkt } from '../components/PanelLayout'
 import { alleKinder, type Kid } from '../data/demo'
 import { SeZaKopf } from '../components/SeZa'
 import { adminAbmelden, elternAnmelden, elternKinder, elternPasswortVergessen } from '../lib/adminCloud'
@@ -90,9 +91,12 @@ function Auswahl({ kinder, onWahl, onLogout }: { kinder: KindKurz[]; onWahl: (id
   )
 }
 
+type ElternTab = 'uebersicht' | 'lektion' | 'lernweg' | 'buch' | 'staerken' | 'bericht' | 'benachrichtigung' | 'rechnungen' | 'tipps'
+const ELTERN_KEY = 'bfk.eltern-tab'
+
 function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => void; onWechseln?: () => void }) {
-  const [bericht, setBericht] = useState(false)
-  if (bericht) return <Bericht kid={kid} eltern zurueck={{ onClick: () => setBericht(false) }} />
+  const [tab, setTabRoh] = useState<ElternTab>(() => { try { return (sessionStorage.getItem(ELTERN_KEY) as ElternTab) || 'uebersicht' } catch { return 'uebersicht' } })
+  const setTab = (t: ElternTab) => { setTabRoh(t); try { sessionStorage.setItem(ELTERN_KEY, t) } catch { /* egal */ } }
   const p = getProgress(kid.id)
   const daily = getDaily(kid.id)
   const welt = WORLDS[p.world - 1]
@@ -107,81 +111,68 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
   const maxWert = Math.max(1, ...BEREICHE.filter((b) => b.id !== 'gesamt').map((b) => werte[b.id]))
   const minuten = Math.min(daily.minutes, TAGESZIEL)
 
+  const punkte: PanelPunkt<ElternTab>[] = [
+    { id: 'uebersicht', titel: 'Übersicht', icon: 'chart', gruppe: '', info: `So lernt ${kid.name} gerade – heute und insgesamt.` },
+    { id: 'lektion', titel: 'Aktuelle Lektion', icon: 'target', gruppe: 'Lernen', info: `Lektion ${nr}: welche Stationen schon geschafft sind.` },
+    { id: 'lernweg', titel: 'Lernweg', icon: 'map', gruppe: 'Lernen', info: `Alle Lektionen in Welt ${p.world}: ${welt?.name ?? ''}.` },
+    { id: 'buch', titel: 'Hausaufgabe im Buch', icon: 'book', gruppe: 'Lernen', info: 'Die Aufgaben im Übungsbuch zur aktuellen Lektion.' },
+    { id: 'staerken', titel: 'Stärken', icon: 'bars', gruppe: 'Fortschritt', info: 'Aus Übungen und Denkspielen berechnet.' },
+    { id: 'bericht', titel: 'Lernbericht', icon: 'medal', gruppe: 'Fortschritt', info: 'Stärken, Entwicklung und Vergleich mit Gleichaltrigen.' },
+    { id: 'benachrichtigung', titel: 'Benachrichtigungen', icon: 'bell', gruppe: 'Konto', info: 'Wochenbericht per E-Mail und Erinnerungen auf dem Handy.' },
+    { id: 'rechnungen', titel: 'Rechnungen & Abo', icon: 'bag', gruppe: 'Konto', info: 'Rechnungen, Zahlungsdaten und Kündigung.' },
+    { id: 'tipps', titel: 'Tipps für zu Hause', icon: 'bulb', gruppe: 'Hilfe', info: 'So unterstützen Sie Ihr Kind beim Üben.' },
+  ]
+  const fuss: PanelFuss[] = [
+    ...(onWechseln ? [{ titel: 'Anderes Kind', icon: 'users' as const, onClick: onWechseln }] : []),
+    { titel: 'Zur Website', icon: 'home', href: '/' },
+    { titel: 'Abmelden', icon: 'logout', onClick: onLogout },
+  ]
+
+  const heute = (
+    <section className="adm-card">
+      <div className="adm-card-head"><h2>Heute</h2><span className="adm-muted">Ziel: {TAGESZIEL} Minuten</span></div>
+      <div className="eltern-ring" style={{ '--p': `${(minuten / TAGESZIEL) * 100}%` } as CSSProperties}>
+        <div><b>{daily.minutes}</b><small>Minuten</small></div>
+      </div>
+      <div className="eltern-heute">
+        <span><b>{daily.tasks}</b> Aufgaben</span><span><b>{daily.stations}</b> Stationen</span><span><b>{daily.games}</b> Denkspiele</span>
+      </div>
+      {daily.minutes >= TAGESZIEL ? <p className="eltern-ok">Tagesaufgabe geschafft – loben Sie Ihr Kind!</p> : <p className="adm-muted">Eine Lektion am Tag (etwa 15 Minuten) ist genug.</p>}
+    </section>
+  )
+  const lektion = (
+    <section className="adm-card">
+      <div className="adm-card-head"><h2>Lektion {nr} · {welt?.units[p.unit - 1]}</h2><span className="adm-muted">{geschafft} von {stationen.length} Stationen</span></div>
+      <ol className="eltern-stationen">
+        {stationen.map((s) => (
+          <li key={s.id} className={s.sterne > 0 ? 'fertig' : s === naechste ? 'jetzt' : ''}>
+            <span className="eltern-st-icon">{s.sterne > 0 ? <Icon name="check" size={16} color="#FFFFFF" strokeWidth={3} /> : null}</span>
+            <span>{s.title}</span>
+            {s.sterne > 0 && <span className="eltern-sterne">{'★'.repeat(s.sterne)}</span>}
+            {s === naechste && <span className="adm-badge warn">als Nächstes</span>}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+
   return (
-    <div className="adm">
-      <header className="adm-head">
-        <div className="adm-brand"><Avatar size={36} {...kid.avatar} /><b>{kid.name}</b><span>Eltern</span></div>
-        <div className="adm-tabs" />
-        <div className="adm-head-r">
-          {onWechseln && <button type="button" className="adm-btn" onClick={onWechseln}>Anderes Kind</button>}
-          <button type="button" className="adm-btn" onClick={onLogout}><Icon name="logout" size={16} color="currentColor" /> Abmelden</button>
-        </div>
-      </header>
-      <main className="adm-main">
-        <button type="button" className="adm-btn primary eltern-bericht-knopf" onClick={() => setBericht(true)}>📊 Lernbericht ansehen – Stärken, Entwicklung &amp; Vergleich</button>
-        <a className="adm-btn eltern-portal-knopf" href="https://billing.stripe.com/p/login/00w7sMafb8SUa6Z9WX9oc00" target="_blank" rel="noopener">🧾 Rechnungen &amp; Zahlungsdaten</a>
-        <p className="adm-muted eltern-portal-hinweis">Rechnungen herunterladen, Karte oder Adresse ändern – Anmeldung mit der E-Mail-Adresse vom Kauf. Kündigen: <a href="/kuendigen.html">Verträge hier kündigen</a></p>
+    <PanelLayout<ElternTab> speicherKey="bf-eltern" marke={<Avatar size={30} {...kid.avatar} />} name={kid.name} rolle="Eltern-Bereich"
+      punkte={punkte} aktiv={tab} onWahl={setTab} fuss={fuss}
+      kopfRechts={<button type="button" className="adm-btn primary" onClick={() => setTab('bericht')}>📊 Lernbericht</button>}>
+      {tab === 'uebersicht' && <>
         <div className="adm-kpis">
           <div className="adm-card adm-kpi"><span>Lektion</span><b>{nr} <small>von {ALLE_LEKTIONEN.length}</small></b><small>{welt?.units[p.unit - 1]}</small></div>
           <div className="adm-card adm-kpi"><span>Level</span><b>{p.level}</b><small>{p.perlen} Perlen gesammelt</small></div>
           <div className="adm-card adm-kpi"><span>Klasse</span><b className="klein">{klasseVon(kid.id).name}</b><small>Tempo und Aufgaben passen sich an</small></div>
           <div className="adm-card adm-kpi"><span>Serie</span><b>{p.streak} <small>Tage</small></b><small>am Stück geübt</small></div>
         </div>
-
-        <WochenberichtKarte />
-        <div className="eltern-grid">
-          <section className="adm-card">
-            <div className="adm-card-head"><h2>Heute</h2><span className="adm-muted">Ziel: {TAGESZIEL} Minuten</span></div>
-            <div className="eltern-ring" style={{ '--p': `${(minuten / TAGESZIEL) * 100}%` } as CSSProperties}>
-              <div><b>{daily.minutes}</b><small>Minuten</small></div>
-            </div>
-            <div className="eltern-heute">
-              <span><b>{daily.tasks}</b> Aufgaben</span><span><b>{daily.stations}</b> Stationen</span><span><b>{daily.games}</b> Denkspiele</span>
-            </div>
-            {daily.minutes >= TAGESZIEL ? <p className="eltern-ok">Tagesaufgabe geschafft – loben Sie Ihr Kind!</p> : <p className="adm-muted">Eine Lektion am Tag (etwa 15 Minuten) ist genug.</p>}
-          </section>
-
-          <section className="adm-card">
-            <div className="adm-card-head"><h2>Aktuelle Lektion</h2><span className="adm-muted">{geschafft} von {stationen.length} Stationen</span></div>
-            <ol className="eltern-stationen">
-              {stationen.map((s) => (
-                <li key={s.id} className={s.sterne > 0 ? 'fertig' : s === naechste ? 'jetzt' : ''}>
-                  <span className="eltern-st-icon">{s.sterne > 0 ? <Icon name="check" size={16} color="#FFFFFF" strokeWidth={3} /> : null}</span>
-                  <span>{s.title}</span>
-                  {s.sterne > 0 && <span className="eltern-sterne">{'★'.repeat(s.sterne)}</span>}
-                  {s === naechste && <span className="adm-badge warn">als Nächstes</span>}
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          <section className="adm-card">
-            <div className="adm-card-head"><h2>Hausaufgabe im Buch</h2></div>
-            {buch ? (
-              <div className="eltern-buch">
-                <div><b>Mental Arithmetic Basics Book</b><span>Seite {buch.seite} · Spalte {buch.spalte} · Aufgaben {buch.von}–{buch.bis}</span></div>
-                {wb && <div><b>Mental Arithmetic Work Book</b><span>Seite {wb.von}{wb.bis !== wb.von ? `–${wb.bis}` : ''} · alle Aufgaben{wb.freiwillig ? ` · freiwillig Seite ${wb.freiwillig[0]}–${wb.freiwillig[1]}` : ''}</span></div>}
-                <p className="adm-muted">Ihr Kind rechnet mit dem Abakus und schreibt die Ergebnisse ins Buch. Schauen Sie gern gemeinsam drüber.</p>
-              </div>
-            ) : <p className="adm-muted">In dieser Lektion gibt es keine Buch-Aufgabe.</p>}
-          </section>
-
-          <section className="adm-card">
-            <div className="adm-card-head"><h2>Stärken</h2><span className="adm-muted">aus Übungen und Denkspielen</span></div>
-            <div className="adm-balken">
-              {BEREICHE.filter((b) => b.id !== 'gesamt').map((b) => (
-                <div key={b.id} className="adm-balken-zeile eltern-staerke">
-                  <span><b>{b.name}</b><small>{b.text}</small></span>
-                  <div className="adm-track"><div style={{ width: `${(werte[b.id] / maxWert) * 100}%` }} /></div>
-                  <span className="adm-num">{werte[b.id]}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-
+        <div className="eltern-grid">{heute}{lektion}</div>
+      </>}
+      {tab === 'lektion' && lektion}
+      {tab === 'lernweg' && (
         <section className="adm-card">
-          <div className="adm-card-head"><h2>Lernweg · Welt {p.world}: {welt?.name}</h2></div>
+          <div className="adm-card-head"><h2>Welt {p.world}: {welt?.name}</h2></div>
           <div className="eltern-weg">
             {welt?.units.map((name, i) => {
               const u = i + 1
@@ -190,11 +181,44 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
             })}
           </div>
         </section>
-
-        <PushKarte kidId={kid.id} name={kid.name} />
-
+      )}
+      {tab === 'buch' && (
+        <section className="adm-card">
+          {buch ? (
+            <div className="eltern-buch">
+              <div><b>Mental Arithmetic Basics Book</b><span>Seite {buch.seite} · Spalte {buch.spalte} · Aufgaben {buch.von}–{buch.bis}</span></div>
+              {wb && <div><b>Mental Arithmetic Work Book</b><span>Seite {wb.von}{wb.bis !== wb.von ? `–${wb.bis}` : ''} · alle Aufgaben{wb.freiwillig ? ` · freiwillig Seite ${wb.freiwillig[0]}–${wb.freiwillig[1]}` : ''}</span></div>}
+              <p className="adm-muted">Ihr Kind rechnet mit dem Abakus und schreibt die Ergebnisse ins Buch. Schauen Sie gern gemeinsam drüber.</p>
+            </div>
+          ) : <p className="adm-muted">In dieser Lektion gibt es keine Buch-Aufgabe.</p>}
+        </section>
+      )}
+      {tab === 'staerken' && (
+        <section className="adm-card">
+          <div className="adm-balken">
+            {BEREICHE.filter((b) => b.id !== 'gesamt').map((b) => (
+              <div key={b.id} className="adm-balken-zeile eltern-staerke">
+                <span><b>{b.name}</b><small>{b.text}</small></span>
+                <div className="adm-track"><div style={{ width: `${(werte[b.id] / maxWert) * 100}%` }} /></div>
+                <span className="adm-num">{werte[b.id]}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      {tab === 'bericht' && <div className="ber-eingebettet"><Bericht kid={kid} eltern /></div>}
+      {tab === 'benachrichtigung' && <><WochenberichtKarte /><PushKarte kidId={kid.id} name={kid.name} /></>}
+      {tab === 'rechnungen' && (
+        <section className="adm-card eltern-konto">
+          <h2>🧾 Rechnungen &amp; Zahlungsdaten</h2>
+          <p className="adm-muted">Rechnungen herunterladen, Karte oder Adresse ändern – Anmeldung mit der E-Mail-Adresse vom Kauf.</p>
+          <a className="adm-btn primary" href="https://billing.stripe.com/p/login/00w7sMafb8SUa6Z9WX9oc00" target="_blank" rel="noopener">Zum Kundenportal</a>
+          <h2>Kündigen</h2>
+          <p className="adm-muted">Sie möchten Ihr Abo beenden? <a href="/kuendigen.html">Verträge hier kündigen</a></p>
+        </section>
+      )}
+      {tab === 'tipps' && (
         <section className="adm-card eltern-tipps">
-          <h2>Tipps für zu Hause</h2>
           <ul>
             <li>Feste Zeit am Tag: lieber kurz und regelmäßig als selten und lang.</li>
             <li>Lassen Sie Ihr Kind am echten Abakus mitrechnen – das macht das Kopfrechnen später leichter.</li>
@@ -202,8 +226,8 @@ function Dashboard({ kid, onLogout, onWechseln }: { kid: Kid; onLogout: () => vo
             <li>Loben Sie die Anstrengung, nicht nur das Ergebnis.</li>
           </ul>
         </section>
-      </main>
-    </div>
+      )}
+    </PanelLayout>
   )
 }
 
