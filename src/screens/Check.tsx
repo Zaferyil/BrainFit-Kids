@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from 'react'
 import { Abakus3D } from '../components/Abakus3D'
 import { speak, stopSpeaking } from '../lib/speak'
+import { track } from '../lib/track'
 import { abakusStellen, BEREICHE, berichtAnfordern, blitzStellen, optionen, punkte, rechenaufgabe, speichernUndVergleichen, STUFEN, stufeVonAlter, zahlMitStellen, zeitLimit, type Bereich, type Variante, type Vergleich, type Werte } from '../lib/check'
 
 // Gratis Kopfrechnen-Check: Alter + Schulstufe → 5 kurze Spiele → Ergebnis im Vergleich mit Gleichaltrigen → Bericht per E-Mail.
@@ -349,7 +350,7 @@ function Ergebnis({ werte, stufe, alter, id, vergleich }: { werte: Werte; stufe:
   const senden = async (e: FormEvent) => {
     e.preventDefault(); setStatus('laeuft'); setFehler('')
     const f = await berichtAnfordern(id, mail, news)
-    if (f) { setFehler(f); setStatus('') } else setStatus('fertig')
+    if (f) { setFehler(f); setStatus('') } else { setStatus('fertig'); track('Lead', { content_name: 'Gratis-Check Bericht' }) }
   }
   const etwa = vergleich.echt ? '' : 'etwa '
   return (
