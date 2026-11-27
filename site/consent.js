@@ -23,7 +23,7 @@
       + '<p>Wir verwenden nur technisch notwendige Speicher, damit Login, Lernstand und Bezahlung funktionieren. Statistik- oder Marketing-Cookies setzen wir nur mit Ihrer Einwilligung – Sie können diese jederzeit widerrufen. Mehr in der <a href="/cookies.html">Cookie-Richtlinie</a> und <a href="/datenschutz.html">Datenschutzerklärung</a>.</p>'
       + '<div class="ck-opt"><label><input type="checkbox" checked disabled><span><b>Notwendig</b><small>Login, Lernstand, Warenkorb, Bezahlung. Immer aktiv.</small></span></label>'
       + '<label><input type="checkbox" id="ck-stat"' + (c.statistik ? ' checked' : '') + '><span><b>Statistik</b><small>Anonyme Nutzungsstatistik zur Verbesserung (derzeit nicht im Einsatz).</small></span></label>'
-      + '<label><input type="checkbox" id="ck-mark"' + (c.marketing ? ' checked' : '') + '><span><b>Marketing</b><small>Werbung und Erfolgsmessung (derzeit nicht im Einsatz).</small></span></label></div>'
+      + '<label><input type="checkbox" id="ck-mark"' + (c.marketing ? ' checked' : '') + '><span><b>Marketing</b><small>Meta-Pixel (Facebook/Instagram): misst, ob ein Besuch über unsere Werbung zu einer Anfrage führt. Nur auf öffentlichen Seiten, nie in der Lernplattform für Kinder. Daten gehen an Meta.</small></span></label></div>'
       + '<div class="ck-k"><button type="button" class="ck-n" id="ck-nur">Nur notwendige</button><button type="button" class="ck-n" id="ck-einst">Einstellungen</button><button type="button" id="ck-alle">Alle akzeptieren</button></div>'
     document.body.appendChild(d)
     d.querySelector('#ck-nur').onclick = function () { speichern(false, false) }
@@ -39,6 +39,33 @@
   function schliessen() { var a = document.getElementById('bfk-ck'), b = document.getElementById('bfk-ck-css'); if (a) a.remove(); if (b) b.remove() }
   window.bfkConsent = lesen
   window.bfkCookies = function () { zeigen(true) }
-  function start() { if (!lesen()) zeigen(false) }
+
+  // Meta-Pixel (Werbe-Erfolgsmessung): nur mit Marketing-Einwilligung und nur auf öffentlichen Seiten
+  // (Website, Gratis-Check, Vor-Ort-Anmeldung). Nie in der Lernplattform für Kinder und im Eltern-Bereich.
+  var PIXEL = '673250477167904', geladen = false
+  function aktiv(c) { return !!(c && c.marketing) && (location.pathname.indexOf('/app') !== 0 || /^#\/(check|vorort)/.test(location.hash)) }
+  function fbc() { // fbclid aus dem Hash (Weiterleitung /vorort → /app/#/vorort?…) für die Werbe-Zuordnung übernehmen
+    try { var m = /[?&]fbclid=([^&#]+)/.exec(location.search + location.hash); if (m && !/(^|; )_fbc=/.test(document.cookie)) document.cookie = '_fbc=fb.1.' + Date.now() + '.' + m[1] + ';path=/;max-age=7776000;SameSite=Lax;Secure' } catch (e) {}
+  }
+  function pixel() {
+    var an = aktiv(lesen())
+    if (!an) { if (window.fbq) { try { window.fbq('consent', 'revoke') } catch (e) {} } return }
+    if (!geladen) {
+      geladen = true; fbc()
+      ;(function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = true; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = true; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+      window.fbq('set', 'autoConfig', false, PIXEL) // keine automatischen Klick-/Formular-Ereignisse
+      window.fbq('init', PIXEL)
+      window.fbq('track', 'PageView')
+      return
+    }
+    try { window.fbq('consent', 'grant') } catch (e) {}
+    window.fbq('track', 'PageView')
+  }
+  /** Ereignis melden (z. B. 'Lead'); ohne Einwilligung oder außerhalb öffentlicher Seiten passiert nichts. Keine E-Mail-Adressen übergeben! */
+  window.bfkTrack = function (name, daten) { if (aktiv(lesen()) && window.fbq) window.fbq('track', name, daten || {}) }
+  window.addEventListener('bfk-consent', pixel)
+  window.addEventListener('hashchange', pixel)
+
+  function start() { if (!lesen()) zeigen(false); else pixel() }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start()
 })()

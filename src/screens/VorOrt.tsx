@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/track'
 import { STANDARD, websiteLaden, type VorOrt as VorOrtDaten } from '../lib/website'
 
 // Öffentliche Formulare für den Vor-Ort-Kurs in Linz (#/vorort, Website /vorort):
@@ -39,6 +40,8 @@ export function VorOrt({ wahl }: { wahl?: string }) {
     })
     if (error || data?.fehler) { setFehler(data?.fehler ?? 'Das hat leider nicht geklappt. Bitte später erneut versuchen.'); setStatus(''); return }
     setZahlung(data?.zahlung ?? null); setStatus('fertig')
+    // Werbe-Erfolgsmessung (nur mit Einwilligung): Voranmeldung = Lead, Schnupperstunde = Schedule, Kursanmeldung = CompleteRegistration
+    track(art === 'voranmeldung' ? 'Lead' : art === 'schnupper' ? 'Schedule' : 'CompleteRegistration', { content_name: 'Vor-Ort ' + art })
     // direkt weiter zur sicheren Zahlung bei Stripe
     if (data?.zahlung) window.setTimeout(() => { window.location.href = data.zahlung }, 2500)
   }
